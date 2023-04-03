@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 연결할 인터 페이스 경로 -->  
+<mapper namespace="com.yedam.spring.emp.mapper.EmpMapper">
+	<!-- 전체 개수 -->
+	<select id="selectEmpAllList" resultType="int">
+		SELECT COUNT(*)
+		FROM employees
+	</select>
+	<!-- 전체 조회 + 페이징-->
+	<select id="selectEmpAllListWithPageing" resultType="EmpVO">
+	<![CDATA[
+		SELECT 	employee_id,
+				first_name,
+				last_name,
+				email,
+				phone_number,
+				hire_date,
+				job_id,
+				salary,
+				commission_pct,
+				manager_id,
+				department_id
+		FROM 	(SELECT	rownum rn,
+						employee_id,
+						first_name,
+						last_name,
+						email,
+						phone_number,
+						hire_date,
+						job_id,
+						salary,
+						commission_pct,
+						manager_id,
+						department_id
+				  FROM	employees
+				  WHERE	rownum <= #{pageNum} * #{amount})
+		WHERE rn > (#{pageNum}-1)* #{amount}
+		ORDER BY employee_id
+	]]>
+	</select>
+	
+	
+	
+	<!-- 단건 조회 -->
+	<select id="selectEmpInfo" resultType="EmpVO">
+		SELECT employee_id,
+				first_name,
+				last_name,
+				email,
+				phone_number,
+				hire_date,
+				job_id,
+				salary,
+				commission_pct,
+				manager_id,
+				department_id
+		FROM 	employees
+		WHERE	employee_id = #{employeeId}
+		<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌 
+			${} : 타입 변경 없이 있는 그대로 집어 넣음-->
+	</select>
+	<!-- 등록 -->
+	<insert id="insertEmpInfo" parameterType="EmpVO">
+		<selectKey keyProperty="employeeId" resultType="int" order="BEFORE">
+			SELECT NVL(MAX(employee_id),0) + 1 FROM employees
+		</selectKey>
+		INSERT INTO employees (
+				employee_id,
+				first_name,
+				last_name,
+				email,
+				hire_date,
+				job_id,
+				salary
+				)
+		VALUES (
+				#{employeeId},
+				#{firstName},
+				#{lastName},
+				#{email},
+				sysdate,
+				#{jobId},
+				#{salary}
+				)
+	</insert>
+	
+	<!-- 수정 : 급여를 정해진 비율로 인상 
+		 2개의 다른 타입의 매개변수를 사용할 경우 parameterType 생략-->
+	<update id="updateEmpSal">
+		UPDATE 	employees
+		SET		salary = salary * (1+ #{raise}/100)
+		WHERE 	employee_id = #{empId}
+	</update>
+	<!-- 수정 : 사원정보 수정 -->
+	<update id="updateEmpInfo" parameterType="EmpVO">
+		UPDATE 	employees
+		<set>		
+				<if test="firstName != null and !firstName.equals('')">
+					first_name = #{firstName},
+			    </if>
+			    <if test="email != null and !email.equals('')">
+			    	email = #{email},
+			    </if>
+			    <if test="salary > 0">
+			    	salary = #{salary}
+			    </if>		
+		</set>		
+		WHERE 	employee_id = #{employeeId}
+	</update>
+	
+	<delete id="deleteEmpInfo" parameterType="int">
+		DELETE FROM employees
+		WHERE  employee_id = #{employeeId}
+	</delete>
+	
+	
+</mapper>

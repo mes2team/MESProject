@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:security="http://www.springframework.org/schema/security"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+ 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.3.xsd">
+
+	<security:http pattern="/css/**" security="none" />
+
+	<security:http>
+		<!-- permitAll() : 접속하는 모든 사람 허용 해주겠다 -->
+		<!-- hasAuthority('ROLE_ADMIN') 특정 사람(ROLE_) 허용 해주겠다 -->
+		<!-- isAuthenticated() 인증된 사람 다 접근 해주겠다 -->
+		<security:intercept-url pattern="/WEB-INF/views/admin/**"
+			access="hasAuthority('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/WEB-INF/views/**"
+			access="isAuthenticated()" />
+			
+		<!-- <security:form-login login-page="/customLogin" /> -->
+		<security:form-login default-target-url="/empList" />
+		<security:logout logout-url="/logout"
+			logout-success-url="/" />
+		<security:csrf disabled="true" />
+	</security:http>
+
+	<security:authentication-manager>
+		<!-- 인증 처리 -->
+		<security:authentication-provider>
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				users-by-username-query="select LOGIN_ID, PASSWORD, 1
+              	  from T_USER
+                  where LOGIN_ID = ?"
+				authorities-by-username-query="select LOGIN_ID, ROLE_NAME
+              	  from T_ROLE
+                	inner join T_USER_ROLE on T_ROLE.ID = T_USER_ROLE.ROLE_ID
+                	inner join T_USER on T_USER_ROLE.USER_ID = T_USER.ID
+              	   where LOGIN_ID = ?" />
+			<security:password-encoder hash="bcrypt" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>
