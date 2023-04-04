@@ -125,13 +125,23 @@
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="tables-general.html">
-              <i class="bi bi-circle"></i><span>General Tables</span>
+            <a href="${pageContext.request.contextPath}/productionPlan">
+              <i class="bi bi-circle"></i><span>생산계획</span>
             </a>
           </li>
           <li>
-            <a href="tables-data.html">
-              <i class="bi bi-circle"></i><span>Data Tables</span>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>생산지시</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>공정실적</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>공정관리</span>
             </a>
           </li>
         </ul>
@@ -161,10 +171,10 @@
       </li><!-- End Charts Nav -->
       
             <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+        <a class="nav-link collapsed" data-bs-target="#abc-nav" data-bs-toggle="collapse" href="#">
           <i class="bi bi-bar-chart"></i><span>자재관리</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <ul id="abc-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="charts-chartjs.html">
               <i class="bi bi-circle"></i><span>Chart.js</span>

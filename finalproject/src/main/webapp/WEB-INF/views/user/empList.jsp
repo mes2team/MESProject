@@ -17,6 +17,15 @@ table, tr, th, td {
 </style>
 </head>
 <body>
+		<div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div>
 	<div>
 		<sec:authorize access="hasRole('ROLE_ADMIN')">
 			<div>
@@ -87,23 +96,26 @@ table, tr, th, td {
 		</table>
 				<!-- 6) 페이징 버튼 제작 -->
 		<div class='pull-right'>
+			<nav aria-label="Page navigation example">
 			<ul class="pagination">
 				<c:if test="${pageMaker.prev }">
-					<li class="paginate_button previous"><a
+					<li class="page-item"><a class="page-link"
 						href="${pageMaker.startPage -1}">Prev</a></li>
 				</c:if>
 				<c:forEach var="num" begin="${pageMaker.startPage }"
 					end="${pageMaker.endPage }">
-					<li class="paginate_button"
-						${pageMaker.cri.pageNum == num ? "active":"" }><a
+					<li class="page-item"
+						${pageMaker.cri.pageNum == num ? "active":"" }><a class="page-link"
 						href="${num }">${num }</a></li>
 				</c:forEach>
 				<c:if test="${pageMaker.next }">
-					<li class="paginate_button next"><a
+					<li class="page-item"><a class="page-link"
 						href="${pageMaker.endPage +1}">next</a></li>
 				</c:if>
 			</ul>
+			</nav>
 		</div>
+		
 		<!-- 해당 페이지 클릭시 페이지번호와 가져올 데이터 개수(default 10개) -->
 		<form action="${pageContext.request.contextPath }/empList"
 			id='actionForm' method='get'>
