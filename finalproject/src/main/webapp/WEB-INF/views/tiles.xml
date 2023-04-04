@@ -9,9 +9,9 @@
 		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp"/>
 	</definition>
 
-	<definition name="home" extends="mainTemplate">
+<!-- 	<definition name="home" extends="mainTemplate">
 		<put-attribute name="main" value="/WEB-INF/views/home.jsp"/>
-	</definition>
+	</definition> -->
 	
 	<definition name="*/*" extends="mainTemplate">
 		<put-attribute name="main" value="/WEB-INF/views/{1}/{2}.jsp"/>
