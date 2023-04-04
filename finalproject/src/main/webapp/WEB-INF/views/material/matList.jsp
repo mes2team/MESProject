@@ -5,11 +5,16 @@
 	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <head>
+<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
+    <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+    <script>
+        jQuery(function($){
+            $("#jaje").DataTable({"lengthChange": false,"searching": true });
+        });
+    </script>
 <meta charset="UTF-8">
-<title>전체조회</title>
+<title>Material List</title>
 <style>
 table, tr, th, td {
 	border: 1px solid black;
@@ -17,30 +22,15 @@ table, tr, th, td {
 </style>
 </head>
 <body>
-		<div class="pagetitle">
-      <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
-    </div>
 	<div>
-		<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<div>
-				<button type="button" onclick="location.href='empInsert'">등록</button>
-			</div>
-		</sec:authorize>
+		        <sec:authorize access="hasRole('ROLE_ADMIN')">	
+		        <!-- ROLE_ADMIN만 볼 수 있는 영역 -->							
+				</sec:authorize>
 <!-- ============================================================== -->
                 <!-- pageheader -->
                 <!-- ============================================================== -->
                 <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <div class="page-header">
-                            <h2 class="pageheader-title">Data Tables</h2>
-                            <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
-                            <div class="page-breadcrumb">
+
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
@@ -48,76 +38,79 @@ table, tr, th, td {
                                         <li class="breadcrumb-item active" aria-current="page">Data Tables</li>
                                     </ol>
                                 </nav>
-                            </div>
-                        </div>
-                    </div>
+                        
+                           
                 </div>
                 <!-- ============================================================== -->
                 <!-- end pageheader -->
                 <!-- ============================================================== -->
                 <div class="row">
+                
                     <!-- ============================================================== -->
                     <!-- basic table  -->
                     <!-- ============================================================== -->
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Basic Table</h5>
+                            <h2 class="card-header">자재관리</h2>
                             <div class="card-body">
                                 <div class="table-responsive">		
 
-		<table class="table table-striped table-bordered first">
+		<table id="jaje"class="table table-striped table-bordered first" >
 			<thead>
 				<tr>
-					<th>employee_id</th>
-					<th>first_name</th>
-					<th>last_name</th>
-					<th>email</th>
-					<th>hire_date</th>
-					<th>job_id</th>
-					<th>salary</th>
-					<th>Delete</th>
+					<th>자재코드</th>
+					<th>자재명</th>
+					<th>자재규격</th>
+					<th>관리단위</th>
+					<th>자재유형</th>
+					<th>안전재고</th>
+					<th>사용여부</th>
+					<th>거래처코드</th>
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
+		        	<th>수정</th>		
+					</sec:authorize>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="emp" items="${empList }">
+				<c:forEach var="mat" items="${matList }">
 					<tr data-id="a">
-						<td>${emp.employeeId }</td>
-						<td>${emp.firstName }</td>
-						<td>${emp.lastName }</td>
-						<td>${emp.email }</td>
-						<td>${emp.hireDate }</td>
-						<td>${emp.jobId }</td>
-						<td>${emp.salary }</td>
-						<td><button type="button"
-								onclick="deleteInfo(${emp.employeeId}, event)">삭제</button></td>
+						<td>${mat.rscCd }</td>
+						<td>${mat.rscNm }</td>
+						<td>${mat.rscSpec }</td>
+						<td>${mat.mngUnit }</td>
+						<td>${mat.rscTyp }</td>
+						<td>${mat.safStc }</td>
+						<td>${mat.useYn }</td>
+						<td>${mat.vendCd }</td>
+						<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<td><button type="button"
+								onclick="deleteInfo(${mat.rscCd}, event)">수정</button></td>
+						</sec:authorize>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 				<!-- 6) 페이징 버튼 제작 -->
 		<div class='pull-right'>
-			<nav aria-label="Page navigation example">
 			<ul class="pagination">
 				<c:if test="${pageMaker.prev }">
-					<li class="page-item"><a class="page-link"
+					<li class="paginate_button previous"><a
 						href="${pageMaker.startPage -1}">Prev</a></li>
 				</c:if>
 				<c:forEach var="num" begin="${pageMaker.startPage }"
 					end="${pageMaker.endPage }">
-					<li class="page-item"
-						${pageMaker.cri.pageNum == num ? "active":"" }><a class="page-link"
+					<li class="paginate_button"
+						${pageMaker.cri.pageNum == num ? "active":"" }><a
 						href="${num }">${num }</a></li>
 				</c:forEach>
 				<c:if test="${pageMaker.next }">
-					<li class="page-item"><a class="page-link"
+					<li class="paginate_button next"><a
 						href="${pageMaker.endPage +1}">next</a></li>
 				</c:if>
 			</ul>
-			</nav>
 		</div>
-		
 		<!-- 해당 페이지 클릭시 페이지번호와 가져올 데이터 개수(default 10개) -->
-		<form action="${pageContext.request.contextPath }/empList"
+		<form action="${pageContext.request.contextPath }/matList"
 			id='actionForm' method='get'>
 			<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
 			<input type="hidden" name="amout" value="${pageMaker.cri.amount }">
@@ -133,7 +126,7 @@ table, tr, th, td {
                 </div>
                 
                 
-        <!-- Optional JavaScript -->
+        <!-- Optional JavaScript -->     
     <script src="${pageContext.request.contextPath}/resources/static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="${pageContext.request.contextPath}/resources/static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
@@ -152,9 +145,9 @@ table, tr, th, td {
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
     <script src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-    <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
-
-	<script>
+    <script src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>	
+	<script>	
+	
 	//페이징 이동
 	$(document).ready(function() {
 		var actionForm = $("#actionForm");
@@ -180,7 +173,7 @@ table, tr, th, td {
 	//목록 삭제
 	function deleteInfo(id,event) {
 		$.ajax({
-			url : 'empDelete',
+			url : 'matDelete',
 			method : 'post',
 			data : { employeeId : id},
 			// dataType : 'json', (생략) // html, text, json, xml
@@ -200,5 +193,6 @@ table, tr, th, td {
 		event.stopPropagation();
 	}
 	</script>
+
 </body>
 </html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.spring.eqm.mapper.EqmMapper">
+
+	<select id="selectEqmList" resultType="EqmVO" >
+		SELECT eqm_cd, 
+               eqm_fg, 
+               eqm_nm,
+               eqm_ist_dt,             
+               eqm_min_temp, 
+               eqm_max_temp, 
+               chck_perd, 
+               use_yn, 
+               eqm_mng, 
+               eqm_img
+     	FROM eqm 
+     	ORDER BY eqm_cd       
+	</select>
+	
+	<insert id="insertEqm" parameterType="EqmVO">
+		INSERT INTO eqm ( 
+                   eqm_cd,
+                   eqm_fg,
+                   eqm_nm,
+                   eqm_ist_dt,
+                   eqm_min_temp,
+                   eqm_max_temp,
+                   chck_perd,
+                   use_yn,
+                   eqm_mng,
+                   eqm_img
+                  )
+                  values (
+                          #{eqmCd},
+                          #{eqmFg},
+                          #{eqmNm},
+                          #{eqmIstDt},
+                          #{eqmMinTemp},
+                          #{eqmMaxTemp},
+                          #{chckPerd},
+                          #{useYn},
+                          #{eqmMng},
+                          #{eqmImg}
+                         )
+	</insert>
+	
+</mapper>
