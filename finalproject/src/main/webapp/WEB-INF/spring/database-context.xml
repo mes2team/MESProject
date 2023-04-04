@@ -18,6 +18,7 @@
 		<property name="jdbcUrl" value="${url}" />
 		<property name="username" value="${user}" />
 		<property name="password" value="${password}" />
+		<property name="maximumPoolSize" value="3" />
 	</bean>
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"
