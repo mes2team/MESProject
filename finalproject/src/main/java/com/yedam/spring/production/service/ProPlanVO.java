@@ -21,10 +21,10 @@ public class ProPlanVO {
 	private int	prefRank;	//작업우선순위
 	private	String edctsCd;	//제품코드
 	private	String bomCd;	//BOM코드
-	private	int	orderCnt;	//주문수량
+	private	String	orderCnt;	//주문수량
 	private	int	indicaCnt;	//생산지시수량
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private	Date wkToDt;	//생산시예정일자
+	private	Date wkToDt;	//생산시작예정일자
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date wkFrDt;	//생산종료일자
 }

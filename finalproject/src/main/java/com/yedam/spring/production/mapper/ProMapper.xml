@@ -3,5 +3,88 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.spring.production.mapper.ProMapper">
-  
+  	
+  	<!-- 생산계획 코드 조회 -->
+  	<select id="getNextPlanCd" resultType="ProPlanVO">
+		SELECT plan_cd
+		FROM(
+			    SELECT plan_cd 
+			    FROM plan
+			    ORDER BY ROWNUM DESC)
+		WHERE ROWNUM = 1
+	</select>
+  	<!-- 생산계획 등록 -->
+  	<insert id="InsertNewPlan" parameterType="ProPlanVO">
+  		BEGIN		
+  			<!-- 생산계획테이블 -->
+  			INSERT INTO plan (plan_cd,
+  							  plan_name,
+  							  paprd_dt,
+  							  now_st,
+  							  plan_dt,
+  							  <if test="orderNo != null and !orderNo.equals('')">
+  							  order_no
+  							  </if>
+  							  )
+  					VALUES	 (#{planCd},
+  							  #{planName},
+  							  #{paprdDt},
+  							  #{nowSt},
+  							  #{planDt},
+  							  <if test="orderNo != null and !orderNo.equals('')">
+  							  #{orderNo}
+  							  </if>
+  							  );
+  			<!-- 생산계획디테일 테이블 -->
+  			INSERT INTO plan_dtl (plan_cd,
+	  							  pref_rank,
+	  							  edcts_cd,
+	  							  bom_cd,
+	  							  <if test="orderCnt != null and !orderCnt.equals('')">
+	  							  order_cnt,
+	  							  </if>
+	  							  wk_to_dt
+	  							  )
+	  					VALUES	 (#{planCd},
+	  							  #{prefRank},
+	  							  #{edctsCd},
+	  							  #{bomCd},
+	  							  <if test="orderCnt != null and !orderCnt.equals('')">
+	  							  #{orderCnt},
+	  							  </if>
+	  							  #{wkToDt}
+	  							  );
+  		END;
+  		
+  	</insert>
+  	<!-- 미지시 주문서 조회 -->
+  	<select id="selectOrderSheet" resultType="OrderSheetVO">
+  		SELECT order_no,
+  			   edcts_cd,
+  			   vend_cd,
+  			   vend_nm,
+  			   order_dt,
+  			   prog_appe,
+  			   paprd_dt,
+  			   prdt_nm,
+  			   order_cnt
+  		FROM  order_sheet
+  		WHERE prog_appe = '접수완료'
+  	</select>
+  	
+  	<!-- BOM 정보 조회 -->
+  	<select id="selectBomInfo" resultType="BomVO">
+  		SELECT bom_cd, standard, edcts_cd
+  		FROM bom
+  		ORDER BY bom_cd
+  	</select>
+  	
+  	<!-- BOM에 따른 자재 정보 -->
+  	<select id="selectBomRscInfo" resultType="BomVO">
+		SELECT 	r.rsc_nm, b.use_cnt, b.unit, r.rsc_typ, p.prcs_nm
+		FROM 	bom_detail b, rsc r, prcs p
+		Where 	b.rsc_cd = r.rsc_cd
+		  AND 	b.prcs_cd = p.prcs_cd 
+		  AND 	bom_cd = #{bomCd}
+  	</select>
   </mapper>
