@@ -74,7 +74,6 @@
 
   <!-- Template Main JS File -->
   <script src="${pageContext.request.contextPath}/resources/assets/js/main.js"></script>
-
-
+  
   </body>
 </html>

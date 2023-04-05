@@ -35,6 +35,21 @@ public class VendServiceImpl implements VendService {
 		return vendMapper.insertVendInfo(vendVo);
 	}
 
+	@Override
+	public int deleteVend(String vendCd) {
+		return vendMapper.deleteVend(vendCd);
+	}
+
+	@Override
+	public List<VendVO> getSerarchVend(VendVO vendVo) {
+		return vendMapper.selectSerarchVend(vendVo);
+	}
+
+	@Override
+	public int updateVend(VendVO vendVO) {
+		return vendMapper.updateVend(vendVO);
+	}
+
 
 
 }

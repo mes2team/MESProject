@@ -14,4 +14,13 @@ public interface VendService {
 	
 	// 거래처 등록
 	public int insertVend(VendVO vendVo);
+	
+	// 거래처 삭제
+	public int deleteVend(String vendCd);
+	
+	// 거래처 검색
+	public List<VendVO> getSerarchVend(VendVO vendVo);
+	
+	// 거래서 수정
+	public int updateVend(VendVO vendVO);
 }

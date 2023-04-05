@@ -11,8 +11,10 @@
 				vend_tel,
 				vend_mag,
 				remk,
-				vend_typ
+				vend_typ,
+				SUBSTR(vend_cd, 4)
 		FROM	vend
+		ORDER BY 8
 	</select>
 	
 	<!-- 매입처 코드 조회 -->
@@ -29,6 +31,7 @@
 		WHERE	vend_cd LIKE 'VEO%'
 	</select>
 	
+	<!-- 등록 -->
 	<insert id="insertVendInfo" parameterType="VendVO">
 		INSERT INTO vend (vend_cd,
 						  vend_nm, 
@@ -45,4 +48,52 @@
 				  		  #{remk},
 				  		  #{vendTyp})
 	</insert>
+	
+	<!-- 삭제 -->
+	<delete id="deleteVend" parameterType="String">
+		DELETE FROM vend
+		WHERE vend_cd = #{vendCd}
+	</delete>
+	
+	<!-- 검색 조회 -->
+	<select id="selectSerarchVend" resultType="VendVO">
+		SELECT	vend_cd,
+				vend_nm,
+				br_num,
+				vend_tel,
+				vend_mag,
+				remk,
+				vend_typ,
+				SUBSTR(vend_cd, 4)
+		FROM	vend
+		<where>
+			<if test="vendCd != null and !vendCd.equals('')">
+				AND vend_cd LIKE '%' || #{vendCd} || '%'
+			</if>
+			<if test="vendNm != null and !vendNm.equals('')">
+				AND vend_nm LIKE '%' || #{vendNm} || '%'
+			</if>
+			<if test="vendMag != null and !vendMag.equals('')">
+				AND vend_mag LIKE '%' || #{vendMag} || '%'
+			</if>
+		</where>
+		ORDER BY 8 
+	</select>
+	
+	<!-- 수정 -->
+	<update id="updateVend">
+		UPDATE vend
+		<set>
+			vend_cd = #{vendCd},
+			vend_nm = #{vendNm},
+			br_num = #{brNum},
+			vend_tel = #{vendTel},
+			vend_mag = #{vendMag},
+			<if test="remk != null and !remk.equals('')">
+				remk = #{remk},
+			</if>
+			vend_typ = #{vendTyp}
+		</set>
+		WHERE vend_cd = #{vendCd}
+	</update>
 </mapper>
