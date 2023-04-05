@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.eqm.service.EqmService;
 import com.yedam.spring.eqm.service.EqmVO;
@@ -18,6 +19,7 @@ public class EqmController {
 	@GetMapping("/eqm")
 	public String eqm(Model model) {
 		model.addAttribute("eqmList",service.selectEqmList());
+		model.addAttribute("maxCdList",service.selectMaxCd());
 		return "eqm/eqm";
 	}
 	
@@ -28,4 +30,24 @@ public class EqmController {
 		return "redirect:eqm";
 	}
 	
+	//설비단건조회
+	@GetMapping("/eqmDetail")
+	@ResponseBody //화면이 아닌 데이터 넘길 땐 요거 써야됨 jsp에서 dataType=json받기위해
+	public EqmVO eqmDetail(EqmVO eqmVO) {
+		return service.selectEqm(eqmVO);
+	}
+	
+	//삭제
+	@PostMapping("/deleteEqm")
+	public String deleteEqm(EqmVO eqmVO) {
+		service.deleteEqm(eqmVO);
+		return "redirect:eqm";
+	}
+	
+	//수정
+	@PostMapping("/updateEqm")
+	public String updateEqm(EqmVO eqmVO) {
+		service.updateEqm(eqmVO);
+		return "redirect:eqm";
+	}
 }

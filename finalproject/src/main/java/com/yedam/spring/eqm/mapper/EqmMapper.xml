@@ -19,6 +19,32 @@
      	ORDER BY eqm_cd       
 	</select>
 	
+	<select id="selectMaxCd" resultType="EqmVO">
+		SELECT 
+    			MAX(CASE WHEN SUBSTR(eqm_cd, 4, 1) = '1' THEN SUBSTR(eqm_cd, 4) END) AS first_max,
+    			MAX(CASE WHEN SUBSTR(eqm_cd, 4, 1) = '2' THEN SUBSTR(eqm_cd, 4) END) AS second_max,
+    			MAX(CASE WHEN SUBSTR(eqm_cd, 4, 1) = '3' THEN SUBSTR(eqm_cd, 4) END) AS third_max,
+    			MAX(CASE WHEN SUBSTR(eqm_cd, 4, 1) = '4' THEN SUBSTR(eqm_cd, 4) END) AS fourth_max,
+    			MAX(CASE WHEN SUBSTR(eqm_cd, 4, 1) = '5' THEN SUBSTR(eqm_cd, 4) END) AS fifth_max
+		FROM eqm   			
+		WHERE SUBSTR(eqm_cd, 4, 1) IN ('1', '2', '3', '4', '5')
+	</select>
+	
+	<select id="selectEqm" resultType="EqmVO">
+		SELECT eqm_cd, 
+               eqm_fg, 
+               eqm_nm,
+               eqm_ist_dt,             
+               eqm_min_temp, 
+               eqm_max_temp, 
+               chck_perd, 
+               use_yn, 
+               eqm_mng, 
+               eqm_img
+        FROM eqm
+        WHERE eqm_cd = #{eqmCd}       
+	</select>
+	
 	<insert id="insertEqm" parameterType="EqmVO">
 		INSERT INTO eqm ( 
                    eqm_cd,
@@ -36,7 +62,12 @@
                           #{eqmCd},
                           #{eqmFg},
                           #{eqmNm},
-                          #{eqmIstDt},
+                          <if test="eqmIstDt != null">
+                          #{eqmIstDt}
+                          </if>
+                          <if test="eqmIstDt == null">
+                          SYSDATE
+                          </if>,
                           #{eqmMinTemp},
                           #{eqmMaxTemp},
                           #{chckPerd},
@@ -45,5 +76,25 @@
                           #{eqmImg}
                          )
 	</insert>
+	
+	<delete id="deleteEqm" parameterType="EqmVO">
+		DELETE FROM eqm
+		WHERE eqm_cd = #{eqmCd}
+	</delete>
+	
+	<update id="updateEqm" parameterType="EqmVO">
+		UPDATE eqm
+		SET eqm_cd =#{eqmCd},
+                   eqm_fg =#{eqmFg},
+                   eqm_nm = #{eqmNm},
+                   eqm_ist_dt = #{eqmIstDt},
+                   eqm_min_temp = #{eqmMinTemp},
+                   eqm_max_temp = #{eqmMaxTemp},
+                   chck_perd = #{chckPerd},
+                   use_yn = #{useYn},
+                   eqm_mng = #{eqmMng},
+                   eqm_img = #{eqmImg}
+        WHERE eqm_cd = #{eqmCd}         
+	</update>
 	
 </mapper>
