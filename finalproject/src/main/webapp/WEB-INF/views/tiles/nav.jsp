@@ -136,8 +136,8 @@
         </a>
         <ul id="abc-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Chart.js</span>
+            <a href="${pageContext.request.contextPath }/matList">
+              <i class="bi bi-circle"></i><span>자재정보</span>
             </a>
           </li>
           <li>

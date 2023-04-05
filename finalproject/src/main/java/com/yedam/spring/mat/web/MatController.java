@@ -46,24 +46,14 @@ public class MatController {
 		return "material/matInfo";
 	}
 	//등록 - form이동
-	@GetMapping("/matInsert")
-	public String matInsertForm() {
-		return "material/matInsert";
-	}
+//	@GetMapping("/matInsert")
+//	public String matInsertForm() {
+//		return "material/matInsert";
+//	}
 	//등록 - Process
 	@PostMapping("/matInsert")
-	public String matInsertProcess(MatVO matVO, RedirectAttributes rrtt) {
-		int matId = matService.insertMat(matVO);
-		String result = null;
-		if(matId == -1) {
-			result = "정상적으로 등록되지 않았습니다.";
-		} else {
-			result = "정상적으로 등록되었습니다."
-					 +"\n등록된 사원의 사번은 " + matId + " 입니다.";
-		}
-		//주로 메세지 전달때 사용
-		rrtt.addFlashAttribute("result",result);
-		//전체조회 컨트롤러 요청
+	public String matInsertProcess(MatVO matVO) {
+		matService.insertMat(matVO);
 		return "redirect:matList";
 	}
 	//수정 - process /
