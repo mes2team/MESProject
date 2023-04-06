@@ -6,10 +6,9 @@ import com.yedam.spring.common.Criteria;
 import com.yedam.spring.mat.service.MatVO;
 
 public interface MatMapper {
-	//전체 개수
-	public int selectMatAllList();
+
 	//전체 조회 + 페이징
-	public List<MatVO> selectMatAllListWithPageing(Criteria cri);
+	public List<MatVO> matList();
 	
 	//단건 조회
 	public MatVO selectMatInfo(MatVO matVO);

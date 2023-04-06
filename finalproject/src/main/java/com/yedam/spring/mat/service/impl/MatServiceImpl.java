@@ -7,7 +7,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yedam.spring.common.Criteria;
 import com.yedam.spring.mat.mapper.MatMapper;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
@@ -17,18 +16,13 @@ public class MatServiceImpl implements MatService {
 	
 	@Autowired
 	MatMapper matMapper;
-
+	
 	@Override
-	public int getMatAll() {
-		//전체조회
-		return matMapper.selectMatAllList();
+	public List<MatVO> matList() {
+		// 전체조회
+		return matMapper.matList();
 	}
 
-	@Override
-	public List<MatVO> getMatAll(Criteria cri) {
-		//페이징 전체조회
-		return matMapper.selectMatAllListWithPageing(cri);
-	}
 
 	@Override
 	public MatVO getMat(MatVO matVO) {
@@ -70,6 +64,8 @@ public class MatServiceImpl implements MatService {
 		
 		return map;
 	}
+
+
 	
 
 }

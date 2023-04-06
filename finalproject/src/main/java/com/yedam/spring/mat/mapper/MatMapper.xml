@@ -4,37 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 연결할 인터 페이스 경로 -->
 <mapper namespace="com.yedam.spring.mat.mapper.MatMapper">
-	<!-- 전체 개수 -->
-	<select id="selectMatAllList" resultType="int">
-		SELECT COUNT(*)
+	<!-- 전체 조회 -->
+	<select id="matList" resultType="MatVO">
+		SELECT *
 		FROM rsc
+	   ORDER BY rsc_cd
 	</select>
-	<!-- 전체 조회 + 페이징 -->
-	<select id="selectMatAllListWithPageing" resultType="MatVO">
-	<![CDATA[
-		SELECT 	rsc_cd,
-				rsc_nm,
-				rsc_spec,
-				mng_unit,
-				rsc_typ,
-				saf_stc,
-				use_yn,
-				vend_cd
-		FROM 	(SELECT	rownum rn,
-						rsc_cd,
-						rsc_nm,
-						rsc_spec,
-						mng_unit,
-						rsc_typ,
-						saf_stc,
-						use_yn,
-						vend_cd
-						FROM 	rsc	
-						WHERE	rownum <= #{pageNum} * #{amount})
-		WHERE rn > (#{pageNum}-1)* #{amount}	
-		ORDER BY rsc_cd DESC
-	]]>
-	</select>
+	
 
 	<!-- 단건 조회 -->
 	<select id="selectMatInfo" resultType="MatVO">
@@ -46,7 +22,8 @@
 		   saf_stc,
 		   use_yn,
 		   vend_cd
-     WHERE rsc_cd = #{rscCd} -->
+	  FROM rsc		   
+     WHERE rsc_cd = #{rscCd}
 	<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌
 	${} : 타입 변경 없이 있는그대로 집어 넣음-->
 	</select>
