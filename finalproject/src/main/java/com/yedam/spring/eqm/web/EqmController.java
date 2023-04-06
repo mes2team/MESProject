@@ -37,17 +37,24 @@ public class EqmController {
 		return service.selectEqm(eqmVO);
 	}
 	
-	//삭제
+	//설비삭제
 	@PostMapping("/deleteEqm")
 	public String deleteEqm(EqmVO eqmVO) {
 		service.deleteEqm(eqmVO);
 		return "redirect:eqm";
 	}
 	
-	//수정
+	//설비수정
 	@PostMapping("/updateEqm")
 	public String updateEqm(EqmVO eqmVO) {
 		service.updateEqm(eqmVO);
 		return "redirect:eqm";
 	}
+	////////////////설비점검내역//////////////////
+	@GetMapping("/eqmCheck")
+	public String eqmCheckPage(Model model) {
+		model.addAttribute("list", service.selectCheckList());
+		return "eqm/eqmCheck";
+	}
+	
 }

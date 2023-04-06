@@ -41,5 +41,10 @@ public class EqmServiceImpl implements EqmService{
 	public int updateEqm(EqmVO eqmVO) {
 		return mapper.updateEqm(eqmVO);
 	}
+	///////설비점검내역////////
+	@Override
+	public List<EqmVO> selectCheckList() {
+		return mapper.selectCheckList();
+	}
 
 }

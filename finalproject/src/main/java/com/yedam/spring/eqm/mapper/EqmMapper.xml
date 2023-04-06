@@ -97,4 +97,18 @@
         WHERE eqm_cd = #{eqmCd}         
 	</update>
 	
+	<!-- 설비점검내역 -->
+	
+	<select id="selectCheckList" resultType="EqmVO">
+		SELECT CHECK_CD,
+			   EQM_CD, 
+			   CHCK_FG,
+			   CHCK_DT,
+			   JDGMNT,
+			   DISPO_CTNT,
+			   CHCK_PSCH,
+			   EQM_NM
+		FROM eqm_check 
+	</select>
+	
 </mapper>

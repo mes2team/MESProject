@@ -8,10 +8,15 @@
 <title>eqm</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<style>
+ 
+</style>
 </head>
 <body>
+<h1>설비관리</h1>
+<div id="container">
 	<div style="width: 100%; height: 200px; overflow: auto;">
-		<table class="table">
+		<table class="table table-striped table-hover" >
 			<thead>
 				<tr>
 					<th scope="col">번호</th>
@@ -122,6 +127,7 @@
 			</div>
 		</div>
 	</form>
+	</div>
 	<script>
 	//수정
 	function updateEqm(){
@@ -209,14 +215,15 @@
 			  cancelButtonText: '취소'
 			}).then((result) => {
 			  if (result.value) {
-				  let eqmCd = inputEqmCd.value;
+				  let eqmCd = document.querySelector('[name="eqmCd"]');
 					$.ajax({
-					      url: 'deleteEqm?eqmCd=' + eqmCd, 
+					      url: 'deleteEqm?eqmCd=' + eqmCd.value, 
 					      type: 'POST', 
 					      //dataType: 'json', 화면 받을 땐 없어도 됨
 					      success: function(result) { 
-					    	  console.log("삭제 됨");
-					    	 document.querySelector('#'+eqmCd).remove();
+					    	document.querySelector('#'+eqmCd.value).remove()
+					    	location.reload();
+					    	cleanInput();
 					      },
 					      error: function(reject) { 
 					        console.log(reject);
@@ -224,7 +231,6 @@
 					    });
 			  }
 			})
-		cleanInput();	
 		
 		
 	}
@@ -252,7 +258,6 @@
 	
 	//단건조회
 	function eqmDetail(eqmCd){
-		disabledEqmFg();
 		$.ajax({
 		      url: '/spring/eqmDetail?eqmCd=' + eqmCd, // 조회 API의 URL
 		      type: 'GET', // HTTP 요청 방식
@@ -268,6 +273,7 @@
 		       useYn.value = result.useYn;
 		       eqmMng.value = result.eqmMng;
 		      // document.querySelector("#preview_img").src ="img/"+result.eqmImg;
+		      disabledEqmFg();
 		      },
 		      error: function(reject) { // 요청이 실패했을 때
 		        console.log(reject);
@@ -372,7 +378,7 @@
 				}
 			}
 		}
-		//수정시 설비구분 막기
+		//단건 클릭시 수정시 설비구분 막기
 		function disabledEqmFg(){
 			document.querySelector('[name="eqmFg"]').setAttribute("disabled", true);
 			document.querySelector('[name="eqmCd"]').setAttribute("disabled", true);
