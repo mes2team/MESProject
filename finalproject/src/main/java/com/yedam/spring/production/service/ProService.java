@@ -21,6 +21,8 @@ public interface ProService {
 
 	public List<ProPlanVO> getProPlans(Criteria cri);
 
-	public int removeProPlan();
+	public String removePlan(String planCd);
+
+	public String modifyProPlan(ProPlanVO vo);
 
 }

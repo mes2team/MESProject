@@ -9,9 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -70,15 +68,28 @@ public class ProController {
 	}
 	
 	//생산계획삭제
-	@PostMapping("/deleteProPlan")
+	@PostMapping("/deletePlan")
 	@ResponseBody
-	public String deleteProPlan(@RequestParam(value = "planCdList[]") List<String> planCdList) {
-	    try {
-	        return "success";
-	    } catch (Exception e) {
-	        // 실패시 error 문자열 반환
-	        return "error";
+	public String deleteProPlan(@RequestBody List<String> planCdList) {
+		String result = null;
+
+	    for(String planCd : planCdList) {
+	        result = proService.removePlan(planCd);
 	    }
+
+	    return result;
+	}
+	
+	//생산계획 수정
+	@PostMapping("/updateProPlan")
+	@ResponseBody
+	public Map<String, Object> updateProPlan(@RequestBody ProPlanVO[] voArr) {
+		Map<String, Object> resultMap = new HashMap<>();
+	    for (int i = 0; i < voArr.length; i++) {
+	    	resultMap.put("result", proService.modifyProPlan(voArr[i]));
+	    }
+
+	    return resultMap;
 	}
 
 	

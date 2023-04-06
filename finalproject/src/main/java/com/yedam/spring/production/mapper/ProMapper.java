@@ -23,4 +23,8 @@ public interface ProMapper {
 
 	public List<ProPlanVO> selectProPlans(Criteria cri);
 
+	public int deleteProPlan(String planCd);
+
+	public int updateProPlan(ProPlanVO vo);
+
 }

@@ -14,7 +14,7 @@ h5 {
 	float: left;
 }
 
-#btnGrp {
+.btnGrp {
 	float: right;
 	padding: 20px 0 15px 0;
 }
@@ -30,6 +30,17 @@ form {
 table {
 	text-align: center;
 }
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 </style>
 </head>
 <body>
@@ -37,12 +48,11 @@ table {
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">생산계획페이지</h5>
-			<div id="btnGrp">
+			<div class="btnGrp">
 				<button id="orderSheetBtn" type="button" class="btn btn-primary"
 					data-bs-toggle="modal" data-bs-target="#orderSheet">주문서</button>
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 					data-bs-target="#createPlan">계획등록</button>
-				<button id="deleteList" type="button" class="btn btn-primary">삭제</button>
 			</div>
 			<!-- Multi Columns Form -->
 			<form class="row g-3">
@@ -76,7 +86,11 @@ table {
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">생산계획조회</h5>
-
+			<div class="btnGrp">
+				<button id="deleteList" type="button" class="btn btn-primary">계획취소</button>
+				<button id="updateList" type="button" class="btn btn-primary">계획수정</button>
+				<button id="updateComplete" type="button" class="btn btn-primary">수정완료</button>
+			</div>
 			<!-- Table with hoverable rows -->
 			<table class="table table-hover">
 				<thead>
@@ -123,6 +137,33 @@ table {
 					</c:forEach>
 				</tbody>
 			</table>
+			<div class='pull-right'>
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						<c:if test="${pageMaker.prev }">
+							<li class="page-item"><a class="page-link"
+								href="${pageMaker.startPage -1}">Prev</a></li>
+						</c:if>
+						<c:forEach var="num" begin="${pageMaker.startPage }"
+							end="${pageMaker.endPage }">
+							<li class="page-item"
+								${pageMaker.cri.pageNum == num ? "active":"" }><a
+								class="page-link" href="${num }">${num }</a></li>
+						</c:forEach>
+						<c:if test="${pageMaker.next }">
+							<li class="page-item"><a class="page-link"
+								href="${pageMaker.endPage +1}">next</a></li>
+						</c:if>
+					</ul>
+				</nav>
+			</div>
+			<!-- 해당 페이지 클릭시 페이지번호와 가져올 데이터 개수(default 10개) -->
+			<form action="${pageContext.request.contextPath }/productionPlan"
+				id='actionForm' method='get'>
+				<input type="hidden" name="pageNum"
+					value="${pageMaker.cri.pageNum }"> <input type="hidden"
+					name="amout" value="${pageMaker.cri.amount }">
+			</form>
 			<!-- End Table with hoverable rows -->
 
 		</div>
@@ -187,7 +228,7 @@ table {
 							<label class="form-label">제품명</label> <input type="text"
 								class="form-control" name="prdtNm" id="prdtNm" value="">
 							<input type="hidden" class="form-control" id="edctsCd"
-								name="edctsCd" value="" readonly>
+								name="edctsCd" readonly>
 						</div>
 						<div class="col-md-12">
 							<label class="form-label">거래처명</label> <input type="text"
@@ -208,7 +249,7 @@ table {
 						</div>
 						<hr>
 						<h5 class="modal-title">생산계획</h5>
-						<input type="hidden" class="form-control" name="nowSt" value="미진행"
+						<input type="hidden" class="form-control" name="nowSt" value="미지시"
 							readonly>
 						<div class="col-md-6">
 							<label class="form-label">생산계획코드</label> <input type="text"
@@ -221,7 +262,7 @@ table {
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">생산계획일자</label> <input type="date"
-								class="form-control" name="planDt" id="currentDate" readonly>
+								class="form-control" id="currentDate" readonly>
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">생산시작 예정일</label> <input type="date"
@@ -277,6 +318,19 @@ table {
 	<!-- End Modal Dialog Scrollable-->
 </body>
 <script>
+	//페이징 이동
+	$(document).ready(function() {
+		var actionForm = $("#actionForm");
+		
+		$(".page-item a").on("click", function(e) {
+			//a 태그 클릭시 이벤트 방지
+			e.preventDefault();
+			//페이징 버튼의 속성값을 form태그의 input값에 입력
+			actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+			//페이징 이동 form 실행
+			actionForm.submit();
+		})
+	})
 	/* 메세지 체크 */
 	function printAlert(message) {
 		if(message == null || message == "") return	;		
@@ -346,6 +400,8 @@ table {
 				    
 				    tbody.append(row); 
 				  })
+				  // 모달 창 열기
+				  $('#orderSheet').modal('show');
 			  },
 			  error: function(xhr, status, error) {
 			    // 요청이 실패했을 때 처리할 로직
@@ -465,31 +521,103 @@ table {
     //삭제버튼 
 	$(document).ready(function() {
 	  $("#deleteList").on("click", function() {
-	    // 체크된 행의 hiddenPlanCd 값을 저장할 배열을 선언합니다.
+		if (!confirm("선택한 항목을 삭제하시겠습니까?")){
+			return;
+		}
 	    var planCdList = [];
-	    // 체크된 체크박스 요소들을 가져옵니다.
 	    $("#proPlanChk input[type='checkbox']:checked").each(function() {
-	      // 체크된 체크박스 요소의 부모인 tr 요소를 찾아 hiddenPlanCd 값을 가져옵니다.
 	      var planCd = $(this).closest("tr").find("#hiddenPlanCd").text();
-	      // 가져온 hiddenPlanCd 값을 배열에 추가합니다.
 	      planCdList.push(planCd);
 	    });
 	
 	    // 스프링 컨트롤러에 Ajax 요청을 보냅니다.
 	    $.ajax({
-	      type: "POST",
-	      url: "deletePlan", // 스프링 컨트롤러의 URL
-	      data: JSON.stringify(planCdList), // hiddenPlanCd 값을 전송합니다.
-	      contentType: "application/json",
-	      success: function(data) {
-	        // 삭제가 성공하면 테이블에서 체크된 행을 삭제합니다.
-	        $("#proPlanChk input[type='checkbox']:checked").closest("tr").remove();
-	      },
-	      error: function(jqXHR, textStatus, errorThrown) {
-	        // 삭제가 실패하면 오류 메시지를 출력합니다.
-	        console.log(textStatus + ": " + errorThrown);
-	      }
+	    	url: "deletePlan",
+	        type: "POST",
+	        data: JSON.stringify(planCdList), 
+	        contentType: "application/json",
+	        success: function(data) {
+	        	console.log(data);
+	        	if(data == "success"){	        		
+	            	$("#proPlanChk input[type='checkbox']:checked").closest("tr").remove();
+	        	} else {
+	        		alert('success까진 옴');
+	        	}
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	            console.log(textStatus + ": " + errorThrown);
+	        }
 	    });
+	  });
+	});
+    
+    //수정 
+    $(document).ready(function() {
+      $("#updateComplete").hide(); 	
+    	
+	  $("#updateList").on("click", function() {
+	    // 체크된 tr 태그의 td들을 input 태그로 변경
+	    $("table").find("tr").each(function() {
+	      if ($(this).find("td").eq(2).find("input[type='checkbox']").prop("checked")) {
+	        $(this).find("td").eq(4).html("<input type='text' name='planName' value='" + $(this).find("td").eq(4).text() + "'>");
+	        $(this).find("td").eq(6).html("<input type='text' name='prdtNm' value='" + $(this).find("td").eq(6).text() + "'>");
+	        $(this).find("td").eq(7).html("<input type='text' style='width:90px;' name='orderCnt' value='" + $(this).find("td").eq(7).text() + "'>");
+	        $(this).find("td").eq(9).html("<input type='date' name='paprdDt' value='" + $(this).find("td").eq(9).text() + "'>");
+	        $(this).find("td").eq(10).html("<input type='date' name='wkToDt' value='" + $(this).find("td").eq(10).text() + "'>");
+	      }	
+	    });
+	    $(this).hide();
+	    $("#updateComplete").show();
+	  });
+	  
+	  $("#updateComplete").on("click", function() {
+		  // 데이터를 저장할 배열 선언
+	      var dataArr = [];
+
+	      // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
+		  $("table").find("tr").each(function() {
+			  if ($(this).find("td").eq(2).find("input[type='checkbox']").prop("checked")) {
+				var planCd =  $(this).find("td").eq(0).html(); 
+				var planName =  $(this).find("td").eq(4).find("input").val().trim();
+				var prdtNm =  $(this).find("td").eq(6).find("input").val().trim();
+				var orderCnt =  $(this).find("td").eq(7).find("input").val().trim();
+				var paprdDt =  $(this).find("td").eq(9).find("input").val().trim();
+				var wkToDt =  $(this).find("td").eq(10).find("input").val().trim();
+				
+				// 객체 형식으로 데이터 저장
+		        var dataObj = {
+		        		planCd : planCd,
+		        		planName : planName,
+		        		prdtNm : prdtNm,
+		        		orderCnt : orderCnt,
+		        		paprdDt : paprdDt,
+		        		wkToDt : wkToDt
+		        }
+		     // 데이터 배열에 객체 추가
+		        dataArr.push(dataObj);
+		      }
+		  });
+		/* 수정 통신 */
+	  $.ajax({
+	        url: "updateProPlan",
+	        method: "POST",
+	        headers: { "Content-Type": "application/json" },
+	        data: JSON.stringify(dataArr),
+	        success: function (data) {
+	        	if (data == "success") {
+		  	      	$(this).find("td").eq(4).html($(this).find("td").eq(4).find("input").val());
+				    $(this).find("td").eq(6).html($(this).find("td").eq(6).find("input").val());
+				    $(this).find("td").eq(7).html($(this).find("td").eq(7).find("input").val());
+				    $(this).find("td").eq(9).html($(this).find("td").eq(9).find("input").val());
+				    $(this).find("td").eq(10).html($(this).find("td").eq(10).find("input").val());
+				    $(this).hide();
+				  $("#updateList").show(); 	  
+	        	}
+	        },
+	        error: function (reject) {
+	          console.log(reject);
+	        },
+	      });
 	  });
 	});
 </script>

@@ -67,8 +67,25 @@ public class ProServiceImpl implements ProService {
 	}
 
 	@Override
-	public int removeProPlan() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String removePlan(String planCd) {
+		String result = null;
+		if(proMapper.deleteProPlan(planCd) > 0) {
+			result ="success";
+		} else {
+			result ="fail";
+		}
+		return result;
 	}
+
+	@Override
+	public String modifyProPlan(ProPlanVO vo) {
+		String result = null;
+		if(proMapper.updateProPlan(vo) > 0) {
+			result ="success";
+		} else {
+			result ="fail";
+		}
+		return result;
+	}
+
 }

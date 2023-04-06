@@ -15,7 +15,14 @@
 	</select>
   	<!-- 생산계획 등록 -->
   	<insert id="InsertNewPlan" parameterType="ProPlanVO">
-  		BEGIN		
+  		BEGIN
+  			<if test="edctsCd == null or edctsCd.equals('')">
+  			SELECT 	edcts_cd
+  			INTO	#{edctsCd}
+  			FROM 	edcts
+  			WHERE	prdt_nm = #{prdtNm};
+  			</if>
+  				
   			<!-- 생산계획테이블 -->
   			INSERT INTO plan (plan_cd,
   							  plan_name,
@@ -30,7 +37,7 @@
   							  #{planName},
   							  #{paprdDt},
   							  #{nowSt},
-  							  #{planDt},
+  							  sysdate,
   							  <if test="orderNo != null and !orderNo.equals('')">
   							  #{orderNo}
   							  </if>
@@ -64,8 +71,8 @@
 	  		  AND	edcts_cd = #{edctsCd};
 	  		</if>
   		END;
-  		
   	</insert>
+  	
   	<!-- 미지시 주문서 조회 -->
   	<select id="selectOrderSheet" resultType="OrderSheetVO">
   		SELECT order_no,
@@ -131,9 +138,38 @@
 						d.prdt_nm
 				   FROM	plan p, plan_dtl d
 				  WHERE	p.plan_cd = d.plan_cd
+				    AND p.now_st IN ('미지시', '지시완료', '생산완료')
 				    AND rownum <= #{pageNum} * #{amount})
 		WHERE rn > (#{pageNum}-1)* #{amount}
 		ORDER BY plan_dt
 	]]>
 	</select>
+	
+	<update id="deleteProPlan" parameterType="String">
+	  		UPDATE 	plan
+	  		SET	 	now_st = '계획취소'
+	  		WHERE	plan_cd = #{planCd}
+	</update>
+	
+	<!-- 생산 계획 수정 -->
+	<update id="updateProPlan" parameterType="ProPlanVO">
+		BEGIN
+		  	SELECT 	edcts_cd
+  			INTO	#{edctsCd}
+  			FROM 	edcts
+  			WHERE	prdt_nm = #{prdtNm};
+		
+	  		UPDATE 	plan
+	  		SET	 	plan_dt = sysdate,
+	  				plan_name = #{planName} 
+	  		WHERE	plan_cd = #{planCd};
+	  		
+	  		UPDATE 	plan_dtl
+	  		SET	 	order_cnt =  #{orderCnt},
+	  				wk_to_dt = #{wkToDt},
+	  				prdt_nm = #{prdtNm},
+	  				edcts_cd = #{edctsCd}
+	  		WHERE	plan_cd = #{planCd};
+	  	END;	
+	</update>
   </mapper>
