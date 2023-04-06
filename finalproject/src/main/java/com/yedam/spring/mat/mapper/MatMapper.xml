@@ -2,14 +2,14 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <!-- 연결할 인터 페이스 경로 -->  
+<!-- 연결할 인터 페이스 경로 -->
 <mapper namespace="com.yedam.spring.mat.mapper.MatMapper">
 	<!-- 전체 개수 -->
 	<select id="selectMatAllList" resultType="int">
 		SELECT COUNT(*)
 		FROM rsc
 	</select>
-	<!-- 전체 조회 + 페이징-->
+	<!-- 전체 조회 + 페이징 -->
 	<select id="selectMatAllListWithPageing" resultType="MatVO">
 	<![CDATA[
 		SELECT 	rsc_cd,
@@ -32,81 +32,87 @@
 						FROM 	rsc	
 						WHERE	rownum <= #{pageNum} * #{amount})
 		WHERE rn > (#{pageNum}-1)* #{amount}	
-		ORDER BY rsc_cd
+		ORDER BY rsc_cd DESC
 	]]>
 	</select>
-	
+
 	<!-- 단건 조회 -->
-	<select id="selectEmpInfo" resultType="EmpVO">
-		SELECT employee_id,
-				first_name,
-				last_name,
-				email,
-				phone_number,
-				hire_date,
-				job_id,
-				salary,
-				commission_pct,
-				manager_id,
-				department_id
-		FROM 	employees
-		WHERE	employee_id = #{employeeId}
-		<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌 
-			${} : 타입 변경 없이 있는 그대로 집어 넣음-->
+	<select id="selectMatInfo" resultType="MatVO">
+	SELECT rsc_cd,
+		   rsc_nm,
+		   rsc_spec,
+		   mng_unit,
+		   rsc_typ,
+		   saf_stc,
+		   use_yn,
+		   vend_cd
+     WHERE rsc_cd = #{rscCd} -->
+	<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌
+	${} : 타입 변경 없이 있는그대로 집어 넣음-->
 	</select>
 	<!-- 등록 -->
-	<insert id="insertEmpInfo" parameterType="EmpVO">
-		<selectKey keyProperty="employeeId" resultType="int" order="BEFORE">
-			SELECT NVL(MAX(employee_id),0) + 1 FROM employees
-		</selectKey>
-		INSERT INTO employees (
-				employee_id,
-				first_name,
-				last_name,
-				email,
-				hire_date,
-				job_id,
-				salary
-				)
+	<insert id="insertMatInfo" parameterType="MatVO">
+		INSERT INTO rsc (
+		rsc_cd,
+		rsc_nm,
+		rsc_spec,
+		mng_unit,
+		rsc_typ,
+		saf_stc,
+		use_yn,
+		vend_cd
+		)
 		VALUES (
-				#{employeeId},
-				#{firstName},
-				#{lastName},
-				#{email},
-				sysdate,
-				#{jobId},
-				#{salary}
-				)
+		'RSC${rscCd}',
+		#{rscNm},
+		#{rscSpec},
+		#{mngUnit},
+		#{rscTyp},
+		#{safStc},
+		#{useYn},
+		#{vendCd}
+		)
 	</insert>
+	<!-- #은 타입에 따라서 숫자면 ''가 안 붙고 문자면 ''가 붙는데
+	$는 타입상관없이 앞에것에 붙도록 한다.-->
 	
-	<!-- 수정 : 급여를 정해진 비율로 인상 
-		 2개의 다른 타입의 매개변수를 사용할 경우 parameterType 생략-->
-	<update id="updateEmpSal">
-		UPDATE 	employees
-		SET		salary = salary * (1+ #{raise}/100)
-		WHERE 	employee_id = #{empId}
+	<!-- 수정 : 급여를 정해진 비율로 인상 2개의 다른 타입의 매개변수를 사용할 경우 parameterType 생략 -->
+	<!-- <update id="updateEmpSal"> UPDATE employees SET salary = salary * (1+ 
+		#{raise}/100) WHERE employee_id = #{empId} </update> -->
+	<!-- 수정 : 자재정보 수정 -->
+	<update id="updateMatInfo" parameterType="MatVO">
+		UPDATE rsc
+		<set>
+			<if test="rscCd != null and !rscCd.equals('')">
+				rsc_cd = #{rscCd},
+			</if>
+			<if test="rscNm != null and !rscNm.equals('')">
+				rsc_nm = #{rscNm},
+			</if>
+			<if test="rscSpec != null and !rscSpec.equals('')">
+				rsc_spec = #{rscSpec},
+			</if>
+			<if test="rscTyp != null and !rscTyp.equals('')">
+				rsc_typ = #{rscTyp},
+			</if>
+			<if test="safStc > 0">
+				saf_stc = #{safStc}
+			</if>
+			<if test="useYn != null and !useYn.equals('')">
+				use_yn = #{useYn},
+			</if>
+			<if test="vendCd != null and !vendCd.equals('')">
+				vend_cd = #{vendCd},
+			</if>
+
+		</set>
+		WHERE rsc_cd = #{rscCd}
 	</update>
-	<!-- 수정 : 사원정보 수정 -->
-	<update id="updateEmpInfo" parameterType="EmpVO">
-		UPDATE 	employees
-		<set>		
-				<if test="firstName != null and !firstName.equals('')">
-					first_name = #{firstName},
-			    </if>
-			    <if test="email != null and !email.equals('')">
-			    	email = #{email},
-			    </if>
-			    <if test="salary > 0">
-			    	salary = #{salary}
-			    </if>		
-		</set>		
-		WHERE 	employee_id = #{employeeId}
-	</update>
-	
+
 	<delete id="deleteEmpInfo" parameterType="int">
 		DELETE FROM employees
-		WHERE  employee_id = #{employeeId}
+		WHERE employee_id = #{employeeId}
 	</delete>
-	
-	
+
+
 </mapper>
