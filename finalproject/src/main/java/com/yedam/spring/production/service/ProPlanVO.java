@@ -27,4 +27,6 @@ public class ProPlanVO {
 	private	Date wkToDt;	//생산시작예정일자
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date wkFrDt;	//생산종료일자
+	
+	private String prdtNm;	//제품명
 }

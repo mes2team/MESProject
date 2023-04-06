@@ -1,6 +1,7 @@
 package com.yedam.spring.production.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.yedam.spring.common.Criteria;
+import com.yedam.spring.common.PageDTO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.ProPlanVO;
 import com.yedam.spring.production.service.ProService;
@@ -22,9 +28,12 @@ public class ProController {
 	ProService proService;
 	//생산계획 페이지 이동
 	@GetMapping("/productionPlan")
-	public String proPlanPage(Model model) {
+	public String proPlanPage(Criteria cri,Model model) {
 		model.addAttribute("nextPlanCd",proService.getNextPlanCd());
 		model.addAttribute("bomInfo", proService.getBomInfo());
+		int total = proService.getProPlanCnt();
+		model.addAttribute("ProPlans",proService.getProPlans(cri));
+		model.addAttribute("pageMaker",new PageDTO(cri,total));
 		return"production/productionplan";
 	}
 	// 생산계획 등록처리
@@ -59,4 +68,20 @@ public class ProController {
 	    resultMap.put("BomRscInfo", proService.getBomRscInfo(vo));
 		return resultMap;
 	}
+	
+	//생산계획삭제
+	@PostMapping("/deleteProPlan")
+	@ResponseBody
+	public String deleteProPlan(@RequestParam(value = "planCdList[]") List<String> planCdList) {
+	    try {
+	        return "success";
+	    } catch (Exception e) {
+	        // 실패시 error 문자열 반환
+	        return "error";
+	    }
+	}
+
+	
+
+
 }

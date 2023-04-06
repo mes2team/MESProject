@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yedam.spring.common.Criteria;
 import com.yedam.spring.production.mapper.ProMapper;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -53,5 +54,21 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public List<BomVO> getBomRscInfo(BomVO vo) {
 		return proMapper.selectBomRscInfo(vo);
+	}
+
+	@Override
+	public int getProPlanCnt() {
+		return proMapper.selectProPlanCnt();
+	}
+
+	@Override
+	public List<ProPlanVO> getProPlans(Criteria cri) {
+		return proMapper.selectProPlans(cri);
+	}
+
+	@Override
+	public int removeProPlan() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

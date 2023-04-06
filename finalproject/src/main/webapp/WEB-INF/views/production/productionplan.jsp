@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +26,10 @@ form {
 .addBtn {
 	background-color: #0d6efd;
 }
+
+table {
+	text-align: center;
+}
 </style>
 </head>
 <body>
@@ -37,7 +42,7 @@ form {
 					data-bs-toggle="modal" data-bs-target="#orderSheet">주문서</button>
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 					data-bs-target="#createPlan">계획등록</button>
-				<button type="button" class="btn btn-primary">삭제</button>
+				<button id="deleteList" type="button" class="btn btn-primary">삭제</button>
 			</div>
 			<!-- Multi Columns Form -->
 			<form class="row g-3">
@@ -70,57 +75,52 @@ form {
 	<!-- 테이블 영역 -->
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title">Table with hoverable rows</h5>
+			<h5 class="card-title">생산계획조회</h5>
 
 			<!-- Table with hoverable rows -->
 			<table class="table table-hover">
 				<thead>
 					<tr>
 						<th scope="col"><input type="checkbox"></th>
-						<th scope="col">생산계획코드</th>
+						<th scope="col">생산계획일자</th>
+						<th scope="col">생산계획명</th>
 						<th scope="col">주문번호</th>
 						<th scope="col">제품명</th>
-						<th scope="col">생산지시수량</th>
-						<th scope="col">생산시작예정일자</th>
+						<th scope="col">주문수량</th>
+						<th scope="col">현재상황</th>
 						<th scope="col">납기일자</th>
+						<th scope="col">생산시작예정일자</th>
+						<th scope="col">생산종료일자</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<th scope="row">1</th>
-						<td>Brandon Jacob</td>
-						<td>Designer</td>
-						<td>28</td>
-						<td>2016-05-25</td>
-					</tr>
-					<tr>
-						<th scope="row">2</th>
-						<td>Bridie Kessler</td>
-						<td>Developer</td>
-						<td>35</td>
-						<td>2014-12-05</td>
-					</tr>
-					<tr>
-						<th scope="row">3</th>
-						<td>Ashleigh Langosh</td>
-						<td>Finance</td>
-						<td>45</td>
-						<td>2011-08-12</td>
-					</tr>
-					<tr>
-						<th scope="row">4</th>
-						<td>Angus Grady</td>
-						<td>HR</td>
-						<td>34</td>
-						<td>2012-06-11</td>
-					</tr>
-					<tr>
-						<th scope="row">5</th>
-						<td>Raheem Lehner</td>
-						<td>Dynamic Division Officer</td>
-						<td>47</td>
-						<td>2011-04-19</td>
-					</tr>
+				<tbody id="proPlanChk">
+					<c:forEach var="item" items="${ProPlans}">
+						<tr>
+							<td id="hiddenPlanCd" hidden=true>${item.planCd }</td>
+							<td hidden=true>${item.edctsCd }</td>
+							<td><input type="checkbox"></td>
+							<td><fmt:formatDate value="${item.planDt }"
+									pattern="yyyy-MM-dd" /></td>
+							<td>${item.planName }</td>
+							<td>${item.orderNo }</td>
+							<td>${item.prdtNm }</td>
+							<td>${item.orderCnt }</td>
+							<td>${item.nowSt }</td>
+							<td><fmt:formatDate value="${item.paprdDt }"
+									pattern="yyyy-MM-dd" /></td>
+							<td><fmt:formatDate value="${item.wkToDt }"
+									pattern="yyyy-MM-dd" /></td>
+							<c:choose>
+								<c:when test="${empty item.wkFrDt}">
+									<td>-</td>
+								</c:when>
+								<c:otherwise>
+									<td><fmt:formatDate value="${item.wkFrDt}"
+											pattern="yyyy-MM-dd" /></td>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</c:forEach>
 				</tbody>
 			</table>
 			<!-- End Table with hoverable rows -->
@@ -139,17 +139,6 @@ form {
 						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form class="row g-3">
-						<div class="col-md-6">
-							<label for="inputEmail5" class="form-label">Email</label> <input
-								type="email" class="form-control" id="inputEmail5">
-						</div>
-						<div class="col-md-6">
-							<label for="inputPassword5" class="form-label">Password</label> <input
-								type="password" class="form-control" id="inputPassword5">
-						</div>
-					</form>
-					<hr>
 					<table class="table table-hover">
 						<thead>
 							<tr>
@@ -164,8 +153,6 @@ form {
 							</tr>
 						</thead>
 						<tbody id=ordSheetTable>
-							<tr>
-							</tr>
 						</tbody>
 					</table>
 					<!-- End Multi Columns Form -->
@@ -193,14 +180,14 @@ form {
 						<h5 class="modal-title">주문서 정보</h5>
 						<div class="col-md-6">
 							<label class="form-label">주문번호</label> <input type="text"
-								class="form-control" id="orderNo" name="orderNo" value=""
+								class="form-control" id="orderNo" name="orderNo" value="PLN9000"
 								readonly>
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">제품명</label> <input type="text"
-								class="form-control" id="prdtNm" value=""> <input
-								type="hidden" class="form-control" id="edctsCd" name="edctsCd"
-								value="" readonly>
+								class="form-control" name="prdtNm" id="prdtNm" value="">
+							<input type="hidden" class="form-control" id="edctsCd"
+								name="edctsCd" value="" readonly>
 						</div>
 						<div class="col-md-12">
 							<label class="form-label">거래처명</label> <input type="text"
@@ -213,13 +200,11 @@ form {
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">납기일자</label> <input type="date"
-								class="form-control" id="paprdDt" name="paprdDt" value=""
-								readonly>
+								class="form-control" id="paprdDt" name="paprdDt" value="">
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">주문수량</label> <input type="text"
-								class="form-control" id="orderCnt" name="orderCnt" value=""
-								readonly>
+								class="form-control" id="orderCnt" name="orderCnt" value="">
 						</div>
 						<hr>
 						<h5 class="modal-title">생산계획</h5>
@@ -246,7 +231,7 @@ form {
 							<label class="form-label">BOM선택</label> <select id="bomSelect"
 								name="bomCd" class="form-select"
 								aria-label="Default select example">
-								<option selected>BOM선택</option>
+								<option disabled selected>BOM선택</option>
 								<c:forEach var="item" items="${bomInfo}">
 									<option data-cd="${item.edctsCd }" value="${item.bomCd}">${item.bomCd}/
 										${item.standard}</option>
@@ -446,5 +431,66 @@ form {
 	  });
 	});
 
+	/* 체크박스 연결 */
+	// tbody의 체크박스
+    const tbodyCheckbox = document.querySelectorAll('#proPlanChk input[type="checkbox"]');
+    // thead의 체크박스
+    const theadCheckbox = document.querySelector('th input[type="checkbox"]');
+
+    // tbody의 체크박스의 상태를 모니터링하여 thead의 체크박스 상태를 변경
+    function updateTheadCheckbox() {
+        // tbody의 체크박스 중 하나라도 체크가 안되어 있으면 thead의 체크박스를 체크 해제
+        if ([...tbodyCheckbox].some((checkbox) => !checkbox.checked)) {
+            theadCheckbox.checked = false;
+        } else {
+            // tbody의 체크박스가 모두 체크 되어 있으면 thead의 체크박스를 체크
+            theadCheckbox.checked = true;
+        }
+    }
+
+    // tbody의 체크박스를 클릭할 때마다 thead의 체크박스 상태 업데이트
+    tbodyCheckbox.forEach((checkbox) => {
+        checkbox.addEventListener('click', () => {
+            updateTheadCheckbox();
+        });
+    });
+
+    // thead의 체크박스를 클릭할 때마다 tbody의 체크박스 상태 업데이트
+    theadCheckbox.addEventListener('click', () => {
+        tbodyCheckbox.forEach((checkbox) => {
+            checkbox.checked = theadCheckbox.checked;
+        });
+    });
+    
+    //삭제버튼 
+	$(document).ready(function() {
+	  $("#deleteList").on("click", function() {
+	    // 체크된 행의 hiddenPlanCd 값을 저장할 배열을 선언합니다.
+	    var planCdList = [];
+	    // 체크된 체크박스 요소들을 가져옵니다.
+	    $("#proPlanChk input[type='checkbox']:checked").each(function() {
+	      // 체크된 체크박스 요소의 부모인 tr 요소를 찾아 hiddenPlanCd 값을 가져옵니다.
+	      var planCd = $(this).closest("tr").find("#hiddenPlanCd").text();
+	      // 가져온 hiddenPlanCd 값을 배열에 추가합니다.
+	      planCdList.push(planCd);
+	    });
+	
+	    // 스프링 컨트롤러에 Ajax 요청을 보냅니다.
+	    $.ajax({
+	      type: "POST",
+	      url: "deletePlan", // 스프링 컨트롤러의 URL
+	      data: JSON.stringify(planCdList), // hiddenPlanCd 값을 전송합니다.
+	      contentType: "application/json",
+	      success: function(data) {
+	        // 삭제가 성공하면 테이블에서 체크된 행을 삭제합니다.
+	        $("#proPlanChk input[type='checkbox']:checked").closest("tr").remove();
+	      },
+	      error: function(jqXHR, textStatus, errorThrown) {
+	        // 삭제가 실패하면 오류 메시지를 출력합니다.
+	        console.log(textStatus + ": " + errorThrown);
+	      }
+	    });
+	  });
+	});
 </script>
 </html>

@@ -43,7 +43,8 @@
 	  							  <if test="orderCnt != null and !orderCnt.equals('')">
 	  							  order_cnt,
 	  							  </if>
-	  							  wk_to_dt
+	  							  wk_to_dt,
+	  							  prdt_nm
 	  							  )
 	  					VALUES	 (#{planCd},
 	  							  #{prefRank},
@@ -52,8 +53,16 @@
 	  							  <if test="orderCnt != null and !orderCnt.equals('')">
 	  							  #{orderCnt},
 	  							  </if>
-	  							  #{wkToDt}
+	  							  #{wkToDt},
+	  							  #{prdtNm}
 	  							  );
+			<if test="orderNo != null and !orderNo.equals('')">
+	  		<!-- 주문서 상태 변경 -->
+	  		UPDATE 	order_sheet
+	  		SET	 	prog_appe = '계획완료'
+	  		WHERE	order_no = #{orderNo}
+	  		  AND	edcts_cd = #{edctsCd};
+	  		</if>
   		END;
   		
   	</insert>
@@ -87,4 +96,44 @@
 		  AND 	b.prcs_cd = p.prcs_cd 
 		  AND 	bom_cd = #{bomCd}
   	</select>
+  	
+  	<!-- 생산계획 총개수 -->
+  	<select id="selectProPlanCnt" resultType="int">
+  		SELECT 	COUNT(plan_cd)
+  		FROM	plan
+  	</select>
+  	
+  		<!-- 생산계획 조회 + 페이징-->
+	<select id="selectProPlans" resultType="ProPlanVO">
+	<![CDATA[
+		SELECT 	plan_cd,
+				plan_name,
+				paprd_dt,
+				now_st,
+				plan_dt,
+				order_no,
+				pref_rank,
+				edcts_cd,
+				order_cnt,
+				wk_to_dt,
+				prdt_nm
+		FROM 	(SELECT	rownum rn,
+						p.plan_cd,
+						p.plan_name,
+						p.paprd_dt,
+						p.now_st,
+						p.plan_dt,
+						p.order_no,
+						d.pref_rank,
+						d.edcts_cd,
+						d.order_cnt,
+						d.wk_to_dt,
+						d.prdt_nm
+				   FROM	plan p, plan_dtl d
+				  WHERE	p.plan_cd = d.plan_cd
+				    AND rownum <= #{pageNum} * #{amount})
+		WHERE rn > (#{pageNum}-1)* #{amount}
+		ORDER BY plan_dt
+	]]>
+	</select>
   </mapper>
