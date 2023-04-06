@@ -113,13 +113,13 @@
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Chart.js</span>
+            <a href="eqm">
+              <i class="bi bi-circle"></i><span>설비관리</span>
             </a>
           </li>
           <li>
-            <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+            <a href="eqmCheck">
+              <i class="bi bi-circle"></i><span>설비점검내역</span>
             </a>
           </li>
           <li>
