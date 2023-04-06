@@ -182,15 +182,15 @@ uri="http://www.springframework.org/security/tags"%>
           <!-- End Modal Dialog Scrollable-->
           <div class="col-md-4">
             <label for="inputEmail5" class="form-label">거래처 코드</label>
-            <input type="email" class="form-control" id="inputVendCd" />
+            <input type="text" class="form-control" id="inputVendCd" />
           </div>
           <div class="col-md-4">
             <label for="inputEmail5" class="form-label">거래처 명</label>
-            <input type="email" class="form-control" id="inputVendNm" />
+            <input type="text" class="form-control" id="inputVendNm" />
           </div>
           <div class="col-md-4">
             <label for="inputEmail5" class="form-label">거래처 담당자</label>
-            <input type="email" class="form-control" id="inputVendMag" />
+            <input type="text" class="form-control" id="inputVendMag" />
           </div>
           <div class="text-center">
             <button type="button" class="btn btn-primary" id="searchVend">

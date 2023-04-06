@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yedam.spring.order.mapper.OrderMapper">
+	<!-- 전체조회 -->
+	<select id="selectOrderList" resultType="OrderSheetVO">
+		SELECT 	order_no,
+				order_dt,
+				vend_cd,
+				vend_nm,
+				prog_appe,
+				paprd_dt,
+				order_nm
+		FROM	order_sheet_test
+		ORDER BY order_no
+	</select>
+	
+	<!-- 주문번호 조회 -->
+	<select id="selectOrderNo" resultType="OrderSheetVO">
+		SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1) as orderNo
+		FROM 	order_sheet_test
+	</select>
+</mapper>

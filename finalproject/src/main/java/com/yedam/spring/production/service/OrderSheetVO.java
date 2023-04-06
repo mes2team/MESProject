@@ -20,4 +20,6 @@ public class OrderSheetVO {
 	private String prdtNm;
 	private int orderCnt;
 	
+	private String orderPno;
+	private String orderNm;
 }
