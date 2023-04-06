@@ -7,7 +7,7 @@
 <html>
 <head>
 <link rel="stylesheet"
-	href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css" />
+	href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
 <script
 	src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 <script>
@@ -19,6 +19,17 @@
         });
     </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+
+<!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
 <meta charset="UTF-8">
 <title>Material List</title>
 <style>
@@ -48,12 +59,11 @@ table, tr, th, td {
 			<!-- 자재 등록 -->
 			<!-- ============================================================== -->
 			<div class="card">
-				<h3 class="card-header" style="margin: 1px">자재등록</h3>
-				<div clas
+				<h3 class="card-header">자재등록</h3>
+				<div class>
 					<!-- Multi Columns Form -->
 					<form class="row g-3" name="insertForm" action="matInsert"
 						method="post" onsubmit="return false">
-						<hr style="margin: 1px">
 
 
 						<div class="col-md-3">
@@ -133,10 +143,9 @@ table, tr, th, td {
 		<div class="row">
 			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 				<div class="card">
-					<h3 class="card-header" style="margin: 1px">자재목록</h3>
+					<h3 class="card-header">자재목록</h3>
 					<div class="card-body">
 						<div class="table-responsive">
-							<hr style="margin: 1px">
 							<table id="jaje" class="table table-striped table-bordered first">
 								<thead>
 									<tr>
@@ -167,13 +176,100 @@ table, tr, th, td {
 											<td>${mat.useYn }</td>
 											<td>${mat.vendCd }</td>
 											<sec:authorize access="hasRole('ROLE_ADMIN')">
-												<td><button type="button"
-														onclick="openModal('${mat.rscCd}')">수정</button></td>
+												<td><button type="button" class="btn btn-primary"
+														data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
+														수정</button></td>
 											</sec:authorize>
 										</tr>
 									</c:forEach>
 								</tbody>
 							</table>
+
+							<!-- Extra Large Modal -->
+							<div class="modal fade" id="ExtralargeModal" tabindex="-1">
+								<div class="modal-dialog modal-xl">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title">자재수정</h5>
+											<button type="button" class="btn-close"
+												data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<form class="row g-3" name="insertForm" action="matInsert"
+						method="post" onsubmit="return false" style="margin: 0px 5px 5px 5px;">
+
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">자재코드</label> RSC<input
+								type="text" class="form-control" id="rscCd" name="rscCd"
+								placeholder="숫자만 입력해주세요." required="">
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">자재명</label> <input
+								type="text" class="form-control" id="rscNm" name="rscNm"
+								placeholder="" required="">
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">자재규격</label> <select
+								class="form-control" id="rscSpec" name="rscSpec" required="">
+								<option value="none">=== 선택 ===</option>
+								<option value="KG">kg(킬로그램)</option>
+								<option value="L">L(리터)</option>
+							</select>
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">관리단위</label> <input
+								type="text" class="form-control" id="mngUnit" name="mngUnit"
+								value="BOX" readonly>
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">자재유형</label> <select
+								class="form-control" id="rscTyp" name="rscTyp" required="">
+								<option value="none">=== 선택 ===</option>
+								<option value="주원료">주원료</option>
+								<option value="첨가제">첨가제</option>
+								<option value="액상원료">액상원료</option>
+							</select>
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">안전재고</label> <input
+								type="text" class="form-control" id="safStc" name="safStc"
+								placeholder="숫자를 입력하세요." required="">
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">사용여부</label> <select
+								class="form-control" id="useYn" name="useYn" required="">
+								<option value="none">=== 선택 ===</option>
+								<option value="Yes">Yes</option>
+								<option value="No">No</option>
+							</select>
+						</div>
+
+						<div class="col-md-3">
+							<label for="country" class="form-label">거래처코드</label> <select
+								class="form-control" id="vendCd" name="vendCd" required="">
+								<option value="none">=== 선택 ===</option>
+								<option value="VEI1000">VEI1000</option>
+								<option value="VEI1001">VEI1001</option>
+							</select>
+						</div>
+					</form>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-primary">수정</button>
+											<button type="button" class="btn btn-secondary"
+												data-bs-dismiss="modal">취소</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- End Extra Large Modal-->
+
+
 							<!-- 6) 페이징 버튼 제작 -->
 							<div class='pull-right'>
 								<ul class="pagination">
@@ -211,45 +307,6 @@ table, tr, th, td {
 		<!-- ============================================================== -->
 
 
-		<!-- Optional JavaScript -->
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/multi-select/js/jquery.multi-select.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/libs/js/main-js.js"></script>
-		<script
-			src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/datatables/js/buttons.bootstrap4.min.js"></script>
-		<script
-			src="${pageContext.request.contextPath}/resources/static/assets/vendor/datatables/js/data-table.js"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-		<script
-			src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/rowgroup/1.0.4/js/dataTables.rowGroup.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-		<script
-			src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
 		<script>
 		//페이징 이동
 		$(document).ready(
