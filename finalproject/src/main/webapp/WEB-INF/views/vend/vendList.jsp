@@ -69,6 +69,7 @@ uri="http://www.springframework.org/security/tags"%>
                     class="form-control"
                     id="vendCd"
                     name="vendCd"
+                    style="background-color: #e9e9e9"
                     readonly
                   />
                 </div>
@@ -271,8 +272,6 @@ uri="http://www.springframework.org/security/tags"%>
       } else {
         $("#vendCd").val("");
       }
-
-      console.log($("select option:selected").val());
     });
 
     // 등록전에 체크
@@ -400,17 +399,14 @@ uri="http://www.springframework.org/security/tags"%>
         let vendCd = $("#inputVendCd").val().toUpperCase();
         let vendNm = $("#inputVendNm").val();
         let vendMag = $("#inputVendMag").val();
-        console.log("클릭");
 
         $.ajax({
           url: "searchVend",
           data: { vendCd: vendCd, vendNm: vendNm, vendMag: vendMag },
           success: function (result) {
-            console.log(result);
             $("tbody").empty();
 
             $.each(result, function (index, item) {
-              console.log(item);
               var $row = $("<tr>").attr("data-id", item.vendCd);
               $row.append(
                 $("<td>").html(
@@ -491,7 +487,6 @@ uri="http://www.springframework.org/security/tags"%>
           cancelButtonText: "취소",
         }).then((result) => {
           if (result.value) {
-            console.log(valueArr);
             $.ajax({
               url: "vendDelete",
               method: "post",
@@ -611,17 +606,56 @@ uri="http://www.springframework.org/security/tags"%>
         // 데이터 배열에 객체 추가
         dataArr.push(dataObj);
       });
-      console.log(dataArr);
 
       $.ajax({
         url: "updateVend",
         method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        data : JSON.stringify(dataArr),
+        headers: { "Content-Type": "application/json" },
+        data: JSON.stringify(dataArr),
         success: function (result) {
-          console.log(result);
+          if (result.result == "success") {
+            $("tbody").empty();
+            $(result.data).each(function (idx, item) {
+              var $row = $("<tr>").attr("data-id", item.vendCd);
+              $row.append(
+                $("<td>").html(
+                  '<input type="checkbox" name="chk" value="' +
+                    item.vendCd +
+                    '" />'
+                )
+              );
+              $row.append($("<td>").text(idx + 1));
+              $row.append($("<td>").text(item.vendTyp));
+              $row.append($("<td>").text(item.vendCd));
+              $row.append($("<td>").text(item.vendNm));
+              $row.append($("<td>").text(item.vendMag));
+              $row.append($("<td>").text(item.brNum));
+              $row.append($("<td>").text(item.vendTel));
+              $row.append($("<td>").text(item.remk));
+              $("tbody").append($row);
+            });
+            enableCheckBoxes();
+            $(".btn-info").text("수정");
+            $(".btn-info").removeAttr("onclick");
+            $(".btn-info").attr("onclick", "updateBtn();");
+          }
 
-          enableCheckBoxes();
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
+
+          Toast.fire({
+            icon: "success",
+            title: "수정이 정상적으로 되었습니다.",
+          });
         },
         error: function (reject) {
           console.log(reject);

@@ -84,15 +84,25 @@
 	<update id="updateVend">
 		UPDATE vend
 		<set>
-			vend_cd = #{vendCd},
-			vend_nm = #{vendNm},
-			br_num = #{brNum},
-			vend_tel = #{vendTel},
-			vend_mag = #{vendMag},
-			<if test="remk != null and !remk.equals('')">
-				remk = #{remk},
+			<if test="vendCd != null and !vendCd.equals('')">
+				vend_cd = #{vendCd},
 			</if>
-			vend_typ = #{vendTyp}
+			<if test="vendNm != null and !vendNm.equals('')">
+				vend_nm = #{vendNm},
+			</if>		
+			<if test="brNum != null and !brNum.equals('')">
+				br_num = #{brNum},
+			</if>
+			<if test="vendTel != null and !vendTel.equals('')">
+				vend_tel = #{vendTel},
+			</if>
+			<if test="vendMag != null and !vendMag.equals('')">
+				vend_mag = #{vendMag},
+			</if>
+			<if test="vendTyp != null and !vendTyp.equals('')">
+				vend_typ = #{vendTyp},
+			</if>
+			remk = #{remk}
 		</set>
 		WHERE vend_cd = #{vendCd}
 	</update>

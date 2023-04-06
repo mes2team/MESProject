@@ -1,6 +1,8 @@
 package com.yedam.spring.vend.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,13 +70,20 @@ public class VendController {
 	// 수정
 	@PostMapping("/updateVend")
 	@ResponseBody
-	public String updateVend(@RequestBody VendVO[] arr) {
+	public Map<String, Object> updateVend(@RequestBody VendVO[] arr) {
+		Map<String, Object> map = new HashMap<>();
 	    if (arr == null) {
-	        return "error";
+	    	map.put("result", "false");
+	    	map.put("data", null);
+	        return map;
 	    }
 	    for (int i = 0; i < arr.length; i++) {
 	        vendService.updateVend(arr[i]);
 	    }
-	    return "success";
+	    
+	    List<VendVO> list = vendService.getVendAll();
+	    map.put("result", "success");
+    	map.put("data", list);
+        return map;
 	}
 }
