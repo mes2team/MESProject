@@ -39,7 +39,7 @@ public class MatServiceImpl implements MatService {
 	@Override
 	public int insertMat(MatVO matVO) {
 		// 등록
-		return matMapper.insertEmpInfo(matVO);
+		return matMapper.insertMatInfo(matVO);
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class MatServiceImpl implements MatService {
 		
 		return map;
 	}
-
+	//삭제
 	@Override
 	public Map<String, String> deleteMat(String rscCd) {
 		Map<String, String> map = new HashMap<>();
