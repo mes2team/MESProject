@@ -46,5 +46,9 @@ public class EqmServiceImpl implements EqmService{
 	public List<EqmVO> selectCheckList() {
 		return mapper.selectCheckList();
 	}
+	@Override
+	public List<EqmVO> searchEqmCheck() {
+		return mapper.searchEqmCheck();
+	}
 
 }

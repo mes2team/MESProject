@@ -98,7 +98,7 @@
 	</update>
 	
 	<!-- 설비점검내역 -->
-	
+	<!-- 전체조회 -->
 	<select id="selectCheckList" resultType="EqmVO">
 		SELECT CHECK_CD,
 			   EQM_CD, 
@@ -111,4 +111,8 @@
 		FROM eqm_check 
 	</select>
 	
+	<!-- 검색조회 -->
+	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
+		
+	</select>
 </mapper>
