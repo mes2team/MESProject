@@ -35,7 +35,6 @@ public class EmpController {
 		model.addAttribute("empList",empService.getEmpAll(cri));
 		//4) 페이지 개수와 이전, 이후 버튼 여부
 		model.addAttribute("pageMaker",new PageDTO(cri,total));
-		System.out.println(new PageDTO(cri,total));
 		// 5) 해당 페이지 이동
 		return "user/empList";
 	}

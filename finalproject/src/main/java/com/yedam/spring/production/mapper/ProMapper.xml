@@ -3,5 +3,137 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.spring.production.mapper.ProMapper">
-  
+  	
+  	<!-- 생산계획 코드 조회 -->
+  	<select id="getNextPlanCd" resultType="ProPlanVO">
+		SELECT plan_cd
+		FROM(
+			    SELECT plan_cd 
+			    FROM plan
+			    ORDER BY ROWNUM DESC)
+		WHERE ROWNUM = 1
+	</select>
+  	<!-- 생산계획 등록 -->
+  	<insert id="InsertNewPlan" parameterType="ProPlanVO">
+  		BEGIN		
+  			<!-- 생산계획테이블 -->
+  			INSERT INTO plan (plan_cd,
+  							  plan_name,
+  							  paprd_dt,
+  							  now_st,
+  							  plan_dt,
+  							  <if test="orderNo != null and !orderNo.equals('')">
+  							  order_no
+  							  </if>
+  							  )
+  					VALUES	 (#{planCd},
+  							  #{planName},
+  							  #{paprdDt},
+  							  #{nowSt},
+  							  #{planDt},
+  							  <if test="orderNo != null and !orderNo.equals('')">
+  							  #{orderNo}
+  							  </if>
+  							  );
+  			<!-- 생산계획디테일 테이블 -->
+  			INSERT INTO plan_dtl (plan_cd,
+	  							  pref_rank,
+	  							  edcts_cd,
+	  							  bom_cd,
+	  							  <if test="orderCnt != null and !orderCnt.equals('')">
+	  							  order_cnt,
+	  							  </if>
+	  							  wk_to_dt,
+	  							  prdt_nm
+	  							  )
+	  					VALUES	 (#{planCd},
+	  							  #{prefRank},
+	  							  #{edctsCd},
+	  							  #{bomCd},
+	  							  <if test="orderCnt != null and !orderCnt.equals('')">
+	  							  #{orderCnt},
+	  							  </if>
+	  							  #{wkToDt},
+	  							  #{prdtNm}
+	  							  );
+			<if test="orderNo != null and !orderNo.equals('')">
+	  		<!-- 주문서 상태 변경 -->
+	  		UPDATE 	order_sheet
+	  		SET	 	prog_appe = '계획완료'
+	  		WHERE	order_no = #{orderNo}
+	  		  AND	edcts_cd = #{edctsCd};
+	  		</if>
+  		END;
+  		
+  	</insert>
+  	<!-- 미지시 주문서 조회 -->
+  	<select id="selectOrderSheet" resultType="OrderSheetVO">
+  		SELECT order_no,
+  			   edcts_cd,
+  			   vend_cd,
+  			   vend_nm,
+  			   order_dt,
+  			   prog_appe,
+  			   paprd_dt,
+  			   prdt_nm,
+  			   order_cnt
+  		FROM  order_sheet
+  		WHERE prog_appe = '접수완료'
+  	</select>
+  	
+  	<!-- BOM 정보 조회 -->
+  	<select id="selectBomInfo" resultType="BomVO">
+  		SELECT bom_cd, standard, edcts_cd
+  		FROM bom
+  		ORDER BY bom_cd
+  	</select>
+  	
+  	<!-- BOM에 따른 자재 정보 -->
+  	<select id="selectBomRscInfo" resultType="BomVO">
+		SELECT 	r.rsc_nm, b.use_cnt, b.unit, r.rsc_typ, p.prcs_nm
+		FROM 	bom_detail b, rsc r, prcs p
+		Where 	b.rsc_cd = r.rsc_cd
+		  AND 	b.prcs_cd = p.prcs_cd 
+		  AND 	bom_cd = #{bomCd}
+  	</select>
+  	
+  	<!-- 생산계획 총개수 -->
+  	<select id="selectProPlanCnt" resultType="int">
+  		SELECT 	COUNT(plan_cd)
+  		FROM	plan
+  	</select>
+  	
+  		<!-- 생산계획 조회 + 페이징-->
+	<select id="selectProPlans" resultType="ProPlanVO">
+	<![CDATA[
+		SELECT 	plan_cd,
+				plan_name,
+				paprd_dt,
+				now_st,
+				plan_dt,
+				order_no,
+				pref_rank,
+				edcts_cd,
+				order_cnt,
+				wk_to_dt,
+				prdt_nm
+		FROM 	(SELECT	rownum rn,
+						p.plan_cd,
+						p.plan_name,
+						p.paprd_dt,
+						p.now_st,
+						p.plan_dt,
+						p.order_no,
+						d.pref_rank,
+						d.edcts_cd,
+						d.order_cnt,
+						d.wk_to_dt,
+						d.prdt_nm
+				   FROM	plan p, plan_dtl d
+				  WHERE	p.plan_cd = d.plan_cd
+				    AND rownum <= #{pageNum} * #{amount})
+		WHERE rn > (#{pageNum}-1)* #{amount}
+		ORDER BY plan_dt
+	]]>
+	</select>
   </mapper>
