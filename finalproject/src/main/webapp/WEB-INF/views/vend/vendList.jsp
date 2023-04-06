@@ -503,6 +503,22 @@ uri="http://www.springframework.org/security/tags"%>
                     title: "오류가 발생했습니다.",
                   });
                 }
+
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
               },
               error: function (reject) {
                 console.log(reject);
@@ -514,7 +530,13 @@ uri="http://www.springframework.org/security/tags"%>
     }
     function updateBtn() {
       // 체크된 체크박스가 없으면 함수 종료
-      if ($("input[name=chk]:checked").length === 0) return;
+      if ($("input[name=chk]:checked").length === 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+        return;
+      }
 
       disableCheckBoxes();
 
@@ -640,7 +662,7 @@ uri="http://www.springframework.org/security/tags"%>
             $(".btn-info").attr("onclick", "updateBtn();");
           }
 
-          const Toast = Swal.mixin({
+          let Toast = Swal.mixin({
             toast: true,
             position: "top",
             showConfirmButton: false,
