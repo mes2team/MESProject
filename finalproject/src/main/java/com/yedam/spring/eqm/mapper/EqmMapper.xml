@@ -98,7 +98,7 @@
 	</update>
 	
 	<!-- 설비점검내역 -->
-	
+	<!-- 전체조회 -->
 	<select id="selectCheckList" resultType="EqmVO">
 		SELECT CHECK_CD,
 			   EQM_CD, 
@@ -111,4 +111,47 @@
 		FROM eqm_check 
 	</select>
 	
+	<!-- 검색조회 -->
+	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
+		
+	</select>
+	
+	<!-- 설비점검내역단건조회 -->
+	<select id="selectCheck" parameterType="EqmVO" resultType="EqmVO">
+		SELECT CHECK_CD,
+			   EQM_CD, 
+			   CHCK_FG,
+			   CHCK_DT,
+			   JDGMNT,
+			   DISPO_CTNT,
+			   CHCK_PSCH,
+			   EQM_NM
+		FROM eqm_check 	
+		WHERE check_cd = #{checkCd}    
+	</select>
+	
+	<!-- 점검등록 -->
+	<insert id="insertCheck" parameterType="EqmVO">
+		INSERT INTO eqm_check
+			   (
+			     CHECK_CD,
+			     EQM_CD, 
+			     CHCK_FG,
+			     CHCK_DT,
+			     JDGMNT,
+			     DISPO_CTNT,
+			     CHCK_PSCH,
+			     EQM_NM
+			   )
+		VALUES (
+				SELECT 'CHK'||(SUBSTR(MAX(check_cd),4)+1) FROM eqm_check,
+			     #{eqmCd}, 
+			     #{chckFg},
+			     #{chckDt},
+			     #{jdgmnt},
+			     #{dispoCtnt},
+			     #{chckPsch},
+			     #{eqmNm}
+				)	  
+	</insert>
 </mapper>

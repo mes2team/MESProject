@@ -14,6 +14,8 @@ public interface ProService {
 	public List<OrderSheetVO> getOrdSheet();
 
 	public List<BomVO> getBomInfo();
+	
+	public List<BomVO> getBomInfo(BomVO vo);
 
 	public List<BomVO> getBomRscInfo(BomVO vo);
 
@@ -21,6 +23,12 @@ public interface ProService {
 
 	public List<ProPlanVO> getProPlans(Criteria cri);
 
-	public int removeProPlan();
+	public String removePlan(String planCd);
+
+	public int modifyProPlan(ProPlanVO vo);
+
+	public List<OrderSheetVO> getprdtInfo();
+
+	
 
 }

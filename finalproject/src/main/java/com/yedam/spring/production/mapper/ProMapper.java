@@ -16,11 +16,21 @@ public interface ProMapper {
 	public List<OrderSheetVO> selectOrderSheet();
 
 	public List<BomVO> selectBomInfo();
+	
+	public List<BomVO> selectBomInfo(BomVO vo);
 
 	public List<BomVO> selectBomRscInfo(BomVO vo);
 
 	public int selectProPlanCnt();
 
 	public List<ProPlanVO> selectProPlans(Criteria cri);
+
+	public int deleteProPlan(String planCd);
+
+	public int updateProPlan(ProPlanVO vo);
+
+	public List<OrderSheetVO> selectPrdtInfo();
+
+	
 
 }

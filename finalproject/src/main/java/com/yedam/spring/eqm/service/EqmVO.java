@@ -36,5 +36,11 @@ public class EqmVO {
 	private String dispoCtnt; //조치내역
 	private String chckPsch; //점검담당자
 	
+	//설비점검내역 조회용
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date start;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date end;
+	
 	
 }
