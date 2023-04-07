@@ -5,7 +5,7 @@
 
 <mapper namespace="com.yedam.spring.order.mapper.OrderMapper">
 	<!-- 전체조회 -->
-	<select id="selectOrderList" resultType="OrderSheetVO">
+	<select id="selectOrderList" resultType="OrderTestVO">
 		SELECT 	order_no,
 				order_dt,
 				vend_cd,
@@ -18,8 +18,63 @@
 	</select>
 	
 	<!-- 주문번호 조회 -->
-	<select id="selectOrderNo" resultType="OrderSheetVO">
+	<select id="selectOrderNo" resultType="OrderTestVO">
 		SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1) as orderNo
 		FROM 	order_sheet_test
 	</select>
+	
+	<!-- 상품정보 조회 -->
+	<select id="selectOrderPrd" resultType="OrderPrdTestVO">
+		SELECT	edcts_cd, prdt_nm
+		FROM	edcts
+		ORDER BY edcts_cd
+	</select>
+	
+	<!-- 주문서 등록 -->
+	<insert id="insertOrder" parameterType="OrderTestVO">
+		INSERT INTO order_sheet_test (order_no,
+									  order_dt,
+									  vend_cd,
+									  vend_nm,
+									  prog_appe,
+									  paprd_dt,
+									  order_nm	
+									 )
+						     VALUES (#{orderNo},
+						     		 #{orderDt},
+						     		 #{vendCd},
+						     		 #{vendNm},
+						     		 '접수완료',
+						     		 #{paprdDt},
+						     		 #{orderNm}
+						     		)
+	</insert>
+	
+	<!-- 주문서 디테일 등록 -->
+	<insert id="insertOrderPrd" parameterType="OrderPrdTestVO">
+		INSERT INTO order_sheet_prd_test (
+										  edcts_cd,
+										  order_cnt,
+										  prdt_nm,
+										  order_no
+										 )
+								  VALUES (
+								  		  #{edctsCd},
+								  		  #{orderCnt},
+								  		  #{prdtNm},
+								  		  #{orderNo}
+	   								     )
+		
+	</insert>
+	
+	<!-- 주문서 삭제 -->
+	<delete id="deleteOrder" parameterType="OrderTestVO">
+		BEGIN
+    		DELETE FROM order_sheet_test
+    		WHERE order_no = #{orderNo};
+    
+    		DELETE FROM order_sheet_prd_test
+    		WHERE order_no = #{orderNo};
+		END;
+	</delete>
 </mapper>

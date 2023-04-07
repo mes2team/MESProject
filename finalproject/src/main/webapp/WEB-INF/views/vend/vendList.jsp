@@ -394,8 +394,9 @@ uri="http://www.springframework.org/security/tags"%>
       //         $(this).closest("tr").toggleClass("selected", this.checked);
       //       });
 
+      // 검색기능
       $("#searchVend").on("click", function (event) {
-        // 수정
+
         let vendCd = $("#inputVendCd").val().toUpperCase();
         let vendNm = $("#inputVendNm").val();
         let vendMag = $("#inputVendMag").val();
