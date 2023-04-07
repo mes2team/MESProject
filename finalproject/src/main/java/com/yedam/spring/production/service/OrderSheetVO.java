@@ -19,5 +19,5 @@ public class OrderSheetVO {
 	private Date paprdDt;
 	private String prdtNm;
 	private int orderCnt;
-	
+	private String orderNm;
 }

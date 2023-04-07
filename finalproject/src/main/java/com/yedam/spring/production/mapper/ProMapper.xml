@@ -15,10 +15,13 @@
 	</select>
   	<!-- 생산계획 등록 -->
   	<insert id="InsertNewPlan" parameterType="ProPlanVO">
+  		DECLARE
+			v_edcts_cd	VARCHAR2(100);
   		BEGIN
+  			v_edcts_cd := #{edctsCd};
   			<if test="edctsCd == null or edctsCd.equals('')">
   			SELECT 	edcts_cd
-  			INTO	#{edctsCd}
+  			INTO	v_edcts_cd
   			FROM 	edcts
   			WHERE	prdt_nm = #{prdtNm};
   			</if>
@@ -28,19 +31,27 @@
   							  plan_name,
   							  paprd_dt,
   							  now_st,
-  							  plan_dt,
   							  <if test="orderNo != null and !orderNo.equals('')">
-  							  order_no
+  							  order_no,
   							  </if>
+  							  <if test="orderNo == null or orderNo.equals('')">
+  							  order_no,
+  							  </if>
+  							  plan_dt
+
   							  )
   					VALUES	 (#{planCd},
   							  #{planName},
   							  #{paprdDt},
-  							  #{nowSt},
-  							  sysdate,
+  							  '미지시',
   							  <if test="orderNo != null and !orderNo.equals('')">
-  							  #{orderNo}
+  							  #{orderNo},
   							  </if>
+  							  <if test="orderNo == null or orderNo.equals('')">
+  							  'NOTORD',
+  							  </if>
+  							  sysdate
+
   							  );
   			<!-- 생산계획디테일 테이블 -->
   			INSERT INTO plan_dtl (plan_cd,
@@ -55,7 +66,7 @@
 	  							  )
 	  					VALUES	 (#{planCd},
 	  							  #{prefRank},
-	  							  #{edctsCd},
+	  							  v_edcts_cd,
 	  							  #{bomCd},
 	  							  <if test="orderCnt != null and !orderCnt.equals('')">
 	  							  #{orderCnt},
@@ -68,30 +79,40 @@
 	  		UPDATE 	order_sheet
 	  		SET	 	prog_appe = '계획완료'
 	  		WHERE	order_no = #{orderNo}
-	  		  AND	edcts_cd = #{edctsCd};
+	  		  AND	edcts_cd = v_edcts_cd;
 	  		</if>
   		END;
   	</insert>
   	
   	<!-- 미지시 주문서 조회 -->
   	<select id="selectOrderSheet" resultType="OrderSheetVO">
-  		SELECT order_no,
-  			   edcts_cd,
-  			   vend_cd,
-  			   vend_nm,
-  			   order_dt,
-  			   prog_appe,
-  			   paprd_dt,
-  			   prdt_nm,
-  			   order_cnt
-  		FROM  order_sheet
-  		WHERE prog_appe = '접수완료'
+  		SELECT ost.order_no,
+  			   ospt.edcts_cd,
+  			   ost.vend_cd,
+  			   ost.vend_nm,
+  			   ost.order_dt,
+  			   ost.prog_appe,
+  			   ost.paprd_dt,
+  			   ospt.prdt_nm,
+  			   ospt.order_cnt
+  		FROM   order_sheet_test ost, order_sheet_prd_test ospt
+  		WHERE  ost.order_no = ospt.order_no
+  		  AND  ost.prog_appe = '접수완료'
+  	</select>
+  	<!-- 완제품 정보 조회 -->
+  	 <select id="selectPrdtInfo" resultType="OrderSheetVO">
+  		SELECT 		edcts_cd , prdt_nm 
+  		FROM 		edcts
+  		ORDER BY 	edcts_cd
   	</select>
   	
   	<!-- BOM 정보 조회 -->
   	<select id="selectBomInfo" resultType="BomVO">
   		SELECT bom_cd, standard, edcts_cd
   		FROM bom
+  		<if test="edctsCd != null and !edctsCd.equals('')">
+  		WHERE		edcts_cd = #{edctsCd}
+  		</if>
   		ORDER BY bom_cd
   	</select>
   	
@@ -153,23 +174,27 @@
 	
 	<!-- 생산 계획 수정 -->
 	<update id="updateProPlan" parameterType="ProPlanVO">
+		DECLARE
+			v_edcts_cd	VARCHAR2(100);
 		BEGIN
-		  	SELECT 	edcts_cd
-  			INTO	#{edctsCd}
-  			FROM 	edcts
-  			WHERE	prdt_nm = #{prdtNm};
-		
-	  		UPDATE 	plan
-	  		SET	 	plan_dt = sysdate,
-	  				plan_name = #{planName} 
-	  		WHERE	plan_cd = #{planCd};
-	  		
-	  		UPDATE 	plan_dtl
-	  		SET	 	order_cnt =  #{orderCnt},
-	  				wk_to_dt = #{wkToDt},
-	  				prdt_nm = #{prdtNm},
-	  				edcts_cd = #{edctsCd}
-	  		WHERE	plan_cd = #{planCd};
-	  	END;	
+			v_edcts_cd := #{edctsCd};
+			
+			SELECT 	edcts_cd
+			INTO 	v_edcts_cd
+			FROM 	edcts
+			WHERE 	prdt_nm = #{prdtNm};
+	
+			UPDATE 	plan
+			SET 	plan_dt = sysdate,
+					plan_name = #{planName}
+			WHERE 	plan_cd = #{planCd};
+	
+			UPDATE 	plan_dtl
+			SET 	order_cnt = #{orderCnt},
+					wk_to_dt = #{wkToDt},
+					prdt_nm = #{prdtNm},
+					edcts_cd = v_edcts_cd
+			WHERE 	plan_cd = #{planCd};
+		END;
 	</update>
   </mapper>

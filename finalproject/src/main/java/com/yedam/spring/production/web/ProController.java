@@ -29,6 +29,7 @@ public class ProController {
 	public String proPlanPage(Criteria cri,Model model) {
 		model.addAttribute("nextPlanCd",proService.getNextPlanCd());
 		model.addAttribute("bomInfo", proService.getBomInfo());
+		model.addAttribute("prdtInfo", proService.getprdtInfo());
 		int total = proService.getProPlanCnt();
 		model.addAttribute("ProPlans",proService.getProPlans(cri));
 		model.addAttribute("pageMaker",new PageDTO(cri,total));
@@ -48,6 +49,26 @@ public class ProController {
 		rrtt.addFlashAttribute("message",message);
 		return "redirect:/productionPlan";
 	}
+	
+	// 생산계획 다중등록처리
+	@PostMapping("/addnewPlans")
+	@ResponseBody 
+	public Map<String, Object> addnewPlans(@RequestBody ProPlanVO[] selectedPlans) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String result = null;
+	    for (ProPlanVO vo : selectedPlans) {
+	    	result = proService.newPlanInsert(vo);
+	    }
+	    if(result.equals("Fail") ) {
+	    	resultMap.put("result", "Fail");
+	    } else {
+	    	resultMap.put("result", "Success");
+	    }
+		return resultMap;
+	}
+	
+	
+	
 	//미지시된 주문서 조회
 	@GetMapping("/getOrderSheet")
 	@ResponseBody
@@ -85,14 +106,25 @@ public class ProController {
 	@ResponseBody
 	public Map<String, Object> updateProPlan(@RequestBody ProPlanVO[] voArr) {
 		Map<String, Object> resultMap = new HashMap<>();
-	    for (int i = 0; i < voArr.length; i++) {
-	    	resultMap.put("result", proService.modifyProPlan(voArr[i]));
+	    if (voArr == null) {
+	    	resultMap.put("result", "false");
+	        return resultMap;
 	    }
-
+	    for (int i = 0; i < voArr.length; i++) {
+	    	proService.modifyProPlan(voArr[i]);
+	    }
+	    resultMap.put("result", "success");
 	    return resultMap;
 	}
 
+	//제품별 BOM 조회
+	@GetMapping("/getPrdtBom")
+	@ResponseBody
+	public Map<String, Object> getPrdtBom(BomVO vo) {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("result", proService.getBomInfo(vo));
+		return resultMap;
+	}
+
 	
-
-
 }
