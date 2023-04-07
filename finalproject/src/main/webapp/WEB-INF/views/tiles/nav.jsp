@@ -141,8 +141,8 @@
             </a>
           </li>
           <li>
-            <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+            <a href="${pageContext.request.contextPath }/matOrder">
+              <i class="bi bi-circle"></i><span>자재발주</span>
             </a>
           </li>
           <li>
