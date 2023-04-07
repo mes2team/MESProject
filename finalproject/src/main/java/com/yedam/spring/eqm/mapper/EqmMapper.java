@@ -24,6 +24,15 @@ public interface EqmMapper {
 	
 	//////////설비점검내역////////////////
 	
-	//설비점검내역 전체조회
+	//점검내역 전체조회
 	public List<EqmVO> selectCheckList();
+	
+	//점검검색조회
+	public List<EqmVO> searchEqmCheck();
+	
+	//점검단건조회
+	public EqmVO selectCheck(EqmVO eqmVO);
+	
+	//점검등록
+	public int insertCheck(EqmVO eqmVO);
 }

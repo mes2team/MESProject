@@ -1,10 +1,13 @@
 package com.yedam.spring.eqm.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.eqm.service.EqmService;
@@ -54,7 +57,35 @@ public class EqmController {
 	@GetMapping("/eqmCheck")
 	public String eqmCheckPage(Model model) {
 		model.addAttribute("list", service.selectCheckList());
+		model.addAttribute("eqmList",service.selectEqmList());
 		return "eqm/eqmCheck";
 	}
+	
+	/* 점검검색조회
+	 * @PostMapping("/searchEqmCheck")
+	 * 
+	 * @ResponseBody public List<EqmVO> searchEqmCheck(@RequestBody EqmVO
+	 * searchKeywords){ return "";
+	 * 
+	 * }
+	 */
+	
+	//점검단건조회
+	@GetMapping("/selectCheck")
+	@ResponseBody
+	public EqmVO selectCheck(EqmVO eqmVO) {
+		return service.selectCheck(eqmVO);
+	}
+	
+	//점검등록
+	@PostMapping("/insertCheck")
+	public String insertCheck(EqmVO eqmVO) {
+		service.insertCheck(eqmVO);
+		return "redirect:eqmCheck";
+	}
+	
+	
+	
+	
 	
 }

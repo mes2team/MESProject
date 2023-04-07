@@ -24,8 +24,8 @@
             </a>
           </li>
           <li>
-            <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Accordion</span>
+            <a href="#">
+              <i class="bi bi-circle"></i><span>Form Elements</span>
             </a>
           </li>
           <li>
@@ -57,8 +57,8 @@
         </a>
         <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="forms-elements.html">
-              <i class="bi bi-circle"></i><span>Form Elements</span>
+            <a href="${pageContext.request.contextPath }/orderMag">
+              <i class="bi bi-circle"></i><span>주문서 관리</span>
             </a>
           </li>
           <li>
@@ -141,8 +141,8 @@
             </a>
           </li>
           <li>
-            <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+            <a href="${pageContext.request.contextPath }/matOrder">
+              <i class="bi bi-circle"></i><span>자재발주</span>
             </a>
           </li>
           <li>

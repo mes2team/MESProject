@@ -3,19 +3,27 @@ package com.yedam.spring.mat.service;
 import java.util.List;
 import java.util.Map;
 
-import com.yedam.spring.common.Criteria;
 
 public interface MatService {
-	//전체 개수
-	public int getMatAll();
-	//전체조회 + 페이징
-	public List<MatVO> getMatAll(Criteria cri);
-	//단건조회
+	//자재목록 전체
+	public List<MatVO> matList();
+	//자재목록단건조회
 	public MatVO getMat(MatVO matVO);
-	//등록
+	//자재목록등록
 	public int insertMat(MatVO matVO);	
-	//수정 - 정보수정
+	//자재목록 수정
 	public Map<String, String> updateMat(MatVO matVO);
-	//삭제
+	//자재목록 삭제
 	public Map<String, String> deleteMat(String rscCd);
+	
+	//자재발주 전체
+	public List<MatVO> matOrderList();
+	//자재발주 단건조회
+	public MatVO getMatOrderInfo(MatVO matVO);
+	//자재발주 등록
+	public int addMatOrderInfo(MatVO matVO);	
+	//자재발주 수정
+	public int modifyMatOrderInfo(MatVO matVO);
+	//자재발주 삭제
+	public int removeMatOrderInfo(String ordrCd);
 }
