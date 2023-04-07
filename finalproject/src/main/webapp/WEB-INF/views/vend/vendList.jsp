@@ -128,16 +128,9 @@ uri="http://www.springframework.org/security/tags"%>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary closeBtn"
-            data-bs-dismiss="modal"
-          >
-            닫기
-          </button>
-          <button type="submit" class="btn btn-primary" id="insertBtn">
-            등록
-          </button>
+          <button type="button" class="btn btn-secondary closeBtn"
+            data-bs-dismiss="modal">닫기</button>
+          <button type="submit" class="btn btn-primary" id="insertBtn"> 등록</button>
         </div>
       </div>
     </div>

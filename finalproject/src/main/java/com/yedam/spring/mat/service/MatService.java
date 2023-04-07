@@ -5,14 +5,25 @@ import java.util.Map;
 
 
 public interface MatService {
-	//전체 개수
+	//자재목록 전체
 	public List<MatVO> matList();
-	//단건조회
+	//자재목록단건조회
 	public MatVO getMat(MatVO matVO);
-	//등록
+	//자재목록등록
 	public int insertMat(MatVO matVO);	
-	//수정 - 정보수정
+	//자재목록 수정
 	public Map<String, String> updateMat(MatVO matVO);
-	//삭제
+	//자재목록 삭제
 	public Map<String, String> deleteMat(String rscCd);
+	
+	//자재발주 전체
+	public List<MatVO> matOrderList();
+	//자재발주 단건조회
+	public MatVO getMatOrderInfo(MatVO matVO);
+	//자재발주 등록
+	public int addMatOrderInfo(MatVO matVO);	
+	//자재발주 수정
+	public int modifyMatOrderInfo(MatVO matVO);
+	//자재발주 삭제
+	public int removeMatOrderInfo(String ordrCd);
 }

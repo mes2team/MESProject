@@ -2,23 +2,29 @@ package com.yedam.spring.mat.mapper;
 
 import java.util.List;
 
-import com.yedam.spring.common.Criteria;
 import com.yedam.spring.mat.service.MatVO;
 
 public interface MatMapper {
 
-	//전체 조회 + 페이징
+	//자재정보 전체조회
 	public List<MatVO> matList();
-	
-	//단건 조회
+	//자재정보 단건 조회
 	public MatVO selectMatInfo(MatVO matVO);
-	
-	//등록
+	//자재정보 등록
 	public int insertMatInfo(MatVO matVO);
-
-	//수정 - 사원 정보 수정
+	//자재정보 수정
 	public int updateMatInfo(MatVO matVO);
-	
-	//삭제
+	//자재정보 삭제
 	public int deleteMatInfo(String rscCd);
+	
+	//발주 전체 조회	
+	public List<MatVO> matOrderAllList();
+	//자재발주 단건 조회
+	public MatVO selectMatOrderInfo(MatVO matVO);
+	//자재발주 등록
+	public int insertMatOrderInfo(MatVO matVO);
+	//자재발주 수정
+	public int updateMatOrderInfo(MatVO matVO);
+	//자재발주 삭제
+	public int deleteMatOrderInfo(String ordrCd);
 }
