@@ -470,7 +470,7 @@ td {
 			});
 
 		} else {
-			if(formOptionchk() == true){
+			if(formOptionchk() != false){
 				newPlan.submit();
 			} 
 		}
