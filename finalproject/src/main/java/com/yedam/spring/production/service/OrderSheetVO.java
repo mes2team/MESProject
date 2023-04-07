@@ -21,5 +21,6 @@ public class OrderSheetVO {
 	private int orderCnt;
 	
 	private String orderPno;
+
 	private String orderNm;
 }

@@ -20,8 +20,8 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public String newPlanInsert(ProPlanVO vo) {
 		int result = proMapper.InsertNewPlan(vo);
-		if(result == 1) {
-			return vo.getOrderNo();
+		if(result < 0) {
+			return "Success";
 		} else {
 			return "Fail";
 		}
@@ -50,6 +50,12 @@ public class ProServiceImpl implements ProService {
 	public List<BomVO> getBomInfo() {
 		return proMapper.selectBomInfo();
 	}
+	
+	@Override
+	public List<BomVO> getBomInfo(BomVO vo) {
+		return proMapper.selectBomInfo(vo);
+	}
+
 
 	@Override
 	public List<BomVO> getBomRscInfo(BomVO vo) {
@@ -67,8 +73,25 @@ public class ProServiceImpl implements ProService {
 	}
 
 	@Override
-	public int removeProPlan() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String removePlan(String planCd) {
+		String result = null;
+		if(proMapper.deleteProPlan(planCd) > 0) {
+			result ="success";
+		} else {
+			result ="fail";
+		}
+		return result;
 	}
+
+	@Override
+	public int modifyProPlan(ProPlanVO vo) {
+		return proMapper.updateProPlan(vo);
+	}
+
+	@Override
+	public List<OrderSheetVO> getprdtInfo() {
+		return proMapper.selectPrdtInfo();
+	}
+
+
 }
