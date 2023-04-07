@@ -42,13 +42,25 @@ public class EqmServiceImpl implements EqmService{
 		return mapper.updateEqm(eqmVO);
 	}
 	///////설비점검내역////////
+	//페이지이동시 전체조회
 	@Override
 	public List<EqmVO> selectCheckList() {
 		return mapper.selectCheckList();
 	}
+	//점검검색조회
 	@Override
 	public List<EqmVO> searchEqmCheck() {
 		return mapper.searchEqmCheck();
+	}
+	//점검단건조회
+	@Override
+	public EqmVO selectCheck(EqmVO eqmVO) {
+		return mapper.selectCheck(eqmVO);
+	}
+	//점검등록
+	@Override
+	public int insertCheck(EqmVO eqmVO) {
+		return mapper.insertCheck(eqmVO);
 	}
 
 }

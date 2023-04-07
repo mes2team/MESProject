@@ -57,14 +57,35 @@ public class EqmController {
 	@GetMapping("/eqmCheck")
 	public String eqmCheckPage(Model model) {
 		model.addAttribute("list", service.selectCheckList());
+		model.addAttribute("eqmList",service.selectEqmList());
 		return "eqm/eqmCheck";
 	}
 	
-	@PostMapping("/searchEqmCheck")
+	/* 점검검색조회
+	 * @PostMapping("/searchEqmCheck")
+	 * 
+	 * @ResponseBody public List<EqmVO> searchEqmCheck(@RequestBody EqmVO
+	 * searchKeywords){ return "";
+	 * 
+	 * }
+	 */
+	
+	//점검단건조회
+	@GetMapping("/selectCheck")
 	@ResponseBody
-	public List<EqmVO> searchEqmCheck(@RequestBody EqmVO searchKeywords){
-		return "";
-			
+	public EqmVO selectCheck(EqmVO eqmVO) {
+		return service.selectCheck(eqmVO);
 	}
+	
+	//점검등록
+	@PostMapping("/insertCheck")
+	public String insertCheck(EqmVO eqmVO) {
+		service.insertCheck(eqmVO);
+		return "redirect:eqmCheck";
+	}
+	
+	
+	
+	
 	
 }

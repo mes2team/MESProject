@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -19,7 +20,7 @@
 				<div style="width: 100%; height: 200px; overflow: auto;">
 					<table class="table table-striped table-hover">
 						<thead>
-							<tr>
+							<tr style="position: sticky; top: 0px; background-color:#E2E2E2">
 								<th scope="col">번호</th>
 								<th scope="col">설비구분</th>
 								<th scope="col">설비코드</th>
@@ -261,7 +262,7 @@
 	const eqmMinTemp = document.querySelector('[name="eqmMinTemp"]');
 	const eqmMaxTemp = document.querySelector('[name="eqmMaxTemp"]');
 	const chckPerd = document.querySelector('[name="chckPerd"]');
-	const useYn = document.querySelector('[name="useYn"]');
+	const useYn = document.querySelectorAll('[name="useYn"]');
 	const eqmMng = document.querySelector('[name="eqmMng"]');
 	const eqmImg = document.querySelector('[name="eqmImg"]');
 	
@@ -279,8 +280,12 @@
 		       eqmMinTemp.value = result.eqmMinTemp;
 		       eqmMaxTemp.value = result.eqmMaxTemp;
 		       chckPerd.value = result.chckPerd;
-		       useYn.value = result.useYn;
 		       eqmMng.value = result.eqmMng;
+		       for(let i=0; i<useYn.length; i++){
+					if(useYn[i].value == result.useYn){
+						useYn[i].checked = true;
+					}
+				}
 		      // document.querySelector("#preview_img").src ="img/"+result.eqmImg;
 		      disabledEqmFg();
 		      },
