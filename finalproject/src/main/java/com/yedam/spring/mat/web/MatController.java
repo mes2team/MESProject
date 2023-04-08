@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -91,13 +93,27 @@ public class MatController {
 	        return map;
 	    }
 	    for (int i = 0; i < arr.length; i++) {
-	    	matService.modifyMatOrderInfo(arr[i]);
+	    	matService.updatematOrder(arr[i]);
 	    }
 	    
 	    List<MatVO> list = matService.matOrderList();
 	    map.put("result", "success");
     	map.put("data", list);
         return map;
+	}
+	
+	//삭제
+	@PostMapping("/matOrderDelete")
+	@ResponseBody
+	public String matOrderDeleteProcess(HttpServletRequest request) {
+		String[] arr = request.getParameterValues("valueArr");
+		if (arr == null) {
+			return "error";
+		}
+		for (int i = 0; i < arr.length; i++) {
+			matService.removeMatOrder(arr[i]);
+		}
+		return "success";
 	}
 	
 }

@@ -137,36 +137,35 @@
 	<update id="updateMatOrderInfo" parameterType="MatVO">
 		UPDATE rsc_ordr
 		<set>
-			<if test="ordrCd != null and !rscCd.equals('')">
+			<if test="ordrCd != null and !ordrCd.equals('')">
 				ordr_cd = #{ordrCd},
 			</if>
-			<if test="ordrReqDt != null and !rscNm.equals('')">
+			<if test="ordrReqDt != null and !ordrReqDt.equals('')">
 				ordr_req_dt = #{ordrReqDt},
 			</if>
-			<if test="vendCd != null and !rscSpec.equals('')">
+			<if test="vendCd != null and !vendCd.equals('')">
 				VEND_CD = #{vendCd},
 			</if>
-			<if test="rscCd != null and !rscTyp.equals('')">
+			<if test="vendNm != null and !vendNm.equals('')">
+				VEND_NM = #{vendNm},
+			</if>
+			<if test="rscCd != null and !rscCd.equals('')">			
 				RSC_CD = #{rscCd},
+			</if>
+			<if test="rscNm != null and !rscNm.equals('')">
+				RSC_NM = #{rscNm},
 			</if>
 			<if test="ordrCnt > 0">
 				ORDR_CNT = #{ordrCnt},
 			</if>
-			<if test="paprdCmndDt != null and !useYn.equals('')">
+			<if test="paprdCmndDt != null and !paprdCmndDt.equals('')">
 				PAPRD_CMND_DT = #{paprdCmndDt},
 			</if>
-			<if test="vendNm != null and !vendCd.equals('')">
-				VEND_NM = #{vendNm},
-			</if>
-			<if test="rscNm != null and !vendCd.equals('')">
-				RSC_NM = #{rscNm},
-			</if>
-
 		</set>
 		WHERE ordr_cd = #{ordrCd}
 	</update>
 <!-- 자재발주 삭제 -->
-	<delete id="deleteMatOrderInfo" parameterType="int">
+	<delete id="deleteMatOrderInfo" parameterType="String">
 		DELETE FROM rsc_ordr
 		WHERE ordr_cd = #{ordrCd}
 	</delete>

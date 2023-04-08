@@ -358,49 +358,55 @@ function updateBtn() {
 
     $('input[name="chk"]:checked').each(function () {
       var row = $(this).closest("tr");
-      var vendTyp = row.find("td:eq(2)").text().trim();
-      var vendCd = row.find("td:eq(3)").text().trim();
-      var vendNm = row.find("td:eq(4)").text().trim();
-      var vendMag = row.find("td:eq(5)").text().trim();
-      var brNum = row.find("td:eq(6)").text().trim();
-      var vendTel = row.find("td:eq(7)").text().trim();
-      var remk = row.find("td:eq(8)").text().trim();
-
+      var ordrCd = row.find("td:eq(2)").text().trim();
+      var ordrReqDt = row.find("td:eq(3)").text().trim();
+      var vendCd = row.find("td:eq(4)").text().trim();
+      var vendNm = row.find("td:eq(5)").text().trim();
+      var rscCd = row.find("td:eq(6)").text().trim();
+      var rscNm = row.find("td:eq(7)").text().trim();
+      var ordrCnt = row.find("td:eq(8)").text().trim();
+      var paprdCmndDt = row.find("td:eq(9)").text().trim();
+           
       row
         .find("td:eq(2)")
         .html(
-          '<input type="text" class="form-control" value="' + vendTyp + '">'
+          '<input type="text" class="form-control" value="' + ordrCd + '">'
         );
       row
         .find("td:eq(3)")
         .html(
-          '<input type="text" class="form-control" value="' + vendCd + '">'
+          '<input type="text" class="form-control" value="' + ordrReqDt + '">'
         );
       row
         .find("td:eq(4)")
         .html(
-          '<input type="text" class="form-control" value="' + vendNm + '">'
+          '<input type="text" class="form-control" value="' + vendCd + '">'
         );
       row
         .find("td:eq(5)")
         .html(
-          '<input type="text" class="form-control" value="' + vendMag + '">'
+          '<input type="text" class="form-control" value="' + vendNm + '">'
         );
       row
         .find("td:eq(6)")
         .html(
-          '<input type="text" class="form-control" value="' + brNum + '">'
+          '<input type="text" class="form-control" value="' + rscCd + '">'
         );
       row
         .find("td:eq(7)")
         .html(
-          '<input type="text" class="form-control" value="' + vendTel + '">'
+          '<input type="text" class="form-control" value="' + rscNm + '">'
         );
       row
         .find("td:eq(8)")
         .html(
-          '<input type="text" class="form-control" value="' + remk + '">'
+          '<input type="text" class="form-control" value="' + ordrCnt + '">'
         );
+      row
+      .find("td:eq(9)")
+      .html(
+        '<input type="text" class="form-control" value="' + paprdCmndDt + '">'
+      );
     });
   }
 
@@ -414,23 +420,25 @@ function updateBtn() {
     // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
     $('input[name="chk"]:checked').each(function () {
       var row = $(this).closest("tr");
-      var vendTyp = row.find("td:eq(2) input").val().trim();
-      var vendCd = row.find("td:eq(3) input").val().trim();
-      var vendNm = row.find("td:eq(4) input").val().trim();
-      var vendMag = row.find("td:eq(5) input").val().trim();
-      var brNum = row.find("td:eq(6) input").val().trim();
-      var vendTel = row.find("td:eq(7) input").val().trim();
-      var remk = row.find("td:eq(8) input").val().trim();
+      var ordrCd = row.find("td:eq(2) input").val().trim();
+      var ordrReqDt = row.find("td:eq(3) input").val().trim();
+      var vendCd = row.find("td:eq(4) input").val().trim();
+      var vendNm = row.find("td:eq(5) input").val().trim();
+      var rscCd = row.find("td:eq(6) input").val().trim();
+      var rscNm = row.find("td:eq(7) input").val().trim();
+      var ordrCnt = row.find("td:eq(8) input").val().trim();
+      var paprdCmndDt = row.find("td:eq(9) input").val().trim();
 
       // 객체 형식으로 데이터 저장
       var dataObj = {
-        vendTyp: vendTyp,
-        vendCd: vendCd,
-        vendNm: vendNm,
-        vendMag: vendMag,
-        brNum: brNum,
-        vendTel: vendTel,
-        remk: remk,
+    		  ordrCd: ordrCd,
+    		  ordrReqDt: ordrReqDt,
+    		  vendCd: vendCd,
+    		  vendNm: vendNm,
+    		  rscCd: rscCd,
+    		  rscNm: rscNm,
+    		  ordrCnt: ordrCnt,
+    		  paprdCmndDt: paprdCmndDt
       };
 
       // 데이터 배열에 객체 추가
@@ -438,7 +446,7 @@ function updateBtn() {
     });
 
     $.ajax({
-      url: "updateVend",
+      url: "updatematOrder",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       data: JSON.stringify(dataArr),
@@ -446,22 +454,23 @@ function updateBtn() {
         if (result.result == "success") {
           $("tbody").empty();
           $(result.data).each(function (idx, item) {
-            var $row = $("<tr>").attr("data-id", item.vendCd);
+            var $row = $("<tr>").attr("data-id", item.ordrCd);
             $row.append(
               $("<td>").html(
                 '<input type="checkbox" name="chk" value="' +
-                  item.vendCd +
+                  item.ordrCd +
                   '" />'
               )
             );
             $row.append($("<td>").text(idx + 1));
-            $row.append($("<td>").text(item.vendTyp));
+            $row.append($("<td>").text(item.ordrCd));
+            $row.append($("<td>").text(item.ordrReqDt));
             $row.append($("<td>").text(item.vendCd));
             $row.append($("<td>").text(item.vendNm));
-            $row.append($("<td>").text(item.vendMag));
-            $row.append($("<td>").text(item.brNum));
-            $row.append($("<td>").text(item.vendTel));
-            $row.append($("<td>").text(item.remk));
+            $row.append($("<td>").text(item.rscCd));
+            $row.append($("<td>").text(item.rscNm));
+            $row.append($("<td>").text(item.ordrCnt));
+            $row.append($("<td>").text(item.paprdCmndDt));
             $("tbody").append($row);
           });
           enableCheckBoxes();
@@ -501,9 +510,77 @@ function updateBtn() {
     $('input[name="chk"]').prop("disabled", false);
   }
       
-      
-      
-      
+  <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
+  <!-- ============================================================== -->
+  <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
+  function deleteBtn() {
+      let valueArr = new Array();
+      let list = $("input[name=chk]");
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].checked) {
+          valueArr.push(list[i].value);
+        }
+      }
+      if (valueArr.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+      } else {
+        Swal.fire({
+          title: "삭제 하시겠습니까?",
+          text: "복구 할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              url: "matOrderDelete",
+              method: "post",
+              traditional: true,
+              data: { valueArr: valueArr },
+              success: function (result) {
+                if (result == "success") {
+                  for (let i = 0; i < valueArr.length; i++) {
+                    $('tr[data-id="' + valueArr[i] + '"]').remove();
+                  }
+                } else if (result == "error") {
+                  Swal.fire({
+                    icon: "error",
+                    title: "오류가 발생했습니다.",
+                  });
+                }
+
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
+              },
+              error: function (reject) {
+                console.log(reject);
+              },
+            });
+          }
+        });
+      }
+    }
+  <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
+  <!-- ============================================================== -->  
       </script>
 </body>
 </html>
