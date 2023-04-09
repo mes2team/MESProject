@@ -449,25 +449,30 @@ td {
 		        plan[key] = value; // 객체에 data-id와 td 값 저장
 		      });
 		      selectedPlans.push(plan); // 선택된 플랜을 배열에 추가
+		      
+			  $.ajax({
+				  type: "POST",
+				  url: "addnewPlans",
+				  data: JSON.stringify(selectedPlans), // 객체를 JSON 형태의 문자열로 변환하여 전송
+				  contentType: "application/json; charset=utf-8",
+				  dataType: "json",
+				  success: function(response) {
+				    console.log(response.result);
+				    if(response.result == 'Success'){
+				    	alert('등록이 완료되었습니다.')
+				    	location.reload();
+				    }
+				  },
+				  error: function(xhr, status, error) {
+				    console.log(error);
+				  }
+				});
+
+		    } else {
+		    	alert('등록할 생산계획을 선택해주세요.');
+		    	return;
 		    }
 		  });
-
-		  $.ajax({
-			  type: "POST",
-			  url: "addnewPlans",
-			  data: JSON.stringify(selectedPlans), // 객체를 JSON 형태의 문자열로 변환하여 전송
-			  contentType: "application/json; charset=utf-8",
-			  dataType: "json",
-			  success: function(response) {
-			    console.log(response.result);
-			    if(response.result == 'Success'){
-			    	location.reload();
-			    }
-			  },
-			  error: function(xhr, status, error) {
-			    console.log(error);
-			  }
-			});
 
 		} else {
 			if(formOptionchk() != false){
@@ -478,7 +483,7 @@ td {
 	
 	
 	
-	function getOrderSheet(){
+	function getOrderSheet(callback){
 		$.ajax({
 			  url: 'getOrderSheet', 
 			  type: 'GET', 
@@ -516,6 +521,7 @@ td {
 				  })
 				  // 모달 창 열기
 				  $('#orderSheet').modal('show');
+				  callback();
 			  },
 			  error: function(xhr, status, error) {
 			    // 요청이 실패했을 때 처리할 로직
@@ -527,8 +533,14 @@ td {
 	document.querySelector('#orderSheetBtn')
 	.addEventListener('click', getOrderSheet);
 	
+	//주문서정보 배열로 저장할 변수
+	var selectedProduct;
+	
 	/* 주문서정보 -> 생산계획작성 */
 	$(document).on("click", ".addBtn", function() {
+		/* 생산계획일자 오늘 설정 */
+		document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
+		
 	    $(this).prop("disabled", true);
 	    
 	    // change background color
@@ -545,7 +557,7 @@ td {
 	    });
 	    $("#orderNo").val(orderArray[2]); 
 	    $("#prdtNm option").removeAttr("selected");
-	    $("#prdtNm option[value='" + orderArray[4].trim() + "']").attr("selected", "selected");
+	    $("#prdtNm option[value='" + orderArray[4].trim() + "']").prop('selected', true);
 	    $("#edctsCd").val(orderArray[0]); 
 	    $("#vendNm").val(orderArray[3]); 
 	    $("#orderDt").val(orderArray[6]);
@@ -842,9 +854,11 @@ td {
       }
       drawPlans();	
 	  if(confirm("주문서를 가져오시겠습니까?")) {
-	    $('#createPlan').modal('hide');
-	    $('#orderSheet').modal('show');
-	    $('#plansDiv').show();
+		  getOrderSheet(function() {
+			    $('#createPlan').modal('hide');
+			    //$('#orderSheet').modal('show');
+			    $('#plansDiv').show();
+			  });
 	  } else {
 	    $('#plansDiv').show();
 	  }
@@ -853,6 +867,7 @@ td {
     
     
     function drawPlans() {
+    	$('input[name="planCd"]').val("PLN"+(parseInt($('input[name="planCd"]').val().substring(3)) + 1));
     	// input과 select의 값을 가져와 변수에 저장
 		  var orderNo = $("#orderNo").val().trim();
 		  var edctsCd = $("#edctsCd").val().trim();
@@ -901,7 +916,6 @@ td {
 		$("#planForm :input:not([name='planCd'])").val("");
 		/* 생산계획일자 오늘 설정 */
 		document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
-		$('input[name="planCd"]').val("PLN"+(parseInt($('input[name="planCd"]').val().substring(3)) + 1));
     }
 </script>
 </html>

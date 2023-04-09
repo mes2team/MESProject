@@ -6,6 +6,7 @@ import com.yedam.spring.common.Criteria;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.production.service.ProPlanVO;
+import com.yedam.spring.production.service.ProPrcsVO;
 
 public interface ProMapper {
 
@@ -30,6 +31,12 @@ public interface ProMapper {
 	public int updateProPlan(ProPlanVO vo);
 
 	public List<OrderSheetVO> selectPrdtInfo();
+
+	public List<ProPrcsVO> selectPrcsList(Criteria cri);
+
+	public int insertPrcs(ProPrcsVO vo);
+
+	public int deletePrcs(String prcsCd);
 
 	
 
