@@ -23,4 +23,22 @@ public interface OrderMapper {
 
 	// 주문서 삭제
 	public int deleteOrder(OrderTestVO vo);
+
+	// 주문서 진행도 수정
+	public int updateOrderProg(OrderTestVO vo);
+
+	// 주문서 디테일 조회
+	public List<OrderTestVO> selectOrderDetail(String orderNo);
+
+	// 주문서 검색
+	public List<OrderTestVO> searchOrder(OrderTestVO vo);
+
+	// 주문서 수정
+	public int updateOrder(OrderTestVO vo);
+
+	// 주문서 디테일 수정
+	public int updateOrderDetail(OrderTestVO vo);
+	
+	// 주문서 디테일 삭제
+	public int deleteOrderDetail(OrderTestVO vo);
 }
