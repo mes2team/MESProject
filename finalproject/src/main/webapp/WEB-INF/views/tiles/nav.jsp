@@ -90,17 +90,17 @@
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/productionPlan">
               <i class="bi bi-circle"></i><span>생산지시</span>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/productionPlan">
               <i class="bi bi-circle"></i><span>공정실적</span>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/processManage">
               <i class="bi bi-circle"></i><span>공정관리</span>
             </a>
           </li>
