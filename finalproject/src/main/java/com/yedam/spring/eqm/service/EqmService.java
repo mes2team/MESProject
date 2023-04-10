@@ -34,11 +34,15 @@ public interface EqmService {
 
 	// 점검등록
 	public int insertCheck(EqmVO eqmVO);
-	
-	//점검삭제
+
+	// 점검삭제
 	public int deleteCheck(String checkCd);
-	
-	//점검수정
+
+	// 점검수정
 	public int updateCheck(EqmVO eqmVO);
 
+	///////////설비비가동//////////
+
+	//비가동목록조회
+	public List<EqmVO> selectOprList();
 }

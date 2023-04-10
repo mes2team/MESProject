@@ -102,6 +102,14 @@ public class EqmController {
 		return "update success";
 	}
 	
+	//설비비가동
+	
+	//설비비가동 화면 및 전체조회
+	@GetMapping("/eqmOpr")
+	public String eqmOpr(Model model) {
+		model.addAttribute("OprList",service.selectOprList());
+		return "eqm/eqmOpr";
+	}
 	
 	
 }

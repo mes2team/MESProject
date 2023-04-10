@@ -163,4 +163,16 @@
 			eqm_nm = #{eqmNm} 
 		WHERE check_cd = #{checkCd}
 	</update>
+	
+	<!-- 설비비가동 -->
+	<select id="selectOprList" resultType="EqmVO">
+		SELECT nopr_cd, 
+               eqm_cd, 
+               eqm_nm, 
+               fr_dt, 
+               to_dt, 
+               eqm_psch, 
+               opert_ctnt
+        FROM eqm_opr       
+	</select>
 </mapper>

@@ -41,4 +41,10 @@ public interface EqmMapper {
 	
 	//점검수정
 	public int updateCheck(EqmVO eqmVO);
+	
+	///////////설비비가동//////////
+	
+	//비가동목록조회
+	public List<EqmVO> selectOprList();
+	
 }
