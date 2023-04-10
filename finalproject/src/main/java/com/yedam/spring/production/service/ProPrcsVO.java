@@ -7,12 +7,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 
 @Data
-public class ProProcessVO {
+public class ProPrcsVO {
 	//공정관리
 	private String prcsCd;
 	private String prcsNm;
 	private String prcsFg;
 	private String prcsCtnt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date   prcsDt;
+	
 	//진행공정관리
 	private int prefRank;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

@@ -10,6 +10,7 @@ import com.yedam.spring.production.mapper.ProMapper;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.production.service.ProPlanVO;
+import com.yedam.spring.production.service.ProPrcsVO;
 import com.yedam.spring.production.service.ProService;
 @Service
 public class ProServiceImpl implements ProService {
@@ -91,6 +92,32 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public List<OrderSheetVO> getprdtInfo() {
 		return proMapper.selectPrdtInfo();
+	}
+
+	@Override
+	public List<ProPrcsVO> getprcsList(Criteria cri) {
+		return proMapper.selectPrcsList(cri);
+	}
+
+	@Override
+	public String addPrcs(ProPrcsVO vo) {
+		int result = proMapper.insertPrcs(vo);
+		if(result > 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+
+	}
+
+	@Override
+	public String removePrcs(String prcsCd) {
+		int result = proMapper.deletePrcs(prcsCd);
+		if(result > 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
 	}
 
 
