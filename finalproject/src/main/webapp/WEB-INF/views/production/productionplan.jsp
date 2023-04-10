@@ -41,6 +41,10 @@ td {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.col-md-2 {
+  display: flex;
+  align-items: flex-end;
+}
 </style>
 </head>
 <body>
@@ -184,7 +188,6 @@ td {
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th scope="col"></th>
 								<th scope="col">주문코드</th>
 								<th scope="col">거래처</th>
 								<th scope="col">제품명</th>
@@ -230,26 +233,31 @@ td {
 								class="form-control" id="vendNm" value="" readonly> <input
 								type="hidden" class="form-control" value="" readonly>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-5">
 							<label class="form-label">제품명*</label> <input type="hidden"
 								class="form-control" id="edctsCd" name="edctsCd" readonly>
 							<select id="prdtNm" name="prdtNm" class="form-select"
 								aria-label="Default select example">
-								<option value="">선택하세요</option>
-								<c:forEach var="pinfo" items="${prdtInfo }">
-									<option data-cd="${pinfo.edctsCd }" value="${pinfo.prdtNm }">${pinfo.prdtNm }/
-										${pinfo.edctsCd }</option>
-								</c:forEach>
 							</select>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-5">
 							<label class="form-label">주문수량*</label> <input type="text"
 								class="form-control" id="orderCnt" name="orderCnt" value="">
+						</div>
+						<div class="col-md-2">
+							<button id="addProduct" type="button" class="btn btn-primary">제품추가</button>
+						</div>
+						<div class="col-md-12">
+							<div class="col-sm-10">
+			                    <select id="multiPro" class="form-select" multiple="" aria-label="multiple select example">
+			                    </select>
+			                  </div>
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">주문일자</label> <input type="date"
 								class="form-control" id="orderDt" value="" readonly>
 						</div>
+
 						<div class="col-md-6">
 							<label class="form-label">납기일자*</label> <input type="date"
 								class="form-control" id="paprdDt" name="paprdDt" value="">
@@ -344,6 +352,7 @@ td {
 	<!-- End Modal Dialog Scrollable-->
 </body>
 <script>
+
 	//취소 버튼 클릭시
 	$(document).ready(function() {
 		var actionForm = $("#actionForm");
@@ -358,12 +367,67 @@ td {
 		}
 		})
 	})
-	//계획 작성 버튼 클릭시
+	
 	$(document).ready(function() {
+		
+		$.ajax({
+			  url: '${pageContext.request.contextPath }/getPrdtInfo', 
+			  type: 'GET', 
+			  dataType: 'json',
+			  success: function(data) {
+				localStorage.setItem('prdtInfo', JSON.stringify(data.prdtInfo));
+			    console.log(data.prdtInfo);
+			    var prdtInfo = JSON.parse(localStorage.getItem('prdtInfo'));
+			 	// select 요소를 가져옴
+			    var prdtSelect = $('#prdtNm');
+
+			    // 기본값인 '선택하세요' 옵션을 추가
+			    prdtSelect.append($('<option>', {
+			      value: '',
+			      text: '선택하세요'
+			    }));
+			    $.each(prdtInfo, function(index, item) {
+			    	  prdtSelect.append($('<option>', {
+			    	    value: item.edctsCd,
+			    	    text: item.prdtNm
+			    	  }));
+			    	});
+			  },
+			  error: function(xhr, status, error) {
+			    // 요청이 실패했을 때 처리할 로직
+			    console.error('요청 실패:', error);
+			  }
+			});
+		
+		$('#addProduct').click(function() {
+			var selectedOption = $('#prdtNm option:selected');
+			var selectedOptionText = selectedOption.text();
+			var selectedOptionValue = selectedOption.val();
+			var orderCntValue = $('#orderCnt').val();
+			
+			var newOption = $('<option>', {
+				  value: selectedOptionValue,
+				  text: selectedOptionText + ' / ' + orderCntValue,
+				  'data-cnt': orderCntValue
+				});
+
+			$('#multiPro').append(newOption);
+			
+			$('#prdtNm option:selected').prop('selected', false);
+
+			$('#orderCnt').val('');
+			
+		});
+		
+		
+		
+		//계획 작성 버튼 클릭시
 		$("#proPlanInsert").on("click", function(e) {
 			/* 생산계획일자 오늘 설정 */
 			document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
 		})
+		
+		
 	})
 	
 	//페이징 이동
@@ -490,36 +554,54 @@ td {
 			  type: 'GET', 
 			  dataType: 'json',
 			  success: function(data) {
+				localStorage.setItem('orderSheetData', JSON.stringify(data.result));
 			    // 성공적으로 응답 받았을 때 처리할 로직
 			    var tbody = $("#ordSheetTable"); // tbody 선택
 				  tbody.empty(); // tbody 비우기
 				  
-				  // 데이터 반복문 처리
+				  var orderNos = {};
+
 				  $.each(data.result, function(index, item) {
-				    var row = $("<tr>"); 
-				    
-				    // td 생성		
-				    row.append($("<td>").attr("hidden", true).text(item.edctsCd));
-				    row.append($("<td>").attr("hidden", true).text(item.vendCd));
-				    row.append($("<th scope='row'>").text(index + 1));
-				    row.append($("<td>").text(item.orderNo));
-				    row.append($("<td>").text(item.vendNm));
-				    row.append($("<td>").text(item.prdtNm));
-				    row.append($("<td>").text(item.orderCnt));
-				    var orderDt = formatDate(item.orderDt)
-				    row.append($("<td>").text(orderDt));
-				    var paprdDt = formatDate(item.paprdDt)
-				    row.append($("<td>").text(paprdDt));
-				    var button = $("<button>", {
-				        type: "button",
-				        class: "btn btn-primary addBtn",
-				        text: "등록",
-				        style: "background-color: #0d6efd;"
-				    });
-				    row.append(button);
-				    
-				    tbody.append(row); 
-				  })
+				      var orderNo = item.orderNo;
+				      var edctsCd = item.edctsCd;
+				      
+				      // 이미 orderNo가 등록된 경우, 해당 tr의 prdtNm 값을 수정
+				      if (orderNos[orderNo]) {
+				          var prdtNmTd = orderNos[orderNo].find("td.prdtNm");
+				          var prevText = prdtNmTd.text();
+				          var count = prevText.match(/외\s*\d*\s*개/);
+				          if (count) {
+				              var num = parseInt(count[0].match(/\d+/)[0]);
+				              num++;
+				              prdtNmTd.text(prevText.replace(count[0], "외 " + num + "개"));
+				          } else {
+				              prdtNmTd.append(" 외 1개");
+				          }
+				      } else {
+				          var row = $("<tr>");
+				          row.append($("<td>").attr("hidden", true).text(edctsCd));
+				          row.append($("<td>").attr("hidden", true).text(item.vendCd));
+				          row.append($("<td>").text(orderNo));
+				          row.append($("<td>").text(item.vendNm));
+				          row.append($("<td>").addClass("prdtNm").text(item.prdtNm));
+				          row.append($("<td>").text(item.orderCnt));
+				          var orderDt = formatDate(item.orderDt)
+				          row.append($("<td>").text(orderDt));
+				          var paprdDt = formatDate(item.paprdDt)
+				          row.append($("<td>").text(paprdDt));
+				          var button = $("<button>", {
+				              type: "button",
+				              class: "btn btn-primary addBtn",
+				              text: "등록",
+				              style: "background-color: #0d6efd;"
+				          });
+				          row.append(button);
+				          tbody.append(row);
+				          
+				          // orderNo 등록
+				          orderNos[orderNo] = row;
+				      }
+				  });
 				  // 모달 창 열기
 				  $('#orderSheet').modal('show');
 				  
@@ -551,20 +633,33 @@ td {
 	    // change text
 	    $(this).text("작성중");
 		
+	    //orderNo 가져오기
+	    var orderNo = $(this).closest("tr").find("td:eq(2)").text();
+	 // orderSheetData를 가져와서 JSON 형식으로 파싱합니다.
+		var orderSheetData = JSON.parse(localStorage.getItem('orderSheetData'));
 		
-	    var orderArray = [];
+		// orderSheetData에서 orderNo가 일치하는 데이터를 찾아서 값들을 변수에 저장합니다.
+		var targetOrderData = [];
+		for (var i = 0; i < orderSheetData.length; i++) {
+		    if (orderSheetData[i].orderNo == orderNo) {
+		        targetOrderData.push(orderSheetData[i]);
+		    }
+		}
+		//수정해야하는 위치
+		console.log(targetOrderData);
+
+
+		
+ 	    var orderArray = [];
 	    var row = $(this).closest("tr");    
 	    row.find("td").each(function() {
 	        orderArray.push($(this).text());
 	    });
 	    $("#orderNo").val(orderArray[2]); 
-	    $("#prdtNm option").removeAttr("selected");
-	    $("#prdtNm option[value='" + orderArray[4].trim() + "']").prop('selected', true);
-	    $("#edctsCd").val(orderArray[0]); 
 	    $("#vendNm").val(orderArray[3]); 
 	    $("#orderDt").val(orderArray[6]);
 	    $("#paprdDt").val(orderArray[7]); 
-	    $("#orderCnt").val(orderArray[5]);
+	    
 	    
 	    getProductBOM(orderArray[0]);
 	    
@@ -831,8 +926,9 @@ td {
     /* 제품 선택시 BOM 정보 들고 오기 */
     $(document).ready(function() {
 	  $('#prdtNm').on('change', function() {
-	    var edctsCd = $('option:selected', this).data('cd');
+	    var edctsCd = $('option:selected', this).val();
 	    getProductBOM(edctsCd);
+
 	  });
 	});
     

@@ -1,8 +1,10 @@
 package com.yedam.spring.production.web;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.common.PageDTO;
 import com.yedam.spring.production.service.BomVO;
+import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.production.service.ProPlanVO;
 import com.yedam.spring.production.service.ProPrcsVO;
 import com.yedam.spring.production.service.ProService;
@@ -30,11 +33,17 @@ public class ProController {
 	public String proPlanPage(Criteria cri,Model model) {
 		model.addAttribute("nextPlanCd",proService.getNextPlanCd());
 		model.addAttribute("bomInfo", proService.getBomInfo());
-		model.addAttribute("prdtInfo", proService.getprdtInfo());
 		int total = proService.getProPlanCnt();
 		model.addAttribute("ProPlans",proService.getProPlans(cri));
 		model.addAttribute("pageMaker",new PageDTO(cri,total));
 		return"production/productionplan";
+	}
+	@GetMapping("/getPrdtInfo")
+	@ResponseBody
+	public Map<String, Object> getPrdtInfo() {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("prdtInfo", proService.getprdtInfo());
+		return resultMap;
 	}
 	// 생산계획 등록처리
 	@PostMapping("/newPlanInsert")
@@ -72,9 +81,18 @@ public class ProController {
 	@GetMapping("/getOrderSheet")
 	@ResponseBody
 	public Map<String, Object> getOrderSheet() {
-	    Map<String, Object> resultMap = new HashMap<>();
-	    resultMap.put("result", proService.getOrdSheet());
-		System.out.println(resultMap);
+		Map<String, Object> resultMap = new HashMap<>();
+		List<OrderSheetVO> orderSheetVO = proService.getOrdSheet();
+		Set<String> orderNoSet = new HashSet<>(); // 중복되지 않는 OrderNo값을 저장할 Set
+	
+		for(OrderSheetVO vo : orderSheetVO) {
+		    orderNoSet.add(vo.getOrderNo());
+		}
+	
+		String[] ordCode = orderNoSet.toArray(new String[0]); // Set을 배열로 변환하여 ordCode에 저장
+	
+		resultMap.put("ordCode", ordCode);
+		resultMap.put("result", orderSheetVO);
 		return resultMap;
 	}
 	
