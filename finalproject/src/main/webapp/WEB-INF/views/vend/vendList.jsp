@@ -128,9 +128,16 @@ uri="http://www.springframework.org/security/tags"%>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary closeBtn"
-            data-bs-dismiss="modal">닫기</button>
-          <button type="submit" class="btn btn-primary" id="insertBtn"> 등록</button>
+          <button
+            type="button"
+            class="btn btn-secondary closeBtn"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+          <button type="submit" class="btn btn-primary" id="insertBtn">
+            등록
+          </button>
         </div>
       </div>
     </div>
@@ -208,7 +215,9 @@ uri="http://www.springframework.org/security/tags"%>
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
-              <table class="table table-striped table-bordered first">
+              <table
+                class="table table-striped table-bordered first table-hover"
+              >
                 <thead>
                   <tr>
                     <th><input type="checkbox" id="cbx_chkAll" /></th>
@@ -356,16 +365,27 @@ uri="http://www.springframework.org/security/tags"%>
     //체크박스 전체 선택
     $(document).ready(function () {
       $("#cbx_chkAll").click(function () {
-        if ($("#cbx_chkAll").is(":checked"))
+        if ($("#cbx_chkAll").is(":checked")) {
           $("input[name=chk]")
             .prop("checked", true)
             .closest("tr")
             .addClass("selected");
-        else
+          $("input[name=chk]").closest("tr").addClass("table-danger");
+        } else {
           $("input[name=chk]")
             .prop("checked", false)
             .closest("tr")
             .removeClass("selected");
+          $("input[name=chk]").closest("tr").removeClass("table-danger");
+        }
+      });
+
+      $(document).on("change", ":checkbox", function () {
+        if ($(this).prop("checked")) {
+          $(this).closest("tr").addClass("table-danger");
+        } else {
+          $(this).closest("tr").removeClass("table-danger");
+        }
       });
 
       $(document).on("click", "input[name=chk]", function () {
@@ -389,7 +409,6 @@ uri="http://www.springframework.org/security/tags"%>
 
       // 검색기능
       $("#searchVend").on("click", function (event) {
-
         let vendCd = $("#inputVendCd").val().toUpperCase();
         let vendNm = $("#inputVendNm").val();
         let vendMag = $("#inputVendMag").val();
@@ -398,6 +417,13 @@ uri="http://www.springframework.org/security/tags"%>
           url: "searchVend",
           data: { vendCd: vendCd, vendNm: vendNm, vendMag: vendMag },
           success: function (result) {
+            if (result.length == 0) {
+              Swal.fire({
+                icon: "warning",
+                title: "검색 결과가 없습니다.",
+              });
+              return;
+            }
             $("tbody").empty();
 
             $.each(result, function (index, item) {
@@ -531,7 +557,7 @@ uri="http://www.springframework.org/security/tags"%>
         });
         return;
       }
-
+      $("#cbx_chkAll").prop("disabled", true);
       disableCheckBoxes();
 
       // 수정 버튼의 텍스트를 "수정완료"로 변경

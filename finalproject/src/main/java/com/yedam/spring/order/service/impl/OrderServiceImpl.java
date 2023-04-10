@@ -51,4 +51,34 @@ public class OrderServiceImpl implements OrderService {
 		return orderMapper.deleteOrder(vo);
 	}
 
+	@Override
+	public int updateOrderProg(OrderTestVO vo) {
+		return orderMapper.updateOrderProg(vo);
+	}
+
+	@Override
+	public List<OrderTestVO> selectOrderDetail(String orderNo) {
+		return orderMapper.selectOrderDetail(orderNo);
+	}
+
+	@Override
+	public List<OrderTestVO> searchOrder(OrderTestVO vo) {
+		return orderMapper.searchOrder(vo);
+	}
+
+	@Override
+	public int updateOrder(OrderTestVO vo) {
+		return orderMapper.updateOrder(vo);
+	}
+
+	@Override
+	public int updateOrderDetail(OrderTestVO vo) {
+		return orderMapper.updateOrderDetail(vo);
+	}
+
+	@Override
+	public int deleteOrderDetail(OrderTestVO vo) {
+		return orderMapper.deleteOrderDetail(vo);
+	}
+
 }

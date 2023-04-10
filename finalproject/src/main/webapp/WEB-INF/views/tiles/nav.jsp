@@ -24,8 +24,8 @@
             </a>
           </li>
           <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Form Elements</span>
+            <a href="${pageContext.request.contextPath }/bomList">
+              <i class="bi bi-circle"></i><span>BOM 관리</span>
             </a>
           </li>
           <li>
