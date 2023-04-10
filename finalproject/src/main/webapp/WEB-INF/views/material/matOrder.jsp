@@ -20,6 +20,7 @@
             });
         });
     </script>
+    
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
@@ -40,9 +41,9 @@ table, tr, th, td {
 	border: 1px solid black;
 }
 
- .low-stock {
-        background-color: #FF0000;
-    }
+.low-stock {
+	background-color: #FF0000;
+}
 
 #matOrderList th:first-child::after {
 	display: none;
@@ -64,119 +65,56 @@ table, tr, th, td {
 </style>
 </head>
 <body>
-	<div>
-		<!-- ============================================================== -->
-		<!-- pageheader pageheader pageheader pageheader pageheader -->
-		<div class="row">
-			<nav aria-label="breadcrumb">
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="#"
-						class="breadcrumb-link">자재관리</a></li>
-					<!-- <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Tables</a></li> -->
-					<li class="breadcrumb-item active" aria-current="page">자재발주</li>
-				</ol>
-			</nav>
-		</div>
-		<!-- pageheader pageheader pageheader pageheader pageheader -->
-		<!-- ============================================================== -->
-		<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
-		<div class="row">
-			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-				<div class="card">
-					<h3 class="">자재재고현황</h3>
-					<div class="card-body">
-						<div class="table-responsive"
-							style="width: 100%; height: 300px; overflow: auto">
-							<table id="stock-table"
-								class="table table-striped table-bordered first table-hover">
-								<thead>
-									<tr>
-										<th>No.</th>
-										<th>자재코드</th>
-										<th>자재명</th>
-										<th>자재유형</th>
-										<th>자재규격</th>
-										<th>입고재고</th>
-										<th>출고재고</th>
-										<th>현재재고</th>
-										<th>미입고잔량</th>
-										<th>안전재고</th>
-									</tr>
-								</thead>
-								<tbody>
-									<c:forEach var="stock" items="${matStock }" varStatus="loop">
-										<tr data-id="${stock.rscCd }">
-											<td>${loop.count }</td>
-											<td>${stock.rscCd }</td>
-											<td>${stock.rscNm }</td>
-											<td>${stock.rscTyp }</td>
-											<td>${stock.rscSpec }</td>
-											<td>${stock.totalIstCnt }</td>
-											<td>${stock.totalOustCnt }</td>
-											<td>${stock.netStc }</td>
-											<td>${stock.noIstCnt }</td>
-											<td>${stock.safStc }</td>
-										</tr>
-									</c:forEach>
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
-		<!-- ============================================================== -->
-		<!-- 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청  -->
-		<div class="row">
-			<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-				<div class="card">
-					<div class="card-body d-flex justify-content-between">
-						<h3 class="">자재발주</h3>
-						<div id="btnGrp">
-							<sec:authorize access="hasRole('ROLE_ADMIN')">
-								<button type="button" class="btn btn-success"
-									data-bs-toggle="modal" data-bs-target="#orderModal">추가</button>
-								<button type="button" class="btn btn-info" onclick="updateBtn()">수정</button>
-								<button type="button" class="btn btn-danger"
-									onclick="deleteBtn()">삭제</button>
-							</sec:authorize>
-						</div>
-					</div>
-					<div class="table-responsive">
-						<table id="matOrderList"
-							class="table table-striped table-bordered first">
+	<!-- ============================================================== -->
+	<!-- pageheader pageheader pageheader pageheader pageheader -->
+	<div class="row">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#" class="breadcrumb-link">자재관리</a></li>
+				<!-- <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Tables</a></li> -->
+				<li class="breadcrumb-item active" aria-current="page">자재발주</li>
+			</ol>
+		</nav>
+	</div>
+	<!-- pageheader pageheader pageheader pageheader pageheader -->
+	<!-- ============================================================== -->
+	<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<h3 class="">자재재고현황</h3>
+				<div class="card-body">
+					<div class="table-responsive"
+						style="width: 100%; height: 300px; overflow: auto">
+						<table id="stock-table"
+							class="table table-striped table-bordered first table-hover">
 							<thead>
 								<tr>
-									<th><input type="checkbox" id="cbx_chkAll" /></th>
 									<th>No.</th>
-									<th>발주번호</th>
-									<th>발주신청일</th>
-									<th>거래처코드</th>
-									<th>거래처명</th>
 									<th>자재코드</th>
 									<th>자재명</th>
-									<th>발주량</th>
-									<th>납기요청일</th>
+									<th>자재유형</th>
+									<th>자재규격</th>
+									<th>입고재고</th>
+									<th>출고재고</th>
+									<th>현재재고</th>
+									<th>미입고잔량</th>
+									<th>안전재고</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach var="matOrder" items="${matOrderList }"
-									varStatus="loop">
-									<tr data-id="${matOrder.ordrCd }">
-										<td><input type="checkbox" name="chk"
-											value="${matOrder.ordrCd }" /></td>
+								<c:forEach var="stock" items="${matStock }" varStatus="loop">
+									<tr data-id="${stock.rscCd }">
 										<td>${loop.count }</td>
-										<td>${matOrder.ordrCd }</td>
-										<td><fmt:formatDate value="${matOrder.ordrReqDt }"
-												pattern="yyyy-MM-dd" /></td>
-										<td>${matOrder.vendCd }</td>
-										<td>${matOrder.vendNm }</td>
-										<td>${matOrder.rscCd }</td>
-										<td>${matOrder.rscNm }</td>
-										<td>${matOrder.ordrCnt }</td>
-										<td><fmt:formatDate value="${matOrder.paprdCmndDt }"
-												pattern="yyyy-MM-dd" /></td>
+										<td>${stock.rscCd }</td>
+										<td>${stock.rscNm }</td>
+										<td>${stock.rscTyp }</td>
+										<td>${stock.rscSpec }</td>
+										<td>${stock.totalIstCnt }</td>
+										<td>${stock.totalOustCnt }</td>
+										<td>${stock.netStc }</td>
+										<td>${stock.noIstCnt }</td>
+										<td>${stock.safStc }</td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -185,97 +123,165 @@ table, tr, th, td {
 				</div>
 			</div>
 		</div>
-		<!-- 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청  -->
-		<!-- ============================================================== -->
-		<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
-		<div class="modal fade" id="orderModal" tabindex="-1">
-			<div class="modal-dialog modal-xl">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h3 class="modal-title">자재발주</h3>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+	</div>
+	<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
+	<!-- ============================================================== -->
+	<!-- 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청  -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-body d-flex justify-content-between">
+					<h3 class="">자재발주</h3>
+					<div id="btnGrp">
+						<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<button type="button" class="btn btn-success"
+								data-bs-toggle="modal" data-bs-target="#orderModal">추가</button>
+							<button type="button" class="btn btn-info" onclick="updateBtn()">수정</button>
+							<button type="button" class="btn btn-danger"
+								onclick="deleteBtn()">삭제</button>
+						</sec:authorize>
 					</div>
-					<form class="row g-3" name="insertForm" action="matOrderInsert"
-						method="post" onsubmit="return false"
-						style="margin: 0px 5px 5px 5px;">
-
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">발주번호</label><input
-								type="text" class="form-control" id="ordrCd" name="ordrCd"
-								placeholder="발주번호를 입력해주세요..">
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">발주신청일</label> <input
-								type="date" class="form-control" id="ordrReqDt" name="ordrReqDt"
-								placeholder="">
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">거래처코드</label><select
-								class="form-control" id="vendCd" name="vendCd" required="">
-								<option value="none" disabled selected>=== 선택 ===</option>
-								<option value="VEI1000">VEI1000</option>
-								<option value="VEI1001">VEI1001</option>
-							</select>
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">거래처명</label> <input
-								type="text" class="form-control" id="vendNm" name="vendNm">
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">자재코드</label> <input
-								type="text" class="form-control" id="rscCd" name="rscCd">
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">자재명</label> <input
-								type="text" class="form-control" id="rscNm" name="rscNm">
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">발주량</label> <input
-								type="text" class="form-control" id="ordrCnt" name="ordrCnt">
-						</div>
-
-						<div class="col-md-3">
-							<label for="country" class="form-label">납기요청일</label> <input
-								type="date" class="form-control" id="paprdCmndDt"
-								name="paprdCmndDt">
-						</div>
-					</form>
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-primary" id="insertBtn">
-							등록</button>
-					</div>
+				</div>
+				<div class="table-responsive">
+					<table id="matOrderList"
+						class="table table-striped table-bordered first">
+						<thead>
+							<tr>
+								<th><input type="checkbox" id="cbx_chkAll" /></th>
+								<th>No.</th>
+								<th>발주번호</th>
+								<th>발주신청일</th>
+								<th>거래처코드</th>
+								<th>거래처명</th>
+								<th>자재코드</th>
+								<th>자재명</th>
+								<th>발주량</th>
+								<th>납기요청일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach var="matOrder" items="${matOrderList }"
+								varStatus="loop">
+								<tr data-id="${matOrder.ordrCd }">
+									<td><input type="checkbox" name="chk"
+										value="${matOrder.ordrCd }" /></td>
+									<td>${loop.count }</td>
+									<td>${matOrder.ordrCd }</td>
+									<td><fmt:formatDate value="${matOrder.ordrReqDt }"
+											pattern="yyyy-MM-dd" /></td>
+									<td>${matOrder.vendCd }</td>
+									<td>${matOrder.vendNm }</td>
+									<td>${matOrder.rscCd }</td>
+									<td>${matOrder.rscNm }</td>
+									<td>${matOrder.ordrCnt }</td>
+									<td><fmt:formatDate value="${matOrder.paprdCmndDt }"
+											pattern="yyyy-MM-dd" /></td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
-		<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
+	</div>
+	<!-- 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청  -->
+	<!-- ============================================================== -->
+	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
+	<div class="modal fade" id="orderModal" tabindex="-1">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">자재발주</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<form class="row g-3" name="insertForm" action="matOrderInsert"
+					method="post" onsubmit="return false"
+					style="margin: 0px 5px 5px 5px;">
 
 
-		<script>
+					<div class="col-md-3">
+						<label for="country" class="form-label">발주번호</label><input
+							type="text" class="form-control" id="ordrCd" name="ordrCd"
+							placeholder="발주번호를 입력해주세요..">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">발주신청일</label> <input
+							type="date" class="form-control" id="ordrReqDt" name="ordrReqDt"
+							placeholder="">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">거래처코드</label><select
+							class="form-control" id="vendCd" name="vendCd">
+							<option value="none" disabled selected>=== 선택 ===</option>
+							<option value="VEI1000">VEI1000</option>
+							<option value="VEI1001">VEI1001</option>
+						</select>
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">거래처명</label> <input
+							type="text" class="form-control" id="vendNm" name="vendNm">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">자재코드</label> <input
+							type="text" class="form-control" id="rscCd" name="rscCd">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">자재명</label> <input
+							type="text" class="form-control" id="rscNm" name="rscNm">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">발주량</label> <input
+							type="text" class="form-control" id="ordrCnt" name="ordrCnt">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">납기요청일</label> <input
+							type="date" class="form-control" id="paprdCmndDt"
+							name="paprdCmndDt">
+					</div>
+				</form>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" id="insertBtn">
+						등록</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
+
+
+	<script>
+		  document.addEventListener('DOMContentLoaded', function() {
+		        var stockTable = document.getElementById('stock-table');
+		        var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+		        for (var i = 0; i < rows.length; i++) {
+		            var currentStockCell = rows[i].cells[7];
+		            var safetyStockCell = rows[i].cells[9];
+
+		            // 셀이 존재하는지 확인
+		            if (currentStockCell && safetyStockCell) {
+		                var currentStock = parseFloat(currentStockCell.innerText);
+		                var safetyStock = parseFloat(safetyStockCell.innerText);
+
+		                // 현재 재고가 안전 재고보다 작은 경우
+		                if (currentStock < safetyStock) {
+		                    // 배경색을 연한 빨간색으로 변경
+		                    rows[i].classList.add('low-stock');
+		                }
+		            }
+		        }
+		    });
 		<!-- ============================================================== -->
 			 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
-document.addEventListener('DOMContentLoaded', function() {
-    var stockTable = document.getElementById('stock-table');
-    var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-    for (var i = 0; i < rows.length; i++) {
-        var currentStock = parseFloat(rows[i].cells[9].innerText);
-        var safetyStock = parseFloat(rows[i].cells[11].innerText);
-
-        if (currentStock < safetyStock) {
-            rows[i].classList.add('low-stock');
-        }
-    }
-});
-      
       
       function formOptionChk() {
           let ordrCd = document.getElementsByName('ordrCd')[0];
