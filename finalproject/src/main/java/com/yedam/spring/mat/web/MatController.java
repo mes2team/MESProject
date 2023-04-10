@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yedam.spring.masterData.service.VendVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
-import com.yedam.spring.vend.service.VendVO;
 
 @Controller
 public class MatController {

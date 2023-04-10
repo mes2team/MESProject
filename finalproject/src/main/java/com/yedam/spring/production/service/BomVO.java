@@ -18,5 +18,7 @@ public class BomVO {
 	// + 자재
 	private String rscNm;
 	private String rscTyp;
-	private String prcsNm;     
+	private String prcsNm;
+	
+	
 }

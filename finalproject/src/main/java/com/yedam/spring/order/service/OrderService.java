@@ -3,43 +3,42 @@ package com.yedam.spring.order.service;
 import java.util.List;
 
 import com.yedam.spring.production.service.OrderSheetVO;
-import com.yedam.spring.vend.service.VendVO;
 
 public interface OrderService {
 	// 전체조회
-	public List<OrderTestVO> selectOrderList();
+	public List<OrderSheetVO> selectOrderList();
 
 	// 주문번호 조회
-	public OrderTestVO selectOrderNo();
+	public OrderSheetVO selectOrderNo();
 
 	// 상품정보 조회
-	public List<OrderPrdTestVO> selectOrderPrd();
+	public List<OrderSheetVO> selectOrderPrd();
 
 	// 주문서 등록
-	public int insertOrder(OrderTestVO vo);
+	public int insertOrder(OrderSheetVO vo);
 
 	// 주문서 디테일 등록
-	public int insertOrderPrd(OrderPrdTestVO vo);
+	public int insertOrderPrd(OrderSheetVO vo);
 
 	// 주문서 삭제
-	public int deleteOrder(OrderTestVO vo);
+	public int deleteOrder(OrderSheetVO vo);
 
 	// 주문서 진행도 수정
-	public int updateOrderProg(OrderTestVO vo);
+	public int updateOrderProg(OrderSheetVO vo);
 
 	// 주문서 디테일 조회
-	public List<OrderTestVO> selectOrderDetail(String orderNo);
+	public List<OrderSheetVO> selectOrderDetail(String orderNo);
 
 	// 주문서 검색
-	public List<OrderTestVO> searchOrder(OrderTestVO vo);
+	public List<OrderSheetVO> searchOrder(OrderSheetVO vo);
 
 	// 주문서 수정
-	public int updateOrder(OrderTestVO vo);
+	public int updateOrder(OrderSheetVO vo);
 
 	// 주문서 디테일 수정
-	public int updateOrderDetail(OrderTestVO vo);
+	public int updateOrderDetail(OrderSheetVO vo);
 
 	// 주문서 디테일 삭제
-	public int deleteOrderDetail(OrderTestVO vo);
+	public int deleteOrderDetail(OrderSheetVO vo);
 
 }

@@ -24,7 +24,7 @@
             </a>
           </li>
           <li>
-            <a href="${pageContext.request.contextPath }/bomList">
+            <a href="${pageContext.request.contextPath }/bomMag">
               <i class="bi bi-circle"></i><span>BOM 관리</span>
             </a>
           </li>
