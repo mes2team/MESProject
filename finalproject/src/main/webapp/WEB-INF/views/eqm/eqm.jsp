@@ -17,7 +17,7 @@
 	<div id="container">
 		<div class="card">
 			<div class="card-body">
-				<div style="width: 100%; height: 200px; overflow: auto;">
+				<div style="width: 100%; height: 200px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr style="position: sticky; top: 0px; background-color:#E2E2E2">
@@ -50,7 +50,7 @@
 		<hr>
 		<div class="card">
 			<div class="card-body">
-				<form id="insertForm" name="insertForm" action="eqm" method="POST">
+				<form id="insertForm" name="insertForm" action="eqm" method="POST" style="margin-top: 20px; margin-bottom: 5px;">
 					<input type="file" name="eqmImg" id="profile_pt"
 						onchange="previewImage(this,'View_area')">
 					<div id='View_area'

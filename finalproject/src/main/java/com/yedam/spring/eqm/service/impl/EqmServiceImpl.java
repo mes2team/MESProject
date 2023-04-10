@@ -62,5 +62,13 @@ public class EqmServiceImpl implements EqmService{
 	public int insertCheck(EqmVO eqmVO) {
 		return mapper.insertCheck(eqmVO);
 	}
+	@Override
+	public int deleteCheck(String checkCd) {
+		return mapper.deleteCheck(checkCd);
+	}
+	@Override
+	public int updateCheck(EqmVO eqmVO) {
+		return mapper.updateCheck(eqmVO);
+	}
 
 }

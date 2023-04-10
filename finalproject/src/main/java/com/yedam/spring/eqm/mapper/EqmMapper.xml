@@ -132,26 +132,35 @@
 	
 	<!-- 점검등록 -->
 	<insert id="insertCheck" parameterType="EqmVO">
-		INSERT INTO eqm_check
-			   (
-			     CHECK_CD,
-			     EQM_CD, 
-			     CHCK_FG,
-			     CHCK_DT,
-			     JDGMNT,
-			     DISPO_CTNT,
-			     CHCK_PSCH,
-			     EQM_NM
-			   )
-		VALUES (
-				SELECT 'CHK'||(SUBSTR(MAX(check_cd),4)+1) FROM eqm_check,
-			     #{eqmCd}, 
-			     #{chckFg},
-			     #{chckDt},
-			     #{jdgmnt},
-			     #{dispoCtnt},
-			     #{chckPsch},
-			     #{eqmNm}
-				)	  
+		INSERT INTO eqm_check (
+								check_cd, 
+							    eqm_cd, 
+							    chck_fg, 
+							    chck_dt, 
+							    jdgmnt, 
+							    dispo_ctnt, 
+							    chck_psch, 
+							    eqm_nm
+							    )
+		SELECT CONCAT('CHK', CAST(SUBSTR(MAX(check_cd), 4) + 1 AS NUMBER)),#{eqmCd},#{chckFg}, #{chckDt},#{jdgmnt},#{dispoCtnt},#{chckPsch},#{eqmNm}
+		FROM eqm_check
 	</insert>
+	
+	<!-- 점검삭제 -->
+	<delete id="deleteCheck" parameterType="String">
+		DELETE FROM eqm_check
+		WHERE check_cd = #{checkCd}
+	</delete>
+	
+	<update id="updateCheck" parameterType="EqmVO">
+		UPDATE eqm_check
+		SET eqm_cd = #{eqmCd}, 
+			chck_fg = #{chckFg}, 
+			chck_dt = #{chckDt}, 
+			jdgmnt = #{jdgmnt}, 
+			dispo_ctnt = #{dispoCtnt}, 
+			chck_psch = #{chckPsch}, 
+			eqm_nm = #{eqmNm} 
+		WHERE check_cd = #{checkCd}
+	</update>
 </mapper>

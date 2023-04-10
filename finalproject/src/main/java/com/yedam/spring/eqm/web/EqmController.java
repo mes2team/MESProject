@@ -1,6 +1,5 @@
 package com.yedam.spring.eqm.web;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -79,12 +78,29 @@ public class EqmController {
 	
 	//점검등록
 	@PostMapping("/insertCheck")
+	@ResponseBody
 	public String insertCheck(EqmVO eqmVO) {
 		service.insertCheck(eqmVO);
-		return "redirect:eqmCheck";
+		return "insertSuccess";
 	}
 	
+	//점검삭제
+	@PostMapping("/deleteCheck")
+	@ResponseBody
+	public String deleteCheck(@RequestBody String[] deleteList) {
+		for(int i=0; i<deleteList.length;i++) {
+			service.deleteCheck(deleteList[i]);
+		}
+		return "Success";
+	}
 	
+	//점검수정
+	@PostMapping("/updateCheck")
+	@ResponseBody
+	public String updateCheck(EqmVO eqmVO) {
+		service.updateCheck(eqmVO);
+		return "update success";
+	}
 	
 	
 	
