@@ -24,8 +24,8 @@
             </a>
           </li>
           <li>
-            <a href="#">
-              <i class="bi bi-circle"></i><span>Form Elements</span>
+            <a href="${pageContext.request.contextPath }/bomList">
+              <i class="bi bi-circle"></i><span>BOM 관리</span>
             </a>
           </li>
           <li>
@@ -90,17 +90,17 @@
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/productionPlan">
               <i class="bi bi-circle"></i><span>생산지시</span>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/productionPlan">
               <i class="bi bi-circle"></i><span>공정실적</span>
             </a>
           </li>
           <li>
-            <a href="#">
+            <a href="${pageContext.request.contextPath}/processManage">
               <i class="bi bi-circle"></i><span>공정관리</span>
             </a>
           </li>

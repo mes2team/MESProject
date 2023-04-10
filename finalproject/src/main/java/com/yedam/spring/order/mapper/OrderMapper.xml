@@ -77,4 +77,67 @@
     		WHERE order_no = #{orderNo};
 		END;
 	</delete>
+	
+	<!-- 주문서 진행도 수정 -->
+	<update id="updateOrderProg" parameterType="OrderTestVO">
+		UPDATE 	order_sheet_test
+		SET		prog_appe = #{progAppe}
+		WHERE	order_no = #{orderNo}
+	</update>
+	
+	<!-- 주문서 디테일 조회 -->
+	<select id="selectOrderDetail" resultType="OrderTestVO">
+		SELECT	edcts_cd,
+				prdt_nm,
+				order_cnt
+		FROM	order_sheet_prd_test
+		WHERE	order_no = #{orderNo}
+		ORDER BY edcts_cd
+	</select>
+	
+	<!-- 주문서 검색 -->
+	<select id="searchOrder" resultType="OrderTestVO">
+		SELECT  order_no,
+				order_dt,
+				vend_cd,
+				vend_nm,
+				prog_appe,
+				paprd_dt,
+				order_nm
+		FROM	order_sheet_test
+		<where>
+			<if test="orderNm != null and !orderNm.equals('')">
+				AND order_nm LIKE '%' || #{orderNm} || '%'
+			</if>
+			<if test="progAppe != null and !progAppe.equals('')">
+				AND prog_appe LIKE '%' || #{progAppe} || '%'
+			</if>
+			<if test="orderDt != null and !orderDt.equals('') and paprdDt != null and !paprdDt.equals('')">
+				AND <![CDATA[order_dt >= #{orderDt}]]> and <![CDATA[paprd_dt <= #{paprdDt}]]>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 주문서 수정 -->
+	<update id="updateOrder" parameterType="OrderTestVO">
+		UPDATE 	order_sheet_test
+		SET		order_nm = #{orderNm},
+				paprd_dt = #{paprdDt}
+		WHERE	order_no = #{orderNo}
+	</update>
+	
+	<!-- 주문서 디테일 수정 -->
+	<update id="updateOrderDetail" parameterType="OrderTestVO">
+		UPDATE 	order_sheet_prd_test
+		SET		order_cnt = #{orderCnt}
+		WHERE	edcts_cd = #{edctsCd}
+		AND		order_no = #{orderNo}
+	</update>
+	
+	<!-- 주문서 디테일 삭제 -->
+	<delete id="deleteOrderDetail" parameterType="OrderTestVO">
+		DELETE FROM order_sheet_prd_test
+		WHERE	edcts_cd = #{edctsCd}
+		AND		order_no = #{orderNo}
+	</delete>
 </mapper>

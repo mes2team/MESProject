@@ -69,4 +69,58 @@ public class OrderController {
 		}
 		return "success";
 	}
+	
+	//주문서 진행도 수정
+	@PostMapping("/orderUpdateProg")
+	@ResponseBody
+	public String orderUpdateProg(OrderTestVO vo) {
+		orderService.updateOrderProg(vo);
+		return "success";
+	}
+	
+	//주문서 디테일 조회
+	@GetMapping("/orderDetail")
+	@ResponseBody
+	public List<OrderTestVO> orderDetailList(String orderNo) {
+		return orderService.selectOrderDetail(orderNo);
+	}
+	
+	//주문서 검색
+	@GetMapping("/searchOrder")
+	@ResponseBody
+	public List<OrderTestVO> orderSearch(OrderTestVO vo){
+		return orderService.searchOrder(vo);
+	}
+	
+	//주문서 수정
+	@PostMapping("/updateOrder")
+	@ResponseBody
+	public String updateOrder(OrderTestVO vo) {
+		int result = orderService.updateOrder(vo);
+		
+		if(result == 1) {
+			return "success";
+		} else {
+			return "error";
+		}
+	}
+	
+	//주문서 디테일 수정
+	@PostMapping("/updateOrderDetail")
+	@ResponseBody
+	public String updateOrderDetail(@RequestBody OrderTestVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			orderService.updateOrderDetail(arr[i]);
+		}
+		
+		return "success";
+	}
+	
+	//주문서 디테일 삭제
+	@PostMapping("/deleteOrderDetail")
+	@ResponseBody
+	public String deleteOrderDetail(OrderTestVO vo) {
+		orderService.deleteOrderDetail(vo);
+		return "success";
+	}
 }

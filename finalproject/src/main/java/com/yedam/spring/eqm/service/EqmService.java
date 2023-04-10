@@ -34,5 +34,11 @@ public interface EqmService {
 
 	// 점검등록
 	public int insertCheck(EqmVO eqmVO);
+	
+	//점검삭제
+	public int deleteCheck(String checkCd);
+	
+	//점검수정
+	public int updateCheck(EqmVO eqmVO);
 
 }

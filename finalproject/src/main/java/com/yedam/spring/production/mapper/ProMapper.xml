@@ -76,7 +76,7 @@
 	  							  );
 			<if test="orderNo != null and !orderNo.equals('')">
 	  		<!-- 주문서 상태 변경 -->
-	  		UPDATE 	order_sheet
+	  		UPDATE 	order_sheet_test
 	  		SET	 	prog_appe = '계획완료'
 	  		WHERE	order_no = #{orderNo}
 	  		  AND	edcts_cd = v_edcts_cd;
@@ -100,7 +100,7 @@
   		  AND  ost.prog_appe = '접수완료'
   	</select>
   	<!-- 완제품 정보 조회 -->
-  	 <select id="selectPrdtInfo" resultType="OrderSheetVO">
+  	<select id="selectPrdtInfo" resultType="OrderSheetVO">
   		SELECT 		edcts_cd , prdt_nm 
   		FROM 		edcts
   		ORDER BY 	edcts_cd
@@ -111,7 +111,7 @@
   		SELECT bom_cd, standard, edcts_cd
   		FROM bom
   		<if test="edctsCd != null and !edctsCd.equals('')">
-  		WHERE		edcts_cd = #{edctsCd}
+  		WHERE	edcts_cd = #{edctsCd}
   		</if>
   		ORDER BY bom_cd
   	</select>
@@ -165,7 +165,7 @@
 		ORDER BY plan_dt
 	]]>
 	</select>
-	
+	<!-- 생산계획 취소 -->
 	<update id="deleteProPlan" parameterType="String">
 	  		UPDATE 	plan
 	  		SET	 	now_st = '계획취소'
@@ -197,4 +197,52 @@
 			WHERE 	plan_cd = #{planCd};
 		END;
 	</update>
+	
+	
+	
+	<!-- 공정관리 페이지 조회 -->
+	<select id="selectPrcsList" resultType="ProPrcsVO">
+	<![CDATA[
+		SELECT 	prcs_cd,
+				prcs_nm,
+				prcs_fg,
+				prcs_ctnt,
+				prcs_dt
+		FROM 	(SELECT	rownum rn,
+						prcs_cd,
+						prcs_nm,
+						prcs_fg,
+						prcs_ctnt,
+						prcs_dt
+				   FROM	prcs
+				  WHERE	 rownum <= #{pageNum} * #{amount})
+		WHERE rn > (#{pageNum}-1)* #{amount}
+		ORDER BY prcs_cd
+	]]>
+	</select>
+	
+	<!-- 공정등록 -->
+	<insert id="insertPrcs" parameterType="ProPrcsVO">
+		INSERT INTO prcs (
+							prcs_cd,
+							prcs_nm,
+							prcs_fg,
+							prcs_ctnt,
+							prcs_dt
+							)
+		VALUES (
+				#{prcsCd},
+				#{prcsNm},
+				#{prcsFg},
+				#{prcsCtnt},
+				#{prcsDt}
+				)
+	</insert>
+	
+	<!-- 공정삭제 -->
+	<delete id="deletePrcs" parameterType="String">
+		DELETE FROM prcs
+		WHERE prcs_cd = #{prcsCd}
+	</delete>
+	
   </mapper>

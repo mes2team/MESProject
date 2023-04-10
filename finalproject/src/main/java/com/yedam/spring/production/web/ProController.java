@@ -17,6 +17,7 @@ import com.yedam.spring.common.Criteria;
 import com.yedam.spring.common.PageDTO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.ProPlanVO;
+import com.yedam.spring.production.service.ProPrcsVO;
 import com.yedam.spring.production.service.ProService;
 
 @Controller
@@ -66,8 +67,6 @@ public class ProController {
 	    }
 		return resultMap;
 	}
-	
-	
 	
 	//미지시된 주문서 조회
 	@GetMapping("/getOrderSheet")
@@ -126,5 +125,37 @@ public class ProController {
 		return resultMap;
 	}
 
+	//공정관리 페이지 이동
+	@GetMapping("/processManage")
+	public String processManagePage(Criteria cri,Model model) {
+		int total = proService.getProPlanCnt();
+		model.addAttribute("prcsList",proService.getprcsList(cri));
+		model.addAttribute("pageMaker",new PageDTO(cri,total));
+		return"production/processManage";
+	}
 	
+	// 공정관리 다중등록처리
+	@PostMapping("/addPrcs")
+	@ResponseBody 
+	public Map<String, Object> addPrcs(@RequestBody ProPrcsVO[] prcsVO) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String result = null;
+	    for (ProPrcsVO vo : prcsVO) {
+	    	result = proService.addPrcs(vo);
+	    }
+		return resultMap;
+	}
+	
+	//공정삭제
+	@PostMapping("/removePrcs")
+	@ResponseBody
+	public String removePrcs(@RequestBody List<String> prcsCdList) {
+		String result = null;
+
+	    for(String prcsCd : prcsCdList) {
+	        result = proService.removePrcs(prcsCd);
+	    }
+	    
+	    return result;
+	}
 }
