@@ -23,7 +23,7 @@ public interface MatService {
 	//자재발주 등록
 	public int addMatOrderInfo(MatVO matVO);	
 	//자재발주 수정
-	public int modifyMatOrderInfo(MatVO matVO);
+	public int updatematOrder(MatVO matVO);
 	//자재발주 삭제
-	public int removeMatOrderInfo(String ordrCd);
+	public int removeMatOrder(String ordrCd);
 }
