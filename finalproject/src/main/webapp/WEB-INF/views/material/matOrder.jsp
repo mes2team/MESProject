@@ -94,8 +94,6 @@ table, tr, th, td {
 										<th>No.</th>
 										<th>자재코드</th>
 										<th>자재명</th>
-										<th>거래처코드</th>
-										<th>거래처명</th>
 										<th>자재유형</th>
 										<th>자재규격</th>
 										<th>입고재고</th>
@@ -111,8 +109,6 @@ table, tr, th, td {
 											<td>${loop.count }</td>
 											<td>${stock.rscCd }</td>
 											<td>${stock.rscNm }</td>
-											<td>${stock.vendCd }</td>
-											<td>${stock.vendNm }</td>
 											<td>${stock.rscTyp }</td>
 											<td>${stock.rscSpec }</td>
 											<td>${stock.totalIstCnt }</td>
