@@ -35,6 +35,14 @@ public interface ProService {
 
 	public String removePrcs(String prcsCd);
 
+	public List<ProOrderVO> getProOrders(Criteria cri);
+
+	public int getProOrderCnt();
+
+	public List<ProPlanVO> getPlanToOrder();
+
+	public List<BomVO> getBomStock(BomVO vo);
+
 	
 
 }

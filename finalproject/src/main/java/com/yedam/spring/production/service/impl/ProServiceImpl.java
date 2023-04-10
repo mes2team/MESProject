@@ -9,6 +9,7 @@ import com.yedam.spring.common.Criteria;
 import com.yedam.spring.production.mapper.ProMapper;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
+import com.yedam.spring.production.service.ProOrderVO;
 import com.yedam.spring.production.service.ProPlanVO;
 import com.yedam.spring.production.service.ProPrcsVO;
 import com.yedam.spring.production.service.ProService;
@@ -118,6 +119,26 @@ public class ProServiceImpl implements ProService {
 		} else {
 			return "Fail";
 		}
+	}
+
+	@Override
+	public List<ProOrderVO> getProOrders(Criteria cri) {
+		return proMapper.selectProOrders(cri);
+	}
+
+	@Override
+	public int getProOrderCnt() {
+		return proMapper.getProOrderCnt();
+	}
+
+	@Override
+	public List<ProPlanVO> getPlanToOrder() {
+		return proMapper.selectPlanToOrder();
+	}
+
+	@Override
+	public List<BomVO> getBomStock(BomVO vo) {
+		return proMapper.selectBomStock(vo);
 	}
 
 

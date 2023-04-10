@@ -5,6 +5,7 @@ import java.util.List;
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
+import com.yedam.spring.production.service.ProOrderVO;
 import com.yedam.spring.production.service.ProPlanVO;
 import com.yedam.spring.production.service.ProPrcsVO;
 
@@ -37,6 +38,14 @@ public interface ProMapper {
 	public int insertPrcs(ProPrcsVO vo);
 
 	public int deletePrcs(String prcsCd);
+
+	public List<ProOrderVO> selectProOrders(Criteria cri);
+
+	public int getProOrderCnt();
+
+	public List<ProPlanVO> selectPlanToOrder();
+
+	public List<BomVO> selectBomStock(BomVO vo);
 
 	
 

@@ -68,7 +68,6 @@ tbody#processList input:not([readonly]) {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-
 }
 </style>
 </head>

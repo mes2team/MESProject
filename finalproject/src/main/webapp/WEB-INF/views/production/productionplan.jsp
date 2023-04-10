@@ -226,6 +226,11 @@ td {
 								readonly>
 						</div>
 						<div class="col-md-6">
+							<label class="form-label">거래처명</label> <input type="text"
+								class="form-control" id="vendNm" value="" readonly> <input
+								type="hidden" class="form-control" value="" readonly>
+						</div>
+						<div class="col-md-6">
 							<label class="form-label">제품명*</label> <input type="hidden"
 								class="form-control" id="edctsCd" name="edctsCd" readonly>
 							<select id="prdtNm" name="prdtNm" class="form-select"
@@ -237,10 +242,9 @@ td {
 								</c:forEach>
 							</select>
 						</div>
-						<div class="col-md-12">
-							<label class="form-label">거래처명</label> <input type="text"
-								class="form-control" id="vendNm" value="" readonly> <input
-								type="hidden" class="form-control" value="" readonly>
+						<div class="col-md-6">
+							<label class="form-label">주문수량*</label> <input type="text"
+								class="form-control" id="orderCnt" name="orderCnt" value="">
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">주문일자</label> <input type="date"
@@ -250,10 +254,7 @@ td {
 							<label class="form-label">납기일자*</label> <input type="date"
 								class="form-control" id="paprdDt" name="paprdDt" value="">
 						</div>
-						<div class="col-md-6">
-							<label class="form-label">주문수량*</label> <input type="text"
-								class="form-control" id="orderCnt" name="orderCnt" value="">
-						</div>
+
 						<hr>
 						<h5 class="modal-title">생산계획</h5>
 						<div class="col-md-6">
@@ -521,6 +522,7 @@ td {
 				  })
 				  // 모달 창 열기
 				  $('#orderSheet').modal('show');
+				  
 				  callback();
 			  },
 			  error: function(xhr, status, error) {
@@ -658,56 +660,70 @@ td {
     });
     
     //삭제버튼 
-	$(document).ready(function() {
-	  $("#deleteList").on("click", function() {
-		var checkboxes = document.querySelectorAll('#proPlanChk input[type="checkbox"]');
-		  
-		// 체크박스가 선택되었는지 확인합니다.
-		var isChecked = false;
-		checkboxes.forEach(function(checkbox) {
-		  if (checkbox.checked) {
-		    isChecked = true;
-		    return;
-		  }
+		$(document).ready(function() {
+		  $("#deleteList").on("click", function() {
+		    var checkboxes = document.querySelectorAll('#proPlanChk input[type="checkbox"]');
+		
+		    // 체크박스가 선택되었는지 확인합니다.
+		    var isChecked = false;
+		    checkboxes.forEach(function(checkbox) {
+		      if (checkbox.checked) {
+		        isChecked = true;
+		        return;
+		      }
+		    });
+		
+		    // 체크박스가 선택되지 않았다면 함수를 종료합니다.
+		    if (!isChecked) {
+		      alert('삭제할 항목을 선택해주세요.');
+		      return;
+		    }
+		
+		    // nowSt가 '미지시'인지 확인합니다.
+		    var isDeletable = true;
+		    $("#proPlanChk input[type='checkbox']:checked").each(function() {
+		      var nowSt = $(this).closest("tr").find("td:nth-child(9)").text();
+		      if (nowSt === '미지시') {
+		        isDeletable = false;
+		        return;
+		      }
+		    });
+		
+		    // nowSt가 '미지시'인 경우 함수를 종료합니다.
+		    if (!isDeletable) {
+		      alert('진행 상태가 \'미지시\'인 계획은 삭제할 수 없습니다.');
+		      return;
+		    }
+		
+		    if (!confirm("선택한 항목을 삭제하시겠습니까?")){
+		      return;
+		    }
+		    var planCdList = [];
+		    $("#proPlanChk input[type='checkbox']:checked").each(function() {
+		      var planCd = $(this).closest("tr").find("#hiddenPlanCd").text();
+		      planCdList.push(planCd);
+		    });
+		
+		    // 스프링 컨트롤러에 Ajax 요청을 보냅니다.
+		    $.ajax({
+		      url: "deletePlan",
+		      type: "POST",
+		      data: JSON.stringify(planCdList),
+		      contentType: "application/json",
+		      success: function(data) {
+		        console.log(data);
+		        if(data == "success"){
+		          $("#proPlanChk input[type='checkbox']:checked").closest("tr").remove();
+		        } else {
+		          alert('통신결과를 받는데 실패');
+		        }
+		      },
+		      error: function(jqXHR, textStatus, errorThrown) {
+		        console.log(textStatus + ": " + errorThrown);
+		      }
+		    });
+		  });
 		});
-
-		// 체크박스가 선택되지 않았다면 함수를 종료합니다.
-		if (!isChecked) {
-		  alert('삭제할 항목을 선택해주세요.')
-		  return;
-		}		  
-		  
-		  
-		  
-		if (!confirm("선택한 항목을 삭제하시겠습니까?")){
-			return;
-		}
-	    var planCdList = [];
-	    $("#proPlanChk input[type='checkbox']:checked").each(function() {
-	      var planCd = $(this).closest("tr").find("#hiddenPlanCd").text();
-	      planCdList.push(planCd);
-	    });
-	
-	    // 스프링 컨트롤러에 Ajax 요청을 보냅니다.
-	    $.ajax({
-	    	url: "deletePlan",
-	        type: "POST",
-	        data: JSON.stringify(planCdList), 
-	        contentType: "application/json",
-	        success: function(data) {
-	        	console.log(data);
-	        	if(data == "success"){	        		
-	            	$("#proPlanChk input[type='checkbox']:checked").closest("tr").remove();
-	        	} else {
-	        		alert('통신결과를 받는데 실패');
-	        	}
-	        },
-	        error: function(jqXHR, textStatus, errorThrown) {
-	            console.log(textStatus + ": " + errorThrown);
-	        }
-	    });
-	  });
-	});
     
     //수정 
     $(document).ready(function() { 	

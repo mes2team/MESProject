@@ -158,4 +158,34 @@ public class ProController {
 	    
 	    return result;
 	}
+	
+	
+	//생산지시 페이지 이동
+	@GetMapping("/productionOrder")
+	public String productionOrderPage(Criteria cri,Model model) {
+		int total = proService.getProOrderCnt();
+		model.addAttribute("ProOrders",proService.getProOrders(cri));
+		model.addAttribute("pageMaker",new PageDTO(cri,total));
+		return"production/productionOrder";
+	}
+	
+	//미지시된 생산계획 조회
+	@GetMapping("/getPlanToOrder")
+	@ResponseBody
+	public Map<String, Object> getPlanToOrder() {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("result", proService.getPlanToOrder());
+		System.out.println(resultMap);
+		return resultMap;
+	}
+	
+	//BOM 단건 조회
+	@GetMapping("/getBomInfo")
+	@ResponseBody
+	public Map<String, Object> getBomInfo(BomVO vo) {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    resultMap.put("result", proService.getBomStock(vo));
+		System.out.println(resultMap);
+		return resultMap;
+	}
 }
