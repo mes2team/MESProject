@@ -29,6 +29,12 @@ public interface ProService {
 
 	public List<OrderSheetVO> getprdtInfo();
 
+	public List<ProPrcsVO> getprcsList(Criteria cri);
+
+	public String addPrcs(ProPrcsVO vo);
+
+	public String removePrcs(String prcsCd);
+
 	
 
 }

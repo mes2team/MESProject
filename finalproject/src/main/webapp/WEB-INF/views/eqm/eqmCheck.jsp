@@ -13,17 +13,17 @@
 <body>
 	<h1>설비점검내역</h1>
 	<div class="card">
-	<form id="checkForm" action="insertCheck" method="post">
-		<div class="card-body">
-			<div class="row g-3 align-items-center"
-				style="margin-top: 20px; margin-bottom: 5px;">
+		<form id="checkForm" action="insertCheck" method="post">
+			<div class="card-body">
+				<div class="row g-3 align-items-center"
+					style="margin-top: 20px; margin-bottom: 5px;">
 					<div class="form-group row">
 						<div class="col-auto">
 							<label style="font-weight: bold;">설비명*</label>
 						</div>
 						<div class="col-auto">
-							<input type="hidden" name="checkCd" >
-							<input type="text" disabled readonly name="eqmNm" class="form-control">
+							<input type="hidden" name="checkCd"> <input type="text"
+								disabled readonly name="eqmNm" class="form-control">
 						</div>
 						<div class="col-auto">
 							<button type="button" class="btn btn-success"
@@ -34,7 +34,8 @@
 							<label style="font-weight: bold;">설비코드*</label>
 						</div>
 						<div class="col-auto">
-							<input type="text" disabled name="eqmCd" class="form-control" readonly>
+							<input type="text" disabled name="eqmCd" class="form-control"
+								readonly>
 						</div>
 
 						<div class="col-auto">
@@ -44,51 +45,54 @@
 							<input type="date" value="" name="chckDt" class="form-control" />
 						</div>
 					</div>
-			</div>
-			<hr>
-			
-			<div class="row g-3 align-items-center">
-
-				<div class="col-auto" style="margin-left: 10px;">
-					<label style="font-weight: bold;">담당자*</label>
-				</div>
-				<div class="col-auto">
-					<input type="text" name="chckPsch" class="form-control">
-				</div>
-
-				<div class="col-auto" style="margin-left: 90px;">
-					<label style="font-weight: bold;">점검구분*</label>
-				</div>
-				<div class="col-auto">
-					<input type="radio" name="chckFg" value="정기점검">
-					정기점검 <input type="radio" name="chckFg" value="수리"> 수리
-				</div>
-
-				<div class="col-auto" style="margin-left: 100px;">
-					<label style="font-weight: bold;">판정*</label>
-				</div>
-				<div class="col-auto">
-					<input type="radio" name="jdgmnt"  value="합격"> 합격 <input
-						type="radio" name="jdgmnt" value="불합격"> 불합격
 				</div>
 				<hr>
-			</div>
 
-			<div class="row g-3 align-items-center" style="margin-bottom: 10px;">
-				<div class="col-auto">
-					<label style="font-weight: bold;">조치내역</label>
-				</div>
-				<textarea class="form-control col-sm-5" name="dispoCtnt"
-					style="width: 500px;" rows="5"></textarea>
-				<div class="col-auto" style="margin-left: 50px; margin-top: 100px;">
-					<button type="button" onclick="formOptionChk()" class="btn btn-primary">저장</button>
-					<button type="button" onclick="inputClean()"
-						class="btn btn-secondary">클린</button>
-				</div>
-				
-			</div>
+				<div class="row g-3 align-items-center">
 
-		</div>
+					<div class="col-auto" style="margin-left: 10px;">
+						<label style="font-weight: bold;">담당자*</label>
+					</div>
+					<div class="col-auto">
+						<input type="text" name="chckPsch" class="form-control">
+					</div>
+
+					<div class="col-auto" style="margin-left: 90px;">
+						<label style="font-weight: bold;">점검구분*</label>
+					</div>
+					<div class="col-auto">
+						<label><input type="radio" name="chckFg" value="정기점검">
+							정기점검</label> <label><input type="radio" name="chckFg" value="수리">
+							수리</label>
+					</div>
+
+					<div class="col-auto" style="margin-left: 100px;">
+						<label style="font-weight: bold;">판정*</label>
+					</div>
+					<div class="col-auto">
+						<label><input type="radio" name="jdgmnt" value="합격">
+							합격</label> <label><input type="radio" name="jdgmnt" value="불합격">
+							불합격</label>
+					</div>
+					<hr>
+				</div>
+
+				<div class="row g-3 align-items-center" style="margin-bottom: 10px;">
+					<div class="col-auto">
+						<label style="font-weight: bold;">조치내역</label>
+					</div>
+					<textarea class="form-control col-sm-5" name="dispoCtnt"
+						style="width: 500px;" rows="5"></textarea>
+					<div class="col-auto" style="margin-left: 50px; margin-top: 100px;">
+						<button type="button" onclick="formOptionChk()"
+							class="btn btn-primary">저장</button>
+						<button type="button" onclick="inputClean()"
+							class="btn btn-secondary">클린</button>
+					</div>
+
+				</div>
+
+			</div>
 		</form>
 	</div>
 	<div class="card">
@@ -112,7 +116,8 @@
 						style="width: 150px; display: inline-block;" id="end"
 						class="form-control">
 					<button type="submit" id="searchButton" class="btn btn-success">조회</button>
-					<button type="button" onclick="" class="btn btn-danger">삭제</button>
+					<button type="button" onclick="deleteCheck()"
+						class="btn btn-danger">삭제</button>
 				</div>
 				<div style="width: 100%; height: 230px; overflow: auto;">
 					<table class="table table-striped table-hover">
@@ -132,9 +137,9 @@
 						<tbody id="listTable">
 							<c:forEach items="${list }" var="item">
 								<tr onclick="selectCheck('${item.checkCd}',this)">
-									<td scope="row"><input type="checkbox"></td>
+									<td scope="row"><input  type="checkbox"></td>
 									<td scope="row"><fmt:formatDate value="${item.chckDt}"
-											pattern="yyyy/MM/dd" /></td>
+											pattern="yyyy-MM-dd" /></td>
 									<td scope="row">${item.checkCd}</td>
 									<td scope="row">${item.eqmCd}</td>
 									<td scope="row">${item.eqmNm}</td>
@@ -217,37 +222,250 @@
 	</div>
 
 
-
 	<script>
-		//등록시 체크
+	
+	//메인화면 입력칸 모두
+	var chckDt = document.querySelector('[name="chckDt"]');
+	var chckFg = document.querySelectorAll('[name="chckFg"]');
+	var chckPsch = document.querySelector('[name="chckPsch"]');
+	var checkCd = document.querySelector('[name="checkCd"]');
+	var dispoCtnt = document.querySelector('[name="dispoCtnt"]');
+	var eqmCd = document.querySelector('[name="eqmCd"]');
+	var eqmNm = document.querySelector('[name="eqmNm"]');
+	var jdgmnt = document.querySelectorAll('[name="jdgmnt"]');
+	//수정
+	function updateCheck(){
+		Swal.fire({
+			  title: '수정하시겠습니까?',
+			  icon: 'question',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: '수정',
+			  cancelButtonText: '취소'
+			}).then((result) => {
+			  if (result.value) {
+					$.ajax({
+					      url: 'updateCheck', 
+					      type: 'POST', 
+					      data:	$('#checkForm').serialize(),
+					      //dataType: 'json', 화면 받을 땐 없어도 됨
+					      success: function(result) { 
+					    	console.log("업데이트성공");
+							updateTr();	//수정된tr 그리고 기존tr 지우기
+					      },
+					      error: function(reject) { 
+					        console.log("업데이트실패");
+					      }
+					    });	
+			  }
+			})
+	}
+	//수정시 tr새로 그리기
+	function updateTr(){
+	  let deleteTd = listTable.querySelectorAll('td')
+	  for(let i=0; i<deleteTd.length; i++){
+		  if(deleteTd[i].innerText == checkCd.value){
+			  deleteTd[i].closest('tr').remove()
+		  }
+	  }
+		 let tr = document.createElement("tr")
+   	  tr.onclick = function(){
+   		  let megeChkCd = this.children[2].innerText
+   		  selectCheck(megeChkCd,this)
+   	  }
+   	  let checkbox = document.createElement("input");
+   	  checkbox.type = "checkbox";
+   	  
+   	  let tds = [];
+   	  for(let l=0; l<8; l++){
+   		  let td = document.createElement("td");
+   		  tds.push(td)
+   	  }
+   	  tds[0].appendChild(checkbox)
+		  tds[1].innerText = chckDt.value;
+   	  tds[2].innerText = checkCd.value;
+   	  tds[3].innerText = eqmCd.value;
+   	  tds[4].innerText = eqmNm.value;
+   	  tds[5].innerText = chckFgVal();
+   	  tds[6].innerText = chckPsch.value;
+   	  tds[7].innerText = jdgmntVal();
+   	  
+		  for(let m=0;m<tds.length;m++){
+		  tr.appendChild(tds[m])
+		  }
+   	  listTable.append(tr);	
+	}
+		//등록시 빈칸체크 (저장버튼 눌렀을시 실행 됨)
 		function formOptionChk(){
 			let inputs = checkForm.querySelectorAll("input")
 			for(let i=1;i<5;i++){
 				if(inputs[i].value == ''){
-					alert("필수항목입력")
+					Swal.fire({
+				          icon: "warning",
+				          title: "필수항목을 확인해주세요.",
+				        });
 					return;
 				}
 			}
 			if(inputs[5].checked == false && inputs[6].checked == false){
-				alert("필수항목입력")
+				Swal.fire({
+			          icon: "warning",
+			          title: "점검구분 확인해주세요.",
+			        });
 				return;
 			}else if(inputs[7].checked == false && inputs[8].checked == false){
-				alert("필수항목입력")
+				Swal.fire({
+			          icon: "warning",
+			          title: "판정을 확인해주세요.",
+			        });
 				return;
 			}
-			checkForm.submit();
+			
+			if(checkCd.value != ''){//점검코드 비지 않았으면 수정
+				updateCheck();	
+			}else{
+				//그렇지 않으면 새로운 등록
+				//전송 보내기 전 disabled 풀기
+				let disableds = document.querySelectorAll('input:disabled');
+				for(j=0;j<disableds.length;j++){
+					disableds[j].disabled = false;
+				}
+			Swal.fire({
+				  title: '점검내역을 추가하시겠습니까?',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: '추가',
+				  cancelButtonText: '취소'
+				}).then((result) => {
+				  if (result.value) {
+					  $.ajax({
+					      url: '/spring/insertCheck', 
+					      type: 'POST', 
+					      data:	$('#checkForm').serialize(),//form안의 데이터 "eqmCd=EQM1000&checkCd=CHK1000" 요런식으로 만드는 과정
+					      //dataType: 'json', 화면 받을 땐 없어도 됨
+					      success: function(result) { 
+					    	  console.log(result)
+					    	  for(k=0;k<disableds.length;k++){
+									disableds[k].disabled = false;
+								}
+					    	  let tr = document.createElement("tr")
+					    	  tr.onclick = function(){
+					    		  let megeChkCd = this.children[2].innerText
+					    		  selectCheck(megeChkCd,this)
+					    	  }
+					    	  let checkbox = document.createElement("input");
+					    	  checkbox.type = "checkbox";
+					    	  
+					    	  let tds = [];
+					    	  for(let l=0; l<8; l++){
+					    		  let td = document.createElement("td");
+					    		  tds.push(td)
+					    	  }
+					    	  tds[0].appendChild(checkbox)
+				    		  tds[1].innerText = chckDt.value;
+					    	  tds[2].innerText = maxCheckCd();
+					    	  tds[3].innerText = eqmCd.value;
+					    	  tds[4].innerText = eqmNm.value;
+					    	  tds[5].innerText = chckFgVal();
+					    	  tds[6].innerText = chckPsch.value;
+					    	  tds[7].innerText = jdgmntVal();
+					    	  
+				    		  for(let m=0;m<tds.length;m++){
+				    		  tr.appendChild(tds[m])
+				    		  }
+					    	  listTable.append(tr);
+					    	  inputClean();
+					    	  for(let j=0;j<disableds.length;j++){
+					  		    disableds[j].disabled = true;
+					  			}
+					    	 
+					    	  
+					      },
+					      error: function(reject) { 
+					        console.log("안됨"+reject);
+					      }
+					    });	
+		
+				  }
+				})}
 		}
-		//등록 insert
+		//최대점검코드 구하는함수(tr그리기용)
+		function maxCheckCd(){
+			let max = 0;
+			let trs = listTable.querySelectorAll("tr")
+			let cds = [];
+			
+			for(let i=0; i<trs.length; i++){
+				let number = parseInt(trs[i].children[2].innerText.substring(3))
+				if(max < number){
+					max = number //1000
+				} 
+			}
+			return'CHK'+(max+1) ;
+		} 
+		//tr그리기용 점검구분, 판정 구하는 함수
+		function chckFgVal(){
+			for(let i=0 ; i<chckFg.length;i++){
+				if(chckFg[i].checked){
+					return chckFg[i].value;
+				}
+			}
+		}
+		function jdgmntVal(){
+			for(let i=0 ; i<jdgmnt.length;i++){
+				if(jdgmnt[i].checked){
+					return jdgmnt[i].value;
+				}
+			}
+		}
+		
+		//삭제 체크된것만 담기
+		function deleteCheck(){
+			let checkList = listTable.querySelectorAll('[type="checkbox"]');			
+			let deleteList = [];
+			for(let i=0; i<checkList.length; i++){
+				if(checkList[i].checked){
+					deleteList.push(checkList[i].closest('tr').children[2].innerText);
+				}
+			}
+			Swal.fire({
+				  title: '선택항목들을 삭제 하시겠습니까?',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: '삭제',
+				  cancelButtonText: '취소'
+				}).then((result) => {
+				  if (result.value) {
+					//삭제
+					   $.ajax({
+					  type: "POST",
+					  url: "/spring/deleteCheck",
+					  data: JSON.stringify(deleteList),
+					  contentType: "application/json; charset=utf-8",
+					  //dataType: "json",
+					  success: function(response) {
+						  console.log("삭제완료")
+						 
+						  for(let j=0;j<checkList.length;j++){
+							  if(checkList[j].checked){
+							  checkList[j].closest('tr').remove();
+							  }
+						  }	
+					  },
+					  error: function(error) {
+						  console.log(error)
+					  }
+					});  
+				  }
+				})
+		}
 
-		//메인화면 입력칸 모두
-		var chckDt = document.querySelector('[name="chckDt"]');
-		var chckFg = document.querySelectorAll('[name="chckFg"]');
-		var chckPsch = document.querySelector('[name="chckPsch"]');
-		var checkCd = document.querySelector('[name="checkCd"]');
-		var dispoCtnt = document.querySelector('[name="dispoCtnt"]');
-		var eqmCd = document.querySelector('[name="eqmCd"]');
-		var eqmNm = document.querySelector('[name="eqmNm"]');
-		var jdgmnt = document.querySelectorAll('[name="jdgmnt"]');
+		
 		//tr클릭시 단건조회, check
 		function selectCheck(chkCd, tr) {
 			let checkbox = tr.querySelector('[type="checkbox"]')
@@ -453,6 +671,13 @@
 			chckFg[i].checked = false;
 			}
 		}
+		//checkbox직접클릭시 체크
+		listTable.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+			  checkbox.addEventListener('click', function(event) {
+			    // 이벤트 핸들러 내에서 이벤트 버블링 막기
+			    event.stopPropagation();
+			  });
+			});
 
 		//모달 창 닫으면 리셋
 		function modalReset() {
