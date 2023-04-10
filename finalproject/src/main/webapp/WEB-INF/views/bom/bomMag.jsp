@@ -110,13 +110,15 @@ uri="http://www.springframework.org/security/tags"%>
               >
                 <thead>
                   <tr>
-                    <th><input type="checkbox" id="cbx_chkAll" /></th>
-                    <th>No.</th>
-                    <th>자재코드</th>
-                    <th>자재이름</th>
-                    <th>사용량</th>
-                    <th>단위</th>
-                    <th>사용공정명</th>
+                    <th scope="col">
+                      <input type="checkbox" id="cbx_chkAll" />
+                    </th>
+                    <th scope="col">No.</th>
+                    <th scope="col">자재코드</th>
+                    <th scope="col">자재이름</th>
+                    <th scope="col">사용량</th>
+                    <th scope="col">단위</th>
+                    <th scope="col">사용공정명</th>
                   </tr>
                 </thead>
                 <tbody id="bomList"></tbody>
@@ -266,7 +268,7 @@ uri="http://www.springframework.org/security/tags"%>
   <!-- 공정 조회 -->
   <div
     class="modal fade"
-    id="prscModal"
+    id="prcsModal"
     tabindex="-1"
     data-bs-backdrop="static"
   >
@@ -306,12 +308,12 @@ uri="http://www.springframework.org/security/tags"%>
               </tr>
             </thead>
             <tbody>
-              <c:forEach items="${prscList }" var="prsc">
+              <c:forEach items="${prcsList }" var="prcs">
                 <tr>
-                  <td>${prsc.prscCd }</td>
-                  <td>${prsc.prscNm }</td>
+                  <td>${prcs.prcsCd }</td>
+                  <td>${prcs.prcsNm }</td>
                   <td>
-                    <button class="btn btn-primary" id="choicePrsc">
+                    <button class="btn btn-primary" id="choicePrcs">
                       선택
                     </button>
                   </td>
@@ -366,11 +368,14 @@ uri="http://www.springframework.org/security/tags"%>
     });
 
     function makeTr(idx, data) {
-      let tr = $("<tr>");
+      let tr = $("<tr>").attr("data-id", data.rscCd);
 
       tr.append(
         $("<td>").append(
-          $("<input>").attr("type", "checkbox").attr("name", "chk")
+          $("<input>")
+            .attr("type", "checkbox")
+            .attr("name", "chk")
+            .attr("value", data.bomCd)
         )
       );
       tr.append("<td>" + (idx + 1) + "</td>");
@@ -455,29 +460,33 @@ uri="http://www.springframework.org/security/tags"%>
       tr.append(
         $("<td>").append(
           $("<button>")
-            .addClass("btn btn-primary my-td-class rscCdBtn")
+            .addClass("btn btn-primary my-td-class rscBtn")
             .attr({
               type: "button",
               "data-bs-toggle": "modal",
               "data-bs-target": "#rscModal",
             })
-            .append($("<i>").addClass("bi bi-search my-td-class rscCdBtn"))
+            .append($("<i>").addClass("bi bi-search my-td-class rscBtn"))
         )
       );
 
       tr.append("<td>");
-      tr.append($("<td>").append($("<input>").css("width", "70px")));
+      tr.append(
+        $("<td>").append(
+          $("<input>").attr("type", "number").css("width", "70px")
+        )
+      );
       tr.append($("<td>").append($("<input>").css("width", "70px")));
       tr.append(
         $("<td>").append(
           $("<button>")
-            .addClass("btn btn-primary my-td-class")
+            .addClass("btn btn-primary my-td-class prcsBtn")
             .attr({
               type: "button",
               "data-bs-toggle": "modal",
-              "data-bs-target": "#prscModal",
+              "data-bs-target": "#prcsModal",
             })
-            .append($("<i>").addClass("bi bi-search my-td-class rscNmBtn"))
+            .append($("<i>").addClass("bi bi-search my-td-class prcsBtn"))
         )
       );
 
@@ -488,7 +497,7 @@ uri="http://www.springframework.org/security/tags"%>
     $(document).ready(function () {
       var inputRscCd;
       var inputRscNm;
-      $(document).on("click", ".rscCdBtn", function () {
+      $(document).on("click", ".rscBtn", function () {
         inputRscCd = $(this).closest("tr").children().eq(2);
         inputRscNm = $(this).closest("tr").children().eq(3);
       });
@@ -499,8 +508,109 @@ uri="http://www.springframework.org/security/tags"%>
         inputRscCd.text(rscCd); // input 업데이트
         inputRscNm.text(rscNm);
 
-        $("#rscSearch").modal("hide"); // 모달 닫기
+        $("#rscModal").modal("hide"); // 모달 닫기
       });
+    });
+
+    // 공정 선택하면 input에 넣기
+    $(document).ready(function () {
+      var inputPrcsNm;
+      $(document).on("click", ".prcsBtn", function () {
+        inputPrcsNm = $(this).closest("tr").children().eq(6);
+      });
+
+      $(document).on("click", "#choicePrcs", function () {
+        let prcsNm = $(this).closest("tr").children().eq(1).text();
+        inputPrcsNm.text(prcsNm); // input 업데이트
+
+        $("#prcsModal").modal("hide"); // 모달 닫기
+      });
+    });
+
+    //삭제
+    $(document).on("click", "#delBtn", function () {
+      let valueArr = [];
+
+      $('input[name="chk"]:checked').each(function (idx, items) {
+        let rscCd = $(items).closest("tr").children().eq(2).text();
+        let dataObj = {
+          bomCd: items.value,
+          rscCd: rscCd,
+        };
+
+        // 데이터 배열에 객체 추가
+        valueArr.push(dataObj);
+      });
+      if (valueArr.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+      } else {
+        Swal.fire({
+          title: "삭제 하시겠습니까?",
+          text: "복구 할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              url: "deleteBom",
+              method: "post",
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify(valueArr),
+              success: function (result) {
+                if (result == "success") {
+                  for (let i = 0; i < valueArr.length; i++) {
+                    $('tr[data-id="' + valueArr[i].rscCd + '"]').remove();
+                  }
+                } else if (result == "error") {
+                  Swal.fire({
+                    icon: "error",
+                    title: "오류가 발생했습니다.",
+                  });
+                }
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
+              },
+              error: function (reject) {
+                console.log(reject);
+              },
+            });
+          }
+        });
+      }
+    });
+
+    $(document).on("dblclick", "td", function () {
+      if ($(this).find("input").length > 0) return; // 이미 input이 있는 경우에는 더블클릭 이벤트를 처리하지 않음
+
+      let value = $(this).text().trim(); // 기존 값 가져오기
+      let input = $("<input>").val(value); // 새로운 input 요소 만들기
+      $(this).empty().append(input); // td 요소 내용을 새로운 input으로 교체
+      input.focus(); // input에 포커스 설정
+    });
+
+    $(document).on("blur", "td input", function () {
+      let value = $(this).val().trim(); // 새로운 값 가져오기
+      $(this).parent().text(value); // input을 td 요소로 교체
     });
   </script>
 </body>

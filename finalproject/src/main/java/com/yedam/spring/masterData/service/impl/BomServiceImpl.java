@@ -26,4 +26,9 @@ public class BomServiceImpl implements BomService {
 		return bomMapper.selectPrcsList();
 	}
 
+	@Override
+	public int deleteBom(BomVO vo) {
+		return bomMapper.deleteBom(vo);
+	}
+
 }

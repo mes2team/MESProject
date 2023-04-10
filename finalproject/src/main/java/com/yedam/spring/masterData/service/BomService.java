@@ -11,5 +11,8 @@ public interface BomService {
 	
 	// 공정 조회
 	public List<ProPrcsVO> getPrcsList();
+	
+	// bom 삭제
+	public int deleteBom(BomVO vo);
 
 }

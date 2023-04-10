@@ -4,8 +4,8 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.spring.masterData.mapper.BomMapper">
 	<select id="selectBomList" resultType="BomVO">
-		SELECT 	r.rsc_cd, r.rsc_nm,
-				bd.use_cnt, bd.unit, p.prcs_nm
+		SELECT 	bd.bom_cd, r.rsc_cd, r.rsc_nm,
+				bd.use_cnt, bd.unit, p.prcs_nm, p.prcs_cd
 		FROM 	bom b, bom_detail bd, prcs p, rsc r
 		WHERE 	b.bom_cd = bd.bom_cd
 		AND 	bd.prcs_cd = p.prcs_cd
@@ -23,4 +23,9 @@
 		FROM	prcs
 		ORDER BY prcs_cd
 	</select>
+	
+	<delete id="deleteBom" parameterType="BomVO">
+		DELETE FROM bom_detail
+		WHERE bom_cd = #{bomCd} and rsc_cd = #{rscCd}
+	</delete>
 </mapper>

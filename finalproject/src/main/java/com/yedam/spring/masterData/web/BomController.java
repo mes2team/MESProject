@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -37,5 +39,16 @@ public class BomController {
 	@ResponseBody
 	public List<BomVO> bomList(@RequestParam String edctsCd){
 		return bomService.getBomList(edctsCd);
+	}
+	
+	@PostMapping("deleteBom")
+	@ResponseBody
+	public String deleteBomProcess(@RequestBody BomVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			System.out.println("여기 프린터 " + arr[i]);
+			bomService.deleteBom(arr[i]);
+		}
+		
+		return "success";
 	}
 }
