@@ -8,7 +8,7 @@
 	<select id="matList" resultType="MatVO">
 		SELECT *
 		FROM rsc
-	   ORDER BY RSC_CD
+	   ORDER BY use_yn DESC, RSC_CD
 	</select>
 <!-- 자재정보 단건 조회 -->
 	<select id="selectMatInfo" resultType="MatVO">
@@ -169,6 +169,27 @@
 		DELETE FROM rsc_ordr
 		WHERE ordr_cd = #{ordrCd}
 	</delete>
+	
+<!-- 자재 재고 현황 -->
+	<select id="matStockList" resultType="MatVO">
+		SELECT r.RSC_CD
+		     , r.RSC_NM
+		     , r.VEND_CD
+		     , r.VEND_NM
+		     , r.rsc_typ
+		     , r.rsc_spec
+		     , SUM(i.ist_cnt) AS TOTAL_IST_CNT
+		     , SUM(out.ouST_CNT) AS TOTAL_OUST_CNT
+		     , (SUM(i.ist_cnt) - SUM(out.ouST_CNT)) AS NET_STC
+		     , (SUM(o.ordr_CNT)-SUM(i.IST_CNT)) AS no_iST_CNT
+		     , r.saf_stc
+		  FROM rsc r JOIN rsc_ist i ON r.rsc_cd = i.rsc_cd
+		            JOIN rsc_oust out ON r.RSC_CD = out.RSC_CD
+		            JOIN rsc_ordr o ON r.RSC_CD = o.RSC_CD
+		 WHERE r.use_yn = 'Yes'
+		 GROUP BY r.RSC_CD, r.RSC_NM, r.VEND_CD, r.VEND_NM, r.rsc_typ, r.rsc_spec, r.saf_stc
+		 ORDER BY r.RSC_CD
+	</select>	
 
 
 </mapper>

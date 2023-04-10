@@ -74,6 +74,7 @@ public class MatController {
 	@GetMapping("/matOrder")
 	public String getMatOrderList(Model model) {
 		model.addAttribute("matOrderList",matService.matOrderList());
+		model.addAttribute("matStock",matService.matStock());
 		return "material/matOrder";
 	}
 	// 등록
@@ -116,4 +117,5 @@ public class MatController {
 		return "success";
 	}
 	
+
 }

@@ -107,9 +107,12 @@ form {
                   </div>
 
                   <div class="col-md-3">
-                     <label for="country" class="form-label">관리단위</label> <input
-                        type="text" class="form-control" id="mngUnit" name="mngUnit"
-                        value="BOX" readonly>
+                     <label for="country" class="form-label">사용여부</label> <select
+                        class="form-control" id="useYn" name="useYn" required="">
+                        <option value="none" disabled selected>=== 선택 ===</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                     </select>
                   </div>
 
                   <div class="col-md-3">
@@ -129,21 +132,18 @@ form {
                   </div>
 
                   <div class="col-md-3">
-                     <label for="country" class="form-label">사용여부</label> <select
-                        class="form-control" id="useYn" name="useYn" required="">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                     </select>
-                  </div>
-
-                  <div class="col-md-3">
                      <label for="country" class="form-label">거래처코드</label> <select
                         class="form-control" id="vendCd" name="vendCd" required="">
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="VEI1000">VEI1000</option>
                         <option value="VEI1001">VEI1001</option>
                      </select>
+                  </div>
+                  
+                  <div class="col-md-3">
+                     <label for="country" class="form-label">거래처명</label> <input
+                        type="text" class="form-control" id="vendNm" name="vendNm"
+                        placeholder="" required="">
                   </div>
 
                   
@@ -165,18 +165,18 @@ form {
                   <div class="table-responsive">
                   
                      <table id="jaje" class="table table-striped table-bordered first">
-                     <h3 class="">자재목록</h3>
+                     <h3 class="">자재정보</h3>
                         <thead>
                            <tr>
                               <th>No.</th>
                               <th>자재코드</th>
                               <th>자재명</th>
                               <th>자재규격</th>
-                              <th>관리단위</th>
                               <th>자재유형</th>
                               <th>안전재고</th>
                               <th>사용여부</th>
                               <th>거래처코드</th>
+                              <th>거래처명</th>
                               <sec:authorize access="hasRole('ROLE_ADMIN')">
                                  <th>수정</th>
                               </sec:authorize>
@@ -189,11 +189,11 @@ form {
                                  <td>${mat.rscCd }</td>
                                  <td>${mat.rscNm }</td>
                                  <td>${mat.rscSpec }</td>
-                                 <td>${mat.mngUnit }</td>
                                  <td>${mat.rscTyp }</td>
                                  <td>${mat.safStc }</td>
                                  <td>${mat.useYn }</td>
                                  <td>${mat.vendCd }</td>
+                                 <td>${mat.vendNm }</td>
                                  <sec:authorize access="hasRole('ROLE_ADMIN')">
                                     <td><button type="button"
                                           class="btn btn-primary updateBtn" data-bs-toggle="modal">
@@ -248,12 +248,6 @@ form {
                                  </div>
 
                                  <div class="col-md-3">
-                                    <label for="country" class="form-label">관리단위</label> <input
-                                       type="text" class="form-control" id="mngUnitModal"
-                                       name="mngUnit" value="BOX" readonly>
-                                 </div>
-
-                                 <div class="col-md-3">
                                     <label for="country" class="form-label">자재유형</label> <select
                                        class="form-control" id="rscTypModal" name="rscTyp"
                                        required="">
@@ -289,6 +283,13 @@ form {
                                        <option value="VEI1001">VEI1001</option>
                                     </select>
                                  </div>
+                                 
+                                 <div class="col-md-3">
+                                    <label for="country" class="form-label">거래처명</label> <input
+                                       type="text" class="form-control" id="vendNmModal"
+                                       name="vendNm" placeholder="" value="${matvo.vendNm }">
+                                 </div>
+                                 
                               </form>
                               <div class="modal-footer">
                                  <button type="button" class="btn btn-primary" id="modifyBtn">수정</button>
@@ -322,6 +323,7 @@ form {
           let safStc = document.getElementsByName('safStc')[0];
           let useYn = $("#useYn option:selected").val();
           let vendCd = $("#vendCd option:selected").val();
+          let vendNm = document.getElementsByName('vendNm')[0];
 
           if (rscCd.value == "") {
               alert("자재코드가 입력되지 않았습니다.");
@@ -356,6 +358,11 @@ form {
           if (vendCd == "none") {
               alert("거래처코드가 선택되지 않았습니다.");
               $("#vendCd").focus();
+              return false;
+          }
+          if (vendNm.value == "") {
+              alert("거래처명이 입력되지 않았습니다.");
+              vendNm.focus();
               return false;
           }
           
@@ -413,13 +420,12 @@ $(document).on('click', '.updateBtn', function() {
         
         $("#rscCdModal").val(response.rscCd);
         $("#rscNmModal").val(response.rscNm);
-        $("#rscSpecModal").val(response.rscSpec);
-        $("#mngUnitModal").val(response.mngUnit);
+        $("#rscSpecModal").val(response.rscSpec);       
         $("#rscTypModal").val(response.rscTyp);
         $("#safStcModal").val(response.safStc);
-         $("#useYnModal").val(response.useYn);
+        $("#useYnModal").val(response.useYn);
         $("#vendCdModal").val(response.vendCd);
-        
+        $("#vendNmModal").val(response.vendNm);
         
        },
        error: function(jqXHR, textStatus, errorThrown) {
@@ -434,11 +440,11 @@ $(document).ready(function() {
     var rscCd = $('#rscCdModal').val(); // 자재코드
     var rscNm = $('#rscNmModal').val(); // 자재명
     var rscSpec = $('#rscSpecModal').val(); // 자재규격
-    var mngUnit = $("#mngUnitModal").val();
     var rscTyp = $("#rscTypModal").val();
     var safStc = $('#safStcModal').val(); // 안전재고
     var useYn = $('#useYnModal').val(); // 사용여부
     var vendCd = $('#vendCdModal').val(); // 거래처코드
+    var vendNm = $("#vendNmModal").val(); //거래처명
 
     // fetch API 요청 보내기
     fetch('matUpdate', {
@@ -449,12 +455,12 @@ $(document).ready(function() {
       body: JSON.stringify({
         rscCd: rscCd,
         rscNm: rscNm,
-        rscSpec: rscSpec,
-        mngUnit: mngUnit,
+        rscSpec: rscSpec,        
         rscTyp: rscTyp,
         safStc: safStc,
         useYn: useYn,
-        vendCd: vendCd
+        vendCd: vendCd,
+        vendNm: vendNm
       })
     }).then(function(response) {
       // 요청이 성공적으로 처리될 경우 수행할 코드 작성

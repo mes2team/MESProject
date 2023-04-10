@@ -27,4 +27,7 @@ public interface MatMapper {
 	public int updateMatOrderInfo(MatVO matVO);
 	//자재발주 삭제
 	public int deleteMatOrderInfo(String ordrCd);
+	
+	//자재 재고 현황
+	public List<MatVO> matStockList();
 }

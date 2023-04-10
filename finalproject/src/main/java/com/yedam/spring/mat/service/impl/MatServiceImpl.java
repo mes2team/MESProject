@@ -84,6 +84,11 @@ public class MatServiceImpl implements MatService {
 		//자재발주 삭제
 		return matMapper.deleteMatOrderInfo(ordrCd);
 	}
+	@Override
+	public List<MatVO> matStock() {
+		// //자재재고현황
+		return matMapper.matStockList();
+	}
 
 
 	
