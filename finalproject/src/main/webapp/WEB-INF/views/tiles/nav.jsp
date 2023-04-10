@@ -159,8 +159,8 @@
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="icons-bootstrap.html">
-              <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
+            <a href="${pageContext.request.contextPath }/prdtInsp">
+              <i class="bi bi-circle"></i><span>제품검사관리</span>
             </a>
           </li>
           <li>
