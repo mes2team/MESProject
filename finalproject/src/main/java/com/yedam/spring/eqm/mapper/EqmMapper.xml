@@ -163,4 +163,61 @@
 			eqm_nm = #{eqmNm} 
 		WHERE check_cd = #{checkCd}
 	</update>
+	
+	<!-- 설비비가동 -->
+	<select id="selectOprList" resultType="EqmVO">
+		SELECT nopr_cd, 
+               e.eqm_cd, 
+               e.eqm_nm, 
+               fr_dt, 
+               to_dt, 
+               eqm_psch, 
+               opert_ctnt
+        FROM eqm e JOIN eqm_opr
+        ON e.eqm_cd = eqm_opr.eqm_cd       
+	</select>
+	
+	<select id="selectYList" resultType="EqmVO">
+		SELECT eqm_cd, 
+               eqm_nm,
+               use_yn 
+     	FROM eqm 
+     	WHERE use_yn = 'Y'
+     	ORDER BY eqm_cd
+	</select>
+	<select id="selectMaxNoprCd" resultType="EqmVO">
+		SELECT NVL(MAX(nopr_cd),'OPR1000') nopr_cd
+		FROM eqm_opr
+	</select>
+	
+	<insert id="insertOprUpdateY" parameterType="EqmVO">
+	BEGIN
+		insert into eqm_opr (nopr_cd, 
+                     eqm_cd,                     
+                     fr_dt, 
+                     to_dt, 
+                     eqm_psch, 
+                     opert_ctnt) 
+             values( #{noprCd},
+                     #{eqmCd},                   
+                     #{frDt},
+                     #{toDt},
+                     #{eqmPsch},
+                     #{opertCtnt} );
+        UPDATE eqm 
+		SET use_yn = 'N'
+		WHERE eqm_cd = #{eqmCd};             
+	END;
+	</insert>
+	
+	<delete id="deleteOpr" parameterType="String">
+	BEGIN
+		UPDATE eqm
+		SET use_yn = 'Y'
+		WHERE eqm_cd = (select eqm_cd from eqm_opr where nopr_cd = #{noprCd});
+		
+		DELETE FROM eqm_opr
+		WHERE nopr_cd = #{noprCd};
+	END;	
+	</delete>
 </mapper>
