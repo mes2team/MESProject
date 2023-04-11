@@ -31,7 +31,7 @@
 						class="btn btn-danger">삭제</button>
 				</div>
 			</div>
-
+	
 			<div
 				style="width: 100%; height: 230px; overflow: auto; margin-top: 20px; margin-bottom: 50px;">
 				<table class="table table-striped table-hover">
@@ -48,9 +48,9 @@
 					</thead>
 					<tbody id="listTable">
 						<c:forEach items="${OprList }" var="opr">
-							<tr onclick="oprDetail(this)" data-bs-toggle="modal"
+							<tr onclick="oprDetail(this,event)" data-bs-toggle=""
 								data-bs-target="#modalDialogScrollable">
-								<td scope="row"><input type="checkbox"></td>
+								<td scope="row" onclick="stopPropagation(event)" ><input type="checkbox"></td>
 								<td scope="row">${opr.noprCd}</td>
 								<td scope="row">${opr.eqmCd}</td>
 								<td scope="row">${opr.eqmNm}</td>
@@ -149,18 +149,27 @@
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary closeBtn"
 							data-bs-dismiss="modal" onclick="modalReset()">닫기</button>
-						<button type="button" onclick="insertOpr()"
+						<button type="button" id="insertBtn" onclick="insertOptCheck()"
 							class="btn btn-primary" data-bs-dismiss="modal">등록</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+	
 	<script>
+	
+	
+	//체크박스 클릭시 tr클릭막기
+	function stopPropagation(e){
+		e.stopPropagation();
+	}
+	
 	//tr클릭시 모달열어서 상세보기
 	function oprDetail(t){
+		t.setAttribute("data-bs-toggle","modal") //클릭시 모달속성이 없던 tr에 모달속성줌 
+		t.click(); //tr한 번 더 클릭하는 효과 이떈 모달효과가 있는 tr을 클릭하는거임
 		modalTitle.innerText = '비가동상세보기';		
-		console.log(t);
 		let option = document.querySelector('option'); //설비명
 		let textarea = document.querySelector('textarea');
 		let inputs = modalForm.querySelectorAll('input')//inputs 0설비코드 1비가동코드 2담당자 3시작일 4종료일
@@ -172,32 +181,35 @@
 		inputs[4].value = tds[5].innerText;
 		option.innerText = tds[3].innerText;
 		textarea.value = tds[6].innerText;
+		
 	}
 	
-	//모달폼 옵션체크
+	//등록시 옵션체크
 	function insertOptCheck(){
+		let insertBtn = document.querySelector('#insertBtn')
 		let inputs = modalForm.querySelectorAll('input')
 		let textarea = modalForm.querySelector('textarea')
 		for(let i=0;i<inputs.length;i++){
 			if(inputs[i].value == ''){
+				//insertBtn.setAttribute("data-bs-dismiss", "");//모달창 닫김 방지
 				alert("필수항목체크")
-				return false;
+				return;
 			}
 		}
 		if(textarea.value == ''){
 			alert("필수항목체크")
+			//insertBtn.setAttribute("data-bs-dismiss", "");
 			return false;
 		}
+		insertOpr(); //등록
 	}
 	
 	//등록
 	function insertOpr(){
-		if(insertOptCheck() == false){
-			return;
-		}
-		modalForm.submit();
-		resetModal();
-			  }
+			modalForm.submit();
+			resetModal();
+	}
+			  
 	    
 	//삭제 체크된것만 담기
 	function deleteCheck(){
@@ -260,10 +272,13 @@
 			let inputs = modalForm.querySelectorAll('input');
 			for(let i=0 ; i<inputs.length; i++){
 				if(i != 1){
-			inputs[i].value = '';
+				inputs[i].value = '';
 				}
 			}
 			modalForm.querySelector('textArea').value = '';
+			modalTitle.innerText = '설비비가동 등록';
+			listTable.querySelector('tr').setAttribute('data-bs-toggle','')//다시 tr에 모달기능 뺏기
+			
 		}
 		//모달열면 설비리스트 다시 뿌리기
 		function modalOpen(){
@@ -272,11 +287,13 @@
 				  type: "GET", // HTTP 메소드 (GET, POST, PUT, DELETE 등)
 				  dataType: "json", // 응답 데이터 타입 (json, xml, text 등)
 				  success: function(res) {
-				    let select = document.querySelector('select[name="eqmCd"]')
-				    let options = select.querySelectorAll('option');
-				    for(let j=1; j< options.length; j++){
-				    	options[j].remove();
-				    }
+		  		let select = document.querySelector('select[name="eqmCd"]')
+		  		let options = select.querySelectorAll('option');
+				     for(let j=1; j< options.length; j++){
+				    	if(options[j].innerText.trim() != '===선택==='){
+				    		options[j].remove();
+				    	}
+				    } 
 				    for(let i=0; i< res.YList.length; i++){
 				    	let option = document.createElement('option');
 				    	option.innerText = res.YList[i].eqmNm;
