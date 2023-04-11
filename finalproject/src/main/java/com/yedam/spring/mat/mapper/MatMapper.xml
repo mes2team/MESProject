@@ -21,7 +21,7 @@
 		   use_yn,
 		   vend_cd,
 		   vend_nm
-	  FROM rsc		   
+	  FROM rsc
      WHERE rsc_cd = #{rscCd}
 	</select>
 <!-- 자재정보 등록 -->

@@ -1,4 +1,4 @@
-package com.yedam.spring.vend.service;
+package com.yedam.spring.masterData.service;
 
 import lombok.Data;
 

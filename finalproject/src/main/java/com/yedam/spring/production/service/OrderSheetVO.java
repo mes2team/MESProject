@@ -8,8 +8,8 @@ import lombok.Data;
 
 @Data
 public class OrderSheetVO {
+	// 주문
 	private String orderNo;
-	private String edctsCd;
 	private String vendCd;
 	private String vendNm;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -17,10 +17,10 @@ public class OrderSheetVO {
 	private String progAppe;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date paprdDt;
-	private String prdtNm;
-	private int orderCnt;
-	
-	private String orderPno;
-
 	private String orderNm;
+
+	// 주문 디테일
+	private String edctsCd;
+	private int orderCnt;
+	private String prdtNm;
 }

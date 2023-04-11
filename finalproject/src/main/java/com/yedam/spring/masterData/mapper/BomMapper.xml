@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.spring.masterData.mapper.BomMapper">
+	<select id="selectBomList" resultType="BomVO">
+		SELECT 	bd.bom_cd, r.rsc_cd, r.rsc_nm,
+				bd.use_cnt, bd.unit, p.prcs_nm, p.prcs_cd
+		FROM 	bom b, bom_detail bd, prcs p, rsc r
+		WHERE 	b.bom_cd = bd.bom_cd
+		AND 	bd.prcs_cd = p.prcs_cd
+		AND 	bd.rsc_cd = r.rsc_cd
+		AND 	b.edcts_cd = #{edctsCd}
+		ORDER BY rsc_cd
+	</select>
+	
+	<select id="selectPrcsList" resultType="ProPrcsVO">
+		SELECT	prcs_cd,
+				prcs_nm,
+				prcs_fg,
+				prcs_ctnt,
+				prcs_dt
+		FROM	prcs
+		ORDER BY prcs_cd
+	</select>
+	
+	<delete id="deleteBom" parameterType="BomVO">
+		DELETE FROM bom_detail
+		WHERE bom_cd = #{bomCd} and rsc_cd = #{rscCd}
+	</delete>
+	
+	<!-- 저장 -->
+	<insert id="saveBom" parameterType="BomVO">
+    	{CALL bom_save(
+      		#{bomCd, mode=IN, jdbcType=VARCHAR},
+      		#{rscCd, mode=IN, jdbcType=VARCHAR},
+      		#{useCnt, mode=IN, jdbcType=INTEGER},
+      		#{unit, mode=IN, jdbcType=VARCHAR},
+      		#{prcsCd, mode=IN, jdbcType=VARCHAR}
+    	)}
+   </insert>
+   
+   <!-- 자재정보 단건 조회 -->
+	<select id="selectMatList" resultType="MatVO">
+		SELECT 	rsc_cd,
+		  		rsc_nm,
+		   		rsc_spec,
+		   		mng_unit,
+		   		rsc_typ,
+		   		saf_stc,
+		   		use_yn,
+		   		vend_cd,
+		   		vend_nm
+	  	FROM rsc
+     	WHERE rsc_nm LIKE '%' || #{rscNm} || '%'
+    </select>
+</mapper>
