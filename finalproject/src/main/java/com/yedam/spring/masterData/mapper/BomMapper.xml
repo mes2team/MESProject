@@ -28,4 +28,30 @@
 		DELETE FROM bom_detail
 		WHERE bom_cd = #{bomCd} and rsc_cd = #{rscCd}
 	</delete>
+	
+	<!-- 저장 -->
+	<insert id="saveBom" parameterType="BomVO">
+    	{CALL bom_save(
+      		#{bomCd, mode=IN, jdbcType=VARCHAR},
+      		#{rscCd, mode=IN, jdbcType=VARCHAR},
+      		#{useCnt, mode=IN, jdbcType=INTEGER},
+      		#{unit, mode=IN, jdbcType=VARCHAR},
+      		#{prcsCd, mode=IN, jdbcType=VARCHAR}
+    	)}
+   </insert>
+   
+   <!-- 자재정보 단건 조회 -->
+	<select id="selectMatList" resultType="MatVO">
+		SELECT 	rsc_cd,
+		  		rsc_nm,
+		   		rsc_spec,
+		   		mng_unit,
+		   		rsc_typ,
+		   		saf_stc,
+		   		use_yn,
+		   		vend_cd,
+		   		vend_nm
+	  	FROM rsc
+     	WHERE rsc_nm LIKE '%' || #{rscNm} || '%'
+    </select>
 </mapper>

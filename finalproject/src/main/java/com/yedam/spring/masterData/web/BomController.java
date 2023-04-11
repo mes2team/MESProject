@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yedam.spring.masterData.service.BomService;
 import com.yedam.spring.masterData.service.EdctsService;
 import com.yedam.spring.mat.service.MatService;
+import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 
 @Controller
@@ -45,10 +46,25 @@ public class BomController {
 	@ResponseBody
 	public String deleteBomProcess(@RequestBody BomVO[] arr) {
 		for(int i = 0; i < arr.length; i++) {
-			System.out.println("여기 프린터 " + arr[i]);
 			bomService.deleteBom(arr[i]);
 		}
 		
 		return "success";
+	}
+	
+	@PostMapping("saveBom")
+	@ResponseBody
+	public String saveBomProcess(@RequestBody BomVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			bomService.saveBom(arr[i]);
+		}
+		
+		return "success";
+	}
+	
+	@PostMapping("searchBom")
+	@ResponseBody
+	public List<MatVO> searchBomProcess(MatVO vo) {
+		return bomService.getMatList(vo);
 	}
 }

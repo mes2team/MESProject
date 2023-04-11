@@ -21,7 +21,7 @@
 		   use_yn,
 		   vend_cd,
 		   vend_nm
-	  FROM rsc		   
+	  FROM rsc
      WHERE rsc_cd = #{rscCd}
 	<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌
 	${} : 타입 변경 없이 있는그대로 집어 넣음-->

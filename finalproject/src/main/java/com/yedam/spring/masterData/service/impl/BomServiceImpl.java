@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.yedam.spring.masterData.mapper.BomMapper;
 import com.yedam.spring.masterData.service.BomService;
+import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.ProPrcsVO;
 
@@ -29,6 +30,16 @@ public class BomServiceImpl implements BomService {
 	@Override
 	public int deleteBom(BomVO vo) {
 		return bomMapper.deleteBom(vo);
+	}
+
+	@Override
+	public int saveBom(BomVO vo) {
+		return bomMapper.saveBom(vo);
+	}
+
+	@Override
+	public List<MatVO> getMatList(MatVO vo) {
+		return bomMapper.selectMatList(vo);
 	}
 
 }

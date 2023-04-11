@@ -77,6 +77,12 @@ uri="http://www.springframework.org/security/tags"%>
             <label class="form-label">안전 재고</label>
             <input type="text" class="form-control" id="inputSafStc" disabled />
           </div>
+          <input
+            type="text"
+            class="form-control"
+            id="inputBomCd"
+            style="display: none"
+          />
           <div class="text-center"></div>
         </form>
         <!-- End Multi Columns Form -->
@@ -233,7 +239,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <th scope="col"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="rscTbody">
               <c:forEach items="${rscList }" var="rsc">
                 <tr>
                   <td>${rsc.rscTyp }</td>
@@ -356,6 +362,7 @@ uri="http://www.springframework.org/security/tags"%>
         url: "bomList",
         data: { edctsCd: edctsCd },
         success: function (result) {
+          $("#inputBomCd").val(result[0].bomCd);
           $("#bomList").empty();
           $.each(result, function (idx, item) {
             makeTr(idx, item);
@@ -381,9 +388,11 @@ uri="http://www.springframework.org/security/tags"%>
       tr.append("<td>" + (idx + 1) + "</td>");
       tr.append("<td>" + data.rscCd + "</td>");
       tr.append("<td>" + data.rscNm + "</td>");
-      tr.append("<td>" + data.useCnt + "</td>");
-      tr.append("<td>" + data.unit + "</td>");
-      tr.append("<td>" + data.prcsNm + "</td>");
+      tr.append("<td class='changeValue my-td-class'>" + data.useCnt + "</td>");
+      tr.append("<td class='changeValue my-td-class'>" + data.unit + "</td>");
+      tr.append(
+        $("<td>" + data.prcsNm + "</td>").attr("data-prcsCd", data.prcsCd)
+      );
 
       $("#bomList").append(tr);
     }
@@ -449,7 +458,7 @@ uri="http://www.springframework.org/security/tags"%>
         return;
       }
 
-      let tr = $("<tr>");
+      let tr = $("<tr data-id>");
 
       tr.append(
         $("<td>").append(
@@ -472,13 +481,19 @@ uri="http://www.springframework.org/security/tags"%>
 
       tr.append("<td>");
       tr.append(
-        $("<td>").append(
-          $("<input>").attr("type", "number").css("width", "70px")
+        $("<td class='my-td-class'>").append(
+          $("<input class='my-td-class'>")
+            .attr("type", "number")
+            .css("width", "70px")
         )
       );
-      tr.append($("<td>").append($("<input>").css("width", "70px")));
       tr.append(
-        $("<td>").append(
+        $("<td class='my-td-class'>").append(
+          $("<input class='my-td-class'>").css("width", "70px")
+        )
+      );
+      tr.append(
+        $("<td data-prcscd>").append(
           $("<button>")
             .addClass("btn btn-primary my-td-class prcsBtn")
             .attr({
@@ -495,16 +510,36 @@ uri="http://www.springframework.org/security/tags"%>
 
     //자재 선택하면 input에 넣기
     $(document).ready(function () {
-      var inputRscCd;
-      var inputRscNm;
+      let inputRscCd;
+      let inputRscNm;
       $(document).on("click", ".rscBtn", function () {
         inputRscCd = $(this).closest("tr").children().eq(2);
         inputRscNm = $(this).closest("tr").children().eq(3);
       });
 
       $(document).on("click", "#choiceRsc", function () {
+        let isValid = true;
         let rscCd = $(this).closest("tr").children().eq(1).text();
         let rscNm = $(this).closest("tr").children().eq(2).text();
+
+        $("#bomList")
+          .children()
+          .each(function (idx, item) {
+            let check = $(item).children().eq(2).text();
+            if (check == rscCd) {
+              Swal.fire({
+                icon: "warning",
+                title: "같은 자재가 있습니다.",
+              });
+              isValid = false;
+              return;
+            }
+          });
+
+        if (isValid == false) {
+          $("#rscModal").modal("hide");
+          return isValid;
+        }
         inputRscCd.text(rscCd); // input 업데이트
         inputRscNm.text(rscNm);
 
@@ -514,15 +549,19 @@ uri="http://www.springframework.org/security/tags"%>
 
     // 공정 선택하면 input에 넣기
     $(document).ready(function () {
-      var inputPrcsNm;
+      let inputPrcsNm;
+      let inputprcsCd;
       $(document).on("click", ".prcsBtn", function () {
         inputPrcsNm = $(this).closest("tr").children().eq(6);
+        inputprcsCd = inputPrcsNm.attr("data-prcscd");
+        console.log(inputprcsCd);
       });
 
       $(document).on("click", "#choicePrcs", function () {
         let prcsNm = $(this).closest("tr").children().eq(1).text();
+        let prcsCd = $(this).closest("tr").children().eq(0).text();
         inputPrcsNm.text(prcsNm); // input 업데이트
-
+        inputPrcsNm.attr("data-prcscd", prcsCd);
         $("#prcsModal").modal("hide"); // 모달 닫기
       });
     });
@@ -599,18 +638,220 @@ uri="http://www.springframework.org/security/tags"%>
       }
     });
 
-    $(document).on("dblclick", "td", function () {
-      if ($(this).find("input").length > 0) return; // 이미 input이 있는 경우에는 더블클릭 이벤트를 처리하지 않음
+    // 더블클릭하면 input나옴
+    $(document).on("dblclick", "#bomList .changeValue", function () {
+      let currentValue = $(this).text().trim();
+      let input = $("<input class='my-td-class'>")
+        .css("width", "70px")
+        .val(currentValue);
 
-      let value = $(this).text().trim(); // 기존 값 가져오기
-      let input = $("<input>").val(value); // 새로운 input 요소 만들기
-      $(this).empty().append(input); // td 요소 내용을 새로운 input으로 교체
-      input.focus(); // input에 포커스 설정
+      $(this).empty().append(input);
+      input.focus();
+
+      // 현재 클릭한 요소와 같은 tr의 .changeValue 요소들도 자동으로 input으로 바꾸기
+      let currentRow = $(this).closest("tr");
+      currentRow
+        .find(".changeValue")
+        .not(this)
+        .each(function () {
+          let currentValue = $(this).text().trim();
+          let input = $("<input>").css("width", "70px").val(currentValue);
+          $(this).empty().append(input);
+        });
     });
 
-    $(document).on("blur", "td input", function () {
-      let value = $(this).val().trim(); // 새로운 값 가져오기
-      $(this).parent().text(value); // input을 td 요소로 교체
+    // 저장
+    $(document).on("click", "#saveBtn", function () {
+      let isValid = true;
+      if ($("#bomList input:not(:checkbox)").length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "바꾼 글이 없습니다.",
+        });
+        return;
+      }
+      let valueArr = [];
+
+      $('input[name="chk"]:checked').each(function (idx, items) {
+        let bomCd = $("#inputBomCd").val();
+        let rscCd = $(items).closest("tr").children().eq(2).text();
+        let useCnt = $(items)
+          .closest("tr")
+          .children()
+          .eq(4)
+          .find("input")
+          .val();
+        let unit = $(items).closest("tr").children().eq(5).find("input").val();
+        let prcsCd = $(items)
+          .closest("tr")
+          .children()
+          .eq(6)
+          .attr("data-prcscd");
+
+        console.log(rscCd);
+        if (rscCd == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "자재코드가 입력되지 않았습니다.",
+          });
+          isValid = false;
+          return;
+        }
+        if (useCnt == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "사용량이 입력되지 않았습니다.",
+          });
+          isValid = false;
+          return;
+        }
+        if (unit == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "단위가 입력되지 않았습니다.",
+          });
+          isValid = false;
+          return;
+        }
+        if (prcsCd == "") {
+          Swal.fire({
+            icon: "warning",
+            title: "사용공정명이 입력되지 않았습니다.",
+          });
+          isValid = false;
+          return;
+        }
+
+        let dataObj = {
+          bomCd: bomCd,
+          rscCd: rscCd,
+          useCnt: parseInt(useCnt),
+          unit: unit.toUpperCase(),
+          prcsCd: prcsCd,
+        };
+
+        // 데이터 배열에 객체 추가
+        valueArr.push(dataObj);
+      });
+
+      if (isValid == false) {
+        return isValid;
+      }
+
+      if (valueArr.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+      } else {
+        Swal.fire({
+          title: "저장 하시겠습니까?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "저장",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              url: "saveBom",
+              method: "post",
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify(valueArr),
+              success: function (result) {
+                if (result == "success") {
+                  $('input[name="chk"]:checked').each(function (idx, items) {
+                    let tdList = $(items).closest("tr").children();
+                    $(items).prop("checked", false);
+                    $(items).closest("tr").attr("class", "");
+                    console.log(tdList);
+                    let useCnt = tdList.eq(4).find("input").val();
+                    let unit = tdList.eq(5).find("input").val();
+
+                    tdList.eq(4).text(useCnt);
+                    tdList.eq(5).text(unit.toUpperCase());
+                  });
+                  let Toast = Swal.mixin({
+                    toast: true,
+                    position: "top",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                      toast.addEventListener("mouseenter", Swal.stopTimer);
+                      toast.addEventListener("mouseleave", Swal.resumeTimer);
+                    },
+                  });
+                  Toast.fire({
+                    icon: "success",
+                    title: "저장이 정상적으로 되었습니다.",
+                  });
+                }
+              },
+
+              error: function (reject) {
+                console.log(reject);
+              },
+            });
+          }
+        });
+      }
+    });
+
+    // 자재 검색
+    $(document).on("click", "#searchRscBtn", function () {
+      console.log("클릭");
+      let searchRscNm = $("#searchRscInput").val();
+
+      $.ajax({
+        url: "searchBom",
+        method: "post",
+        data: { RscNm: searchRscNm },
+        success: function (result) {
+          if (result.length > 0) {
+            $("#rscTbody").empty();
+            for (let i = 0; i < result.length; i++) {
+              let item = result[i];
+              let tr = $("<tr>");
+
+              tr.append("<td>" + item.rscTyp + "</td>");
+              tr.append("<td>" + item.rscCd + "</td>");
+              tr.append("<td>" + item.rscNm + "</td>");
+              tr.append("<td>" + item.rscSpec + "</td>");
+              tr.append("<td>" + item.mngUnit + "</td>");
+              tr.append("<td>" + item.vendNm + "</td>");
+              tr.append(
+                $("<td>").append(
+                  $('<button class="btn btn-primary" id="choiceRsc">').text(
+                    "선택"
+                  )
+                )
+              );
+              $("#rscTbody").append(tr);
+            }
+          } else {
+            Swal.fire({
+              icon: "warning",
+              title: "검색 결과가 없습니다.",
+            });
+          }
+          console.log(result);
+        },
+        error: function (reject) {
+          console.log(reject);
+        },
+      });
+    });
+
+    // 엔터키를 눌렀을 때 검색 버튼 클릭 이벤트 실행
+    $(document).ready(function () {
+      $("#searchRscInput").on("keypress", function (event) {
+        if (event.which === 13) {
+          event.preventDefault();
+          $("#searchRscBtn").click();
+        }
+      });
     });
   </script>
 </body>
