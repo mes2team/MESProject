@@ -120,11 +120,11 @@
 									placeholder="필수입력">
 							</div>
 							<div class="col-auto">
-								<label for="inputPassword6" class="col-form-label">사용여부</label>
+								<label for="inputPassword6" class="col-form-label"></label>
 							</div>
 							<div class="col-auto">
-								<input type="radio" name="useYn" checked value="Y"> 사용 <input
-									type="radio" name="useYn" value="N"> 미사용
+								<input  type="radio" name="useYn" checked value="Y" hidden> <input
+									type="radio" name="useYn" value="N" hidden> 
 								<button type="button" onclick="formOptionChk()"
 									class="btn btn-outline-info">저장</button>
 								<button type="button" onclick="deleteEqm()"
@@ -141,6 +141,7 @@
 	<script>
 	//수정
 	function updateEqm(){
+			
 		Swal.fire({
 			  title: '수정하시겠습니까?',
 			  icon: 'question',
@@ -150,7 +151,9 @@
 			  confirmButtonText: '수정',
 			  cancelButtonText: '취소'
 			}).then((result) => {
+				inputEqmCd.disabled = false;
 			  if (result.value) {
+				  document
 					$.ajax({
 					      url: 'updateEqm', 
 					      type: 'POST', 
@@ -158,6 +161,7 @@
 					      //dataType: 'json', 화면 받을 땐 없어도 됨
 					      success: function(result) { 
 					    	console.log("업데이트성공");
+					    	inputEqmCd.disabled = true;
 					    	location.reload();
 					      },
 					      error: function(reject) { 

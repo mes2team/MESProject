@@ -24,7 +24,7 @@
             </a>
           </li>
           <li>
-            <a href="${pageContext.request.contextPath }/bomList">
+            <a href="${pageContext.request.contextPath }/bomMag">
               <i class="bi bi-circle"></i><span>BOM 관리</span>
             </a>
           </li>
@@ -90,7 +90,7 @@
             </a>
           </li>
           <li>
-            <a href="${pageContext.request.contextPath}/productionPlan">
+            <a href="${pageContext.request.contextPath}/productionOrder">
               <i class="bi bi-circle"></i><span>생산지시</span>
             </a>
           </li>
@@ -123,8 +123,8 @@
             </a>
           </li>
           <li>
-            <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+            <a href="eqmOpr">
+              <i class="bi bi-circle"></i><span>비가동관리</span>
             </a>
           </li>
         </ul>
@@ -146,8 +146,8 @@
             </a>
           </li>
           <li>
-            <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+            <a href="${pageContext.request.contextPath }/matReceipt">
+              <i class="bi bi-circle"></i><span>자재입고</span>
             </a>
           </li>
         </ul>
@@ -159,8 +159,8 @@
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="icons-bootstrap.html">
-              <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
+            <a href="${pageContext.request.contextPath }/prdtInsp">
+              <i class="bi bi-circle"></i><span>제품검사관리</span>
             </a>
           </li>
           <li>

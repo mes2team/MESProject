@@ -27,4 +27,20 @@ public interface MatMapper {
 	public int updateMatOrderInfo(MatVO matVO);
 	//자재발주 삭제
 	public int deleteMatOrderInfo(String ordrCd);
+	
+	//자재 재고 현황
+	public List<MatVO> matStockList();
+	
+	//자재입고 현황
+	public List<MatVO> matReceiptList();
+	//자재발주 단건 조회
+	public MatVO selectMatReceiptInfo(MatVO matVO);
+	//자재입고 추가
+	public int insertMatReceipt(MatVO matVO);
+	//자재입고 수정
+	public int updateMatReceiptInfo(MatVO matVO);
+	//자재발주 삭제
+	public int deleteMatReceiptInfo(String rscLotCd);
+	
+	
 }

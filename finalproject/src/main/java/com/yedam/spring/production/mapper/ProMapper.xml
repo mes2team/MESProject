@@ -16,15 +16,15 @@
   	<!-- 생산계획 등록 -->
   	<insert id="InsertNewPlan" parameterType="ProPlanVO">
   		DECLARE
-			v_edcts_cd	VARCHAR2(100);
+			v_prdt_nm	VARCHAR2(100);
   		BEGIN
-  			v_edcts_cd := #{edctsCd};
-  			<if test="edctsCd == null or edctsCd.equals('')">
-  			SELECT 	edcts_cd
-  			INTO	v_edcts_cd
+  			v_prdt_nm := #{prdtNm};
+
+  			SELECT 	prdt_nm
+  			INTO	v_prdt_nm
   			FROM 	edcts
-  			WHERE	prdt_nm = #{prdtNm};
-  			</if>
+  			WHERE	edcts_cd = #{edctsCd};
+
   				
   			<!-- 생산계획테이블 -->
   			INSERT INTO plan (plan_cd,
@@ -58,31 +58,61 @@
 	  							  pref_rank,
 	  							  edcts_cd,
 	  							  bom_cd,
-	  							  <if test="orderCnt != null and !orderCnt.equals('')">
 	  							  order_cnt,
-	  							  </if>
 	  							  wk_to_dt,
 	  							  prdt_nm
 	  							  )
 	  					VALUES	 (#{planCd},
 	  							  #{prefRank},
-	  							  v_edcts_cd,
+	  							  #{edctsCd},
 	  							  #{bomCd},
-	  							  <if test="orderCnt != null and !orderCnt.equals('')">
 	  							  #{orderCnt},
-	  							  </if>
 	  							  #{wkToDt},
-	  							  #{prdtNm}
+	  							  v_prdt_nm
 	  							  );
 			<if test="orderNo != null and !orderNo.equals('')">
 	  		<!-- 주문서 상태 변경 -->
 	  		UPDATE 	order_sheet_test
 	  		SET	 	prog_appe = '계획완료'
-	  		WHERE	order_no = #{orderNo}
-	  		  AND	edcts_cd = v_edcts_cd;
+	  		WHERE	order_no = #{orderNo};
 	  		</if>
   		END;
   	</insert>
+  	
+  	  	<!-- 생산계획 여러 제품 저장 -->
+  	<insert id="plusPlanInsert" parameterType="ProPlanVO">
+  		DECLARE
+			v_prdt_nm	VARCHAR2(100);
+  		BEGIN
+  			v_prdt_nm := #{prdtNm};
+
+  			SELECT 	prdt_nm
+  			INTO	v_prdt_nm
+  			FROM 	edcts
+  			WHERE	edcts_cd = #{edctsCd};
+
+  			<!-- 생산계획디테일 테이블 -->
+  			INSERT INTO plan_dtl (plan_cd,
+	  							  pref_rank,
+	  							  edcts_cd,
+	  							  bom_cd,
+	  							  order_cnt,
+	  							  wk_to_dt,
+	  							  prdt_nm
+	  							  )
+	  					VALUES	 (#{planCd},
+	  							  #{prefRank},
+	  							  #{edctsCd},
+	  							  #{bomCd},
+	  							  #{orderCnt},
+	  							  #{wkToDt},
+	  							  v_prdt_nm
+	  							  );
+  		END;
+  	</insert>
+  	
+  	
+  	
   	
   	<!-- 미지시 주문서 조회 -->
   	<select id="selectOrderSheet" resultType="OrderSheetVO">
@@ -98,6 +128,7 @@
   		FROM   order_sheet_test ost, order_sheet_prd_test ospt
   		WHERE  ost.order_no = ospt.order_no
   		  AND  ost.prog_appe = '접수완료'
+  		ORDER BY ost.paprd_dt DESC
   	</select>
   	<!-- 완제품 정보 조회 -->
   	<select id="selectPrdtInfo" resultType="OrderSheetVO">
@@ -245,4 +276,73 @@
 		WHERE prcs_cd = #{prcsCd}
 	</delete>
 	
+	<!-- 생산지시 조회 + 페이징 -->
+	<select id="selectProOrders" resultType="ProOrderVO">
+	<![CDATA[
+		SELECT 	indica_dt,
+				plan_cd,
+				pref_rank,
+				now_st,
+				order_cnt,
+				wk_to_dt,
+				indica_cnt,
+				edcts_cd,
+				bom_cd
+		FROM 	(SELECT	rownum rn,
+						ic.indica_dt,
+						ic.plan_cd,
+						ic.pref_rank,
+						ic.now_st,
+						idd.order_cnt,
+						idd.wk_to_dt,
+						idd.indica_cnt,
+						idd.edcts_cd,
+						idd.bom_cd
+				   FROM	indica ic, indica_dtl idd
+				  WHERE	ic.plan_cd = idd.plan_cd
+				  	AND ic.indica_dt = idd.indica_dt
+				    AND rownum <= #{pageNum} * #{amount})
+		WHERE rn > (#{pageNum}-1)* #{amount}
+		ORDER BY indica_dt
+	]]>
+	</select>
+	<!-- 지시 개수 -->
+	<select id="getProOrderCnt" resultType="int">
+		SELECT COUNT(*) FROM indica
+	</select>
+	
+	<!-- 미지시 생산 계획 조회 -->
+  	<select id="selectPlanToOrder" resultType="ProPlanVO">
+  		SELECT p.plan_cd,
+  			   p.paprd_dt,
+  			   p.now_st,
+  			   pref_rank,
+  			   pd.edcts_cd,
+  			   pd.bom_cd,
+  			   pd.order_cnt,
+  			   pd.wk_to_dt,
+  			   e.prdt_nm
+  		FROM   plan p, plan_dtl pd, edcts e
+  		WHERE  p.plan_cd = pd.plan_cd
+  		  AND  pd.edcts_cd = e.edcts_cd
+  		  AND  p.now_st = '미지시'
+  		ORDER BY p.plan_cd
+  	</select>
+  	
+  	<select id="selectBomStock" resultType="BomVO">
+  		SELECT b.bom_cd, 
+  			   r.rsc_cd, 
+  			   r.rsc_nm, 
+  			   r.rsc_spec, 
+  			   r.rsc_typ, 
+  			   l.rsc_lot_cd, 
+  			   l.lot_rmn_cnt, 
+  			   l.exp_dt,
+  			   p.prcs_nm  
+		FROM  prcs p,bom_detail b, rsc r, rsc_lot l
+		WHERE p.prcs_cd = b.prcs_cd
+		  AND b.rsc_cd = r.rsc_cd
+		  AND r.rsc_cd = l.rsc_cd
+		  AND b.bom_cd = #{bomCd}
+  	</select>
   </mapper>

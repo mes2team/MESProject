@@ -382,7 +382,9 @@ uri="http://www.springframework.org/security/tags"%>
 
       $(document).on("change", ":checkbox", function () {
         if ($(this).prop("checked")) {
-          $(this).closest("tr").addClass("table-danger");
+          if (!$(this).closest("tr").children().eq(0).is("th")) {
+            $(this).closest("tr").addClass("table-danger");
+          }
         } else {
           $(this).closest("tr").removeClass("table-danger");
         }
@@ -676,7 +678,9 @@ uri="http://www.springframework.org/security/tags"%>
               $row.append($("<td>").text(item.remk));
               $("tbody").append($row);
             });
+            $("#cbx_chkAll").prop("disabled", false);
             enableCheckBoxes();
+
             $(".btn-info").text("수정");
             $(".btn-info").removeAttr("onclick");
             $(".btn-info").attr("onclick", "updateBtn();");

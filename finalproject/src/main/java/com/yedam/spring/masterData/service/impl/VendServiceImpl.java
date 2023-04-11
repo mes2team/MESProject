@@ -1,13 +1,13 @@
-package com.yedam.spring.vend.service.impl;
+package com.yedam.spring.masterData.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.yedam.spring.vend.mapper.VendMapper;
-import com.yedam.spring.vend.service.VendService;
-import com.yedam.spring.vend.service.VendVO;
+import com.yedam.spring.masterData.mapper.VendMapper;
+import com.yedam.spring.masterData.service.VendService;
+import com.yedam.spring.masterData.service.VendVO;
 
 @Service
 public class VendServiceImpl implements VendService {

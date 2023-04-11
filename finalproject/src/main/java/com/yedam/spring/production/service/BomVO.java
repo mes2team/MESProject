@@ -1,5 +1,9 @@
 package com.yedam.spring.production.service;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -18,5 +22,13 @@ public class BomVO {
 	// + 자재
 	private String rscNm;
 	private String rscTyp;
-	private String prcsNm;     
+	private String prcsNm;    
+	
+	// + lot 재고 정보
+	private String rscSpec;
+	private String rscLotCd;
+	private int LotRmnCnt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date expDt;
+
 }

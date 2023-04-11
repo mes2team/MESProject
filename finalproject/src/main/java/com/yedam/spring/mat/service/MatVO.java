@@ -18,9 +18,14 @@ public class MatVO {
 	private String vendCd; //거래처코드
 	private String vendNm; //거래처이름
 	
-	private int rscStc;
-	private int baseStc; 
-	private int avalStc;
+	private int rscStc; //재고량
+	private int istStc; //입고재고량
+	private int oustStc; //출고재고량
+	private int netStc; //현재재고
+	
+	private int totalIstCnt; //입고재고(검사완료재고)
+    private int totalOustCnt; //출고재고(오늘까지 생산지시 재고)
+    private int noIstCnt; // 미입고잔량(발주신청재고-전체검사완료재고)
 	
 	private String ordrCd; //발주번호
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -30,8 +35,35 @@ public class MatVO {
 	private Date paprdCmndDt; //납기요청일
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date clsYymm;
-	private int prvmmStc;
+	private Date clsYymm; //마감년월
+	private int prvmmStc; //전월재고
+	
+	private String istCd; //입고코드
+	private int istCnt; //입고수량
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date istDt; //입고일자
+	
+	private String  rscLotCd; //LOT번호 
+	private int lotCnt; //LOT수량
+	private int lotRmnCnt; //LOT잔량
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date expDt;  //유통기한
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date oustDt; //출고일자
+	private int oustCnt; //출고수량
+	
+	private String rscInspCd; //검사코드
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date inspDt; //검사일자
+	private String inspTstr;	//검사자
+	private int inspCnt; //검사수량
+	private int inspPassCnt; //합격수량
+	private int inspFailCnt; //불량수량
+	private int bool; //입고마감
+	
+	private String infCd; //불량코드
+	private int infNm; // 불량명
 	
 	
 }

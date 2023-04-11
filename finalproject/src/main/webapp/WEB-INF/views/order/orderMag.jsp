@@ -979,7 +979,9 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     //체크되면 빨간색으로 바뀜
     $(document).on("change", ":checkbox", function () {
       if ($(this).prop("checked")) {
-        $(this).closest("tr").addClass("table-danger");
+        if (!$(this).closest("tr").children().eq(0).is("th")) {
+          $(this).closest("tr").addClass("table-danger");
+        }
       } else {
         $(this).closest("tr").removeClass("table-danger");
       }
