@@ -63,18 +63,18 @@ public class ProController {
 	// 생산계획 다중등록처리
 	@PostMapping("/addnewPlans")
 	@ResponseBody 
-	public Map<String, Object> addnewPlans(@RequestBody ProPlanVO[] selectedPlans) {
-		Map<String, Object> resultMap = new HashMap<>();
-		String result = null;
-	    for (ProPlanVO vo : selectedPlans) {
-	    	result = proService.newPlanInsert(vo);
+	public Map<String, Object> addnewPlans(@RequestBody List<ProPlanVO> proPlanArray) {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    String result = null;
+	    for(int i=0; i<proPlanArray.size(); i++) {
+	        if(i==0){
+	            result = proService.newPlanInsert(proPlanArray.get(i));
+	        } else {
+	            result = proService.plusPlanInsert(proPlanArray.get(i));
+	        }
 	    }
-	    if(result.equals("Fail") ) {
-	    	resultMap.put("result", "Fail");
-	    } else {
-	    	resultMap.put("result", "Success");
-	    }
-		return resultMap;
+	    resultMap.put("result", result);
+	    return resultMap;
 	}
 	
 	//미지시된 주문서 조회

@@ -45,6 +45,9 @@ td {
   display: flex;
   align-items: flex-end;
 }
+div#prcsInfo {
+  border-left: 1px solid black;
+}
 </style>
 </head>
 <body>
@@ -176,7 +179,7 @@ td {
 
 	<!-- 모달창 -->
 	<!-- 주문서 조회 -->
-	<div class="modal fade" id="orderSheet" tabindex="-1">
+	<div class="modal fade" id="orderSheet" data-bs-backdrop="static" tabindex="-1">
 		<div class="modal-dialog modal-lg modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -186,15 +189,15 @@ td {
 				</div>
 				<div class="modal-body">
 					<table class="table table-hover">
-						<thead>
+						<thead id=aBox>
 							<tr>
+								<th scope="col"><input type="checkbox"></th>
 								<th scope="col">주문코드</th>
 								<th scope="col">거래처</th>
 								<th scope="col">제품명</th>
-								<th scope="col">주문수량</th>
-								<th scope="col">주문일자</th>
+								<!-- <th scope="col">주문수량</th> -->
+								<!-- <th scope="col">주문일자</th> -->
 								<th scope="col">납기일자</th>
-								<th scope="col">등록</th>
 							</tr>
 						</thead>
 						<tbody id=ordSheetTable>
@@ -203,6 +206,7 @@ td {
 					<!-- End Multi Columns Form -->
 				</div>
 				<div class="modal-footer">
+					<button type="button" class="btn btn-primary addBtn">등록</button>
 					<button type="button" class="btn btn-secondary"
 						data-bs-dismiss="modal">Close</button>
 				</div>
@@ -211,8 +215,8 @@ td {
 	</div>
 
 	<!-- 생산계획 작성 -->
-	<div class="modal fade" id="createPlan" tabindex="-1">
-		<div class="modal-dialog modal-lg modal-dialog-scrollable">
+	<div class="modal fade" id="createPlan" data-bs-backdrop="static" tabindex="-1">
+		<div class="modal-dialog modal-xl modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">새로운 생산계획 작성</h5>
@@ -222,27 +226,27 @@ td {
 				<div class="modal-body">
 					<form id="planForm" name="newPlan" action="newPlanInsert"
 						method="POST" onsubmit="return false" class="row g-3">
-						<h5 class="modal-title">주문서 정보</h5>
-						<div class="col-md-6">
-							<label class="form-label">주문번호</label> <input type="text"
-								class="form-control" id="orderNo" name="orderNo" value=""
-								readonly>
-						</div>
-						<div class="col-md-6">
-							<label class="form-label">거래처명</label> <input type="text"
-								class="form-control" id="vendNm" value="" readonly> <input
-								type="hidden" class="form-control" value="" readonly>
-						</div>
-						<div class="col-md-5">
+						<h5 class="modal-title">생산계획</h5>
+						<div class="col-md-4">
 							<label class="form-label">제품명*</label> <input type="hidden"
-								class="form-control" id="edctsCd" name="edctsCd" readonly>
-							<select id="prdtNm" name="prdtNm" class="form-select"
+								class="form-control" id="edctsCd"  readonly>
+							<select id="prdtNm"  class="form-select"
 								aria-label="Default select example">
 							</select>
 						</div>
-						<div class="col-md-5">
-							<label class="form-label">주문수량*</label> <input type="text"
-								class="form-control" id="orderCnt" name="orderCnt" value="">
+						<div class="col-md-3">
+							<label class="form-label">생산수량*</label> <input type="text"
+								class="form-control" id="orderCnt"  value="">
+						</div>
+						<div class="col-md-3">
+							<label class="form-label">BOM선택*</label> 
+							<select id="bomSelect" class="form-select" aria-label="Default select example">
+								<option value="">선택하세요</option>
+								<c:forEach var="item" items="${bomInfo}">
+									<option data-cd="${item.edctsCd }" value="${item.bomCd}">${item.bomCd}/
+										${item.standard}</option>
+								</c:forEach>
+							</select>
 						</div>
 						<div class="col-md-2">
 							<button id="addProduct" type="button" class="btn btn-primary">제품추가</button>
@@ -251,20 +255,8 @@ td {
 							<div class="col-sm-10">
 			                    <select id="multiPro" class="form-select" multiple="" aria-label="multiple select example">
 			                    </select>
-			                  </div>
+			                </div>
 						</div>
-						<div class="col-md-6">
-							<label class="form-label">주문일자</label> <input type="date"
-								class="form-control" id="orderDt" value="" readonly>
-						</div>
-
-						<div class="col-md-6">
-							<label class="form-label">납기일자*</label> <input type="date"
-								class="form-control" id="paprdDt" name="paprdDt" value="">
-						</div>
-
-						<hr>
-						<h5 class="modal-title">생산계획</h5>
 						<div class="col-md-6">
 							<label class="form-label">생산계획코드</label> <input type="text"
 								class="form-control" name="planCd" value="${nextPlanCd }"
@@ -282,18 +274,7 @@ td {
 							<label class="form-label">생산시작 예정일*</label> <input type="date"
 								name="wkToDt" class="form-control">
 						</div>
-						<div class="col-md-6">
-							<label class="form-label">BOM선택*</label> 
-							<select id="bomSelect"
-								name="bomCd" class="form-select"
-								aria-label="Default select example">
-								<option value="">선택하세요</option>
-								<c:forEach var="item" items="${bomInfo}">
-									<option data-cd="${item.edctsCd }" value="${item.bomCd}">${item.bomCd}/
-										${item.standard}</option>
-								</c:forEach>
-							</select>
-						</div>
+
 						<div class="col-md-6">
 							<label class="form-label">우선순위*</label> 
 							<select name="prefRank"
@@ -305,44 +286,45 @@ td {
 							</select>
 						</div>
 						<hr>
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th scope="col"></th>
-									<th scope="col">자재명(단위)</th>
-									<th scope="col">자재소모량</th>
-									<th scope="col">자재유형</th>
-									<th scope="col">투입공정</th>
-								</tr>
-							</thead>
-							<tbody id="rscTable">
-
-							</tbody>
-						</table>
+						<div class="row col-md-12">
+							<div class="col-md-8">
+								<h5 class="modal-title">자재정보</h5>
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th scope="col"></th>
+											<th scope="col">자재명(단위)</th>
+											<th scope="col">자재유형</th>
+											<th scope="col">현재재고량</th>
+											<th scope="col">예정자재소모량</th>
+										</tr>
+									</thead>
+									<tbody id="rscTable">
+		
+									</tbody>
+								</table>
+							</div>
+							<div id="prcsInfo" class="col-md-4">
+								<h5 class="modal-title">공정정보</h5>
+								<table class="table table-hover">
+									<thead>
+										<tr>
+											<th scope="col">공정순서</th>
+											<th scope="col">공정유형</th>
+											<th scope="col">공정명</th>
+										</tr>
+									</thead>
+									<tbody id="rscTable">
+		
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</form>
-					<div id="plansDiv" style="display:none;">
-					<h5 class="modal-title">작성완료된 생산계획</h5>
-							<table class="table table-hover">
-							<thead>
-								<tr>
-									<th scope="col"><input type="checkbox"></th>
-									<th scope="col">주문번호</th>
-									<th scope="col">생산계획명</th>
-									<th scope="col">제품명</th>
-									<th scope="col">수량</th>
-									<th scope="col">납기일자</th>
-									<th scope="col"></th>
-								</tr>
-							</thead>
-							<tbody id="plansBefore">
-							</tbody>
-						</table>
-					</div>
 					<hr>
 					<!-- End Multi Columns Form -->
 				</div>
 				<div class="modal-footer">
-					<button id="morePlan" type="button" class="btn btn-primary">추가 등록하기</button>
 					<button id="newPlanSubmit" type="button" class="btn btn-primary">등록</button>
 					<button id="cancelPlan" type="button" class="btn btn-secondary">취소</button>
 				</div>
@@ -353,23 +335,45 @@ td {
 </body>
 <script>
 
-	//취소 버튼 클릭시
+	
 	$(document).ready(function() {
+		// thead의 checkbox 클릭 시, tbody의 모든 checkbox 선택/해제
+		$("#aBox input[type='checkbox']").on("click", function() {
+		  var checked = $(this).prop("checked");
+		  $("#ordSheetTable input[type='checkbox']").prop("checked", checked);
+		});
+
+		// tbody의 checkbox 클릭 시, thead의 checkbox 업데이트
+		$("#ordSheetTable").on("click", "input[type='checkbox']", function() {
+		  var allChecked = $("#ordSheetTable input[type='checkbox']").length === $("#ordSheetTable input[type='checkbox']:checked").length;
+		  $("#aBox input[type='checkbox']").prop("checked", allChecked);
+		});
+
+		
+		//취소 버튼 클릭시
 		var actionForm = $("#actionForm");
 		$("#cancelPlan").on("click", function(e) {
-		if(!confirm('생산계획을 취소하시겠습니까?(작성중인 계획서 모두 사라집니다.)')){
+		if(confirm('생산계획을 취소하시겠습니까?(작성중인 계획서 모두 사라집니다.)')){
+  		    $('#planForm input[type=text], #planForm input[type=date]').val('');
+		    $('#planForm select option:selected').prop('selected', false);
+		    $("#orderNo").attr("readonly", false);
+		    $("#vendNm").attr("readonly", false);
+		    $("#prdtNm").attr("readonly", false);
+		    $("#orderCnt").attr("readonly", false);
+		    $("#orderDt").attr("readonly", false);
+		    $("#paprdDt").attr("readonly", false);
+
+		    $('#multiPro').empty();
 			$('#createPlan').modal('hide');
-		} else {
-			$("#planForm :input:not([name='planCd'])").val("");
-			$('#plansBefore').empty;
-			$('#plansDiv').hide();
-			$('#createPlan').modal('hide');
-		}
+		} 
 		})
+		
+		 $('#multiPro').on('dblclick', 'option', function() {
+
+		 })
 	})
 	
 	$(document).ready(function() {
-		
 		$.ajax({
 			  url: '${pageContext.request.contextPath }/getPrdtInfo', 
 			  type: 'GET', 
@@ -401,21 +405,28 @@ td {
 		
 		$('#addProduct').click(function() {
 			var selectedOption = $('#prdtNm option:selected');
+			var selectedBOM = $('#bomSelect option:selected');
 			var selectedOptionText = selectedOption.text();
 			var selectedOptionValue = selectedOption.val();
+			var selectedBomValue = selectedBOM.val();
 			var orderCntValue = $('#orderCnt').val();
 			
-			var newOption = $('<option>', {
-				  value: selectedOptionValue,
-				  text: selectedOptionText + ' / ' + orderCntValue,
-				  'data-cnt': orderCntValue
-				});
+			  // 제품명과 주문수량 값이 있는 경우에만 추가
+			  if (selectedOptionValue && orderCntValue) {
+			    var newOption = $('<option>', {
+			      value: selectedOptionValue,
+			      text: selectedOptionText + ' / ' + orderCntValue + ' / ' + selectedBomValue,
+			      'data-cnt': orderCntValue,
+			      'data-bom': selectedBomValue
+			    });
 
-			$('#multiPro').append(newOption);
-			
-			$('#prdtNm option:selected').prop('selected', false);
+			    $('#multiPro').append(newOption);
 
-			$('#orderCnt').val('');
+			    $('#prdtNm option:selected').prop('selected', false);
+			    $('#orderCnt').val('');
+			  } else {
+				  alert('제품정보를 입력해주세요.')
+			  }
 			
 		});
 		
@@ -460,20 +471,16 @@ td {
  		let planName = document.getElementsByName('planName')[0];
 		let wkToDt = document.getElementsByName('wkToDt')[0];
 		let bomSelect = document.getElementById('bomSelect');
-		
-		if(prdtNm.selectedOptions.length === 0 || prdtNm.selectedOptions[0].value === "") {
-		  alert("제품명이 선택되지 않았습니다.");
-		  prdtNm.focus();
+		let multiPro = document.getElementById('multiPro');
+
+		if(multiPro.selectedOptions.length === 0) {
+		  alert("제품이 선택되지 않았습니다.");
+		  multiPro.focus();
 		  return false;
 		}
 		if(paprdDt.value === "") {
 		  alert("납기일자가 입력되지 않았습니다.");
 		  paprdDt.focus();
-		  return false;
-		}
-		if(orderCnt.value === "") {
-		  alert("주문수량이 입력되지 않았습니다.");
-		  orderCnt.focus();
 		  return false;
 		}
  		if(planName.value === "") {
@@ -499,51 +506,70 @@ td {
 			.addEventListener('click', submitPlanForm);
 	
 	function submitPlanForm() {
-		//추가 사항 확인
-		if ($("#plansDiv").is(":visible")) {
-		  var selectedPlans = []; // 선택된 플랜을 담을 배열
-		  $("#plansBefore tr").each(function() {
-		    var $checkbox = $(this).find("td:first-child input[type='checkbox']");
-		    var $status = $(this).find("td[data-id='status']");
-		
-		    if ($checkbox.is(":checked") && $status.text() === "작성완료") {
-		      var plan = {}; // 플랜 정보를 담을 객체
-		      $(this).find("td[data-id]").each(function() {
-		        var key = $(this).attr("data-id");
-		        var value = $(this).text();
-		        plan[key] = value; // 객체에 data-id와 td 값 저장
-		      });
-		      selectedPlans.push(plan); // 선택된 플랜을 배열에 추가
-		      
-			  $.ajax({
-				  type: "POST",
-				  url: "addnewPlans",
-				  data: JSON.stringify(selectedPlans), // 객체를 JSON 형태의 문자열로 변환하여 전송
-				  contentType: "application/json; charset=utf-8",
-				  dataType: "json",
-				  success: function(response) {
-				    console.log(response.result);
-				    if(response.result == 'Success'){
-				    	alert('등록이 완료되었습니다.')
-				    	location.reload();
-				    }
-				  },
-				  error: function(xhr, status, error) {
-				    console.log(error);
-				  }
-				});
-
-		    } else {
-		    	alert('등록할 생산계획을 선택해주세요.');
-		    	return;
-		    }
-		  });
-
-		} else {
 			if(formOptionchk() != false){
-				newPlan.submit();
+			var selectedValues = $('#multiPro').val();
+			var productArray = [];
+
+			$('#multiPro option:selected').each(function() {
+			  var value = $(this).val();
+			  var cnt = $(this).data('cnt');
+			  var bom = $(this).data('bom');
+			  var productInfo = {
+			    edctsCd: value,
+			    orderCnt: cnt,
+			    BomCd: bom
+			  };
+			  productArray.push(productInfo);
+			});
+
+			console.log(productArray);
+			
+			var proPlanArray = [];
+			for (var i = 0; i < productArray.length; i++) {
+			    var proPlanVO = {};
+			    $("#planForm [name]").each(function() {
+			      proPlanVO[this.name] = $(this).val();
+			    });
+			    proPlanVO.edctsCd = productArray[i].edctsCd;
+			    proPlanVO.orderCnt = productArray[i].orderCnt;
+			    proPlanArray.push(proPlanVO);
+			    // 이후에 해당 배열을 서버로 보내는 ajax 코드 작성
+			}
+			console.log(proPlanArray);
+			
+				
+			 $.ajax({
+				    url: "${pageContext.request.contextPath }/addnewPlans",
+				    type: "POST",
+				    data: JSON.stringify(proPlanArray),
+				    contentType: "application/json",
+				    success: function(response) {
+				      console.log(response.result);
+				      if(response.result == 'Success'){
+			    		  $('#planForm input[type=text], #planForm input[type=date]').val('');
+			    		  $('#planForm select option:selected').prop('selected', false);
+			  		      $("#orderNo").attr("readonly", false);
+					      $("#vendNm").attr("readonly", false);
+					      $("#prdtNm").attr("readonly", false);
+					      $("#orderCnt").attr("readonly", false);
+					      $("#orderDt").attr("readonly", false);
+					      $("#paprdDt").attr("readonly", false);
+			    		  $('#multiPro').empty();
+				    	  if (confirm('생산계획이 등록되었습니다.\n계속해서 주문서를 등록하시겠습니까?')) {
+				    		  $('#orderSheet').modal('show');
+				    		  $('#createPlan').modal('hide');
+				    		} else {
+					    	  $('#createPlan').modal('hide');
+				    		}
+				      }
+				    },
+				    error: function(jqXHR, textStatus, error) {
+				      console.error('요청 실패:', error);
+				    }
+				  });
+				
 			} 
-		}
+		
 	}
 	
 	
@@ -567,35 +593,31 @@ td {
 				      
 				      // 이미 orderNo가 등록된 경우, 해당 tr의 prdtNm 값을 수정
 				      if (orderNos[orderNo]) {
-				          var prdtNmTd = orderNos[orderNo].find("td.prdtNm");
-				          var prevText = prdtNmTd.text();
-				          var count = prevText.match(/외\s*\d*\s*개/);
-				          if (count) {
-				              var num = parseInt(count[0].match(/\d+/)[0]);
-				              num++;
-				              prdtNmTd.text(prevText.replace(count[0], "외 " + num + "개"));
-				          } else {
-				              prdtNmTd.append(" 외 1개");
-				          }
-				      } else {
+						    var prdtNmTd = orderNos[orderNo].find("td.prdtNm");
+						    var prevText = prdtNmTd.text();
+						    var count = prevText.match(/외\s*\d*\s*개/);
+						    if (count) {
+						        var num = parseInt(count[0].match(/\d+/)[0]);
+						        num++;
+						        prevText = prevText.replace(count[0], "외 " + num + "개");
+						    } else {
+						        prevText = prevText + " 외 1개";
+						    }
+						    prdtNmTd.text(prevText);
+						} else {
 				          var row = $("<tr>");
-				          row.append($("<td>").attr("hidden", true).text(edctsCd));
-				          row.append($("<td>").attr("hidden", true).text(item.vendCd));
+				          var inputTd = $("<td>").append($("<input>").attr("type", "checkbox"));
+				          row.append(inputTd);
 				          row.append($("<td>").text(orderNo));
 				          row.append($("<td>").text(item.vendNm));
 				          row.append($("<td>").addClass("prdtNm").text(item.prdtNm));
-				          row.append($("<td>").text(item.orderCnt));
-				          var orderDt = formatDate(item.orderDt)
-				          row.append($("<td>").text(orderDt));
 				          var paprdDt = formatDate(item.paprdDt)
 				          row.append($("<td>").text(paprdDt));
-				          var button = $("<button>", {
-				              type: "button",
-				              class: "btn btn-primary addBtn",
-				              text: "등록",
-				              style: "background-color: #0d6efd;"
-				          });
-				          row.append(button);
+				          var orderDt = formatDate(item.orderDt)
+/* 				          row.append($("<td>").attr("hidden", true).text(orderDt));
+				          row.append($("<td>").attr("hidden", true).text(edctsCd));
+				          row.append($("<td>").attr("hidden", true).text(item.vendCd));
+				          row.append($("<td>").attr("hidden", true).text(item.orderCnt)); */
 				          tbody.append(row);
 				          
 				          // orderNo 등록
@@ -624,49 +646,72 @@ td {
 	$(document).on("click", ".addBtn", function() {
 		/* 생산계획일자 오늘 설정 */
 		document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
-		
-	    $(this).prop("disabled", true);
-	    
-	    // change background color
-	    $(this).css("background-color", "gray");
-	    
-	    // change text
-	    $(this).text("작성중");
-		
-	    //orderNo 가져오기
-	    var orderNo = $(this).closest("tr").find("td:eq(2)").text();
-	 // orderSheetData를 가져와서 JSON 형식으로 파싱합니다.
+
+
+	 	// orderSheetData를 가져와서 JSON 형식으로 파싱합니다.
 		var orderSheetData = JSON.parse(localStorage.getItem('orderSheetData'));
+		console.log(orderSheetData);
 		
-		// orderSheetData에서 orderNo가 일치하는 데이터를 찾아서 값들을 변수에 저장합니다.
-		var targetOrderData = [];
-		for (var i = 0; i < orderSheetData.length; i++) {
-		    if (orderSheetData[i].orderNo == orderNo) {
-		        targetOrderData.push(orderSheetData[i]);
-		    }
+		var selectedOrders = [];
+		$("#ordSheetTable input[type='checkbox']:checked").each(function() {
+		  var item = $(this).closest("tr").find("td:eq(1)").text();
+		  selectedOrders.push(item);
+		});
+		console.log(selectedOrders);
+		// localStorage에서 선택된 항목만 필터링하기
+		var orderSheetData = JSON.parse(localStorage.getItem("orderSheetData"));
+		var filteredOrder = orderSheetData.filter(function(item) {
+		  return selectedOrders.indexOf(item.orderNo) !== -1;
+		});
+
+		console.log(filteredOrder);
+		
+		// filteredOrder 배열을 edctsCd를 기준으로 그룹화
+		const groupedOrders = {};
+		for (const order of filteredOrder) {
+		  if (groupedOrders[order.edctsCd]) {
+		    groupedOrders[order.edctsCd].push(order);
+		  } else {
+		    groupedOrders[order.edctsCd] = [order];
+		  }
 		}
-		//수정해야하는 위치
-		console.log(targetOrderData);
-
-
 		
- 	    var orderArray = [];
-	    var row = $(this).closest("tr");    
-	    row.find("td").each(function() {
-	        orderArray.push($(this).text());
-	    });
-	    $("#orderNo").val(orderArray[2]); 
-	    $("#vendNm").val(orderArray[3]); 
-	    $("#orderDt").val(orderArray[6]);
-	    $("#paprdDt").val(orderArray[7]); 
-	    
-	    
-	    getProductBOM(orderArray[0]);
-	    
+		console.log(groupedOrders);
+		
+		// 각 그룹의 orderCnt 합 구하기
+		const orderCntSum = {};
+		for (const edctsCd in groupedOrders) {
+		  let sum = 0;
+		  let prdtNm = '';
+		  for (const order of groupedOrders[edctsCd]) {
+		    sum += order.orderCnt;
+		    prdtNm = order.prdtNm;
+		  }
+		  orderCntSum[edctsCd] = {sum, prdtNm};
+		}
+		
+		console.log(orderCntSum);
+		
+		// orderCntSum에서 edctsCd와 orderCnt 값을 이용해 option 요소를 생성하고 select 요소에 추가
+		for (const edctsCd in orderCntSum) {
+			 console.log(edctsCd);
+			 console.log(orderCntSum[edctsCd])
+		   
+			// select 요소 선택
+			 const select = $('#multiPro');
 
-		      // 현재 모달창 닫기
+			 // option 태그 생성 후 append
+			 select.append($('<option>', {
+			   value: edctsCd,
+			   text: orderCntSum[edctsCd].prdtNm + " / " + orderCntSum[edctsCd].sum,
+			   "data-sum": orderCntSum[edctsCd].sum,
+			   "data-nm": orderCntSum[edctsCd].prdtNm
+			 }));
+		}
+		
+ 		// 현재 모달창 닫기
 		$('#orderSheet').modal('hide');
-		      // 다른 모달창 열기
+		// 다른 모달창 열기
 		$('#createPlan').modal('show');
 
 	});
@@ -923,15 +968,6 @@ td {
 	  });
 	});
     
-    /* 제품 선택시 BOM 정보 들고 오기 */
-    $(document).ready(function() {
-	  $('#prdtNm').on('change', function() {
-	    var edctsCd = $('option:selected', this).val();
-	    getProductBOM(edctsCd);
-
-	  });
-	});
-    
     function getProductBOM(edctsCd) {
     	  $.ajax({
     	    type: 'GET',
@@ -959,75 +995,6 @@ td {
     	  });
     	}
     
-    // 계획서 추가
-    $('#morePlan').on('click', function() {
-      if(formOptionchk() == false){
-    	  return
-      }
-      drawPlans();	
-	  if(confirm("주문서를 가져오시겠습니까?")) {
-		  getOrderSheet(function() {
-			    $('#createPlan').modal('hide');
-			    //$('#orderSheet').modal('show');
-			    $('#plansDiv').show();
-			  });
-	  } else {
-	    $('#plansDiv').show();
-	  }
-	});
     
-    
-    
-    function drawPlans() {
-    	$('input[name="planCd"]').val("PLN"+(parseInt($('input[name="planCd"]').val().substring(3)) + 1));
-    	// input과 select의 값을 가져와 변수에 저장
-		  var orderNo = $("#orderNo").val().trim();
-		  var edctsCd = $("#edctsCd").val().trim();
-		  var prdtNm = $("#prdtNm").val();
-		  var vendNm = $("#vendNm").val().trim();
-		  var orderDt = $("#orderDt").val();
-		  var paprdDt = $("#paprdDt").val();
-		  var orderCnt = $("#orderCnt").val().trim();
-		  var planCd = $("input[name=planCd]").val().trim();
-		  var planName = $("input[name=planName]").val().trim();
-		  var currentDate = $("#currentDate");
-		  var wkToDt = $("input[name=wkToDt]").val();
-		  var bomCd = $("#bomSelect").val();
-		  var prefRank = $("select[name=prefRank]").val();
-		
-		  var tr = $("<tr>")
-		    .append($("<td>").append($("<input>").attr("type", "checkbox")))
-		    .append($("<td>").attr("data-id", "orderNo"))
-		    .append($("<td>").attr("data-id", "planName"))
-		    .append($("<td>").attr("data-id", "prdtNm"))
-		    .append($("<td>").attr("data-id", "orderCnt"))
-		    .append($("<td>").attr("data-id", "paprdDt"))
-		    .append($("<td>").attr("data-id", "status"))
-		    .append($("<td>").attr("data-id", "planCd").attr("hidden", true))
-		    .append($("<td>").attr("data-id", "edctsCd").attr("hidden", true))
-		    .append($("<td>").attr("data-id", "wkToDt").attr("hidden", true))
-		    .append($("<td>").attr("data-id", "bomCd").attr("hidden", true))
-		    .append($("<td>").attr("data-id", "prefRank").attr("hidden", true));
-
-		// td 태그에 값을 넣어줍니다.
-		tr.find("[data-id='planName']").text(planName);
-		tr.find("[data-id='prdtNm']").text(prdtNm);
-		tr.find("[data-id='orderCnt']").text(orderCnt);
-		tr.find("[data-id='paprdDt']").text(paprdDt);
-		tr.find("[data-id='status']").text('작성완료');
-		tr.find("[data-id='orderNo']").text(orderNo);
-		tr.find("[data-id='planCd']").text(planCd);
-		tr.find("[data-id='edctsCd']").text(edctsCd);
-		tr.find("[data-id='wkToDt']").text(wkToDt);
-		tr.find("[data-id='bomCd']").text(bomCd);
-		tr.find("[data-id='prefRank']").text(prefRank);
-
-		// 테이블에 tr 태그를 추가합니다.
-		$("#plansBefore").append(tr);		
-	    
-		$("#planForm :input:not([name='planCd'])").val("");
-		/* 생산계획일자 오늘 설정 */
-		document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
-    }
 </script>
 </html>

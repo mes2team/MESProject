@@ -47,6 +47,8 @@ public interface ProMapper {
 
 	public List<BomVO> selectBomStock(BomVO vo);
 
+	public int plusPlanInsert(ProPlanVO proPlanVO);
+
 	
 
 }

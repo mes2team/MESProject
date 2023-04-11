@@ -43,6 +43,8 @@ public interface ProService {
 
 	public List<BomVO> getBomStock(BomVO vo);
 
+	public String plusPlanInsert(ProPlanVO proPlanVO);
+
 	
 
 }

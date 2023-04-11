@@ -29,6 +29,16 @@ public class ProServiceImpl implements ProService {
 		}
 
 	}
+	
+	@Override
+	public String plusPlanInsert(ProPlanVO proPlanVO) {
+		int result = proMapper.plusPlanInsert(proPlanVO);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
 
 	@Override
 	public String getNextPlanCd() {
@@ -140,6 +150,8 @@ public class ProServiceImpl implements ProService {
 	public List<BomVO> getBomStock(BomVO vo) {
 		return proMapper.selectBomStock(vo);
 	}
+
+	
 
 
 }
