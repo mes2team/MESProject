@@ -6,11 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.spring.order.mapper.OrderMapper;
-import com.yedam.spring.order.service.OrderPrdTestVO;
 import com.yedam.spring.order.service.OrderService;
-import com.yedam.spring.order.service.OrderTestVO;
-import com.yedam.spring.vend.mapper.VendMapper;
-import com.yedam.spring.vend.service.VendVO;
+import com.yedam.spring.production.service.OrderSheetVO;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -18,66 +15,64 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	OrderMapper orderMapper;
 	
-	@Autowired
-	VendMapper vendMapper;
 
 	@Override
-	public List<OrderTestVO> selectOrderList() {
+	public List<OrderSheetVO> selectOrderList() {
 		return orderMapper.selectOrderList();
 	}
 
 	@Override
-	public OrderTestVO selectOrderNo() {
+	public OrderSheetVO selectOrderNo() {
 		return orderMapper.selectOrderNo();
 	}
 
 	@Override
-	public List<OrderPrdTestVO> selectOrderPrd() {
+	public List<OrderSheetVO> selectOrderPrd() {
 		return orderMapper.selectOrderPrd();
 	}
 
 	@Override
-	public int insertOrder(OrderTestVO vo) {
+	public int insertOrder(OrderSheetVO vo) {
 		return orderMapper.insertOrder(vo);
 	}
 
 	@Override
-	public int insertOrderPrd(OrderPrdTestVO vo) {
+	public int insertOrderPrd(OrderSheetVO vo) {
 		return orderMapper.insertOrderPrd(vo);
 	}
 
 	@Override
-	public int deleteOrder(OrderTestVO vo) {
+	public int deleteOrder(OrderSheetVO vo) {
 		return orderMapper.deleteOrder(vo);
 	}
 
 	@Override
-	public int updateOrderProg(OrderTestVO vo) {
+	public int updateOrderProg(OrderSheetVO vo) {
 		return orderMapper.updateOrderProg(vo);
 	}
 
 	@Override
-	public List<OrderTestVO> selectOrderDetail(String orderNo) {
+	public List<OrderSheetVO> selectOrderDetail(String orderNo) {
 		return orderMapper.selectOrderDetail(orderNo);
 	}
 
 	@Override
-	public List<OrderTestVO> searchOrder(OrderTestVO vo) {
+	public List<OrderSheetVO> searchOrder(OrderSheetVO vo) {
 		return orderMapper.searchOrder(vo);
 	}
 
 	@Override
-	public int updateOrder(OrderTestVO vo) {
+	public int updateOrder(OrderSheetVO vo) {
 		return orderMapper.updateOrder(vo);
 	}
 
 	@Override
-	public int updateOrderDetail(OrderTestVO vo) {
+	public int updateOrderDetail(OrderSheetVO vo) {
 		return orderMapper.updateOrderDetail(vo);
 	}
 
 	@Override
-	public int deleteOrderDetail(OrderTestVO vo) {
+	public int deleteOrderDetail(OrderSheetVO vo) {
 		return orderMapper.deleteOrderDetail(vo);
 	}
 

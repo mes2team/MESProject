@@ -42,5 +42,14 @@ public class EqmVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date end;
 	
+	//설비비가동
+	private String noprCd; //점검코드? 비가동코드
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date frDt; //시작일시
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date toDt; //종료일시
+	private String eqmPsch; //비가동담당자
+	private String opertCtnt; //작업내용
+	
 	
 }

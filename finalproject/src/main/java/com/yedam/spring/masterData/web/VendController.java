@@ -1,4 +1,4 @@
-package com.yedam.spring.vend.web;
+package com.yedam.spring.masterData.web;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.spring.vend.service.VendService;
-import com.yedam.spring.vend.service.VendVO;
+import com.yedam.spring.masterData.service.VendService;
+import com.yedam.spring.masterData.service.VendVO;
 
 @Controller
 public class VendController {

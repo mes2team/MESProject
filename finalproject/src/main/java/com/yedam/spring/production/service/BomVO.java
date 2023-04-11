@@ -30,4 +30,5 @@ public class BomVO {
 	private int LotRmnCnt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date expDt;
+
 }

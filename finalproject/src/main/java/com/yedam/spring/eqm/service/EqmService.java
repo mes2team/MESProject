@@ -34,11 +34,26 @@ public interface EqmService {
 
 	// 점검등록
 	public int insertCheck(EqmVO eqmVO);
-	
-	//점검삭제
+
+	// 점검삭제
 	public int deleteCheck(String checkCd);
-	
-	//점검수정
+
+	// 점검수정
 	public int updateCheck(EqmVO eqmVO);
 
+	/////////// 설비비가동//////////
+	// 모달 설비등록 사용여부Y인 설비리스트
+	public List<EqmVO> selectYList();
+
+	// 비가동목록조회
+	public List<EqmVO> selectOprList();
+
+	// 최대비가동코드
+	public EqmVO selectMaxNoprCd();
+
+	// 비가동등록,Y업데이트
+	public int insertOprUpdateY(EqmVO eqmVO);
+	
+	//비가동 삭제 
+		public int deleteOpr(String noprCd);
 }
