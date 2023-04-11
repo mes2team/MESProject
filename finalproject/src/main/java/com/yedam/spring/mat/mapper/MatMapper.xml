@@ -8,7 +8,7 @@
 	<select id="matList" resultType="MatVO">
 		SELECT *
 		FROM rsc
-	   ORDER BY RSC_CD
+	   ORDER BY use_yn DESC, RSC_CD
 	</select>
 <!-- 자재정보 단건 조회 -->
 	<select id="selectMatInfo" resultType="MatVO">
@@ -23,8 +23,6 @@
 		   vend_nm
 	  FROM rsc		   
      WHERE rsc_cd = #{rscCd}
-	<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌
-	${} : 타입 변경 없이 있는그대로 집어 넣음-->
 	</select>
 <!-- 자재정보 등록 -->
 	<insert id="insertMatInfo" parameterType="MatVO">
@@ -51,6 +49,8 @@
 		#{vendNm}
 		)
 	</insert>
+	<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌
+	${} : 타입 변경 없이 있는그대로 집어 넣음-->
 	<!-- #은 타입에 따라서 숫자면 ''가 안 붙고 문자면 ''가 붙는데
 	$는 타입상관없이 앞에것에 붙도록 한다.-->
 	
@@ -100,9 +100,7 @@
 	<select id="selectMatOrderInfo" resultType="MatVO">
 	SELECT *
 	  FROM rsc_ordr		   
-     WHERE ordr_cd = #{ordrCd}
-	<!--#{} : preparedStatement 들어오는 데이터를 sql에 맞게 타입을 맞춰줌
-	${} : 타입 변경 없이 있는그대로 집어 넣음-->
+     WHERE ordr_cd = #{ordrCd}	
 	</select>
 <!-- 자재발주 등록 -->
 	<insert id="insertMatOrderInfo" parameterType="MatVO">
@@ -169,6 +167,92 @@
 		DELETE FROM rsc_ordr
 		WHERE ordr_cd = #{ordrCd}
 	</delete>
+	
+<!-- 자재 재고 현황 -->
+	<select id="matStockList" resultType="MatVO">
+		SELECT r.RSC_CD
+		     , r.RSC_NM
+		     , r.VEND_CD
+		     , r.VEND_NM
+		     , r.rsc_typ
+		     , r.rsc_spec
+		     , SUM(i.ist_cnt) AS TOTAL_IST_CNT
+		     , SUM(out.ouST_CNT) AS TOTAL_OUST_CNT
+		     , (SUM(i.ist_cnt) - SUM(out.ouST_CNT)) AS NET_STC
+		     , (SUM(o.ordr_CNT)-SUM(i.IST_CNT)) AS no_iST_CNT
+		     , r.saf_stc
+		  FROM rsc r LEFT JOIN rsc_ist i ON r.rsc_cd = i.rsc_cd
+		             LEFT JOIN rsc_oust out ON r.RSC_CD = out.RSC_CD
+		             LEFT JOIN rsc_ordr o ON r.RSC_CD = o.RSC_CD
+		 WHERE r.use_yn = 'Yes'
+		 GROUP BY r.RSC_CD, r.RSC_NM, r.VEND_CD, r.VEND_NM, r.rsc_typ, r.rsc_spec, r.saf_stc
+		 ORDER BY r.RSC_CD
+	</select>
+	
+<!-- 자재입고 현황 -->	
+	<select id="matReceiptList" resultType="MatVO">
+		SELECT i.rsc_lot_cd
+		     , i.rsc_cd
+		     , r.rsc_nm
+		     , i.ordr_cd
+		     , o.ordr_cnt
+		     , i.rsc_insp_cd
+		     , i.ist_cnt
+		     , i.ist_dt
+		  FROM rsc_ist i JOIN rsc r ON i.rsc_cd = r.rsc_cd
+		  				 LEFT JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
+		 ORDER BY i.rsc_lot_cd
+	</select>
+
+<!-- 자재입고 등록 -->
+	<insert id="insertMatReceipt" parameterType="MatVO">
+		INSERT INTO rsc_ist (
+		rsc_lot_cd,
+		rsc_cd,
+		ordr_cd,
+		rsc_insp_cd,
+		ist_cnt,
+		ist_dt
+		)
+		VALUES (
+		'RLT${rscLotCd}',
+		#{rscCd},
+		#{ordrCd},
+		#{rscInspCd},
+		#{istCnt},
+		#{istDt}
+		)
+	</insert>	
+<!-- 자재입고 수정 -->
+	<update id="updateMatReceiptInfo" parameterType="MatVO">
+		UPDATE rsc_ist
+		<set>
+			<if test="rscLotCd != null and !rscLotCd.equals('')">
+				rsc_lot_cd = #{rscLotCd},
+			</if>
+			<if test="rscCd != null and !rscCd.equals('')">
+				rsc_cd = #{rscCd},
+			</if>
+			<if test="ordrCd != null and !ordrCd.equals('')">
+				ordr_cd = #{ordrCd},
+			</if>
+			<if test="rscInspCd != null and !rscInspCd.equals('')">
+				rsc_insp_cd = #{rscInspCd},
+			</if>
+			<if test="istCnt != null and !istCnt.equals('')">			
+				ist_cnt = #{istCnt},
+			</if>
+			<if test="istDt != null and !istDt.equals('')">
+				ist_dt = #{istDt},
+			</if>
+		</set>
+		WHERE rsc_lot_cd = #{rscLotCd}
+	</update>
+<!-- 자재입고 삭제 -->
+	<delete id="deleteMatReceiptInfo" parameterType="String">
+		DELETE FROM rsc_ist
+		WHERE rsc_lot_cd = #{rscLotCd}
+	</delete>		
 
 
 </mapper>

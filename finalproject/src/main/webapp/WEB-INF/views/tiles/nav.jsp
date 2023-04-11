@@ -146,8 +146,8 @@
             </a>
           </li>
           <li>
-            <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+            <a href="${pageContext.request.contextPath }/matReceipt">
+              <i class="bi bi-circle"></i><span>자재입고</span>
             </a>
           </li>
         </ul>
