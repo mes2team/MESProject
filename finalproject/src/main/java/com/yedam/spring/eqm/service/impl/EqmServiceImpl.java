@@ -74,5 +74,22 @@ public class EqmServiceImpl implements EqmService{
 	public List<EqmVO> selectOprList() {
 		return mapper.selectOprList();
 	}
+	@Override
+	public List<EqmVO> selectYList() {
+		return mapper.selectYList();
+	}
+	@Override
+	public EqmVO selectMaxNoprCd() {
+		return mapper.selectMaxNoprCd();
+	}
+	@Override
+	public int insertOprUpdateY(EqmVO eqmVO) {
+		return mapper.insertOprUpdateY(eqmVO);
+	}
+	@Override
+	public int deleteOpr(String noprCd) {
+		// TODO Auto-generated method stub
+		return mapper.deleteOpr(noprCd);
+	}
 
 }

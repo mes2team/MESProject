@@ -45,10 +45,10 @@ public class EqmVO {
 	//설비비가동
 	private String noprCd; //점검코드? 비가동코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String frDt; //시작일시
+	private Date frDt; //시작일시
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String toDt; //종료일시
-	private String eqmPsch; //설비담당자
+	private Date toDt; //종료일시
+	private String eqmPsch; //비가동담당자
 	private String opertCtnt; //작업내용
 	
 	

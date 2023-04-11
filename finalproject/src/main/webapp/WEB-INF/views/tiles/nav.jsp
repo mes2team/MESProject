@@ -123,8 +123,8 @@
             </a>
           </li>
           <li>
-            <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+            <a href="eqmOpr">
+              <i class="bi bi-circle"></i><span>비가동관리</span>
             </a>
           </li>
         </ul>
