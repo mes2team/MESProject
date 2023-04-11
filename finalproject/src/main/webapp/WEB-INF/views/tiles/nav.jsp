@@ -90,7 +90,7 @@
             </a>
           </li>
           <li>
-            <a href="${pageContext.request.contextPath}/productionPlan">
+            <a href="${pageContext.request.contextPath}/productionOrder">
               <i class="bi bi-circle"></i><span>생산지시</span>
             </a>
           </li>
