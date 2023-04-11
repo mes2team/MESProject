@@ -87,7 +87,7 @@ table, tr, th, td {
 					<div class="table-responsive"
 						style="width: 100%; height: 300px; overflow: auto">
 						<table id="stock-table"
-							class="table table-striped table-bordered first table-hover">
+							class="table table-bordered first table-hover">
 							<thead>
 								<tr>
 									<th>No.</th>
@@ -126,7 +126,7 @@ table, tr, th, td {
 	</div>
 	<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
 	<!-- ============================================================== -->
-	<!-- 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청  -->
+	<!-- 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블  -->
 	<div class="row">
 		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			<div class="card">
@@ -136,7 +136,7 @@ table, tr, th, td {
 						<sec:authorize access="hasRole('ROLE_ADMIN')">
 							<button type="button" class="btn btn-success"
 								data-bs-toggle="modal" data-bs-target="#orderModal">추가</button>
-							<button type="button" class="btn btn-info" onclick="updateBtn()">수정</button>
+							<button type="button" class="btn btn-primary" id="updateBtn" onclick="updateBtn()">수정</button>
 							<button type="button" class="btn btn-danger"
 								onclick="deleteBtn()">삭제</button>
 						</sec:authorize>
@@ -184,7 +184,7 @@ table, tr, th, td {
 			</div>
 		</div>
 	</div>
-	<!-- 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청 자재 발주신청  -->
+	<!-- 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블  -->
 	<!-- ============================================================== -->
 	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
 	<div class="modal fade" id="orderModal" tabindex="-1">
@@ -413,16 +413,16 @@ function updateBtn() {
       });
       return;
     }
-
+    $("#cbx_chkAll").prop("disabled", true);
     disableCheckBoxes();
 
     // 수정 버튼의 텍스트를 "수정완료"로 변경
-    $(".btn-info").text("수정완료");
+    $("#updateBtn").text("수정완료");
 
     // 수정완료 버튼 클릭 이벤트 핸들러 설정
     // $(".btn-info").off("click").on("click", submitBtn);
-    $(".btn-info").removeAttr("onclick");
-    $(".btn-info").attr("onclick", "submitBtn();");
+    $("#updateBtn").removeAttr("onclick");
+    $("#updateBtn").attr("onclick", "submitBtn();");
 
     $('input[name="chk"]:checked').each(function () {
       var row = $(this).closest("tr");
@@ -542,9 +542,9 @@ function updateBtn() {
             $("tbody").append($row);
           });
           enableCheckBoxes();
-          $(".btn-info").text("수정");
-          $(".btn-info").removeAttr("onclick");
-          $(".btn-info").attr("onclick", "updateBtn();");
+          $("#updateBtn").text("수정");
+          $("#updateBtn").removeAttr("onclick");
+          $("#updateBtn").attr("onclick", "updateBtn();");
         }
 
         let Toast = Swal.mixin({

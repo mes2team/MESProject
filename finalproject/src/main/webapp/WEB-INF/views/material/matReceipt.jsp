@@ -1,19 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-   pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sec"
-   uri="http://www.springframework.org/security/tags"%>
+	uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet"
-   href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+	href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
 <script
-   src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+	src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 <script>
         jQuery(function($){
-            $("#jaje").DataTable({
+            $("#receipt").DataTable({
                lengthChange: false,
                 info: false,
             });
@@ -22,26 +22,28 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-   href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 
 
 
 <!-- jQuery and Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script
-   src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <meta charset="UTF-8">
 <title>Material List</title>
 <style>
 table, tr, th, td {
-   border: 1px solid black;
+	border: 1px solid black;
 }
+
 .insert {
 	display: inline-blcok;
 	float: left;
 }
+
 form {
 	clear: both;
 }
@@ -49,320 +51,182 @@ form {
 #btnGrp {
 	display: inline-blcok;
 	float: right;
+	text-align: right;
+}
+
+#receipt th:first-child::after {
+	display: none;
+}
+
+#receipt th:first-child::before {
+	display: none;
 }
 </style>
 </head>
 <body>
-   <div>
-      <!-- ============================================================== -->
-      <!-- pageheader -->
-      <!-- ============================================================== -->
-      <div class="row">
-         <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-               <li class="breadcrumb-item"><a href="#"
-                  class="breadcrumb-link">자재관리</a></li>
-               <!-- <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Tables</a></li> -->
-               <li class="breadcrumb-item active" aria-current="page">자재정보</li>
-            </ol>
-         </nav>
-      </div>
-      <sec:authorize access="hasRole('ROLE_ADMIN')">
-         <!-- ROLE_ADMIN만 볼 수 있는 영역 -->
-         <!-- ============================================================== -->
-         <!-- 자재 등록 -->
-         <!-- ============================================================== -->
-         <div class="card">
-            <div class="card-body">
-            
-               <!-- Multi Columns Form -->
-               <h3 class="insert">자재등록</h3>
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#" class="breadcrumb-link">자재관리</a></li>
+				<li class="breadcrumb-item active" aria-current="page">자재입고</li>
+			</ol>
+		</nav>
+	</div>
+	<!-- ROLE_ADMIN만 볼 수 있는 영역 -->
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<!-- ============================================================== -->
+		<!-- 자재 입고 등록 자재 입고 등록 자재 입고 등록 자재 입고 등록 자재 입고 등록 자재 입고 등록 -->
+		<div class="card">
+			<div class="card-body">
+				<h3 class="insert">자재입고등록</h3>
 				<div id="btnGrp">
-                     <button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-                     <button type="reset" class="btn btn-secondary">초기화</button>
-                  </div>
-               <form class="row g-3" name="insertForm" action="matInsert"
-                  method="post" onsubmit="return false"
-                  style="margin: 0px 5px 5px 5px;">
-				
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">자재코드</label> RSC<input
-                        type="text" class="form-control" id="rscCd" name="rscCd"
-                        placeholder="숫자만 입력해주세요." required="">
-                  </div>
+					<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
+					<button type="reset" class="btn btn-secondary">초기화</button>
+				</div>
+				<form class="row g-3" name="insertForm" action="matReceiptInsert"
+					method="post" onsubmit="return false"
+					style="margin: 0px 5px 5px 5px;">
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">자재명</label> <input
-                        type="text" class="form-control" id="rscNm" name="rscNm"
-                        placeholder="" required="">
-                  </div>
+					<div class="col-md-2">
+						<label for="country" class="form-label">LOT번호</label> RLT<input
+							type="text" class="form-control" id="rscLotCd" name="rscLotCd"
+							placeholder="숫자만 입력해주세요.">
+					</div>
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">자재규격</label> <select
-                        class="form-control" id="rscSpec" name="rscSpec" required="">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="KG">kg(킬로그램)</option>
-                        <option value="L">L(리터)</option>
-                     </select>
-                  </div>
+					<div class="col-md-2">
+						<label for="country" class="form-label">자재코드</label> <input
+							type="text" class="form-control" id="rscCd" name="rscCd"
+							placeholder="">
+					</div>
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">사용여부</label> <select
-                        class="form-control" id="useYn" name="useYn" required="">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                     </select>
-                  </div>
+					<div class="col-md-2">
+						<label for="country" class="form-label">발주번호</label> <input
+							type="text" class="form-control" id="ordrCd" name="ordrCd">
+					</div>
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">자재유형</label> <select
-                        class="form-control" id="rscTyp" name="rscTyp" required="">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="주원료">주원료</option>
-                        <option value="첨가제">첨가제</option>
-                        <option value="액상원료">액상원료</option>
-                     </select>
-                  </div>
+					<div class="col-md-2">
+						<label for="country" class="form-label">검사코드</label> <input
+							type="text" class="form-control" id="rscInspCd" name="rscInspCd">
+					</div>
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">안전재고</label> <input
-                        type="text" class="form-control" id="safStc" name="safStc"
-                        placeholder="숫자를 입력하세요." required="">
-                  </div>
+					<div class="col-md-2">
+						<label for="country" class="form-label">입고수량</label> <input
+							type="text" class="form-control" id="istCnt" name="istCnt"
+							placeholder="숫자를 입력하세요.">
+					</div>
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">거래처코드</label> <select
-                        class="form-control" id="vendCd" name="vendCd" required="">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="VEI1000">VEI1000</option>
-                        <option value="VEI1001">VEI1001</option>
-                     </select>
-                  </div>
-                  
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">거래처명</label> <input
-                        type="text" class="form-control" id="vendNm" name="vendNm"
-                        placeholder="" required="">
-                  </div>
+					<div class="col-md-2">
+						<label for="country" class="form-label">입고일</label> <input
+							type="date" class="form-control" id="istDt" name="istDt">
+					</div>
 
-                  
-               </form>
-               <!-- End Multi Columns Form -->
+				</form>
+			</div>
+		</div>
+	</sec:authorize>
+	<!-- 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록  -->
+	<!-- ============================================================== -->
+<!-- 자재입고현황테이블 자재입고현황테이블 자재입고현황테이블 자재입고현황테이블 자재입고현황테이블  -->
 
-            </div>
-         </div>
-      </sec:authorize>
-      <!-- ============================================================== -->
-      <!-- basic table  -->
-      <!-- ============================================================== -->
-      <div class="row">
-         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="card">
-               
-               <div class="card-body">
-               
-                  <div class="table-responsive">
-                  
-                     <table id="jaje" class="table table-striped table-bordered first">
-                     <h3 class="">자재정보</h3>
-                        <thead>
-                           <tr>
-                              <th>No.</th>
-                              <th>자재코드</th>
-                              <th>자재명</th>
-                              <th>자재규격</th>
-                              <th>자재유형</th>
-                              <th>안전재고</th>
-                              <th>사용여부</th>
-                              <th>거래처코드</th>
-                              <th>거래처명</th>
-                              <sec:authorize access="hasRole('ROLE_ADMIN')">
-                                 <th>수정</th>
-                              </sec:authorize>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           <c:forEach var="mat" items="${matList }" varStatus="loop">
-                              <tr data-id="a">
-                                 <td>${loop.count }</td>
-                                 <td>${mat.rscCd }</td>
-                                 <td>${mat.rscNm }</td>
-                                 <td>${mat.rscSpec }</td>
-                                 <td>${mat.rscTyp }</td>
-                                 <td>${mat.safStc }</td>
-                                 <td>${mat.useYn }</td>
-                                 <td>${mat.vendCd }</td>
-                                 <td>${mat.vendNm }</td>
-                                 <sec:authorize access="hasRole('ROLE_ADMIN')">
-                                    <td><button type="button"
-                                          class="btn btn-primary updateBtn" data-bs-toggle="modal">
-                                          수정</button></td>
-                                 </sec:authorize>
-                              </tr>
-                           </c:forEach>
-                        </tbody>
-                     </table>
-
-                     <!-- ################Extra Large Modal################################## -->
-                     <div class="modal fade" id="modifyModal" tabindex="-1">
-                        <div class="modal-dialog modal-xl">
-                           <div class="modal-content">
-                              <div class="modal-header">
-                                 <h5 class="modal-title">자재수정</h5>
-                                 <button type="button" class="btn-close"
-                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <form class="row g-3" name="updateForm" action="updateMat"
-                                 method="post" onsubmit="return false"
-                                 style="margin: 0px 5px 5px 5px;">
+<div class="row">
+	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+		<div class="card">
+			<div class="card-body d-flex justify-content-between">
+				<h3 >자재입고현황</h3>
+				<div id="btnGrp">
+					<sec:authorize access="hasRole('ROLE_ADMIN')">						
+						<button type="button" class="btn btn-primary" id="updateBtn" onclick="updateBtn()">수정</button>
+						<button type="button" class="btn btn-danger"
+							onclick="deleteBtn()">삭제</button>
+					</sec:authorize>
+				</div>
+			</div>
+			<div class="table-responsive">
+				<table id="receipt"
+					class="table table-striped table-bordered first">
+					<thead>
+						<tr>
+							<th><input type="checkbox" id="cbx_chkAll" /></th>
+							<th>No.</th>
+							<th>LOT번호</th>
+							<th>자재코드</th>
+							<th>자재명</th>
+							<th>발주번호</th>
+							<th>발주수량</th>
+							<th>검사코드</th>
+							<th>입고수량</th>
+							<th>입고일</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="matReceipt" items="${matReceiptList }"
+							varStatus="loop">
+							<tr data-id="${matReceipt.rscLotCd }">
+								<td><input type="checkbox" name="chk"
+									value="${matReceipt.rscLotCd }" /></td>
+								<td>${loop.count }</td>
+								<td>${matReceipt.rscLotCd }</td>
+								<td>${matReceipt.rscCd }</td>
+								<td>${matReceipt.rscNm }</td>
+								<td>${matReceipt.ordrCd }</td>
+								<td>${matReceipt.ordrCnt }</td>
+								<td>${matReceipt.rscInspCd }</td>
+								<td>${matReceipt.istCnt }</td>
+								<td><fmt:formatDate value="${matReceipt.istDt }"
+										pattern="yyyy-MM-dd" /></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 
 
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재코드</label> RSC<input
-                                       type="text" class="form-control" id="rscCdModal"
-                                       name="rscCd" placeholder="숫자만 입력해주세요." value="">
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재명</label> <input
-                                       type="text" class="form-control" id="rscNmModal"
-                                       name="rscNm" placeholder="" value="${matvo.rscNm }">
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재규격</label>
-                                    <%
-                                    String RscSpec = (String) request.getAttribute("rscSpec");
-                                    %>
-                                    <%
-                                    System.out.println(RscSpec);
-                                    %>
-                                    <select class="form-control" id="rscSpecModal"
-                                       name="rscSpec">
-                                       <option value="KG"
-                                          <%="KG".equals(RscSpec) ? "selected" : ""%>>kg(킬로그램)</option>
-                                       <option value="L"
-                                          <%="L".equals(RscSpec) ? "selected" : ""%>>L(리터)</option>
-                                    </select>
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재유형</label> <select
-                                       class="form-control" id="rscTypModal" name="rscTyp"
-                                       required="">
-                                       <option value="none" disabled>=== 선택 ===</option>
-                                       <option value="주원료">주원료</option>
-                                       <option value="첨가제">첨가제</option>
-                                       <option value="액상원료">액상원료</option>
-                                    </select>
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">안전재고</label> <input
-                                       type="text" class="form-control" id="safStcModal"
-                                       name="safStc" placeholder="숫자를 입력하세요." required="">
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">사용여부</label> <select
-                                       class="form-control" id="useYnModal" name="useYn"
-                                       required="">
-                                       <option value="none" disabled>=== 선택 ===</option>
-                                       <option value="Yes">Yes</option>
-                                       <option value="No">No</option>
-                                    </select>
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">거래처코드</label> <select
-                                       class="form-control" id="vendCdModal" name="vendCd"
-                                       required="">
-                                       <option value="none" disabled>=== 선택 ===</option>
-                                       <option value="VEI1000">VEI1000</option>
-                                       <option value="VEI1001">VEI1001</option>
-                                    </select>
-                                 </div>
-                                 
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">거래처명</label> <input
-                                       type="text" class="form-control" id="vendNmModal"
-                                       name="vendNm" placeholder="" value="${matvo.vendNm }">
-                                 </div>
-                                 
-                              </form>
-                              <div class="modal-footer">
-                                 <button type="button" class="btn btn-primary" id="modifyBtn">수정</button>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <!-- End Extra Large Modal-->
-
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-
-      <!-- ============================================================== -->
-      <!-- end basic table  -->
-      <!-- ============================================================== -->
-
-
-      <script>
-      <!-- ============================================================== -->
-                  <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
-<!-- ============================================================== -->   
+	<script>
+	<!-- ============================================================== -->
+	<!-- 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록  -->
       
       function formOptionChk() {
+          let rscLotCd = document.getElementsByName('rscLotCd')[0];
           let rscCd = document.getElementsByName('rscCd')[0];
-          let rscNm = document.getElementsByName('rscNm')[0];
-          let rscSpec = $("#rscSpec option:selected").val();
-          let rscTyp = $("#rscTyp option:selected").val();
-          let safStc = document.getElementsByName('safStc')[0];
-          let useYn = $("#useYn option:selected").val();
-          let vendCd = $("#vendCd option:selected").val();
-          let vendNm = document.getElementsByName('vendNm')[0];
+          let ordrCd = document.getElementsByName('ordrCd')[0];
+          let rscInspCd = document.getElementsByName('rscInspCd')[0];
+          let istCnt = document.getElementsByName('istCnt')[0];
+          let istDt = document.getElementsByName('istDt')[0];
 
+          if (rscLotCd.value == "") {
+              alert("LOT번호가 입력되지 않았습니다.");
+              rscLotCd.focus();
+              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
+          }
           if (rscCd.value == "") {
               alert("자재코드가 입력되지 않았습니다.");
               rscCd.focus();
-              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
-          }
-          if (rscNm.value == "") {
-              alert("자재명이 입력되지 않았습니다.");
-              rscNm.focus();
+              return false;
+          }          
+          if (ordrCd.value == "") {
+              alert("발주번호가 입력되지 않았습니다.");
+              ordrCd.focus();
               return false;
           }
-          if (rscSpec == "none") {
-              alert("자재규격이 선택되지 않았습니다.");
-              $("#rscSpec").focus();
+          if (rscInspCd.value == "") {
+              alert("검사코드 입력되지 않았습니다.");
+              rscInspCd.focus();
               return false;
           }
-          if (rscTyp == "none") {
-              alert("자재유형이 선택되지 않았습니다.");
-              $("#rscTyp").focus();
+          if (istCnt.value == "") {
+              alert("입고수량이 입력되지 않았습니다.");
+              istCnt.focus();
               return false;
           }
-          if (safStc.value == "") {
-              alert("안전재고가 입력되지 않았습니다.");
-              safStc.focus();
-              return false;
-          }
-          if (useYn == "none") {
-              alert("사용여부가 선택되지 않았습니다.");
-              $("#useYn").focus();
-              return false;
-          }
-          if (vendCd == "none") {
-              alert("거래처코드가 선택되지 않았습니다.");
-              $("#vendCd").focus();
-              return false;
-          }
-          if (vendNm.value == "") {
-              alert("거래처명이 입력되지 않았습니다.");
-              vendNm.focus();
+          if (istDt.value == "") {
+              alert("입고일이 입력되지 않았습니다.");
+              istDt.focus();
               return false;
           }
           
@@ -386,97 +250,272 @@ form {
 
       $("#insertBtn").on("click", formOptionChk)
 
-<!-- ============================================================== -->
-<!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
+<!-- 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록  -->
 <!-- ============================================================== -->      
-
-<!-- ============================================================== -->
-<!-- 단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회 -->
 <!-- ============================================================== -->   
-      
-$(document).on('click', '.updateBtn', function() {
-  // 버튼 클릭 이벤트 리스너 함수
+<!-- 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 -->
 
-  // 단건조회를 위한 rsc_cd 값을 추출합니다.
-  var rscCd = $(this).closest('tr').find('td:eq(1)').text();
-  
-//서버로 보낼 데이터를 구성합니다.
-  var data = {
-    rscCd: rscCd
-  };
+//체크박스 전체 선택
+$(document).ready(function () {
 
-  // Ajax 요청을 보냅니다.
-  $.ajax({
-       type: 'GET',
-       url: 'matInfo',
-       data: $.param(data), 
-       dataType: 'json',
-       success: function(response) {
-         // 성공적으로 응답을 받았을 때 처리할 코드를 작성합니다.
-        console.log(response);
-        console.log(response.useYn);
-        
-        $('#modifyModal').modal('show');
-        
-        $("#rscCdModal").val(response.rscCd);
-        $("#rscNmModal").val(response.rscNm);
-        $("#rscSpecModal").val(response.rscSpec);       
-        $("#rscTypModal").val(response.rscTyp);
-        $("#safStcModal").val(response.safStc);
-        $("#useYnModal").val(response.useYn);
-        $("#vendCdModal").val(response.vendCd);
-        $("#vendNmModal").val(response.vendNm);
-        
-       },
-       error: function(jqXHR, textStatus, errorThrown) {
-           alert('데이터를 불러올 수 없습니다.');
-       }
-     });
-   });
+  $("#cbx_chkAll").click(function () {
+    if ($(this).is(":checked"))
+      $("input[name=chk]")
+        .prop("checked", true)
+        .closest("tr")
+        .addClass("selected");
+    else
+      $("input[name=chk]")
+        .prop("checked", false)
+        .closest("tr")
+        .removeClass("selected");
+  });
 
-/* 수정*/
-$(document).ready(function() {
-  $('#modifyBtn').click(function() {
-    var rscCd = $('#rscCdModal').val(); // 자재코드
-    var rscNm = $('#rscNmModal').val(); // 자재명
-    var rscSpec = $('#rscSpecModal').val(); // 자재규격
-    var rscTyp = $("#rscTypModal").val();
-    var safStc = $('#safStcModal').val(); // 안전재고
-    var useYn = $('#useYnModal').val(); // 사용여부
-    var vendCd = $('#vendCdModal').val(); // 거래처코드
-    var vendNm = $("#vendNmModal").val(); //거래처명
+  $(document).on("click", "input[name=chk]", function () {
+    var total = $("input[name=chk]").length;
+    var checked = $("input[name=chk]:checked").length;
 
-    // fetch API 요청 보내기
-    fetch('matUpdate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        rscCd: rscCd,
-        rscNm: rscNm,
-        rscSpec: rscSpec,        
-        rscTyp: rscTyp,
-        safStc: safStc,
-        useYn: useYn,
-        vendCd: vendCd,
-        vendNm: vendNm
-      })
-    }).then(function(response) {
-      // 요청이 성공적으로 처리될 경우 수행할 코드 작성
-      console.log("성공"+response);
-      window.location.href = "matList";
-    }).catch(function(error) {
-      // 요청이 실패할 경우 수행할 코드 작성
-      console.log("실패"+error);
-    });
+    if (total != checked) $("#cbx_chkAll").prop("checked", false);
+    else $("#cbx_chkAll").prop("checked", true);
   });
 });
 
-   
+//행 선택하면 체크
+$(document).on("click", "table tr", function (event) {
+  if (event.target.type !== "checkbox") {
+    $(":checkbox", this).trigger("click");
+  }
+});
 
-   
+$(document).on("change", "table tr :checkbox", function (event) {
+  $(this).closest("tr").toggleClass("selected", this.checked);
+});
+<!-- 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 -->
+<!-- ============================================================== -->
+<!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
+
+function updateBtn() {
+    // 체크된 체크박스가 없으면 함수 종료
+    if ($("input[name=chk]:checked").length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "선택된 글이 없습니다.",
+      });
+      return;
+    }
+    $("#cbx_chkAll").prop("disabled", true);
+    disableCheckBoxes();
+
+    // 수정 버튼의 텍스트를 "수정완료"로 변경
+    $("#updateBtn").text("수정완료");
+
+    // 수정완료 버튼 클릭 이벤트 핸들러 설정
+    // $(".btn-info").off("click").on("click", submitBtn);
+    $("#updateBtn").removeAttr("onclick");
+    $("#updateBtn").attr("onclick", "submitBtn();");
+
+    $('input[name="chk"]:checked').each(function () {
+      var row = $(this).closest("tr");
+      var rscLotCd = row.find("td:eq(2)").text().trim();
+      var rscCd = row.find("td:eq(3)").text().trim();
+      var ordrCd = row.find("td:eq(5)").text().trim();
+      var rscInspCd = row.find("td:eq(7)").text().trim();      
+      var istDt = row.find("td:eq(9)").text().trim();
+           
+      row
+        .find("td:eq(2)")
+        .html(
+          '<input type="text" class="form-control" value="' + rscLotCd + '">'
+        );
+      row
+        .find("td:eq(3)")
+        .html(
+          '<input type="text" class="form-control" value="' + rscCd + '">'
+        );      
+      row
+        .find("td:eq(5)")
+        .html(
+          '<input type="text" class="form-control" value="' + ordrCd + '">'
+        );
+      row
+        .find("td:eq(7)")
+        .html(
+          '<input type="text" class="form-control" value="' + rscInspCd + '">'
+        );
+      row
+      .find("td:eq(9)")
+      .html(
+        '<input type="text" class="form-control" value="' + istDt + '">'
+      );
+    });
+  }
+
+  function submitBtn() {
+    // 체크된 체크박스가 없으면 함수 종료
+    if ($("input[name=chk]:checked").length === 0) return;
+
+    // 데이터를 저장할 배열 선언
+    var dataArr = [];
+
+    // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
+    $('input[name="chk"]:checked').each(function () {
+      var row = $(this).closest("tr");
+      var rscLotCd = row.find("td:eq(2) input").val().trim();
+      var rscCd = row.find("td:eq(3) input").val().trim();
+      var ordrCd = row.find("td:eq(5) input").val().trim();
+      var rscInspCd = row.find("td:eq(7) input").val().trim();
+      var istDt = row.find("td:eq(9) input").val().trim();
+
+      // 객체 형식으로 데이터 저장
+      var dataObj = {
+    		  rscLotCd: rscLotCd,
+    		  rscCd: rscCd,
+    		  ordrCd: ordrCd,
+    		  rscInspCd: rscInspCd,
+    		  istDt: istDt
+      };
+
+      // 데이터 배열에 객체 추가
+      dataArr.push(dataObj);
+    });
+
+    $.ajax({
+      url: "updateMatReceipt",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      data: JSON.stringify(dataArr),
+      success: function (result) {
+        if (result.result == "success") {
+          $("tbody").empty();
+          $(result.data).each(function (idx, item) {
+            var $row = $("<tr>").attr("data-id", item.ordrCd);
+            $row.append(
+              $("<td>").html(
+                '<input type="checkbox" name="chk" value="' +
+                  item.ordrCd +
+                  '" />'
+              )
+            );
+            $row.append($("<td>").text(idx + 1));
+            $row.append($("<td>").text(item.ordrCd));
+            $row.append($("<td>").text(item.ordrReqDt));
+            $row.append($("<td>").text(item.vendCd));
+            $row.append($("<td>").text(item.vendNm));
+            $row.append($("<td>").text(item.rscCd));
+            $row.append($("<td>").text(item.rscNm));
+            $row.append($("<td>").text(item.ordrCnt));
+            $row.append($("<td>").text(item.paprdCmndDt));
+            $("tbody").append($row);
+          });
+          enableCheckBoxes();
+          $("#updateBtn").text("수정");
+          $("#updateBtn").removeAttr("onclick");
+          $("#updateBtn").attr("onclick", "updateBtn();");
+        }
+
+        let Toast = Swal.mixin({
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+
+        Toast.fire({
+          icon: "success",
+          title: "수정이 정상적으로 되었습니다.",
+        });
+      },
+      error: function (reject) {
+        console.log(reject);
+      },
+    });
+  }
+
+  function disableCheckBoxes() {
+    $('input[name="chk"]').prop("disabled", true);
+  }
+
+  function enableCheckBoxes() {
+    $('input[name="chk"]').prop("disabled", false);
+  }
       
-      </script>
+  <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
+  <!-- ============================================================== -->
+  <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
+  function deleteBtn() {
+      let valueArr = new Array();
+      let list = $("input[name=chk]");
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].checked) {
+          valueArr.push(list[i].value);
+        }
+      }
+      if (valueArr.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+      } else {
+        Swal.fire({
+          title: "삭제 하시겠습니까?",
+          text: "복구 할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              url: "matReceiptDelete",
+              method: "post",
+              traditional: true,
+              data: { valueArr: valueArr },
+              success: function (result) {
+                if (result == "success") {
+                  for (let i = 0; i < valueArr.length; i++) {
+                    $('tr[data-id="' + valueArr[i] + '"]').remove();
+                  }
+                } else if (result == "error") {
+                  Swal.fire({
+                    icon: "error",
+                    title: "오류가 발생했습니다.",
+                  });
+                }
+
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
+              },
+              error: function (reject) {
+                console.log(reject);
+              },
+            });
+          }
+        });
+      }
+    }
+  <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
+  <!-- ============================================================== --> 	
+	
+	</script>
 </body>
 </html>

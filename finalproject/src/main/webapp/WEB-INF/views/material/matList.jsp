@@ -53,7 +53,6 @@ form {
 </style>
 </head>
 <body>
-   <div>
       <!-- ============================================================== -->
       <!-- pageheader -->
       <!-- ============================================================== -->
@@ -62,7 +61,7 @@ form {
             <ol class="breadcrumb">
                <li class="breadcrumb-item"><a href="#"
                   class="breadcrumb-link">자재관리</a></li>
-               <!-- <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Tables</a></li> -->
+               
                <li class="breadcrumb-item active" aria-current="page">자재정보</li>
             </ol>
          </nav>
@@ -88,18 +87,18 @@ form {
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재코드</label> RSC<input
                         type="text" class="form-control" id="rscCd" name="rscCd"
-                        placeholder="숫자만 입력해주세요." required="">
+                        placeholder="숫자만 입력해주세요.">
                   </div>
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재명</label> <input
                         type="text" class="form-control" id="rscNm" name="rscNm"
-                        placeholder="" required="">
+                        placeholder="">
                   </div>
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재규격</label> <select
-                        class="form-control" id="rscSpec" name="rscSpec" required="">
+                        class="form-control" id="rscSpec" name="rscSpec" >
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="KG">kg(킬로그램)</option>
                         <option value="L">L(리터)</option>
@@ -108,7 +107,7 @@ form {
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">사용여부</label> <select
-                        class="form-control" id="useYn" name="useYn" required="">
+                        class="form-control" id="useYn" name="useYn">
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -117,7 +116,7 @@ form {
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재유형</label> <select
-                        class="form-control" id="rscTyp" name="rscTyp" required="">
+                        class="form-control" id="rscTyp" name="rscTyp">
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="주원료">주원료</option>
                         <option value="첨가제">첨가제</option>
@@ -128,12 +127,12 @@ form {
                   <div class="col-md-3">
                      <label for="country" class="form-label">안전재고</label> <input
                         type="text" class="form-control" id="safStc" name="safStc"
-                        placeholder="숫자를 입력하세요." required="">
+                        placeholder="숫자를 입력하세요.">
                   </div>
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">거래처코드</label> <select
-                        class="form-control" id="vendCd" name="vendCd" required="">
+                        class="form-control" id="vendCd" name="vendCd">
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="VEI1000">VEI1000</option>
                         <option value="VEI1001">VEI1001</option>
@@ -143,7 +142,7 @@ form {
                   <div class="col-md-3">
                      <label for="country" class="form-label">거래처명</label> <input
                         type="text" class="form-control" id="vendNm" name="vendNm"
-                        placeholder="" required="">
+                        placeholder="">
                   </div>
 
                   
@@ -164,8 +163,8 @@ form {
                
                   <div class="table-responsive">
                   
+                     <h3>자재정보</h3>
                      <table id="jaje" class="table table-striped table-bordered first">
-                     <h3 class="">자재정보</h3>
                         <thead>
                            <tr>
                               <th>No.</th>
@@ -249,8 +248,7 @@ form {
 
                                  <div class="col-md-3">
                                     <label for="country" class="form-label">자재유형</label> <select
-                                       class="form-control" id="rscTypModal" name="rscTyp"
-                                       required="">
+                                       class="form-control" id="rscTypModal" name="rscTyp">
                                        <option value="none" disabled>=== 선택 ===</option>
                                        <option value="주원료">주원료</option>
                                        <option value="첨가제">첨가제</option>
@@ -261,13 +259,12 @@ form {
                                  <div class="col-md-3">
                                     <label for="country" class="form-label">안전재고</label> <input
                                        type="text" class="form-control" id="safStcModal"
-                                       name="safStc" placeholder="숫자를 입력하세요." required="">
+                                       name="safStc" placeholder="숫자를 입력하세요.">
                                  </div>
 
                                  <div class="col-md-3">
                                     <label for="country" class="form-label">사용여부</label> <select
-                                       class="form-control" id="useYnModal" name="useYn"
-                                       required="">
+                                       class="form-control" id="useYnModal" name="useYn">
                                        <option value="none" disabled>=== 선택 ===</option>
                                        <option value="Yes">Yes</option>
                                        <option value="No">No</option>
@@ -276,8 +273,7 @@ form {
 
                                  <div class="col-md-3">
                                     <label for="country" class="form-label">거래처코드</label> <select
-                                       class="form-control" id="vendCdModal" name="vendCd"
-                                       required="">
+                                       class="form-control" id="vendCdModal" name="vendCd">
                                        <option value="none" disabled>=== 선택 ===</option>
                                        <option value="VEI1000">VEI1000</option>
                                        <option value="VEI1001">VEI1001</option>

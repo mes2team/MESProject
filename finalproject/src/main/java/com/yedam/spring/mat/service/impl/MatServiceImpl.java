@@ -84,10 +84,37 @@ public class MatServiceImpl implements MatService {
 		//자재발주 삭제
 		return matMapper.deleteMatOrderInfo(ordrCd);
 	}
+	
 	@Override
 	public List<MatVO> matStock() {
 		// //자재재고현황
 		return matMapper.matStockList();
+	}
+	
+	@Override
+	public List<MatVO> matReceiptList() {
+		//자재입고 현황
+		return matMapper.matReceiptList();
+	}
+	@Override
+	public MatVO getMatReceiptInfo(MatVO matVO) {
+		//자재입고 단건 조회
+		return matMapper.selectMatReceiptInfo(matVO);
+	}
+	@Override
+	public int addMatReceipt(MatVO matVO) {
+		//자재입고 추가
+		return matMapper.insertMatReceipt(matVO);
+	}
+	@Override
+	public int updateMatReceipt(MatVO matVO) {
+		//자재입고 수정
+		return matMapper.updateMatReceiptInfo(matVO);
+	}
+	@Override
+	public int removeMatReceipt(String rscLotCd) {
+		//자재발주 삭제
+		return matMapper.deleteMatReceiptInfo(rscLotCd);
 	}
 
 
