@@ -1,4 +1,4 @@
-package com.yedam.spring.order.web;
+package com.yedam.spring.sales.web;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.masterData.service.VendService;
 import com.yedam.spring.masterData.service.VendVO;
-import com.yedam.spring.order.service.OrderService;
 import com.yedam.spring.production.service.OrderSheetVO;
+import com.yedam.spring.sales.service.OrderService;
 
 @Controller
 public class OrderController {
@@ -29,9 +29,9 @@ public class OrderController {
 	public String getOrderAllList(Model model) {
 		model.addAttribute("orderList", orderService.selectOrderList());
 		model.addAttribute("vendList", vendService.getVendAll());
-		model.addAttribute("orderNo", orderService.selectOrderNo().getOrderNo());
+//		model.addAttribute("orderNo", orderService.selectOrderNo().getOrderNo());
 		model.addAttribute("orderPrdList", orderService.selectOrderPrd());
-		return "order/orderMag";
+		return "sales/orderMag";
 	}
 	
 	// 거래처조회

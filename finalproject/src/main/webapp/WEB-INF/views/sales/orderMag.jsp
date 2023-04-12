@@ -289,8 +289,8 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                 type="text"
                 class="form-control"
                 name="orderNo"
-                value="ORD${orderNo }"
                 id="orderNo"
+                placeholder="자동입력"
                 readonly
               />
             </div>
@@ -541,7 +541,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     "click",
     "#createOrder button[data-bs-dismiss='modal']",
     function () {
-      console.log("닫기");
       $("#paprdDt").val("");
       $("input[name='orderNm']").val("");
       $("#cbx_chkAll2").prop("checked", false);
@@ -564,7 +563,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
       method: "post",
       data: { orderNo: orderNo, edctsCd: edctsCd },
       success: function (result) {
-        console.log(result);
         if (result == "success") {
           this1.closest("tr").remove();
         }
@@ -624,6 +622,26 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
       Swal.fire({
         icon: "warning",
         title: "납기일이 입력되지 않았습니다.",
+      });
+      return;
+    }
+
+    let invalidInputs = [];
+
+    $("#orderDetailList")
+      .children()
+      .each(function (idx, item) {
+        let cnt = $(item).children().eq(2).find("input").val();
+
+        if (parseInt(cnt) <= 0) {
+          invalidInputs.push($(this).closest("tr"));
+        }
+      });
+
+    if (invalidInputs.length > 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "1이상 입력해주세요",
       });
       return;
     }
@@ -841,7 +859,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
           );
           $("#orderListBody").append(tr);
         });
-        console.log(result);
       },
       error: function (reject) {
         console.log(reject);
@@ -1128,6 +1145,23 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
       });
       return;
     }
+
+    let invalidInputs = [];
+    $("input[name=chk2]:checked").each(function () {
+      let inputVal = $(this).closest("tr").find("td:eq(3) input").val();
+      if (parseInt(inputVal) <= 0) {
+        invalidInputs.push($(this).closest("tr"));
+      }
+    });
+
+    if (invalidInputs.length > 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "수량을 1이상 입력해주세요",
+      });
+      return;
+    }
+
     // 데이터를 저장할 배열 선언
     let dataArr = [];
 
