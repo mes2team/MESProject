@@ -496,7 +496,6 @@ div#prcsInfo {
 		  return false;
 		}
 
-		//form의 name 속성을 사용
 
 	}
 	//등록버튼 클릭 이벤트
@@ -537,9 +536,6 @@ div#prcsInfo {
 			console.log(proPlanArray);
 			
 			
-			const orderSheetData = localStorage.getItem('orderSheetData');
-			proPlanArray.push(orderSheetData);
-			
 			 $.ajax({
 				    url: "${pageContext.request.contextPath }/addnewPlans",
 				    type: "POST",
@@ -548,38 +544,39 @@ div#prcsInfo {
 				    success: function(response) {
 				      console.log(response.result);
 				      if(response.result == 'Success'){
-				    	  const orderSheetData = localStorage.getItem('orderSheetData');
+				    	  
+				    	  const selectedOrders = localStorage.getItem('selectedOrders');
+				    	  console.log(selectedOrders);
+				    	  var orderArray = JSON.parse(selectedOrders);
+				    	  console.log(orderArray);
 				    	  $.ajax({
-				    		  url:"${pageContext.request.contextPath }/prcsOrderSheet",
-				    		  type:"POST",
-				    		  data: JSON.stringify(orderSheetData),
-				    		  contentType:"application/json",
-				    		  success: function(data){
+				    		    url: "prcsOrderSheet",
+				    		    type: "POST",
+				    		    data: JSON.stringify(orderArray),
+				    		    contentType: "application/json",
+				    		    success: function(data){
 				    			  console.log("주문서처리 "+data)
+						    	  $('#planForm input[type=text], #planForm input[type=date]').val('');
+					    		  $('#planForm select option:selected').prop('selected', false);
+					  		      $("#orderNo").attr("readonly", false);
+							      $("#vendNm").attr("readonly", false);
+							      $("#prdtNm").attr("readonly", false);
+							      $("#orderCnt").attr("readonly", false);
+							      $("#orderDt").attr("readonly", false);
+							      $("#paprdDt").attr("readonly", false);
+					    		  $('#multiPro').empty();
+						    	  if (confirm('생산계획이 등록되었습니다.\n계속해서 주문서를 등록하시겠습니까?')) {
+						    		  getOrderSheet();
+						    		  $('#createPlan').modal('hide');
+						    		} else {
+							    	  $('#createPlan').modal('hide');
+						    		}
+				    			  
 				    		  },
 				    		  error: function(error){
 				    			  console.log(error)
 				    		  }
 				    	  })
-				    	  
-				    	  
-				    	  
-				    	  
-			    		  $('#planForm input[type=text], #planForm input[type=date]').val('');
-			    		  $('#planForm select option:selected').prop('selected', false);
-			  		      $("#orderNo").attr("readonly", false);
-					      $("#vendNm").attr("readonly", false);
-					      $("#prdtNm").attr("readonly", false);
-					      $("#orderCnt").attr("readonly", false);
-					      $("#orderDt").attr("readonly", false);
-					      $("#paprdDt").attr("readonly", false);
-			    		  $('#multiPro').empty();
-				    	  if (confirm('생산계획이 등록되었습니다.\n계속해서 주문서를 등록하시겠습니까?')) {
-				    		  $('#orderSheet').modal('show');
-				    		  $('#createPlan').modal('hide');
-				    		} else {
-					    	  $('#createPlan').modal('hide');
-				    		}
 				      }
 				    },
 				    error: function(jqXHR, textStatus, error) {
@@ -665,8 +662,6 @@ div#prcsInfo {
 				  });
 				  // 모달 창 열기
 				  $('#orderSheet').modal('show');
-				  
-				  callback();
 			  },
 			  error: function(xhr, status, error) {
 			    // 요청이 실패했을 때 처리할 로직
@@ -697,6 +692,7 @@ div#prcsInfo {
 		  selectedOrders.push(item);
 		});
 		console.log(selectedOrders);
+		localStorage.removeItem("selectedOrders");
 		localStorage.setItem('selectedOrders', JSON.stringify(selectedOrders));
 		// localStorage에서 선택된 항목만 필터링하기
 		var orderSheetData = JSON.parse(localStorage.getItem("orderSheetData"));
@@ -853,7 +849,7 @@ div#prcsInfo {
 	    return formattedDate;
 	}
 	
-	// bom선택시 이벤트
+	/* // bom선택시 이벤트
 	$(document).ready(function() {
 	  $("#bomSelect").change(function() {
 	    // 선택된 옵션의 값을 가져와서 처리
@@ -893,7 +889,7 @@ div#prcsInfo {
 			  }
 			});
 	  });
-	});
+	}); */
 
 	/* 체크박스 연결 */
 	// tbody의 체크박스
@@ -950,7 +946,7 @@ div#prcsInfo {
 		    var isDeletable = true;
 		    $("#proPlanChk input[type='checkbox']:checked").each(function() {
 		      var nowSt = $(this).closest("tr").find("td:nth-child(9)").text();
-		      if (nowSt === '미지시') {
+		      if (nowSt === '지시완료') {
 		        isDeletable = false;
 		        return;
 		      }
@@ -958,7 +954,7 @@ div#prcsInfo {
 		
 		    // nowSt가 '미지시'인 경우 함수를 종료합니다.
 		    if (!isDeletable) {
-		      alert('진행 상태가 \'미지시\'인 계획은 삭제할 수 없습니다.');
+		      alert('진행 상태가 \'지시완료\'인 계획은 삭제할 수 없습니다.');
 		      return;
 		    }
 		
@@ -970,7 +966,7 @@ div#prcsInfo {
 		      var planCd = $(this).closest("tr").find("#hiddenPlanCd").text();
 		      planCdList.push(planCd);
 		    });
-		
+			console.log(planCdList);
 		    // 스프링 컨트롤러에 Ajax 요청을 보냅니다.
 		    $.ajax({
 		      url: "deletePlan",

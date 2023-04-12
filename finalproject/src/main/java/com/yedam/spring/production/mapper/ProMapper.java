@@ -52,6 +52,8 @@ public interface ProMapper {
 
 	public List<BomVO> selectgetRscStock(String edctsCd);
 
+	public int updateOrderStatus(String orderNo);
+
 	
 
 }

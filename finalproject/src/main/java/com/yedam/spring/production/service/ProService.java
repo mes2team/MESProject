@@ -47,6 +47,8 @@ public interface ProService {
 
 	public List<BomVO> getRscStock(String edctsCd);
 
+	public String modifyOrderStatus(String orderNo);
+
 	
 
 }

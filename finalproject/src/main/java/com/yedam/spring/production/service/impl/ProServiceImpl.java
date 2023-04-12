@@ -156,6 +156,16 @@ public class ProServiceImpl implements ProService {
 		
 	}
 
+	@Override
+	public String modifyOrderStatus(String orderNo) {
+		int result = proMapper.updateOrderStatus(orderNo);
+		if(result > 0) {
+			return orderNo;
+		} else {
+			return orderNo + "Fail";
+		}
+	}
+
 	
 
 

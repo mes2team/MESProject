@@ -63,12 +63,6 @@
 		  							  #{wkToDt},
 		  							  v_prdt_nm
 		  							  );
-				<if test="orderNo != null and !orderNo.equals('')">
-		  		<!-- 주문서 상태 변경 -->
-		  		UPDATE 	order_sheet_test
-		  		SET	 	prog_appe = '계획완료'
-		  		WHERE	order_no = #{orderNo};
-		  		</if>
 	  		END;
 	  	</insert>
  
@@ -362,6 +356,12 @@
 		ORDER BY b.bom_cd  
   	</select>
   	
+  	<!-- 등록된 주문서 상태변경 -->
+  	<update id="updateOrderStatus" parameterType="String">
+  			UPDATE 	order_sheet_test
+		  	SET	 	prog_appe = '계획완료'
+		  	WHERE	order_no = #{orderNo}
+  	</update>
   	
   	
   	
