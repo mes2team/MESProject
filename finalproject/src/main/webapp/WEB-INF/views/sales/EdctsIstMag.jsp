@@ -45,9 +45,15 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <h5 class="card-title">제품입고 관리</h5>
         <div id="btnGrp">
           <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <button type="button" class="btn btn-secondary">조회</button>
-            <button type="button" class="btn btn-success">등록</button>
-            <button type="button" class="btn btn-primary">초기화</button>
+            <button type="button" class="btn btn-secondary" id="searchBtn">
+              조회
+            </button>
+            <button type="button" class="btn btn-success" id="insertBtn">
+              등록
+            </button>
+            <button type="button" class="btn btn-primary" id="reset">
+              초기화
+            </button>
           </sec:authorize>
         </div>
         <!-- Multi Columns Form -->
@@ -72,7 +78,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </div>
           <div class="col-md-4">
             <label class="form-label">제품 입고 수량</label>
-            <input type="text" class="form-control" id="inputSpec" disabled />
+            <input type="text" class="form-control" id="inputCnt" disabled />
           </div>
           <div class="col-md-4">
             <label for="inputEmail5" class="form-label">제품 입고 날짜</label>
@@ -114,7 +120,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>제품명</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody id="edctsIstBody">
                   <c:forEach
                     items="${edctsistList }"
                     var="eist"
@@ -173,7 +179,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 <th scope="col">제품 코드</th>
                 <th scope="col">제품 이름</th>
                 <th scope="col">제품 입고수량</th>
-                <th scope="col"></th>
+                <th scope="col" style="width: 100px"></th>
               </tr>
             </thead>
             <tbody id="productList"></tbody>
@@ -197,9 +203,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     $.ajax({
       url: "completePro",
       success: function (result) {
-        console.log(result);
         $(result).each(function (idx, item) {
-          console.log(item);
           let edctsCd = item.edctsCd;
           let prodCnt = item.prodCnt;
           let inferCnt = item.inferCnt;
@@ -226,11 +230,138 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       },
     });
 
-    function makeMaxLot() {
-      let original = "${maxLot.edctsLotNo}"; //EDCTS-L202304100
-      let number = parseInt(original.substring(7)); //202304101
-      let maxLot = original.replace(number, number + 1);
-      document.querySelector('[name="edctsLotNo"]').value = maxLot;
+    // 선택 버튼 클릭시 input에 전달
+    $(document).on("click", ".choiceBtn", function () {
+      let edctsCd = $(this).closest("tr").children().eq(0).text();
+      let edctsNm = $(this).closest("tr").children().eq(1).text();
+      let cnt = $(this).closest("tr").children().eq(2).text();
+
+      $("#inputCode").val(edctsCd);
+      $("#inputName").val(edctsNm);
+      $("#inputCnt").val(cnt);
+
+      $("#completeModal").modal("hide");
+    });
+
+    // 초기화 버튼
+    $(document).on("click", "#reset", function () {
+      $("#inputCode").val("");
+      $("#inputName").val("");
+      $("#inputCnt").val("");
+      $("#startDate").val("");
+      $("#endDate").val("");
+    });
+
+    // 등록버튼
+    $(document).on("click", "#insertBtn", function () {
+      let inputCode = $("#inputCode").val();
+      let inputName = $("#inputName").val();
+      let inputCnt = $("#inputCnt").val();
+
+      if (inputCode == "" || inputName == "" || inputCnt == "") {
+        Swal.fire({
+          icon: "warning",
+          title: "입고 상품을 선택해주세요.",
+        });
+        return;
+      }
+      Swal.fire({
+        title: "등록하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "등록",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        $.ajax({
+          url: "insertEdctsIst",
+          method: "post",
+          data: { edctsCd: inputCode, edctsIstCnt: inputCnt },
+          success: function (result) {
+            $("#edctsIstBody").empty();
+            $("#inputCode").val("");
+            $("#inputName").val("");
+            $("#inputCnt").val("");
+            $("#startDate").val("");
+            $("#endDate").val("");
+            $(result).each(function (idx, item) {
+              let tr = $("<tr>");
+              tr.append("<td>" + (idx + 1) + "</td>");
+              tr.append("<td>" + item.edctsIstNo + "</td>");
+              tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
+              tr.append("<td>" + item.edctsIstCnt + "</td>");
+              tr.append("<td>" + item.edctsCd + "</td>");
+              tr.append("<td>" + item.edctsLotNo + "</td>");
+              tr.append("<td>" + item.prdtNm + "</td>");
+
+              $("#edctsIstBody").append(tr);
+            });
+          },
+          error: function (reject) {
+            console.log(reject);
+          },
+        });
+      });
+    });
+
+    //날짜 변환
+    function productDate(timestamp) {
+      let date = new Date(timestamp);
+      let year = date.getFullYear();
+      let month = String(date.getMonth() + 1).padStart(2, "0");
+      let day = String(date.getDate()).padStart(2, "0");
+      let formattedDate = year + "-" + month + "-" + day;
+      return formattedDate;
     }
+
+    // 조회 버튼
+    $(document).on("click", "#searchBtn", function () {
+      let startDate = $("#startDate").val();
+      let endDate = $("#endDate").val();
+
+      if (startDate == "" || endDate == "") {
+        Swal.fire({
+          icon: "warning",
+          title: "날짜를 입력해주세요",
+        });
+        return;
+      }
+
+      $.ajax({
+        url: "searchEdctsIst",
+        data: { edctsIstDt: startDate, edctsIstDtEnd: endDate },
+        success: function (result) {
+          if (result.length == 0) {
+            Swal.fire({
+              icon: "warning",
+              title: "검색 결과가 없습니다.",
+            });
+            return;
+          }
+          $("#edctsIstBody").empty();
+          $("#inputCode").val("");
+          $("#inputName").val("");
+          $("#inputCnt").val("");
+          $("#startDate").val("");
+          $("#endDate").val("");
+          $(result).each(function (idx, item) {
+            let tr = $("<tr>");
+            tr.append("<td>" + (idx + 1) + "</td>");
+            tr.append("<td>" + item.edctsIstNo + "</td>");
+            tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
+            tr.append("<td>" + item.edctsIstCnt + "</td>");
+            tr.append("<td>" + item.edctsCd + "</td>");
+            tr.append("<td>" + item.edctsLotNo + "</td>");
+            tr.append("<td>" + item.prdtNm + "</td>");
+
+            $("#edctsIstBody").append(tr);
+          });
+        },
+        error: function (reject) {
+          console.log(reject);
+        },
+      });
+    });
   </script>
 </body>
