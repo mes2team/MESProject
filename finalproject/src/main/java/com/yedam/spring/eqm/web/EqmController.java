@@ -142,5 +142,14 @@ public class EqmController {
 		 map.put("YList", service.selectYList());
 		return map;
 	}
+	
+	//비가동수정
+	@PostMapping("/updateOpr")
+	public String updateOpr(EqmVO eqmVO) {
+		service.updateOpr(eqmVO);
+		return "redirect:eqmOpr"; //jsp에서 ajax result로페이지 못 받아서 리다이렉트 안 됨
+								  // success부분에 그냥 location.reload()해주기	
+	}
+	
 
 }

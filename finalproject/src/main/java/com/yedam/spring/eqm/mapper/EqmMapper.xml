@@ -220,4 +220,13 @@
 		WHERE nopr_cd = #{noprCd};
 	END;	
 	</delete>
+	
+	<update id="updateOpr" parameterType="EqmVO">
+		UPDATE eqm_opr
+		SET fr_dt = #{frDt}, 
+            to_dt = #{toDt}, 
+            eqm_psch = #{eqmPsch}, 
+            opert_ctnt = #{opertCtnt}
+        WHERE nopr_cd = #{noprCd}    
+	</update>
 </mapper>

@@ -91,5 +91,9 @@ public class EqmServiceImpl implements EqmService{
 		// TODO Auto-generated method stub
 		return mapper.deleteOpr(noprCd);
 	}
+	@Override
+	public int updateOpr(EqmVO eqmVO) {
+		return mapper.updateOpr(eqmVO);
+	}
 
 }

@@ -31,7 +31,7 @@
 						class="btn btn-danger">삭제</button>
 				</div>
 			</div>
-	
+
 			<div
 				style="width: 100%; height: 230px; overflow: auto; margin-top: 20px; margin-bottom: 50px;">
 				<table class="table table-striped table-hover">
@@ -39,7 +39,7 @@
 						<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 							<th scope="col"><input type="checkbox"
 								onclick="allCheck(this)" /></th>
-							<th scope="col">점검코드</th>
+							<th scope="col">비가동코드</th>
 							<th scope="col">설비코드</th>
 							<th scope="col">설비명</th>
 							<th scope="col">시작일자</th>
@@ -50,8 +50,9 @@
 						<c:forEach items="${OprList }" var="opr">
 							<tr onclick="oprDetail(this,event)" data-bs-toggle=""
 								data-bs-target="#modalDialogScrollable">
-								<td scope="row" onclick="stopPropagation(event)" ><input type="checkbox"></td>
-								<td scope="row">${opr.noprCd}</td>
+								<td scope="row" onclick="stopPropagation(event)"><input
+									type="checkbox"></td>
+								<td class="mainNoprCd" scope="row">${opr.noprCd}</td>
 								<td scope="row">${opr.eqmCd}</td>
 								<td scope="row">${opr.eqmNm}</td>
 								<td scope="row"><fmt:formatDate value="${opr.frDt}"
@@ -90,7 +91,7 @@
 									<div class="col-auto">
 										<select name="eqmCd" onchange="makeEqmCd()"
 											class="form-select" style="width: 216px;">
-											<option style="text-align: center;">===선택===</option>
+											<option id="defaultOpt" style="text-align: center;">===선택===</option>
 											<c:forEach items="${YList }" var="Y">
 												<option value="${Y.eqmCd }">${Y.eqmNm }</option>
 											</c:forEach>
@@ -109,7 +110,7 @@
 										<label style="font-weight: bold;">비가동코드</label>
 									</div>
 									<div class="col-auto">
-										<input type="text" readonly name="noprCd" class="form-control">
+										<input type="text" disabled name="noprCd" class="form-control">
 									</div>
 									<div class="col-auto" style="margin-left: 10px;">
 										<label style="font-weight: bold;">담당자*</label>
@@ -156,7 +157,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
 	
 	
@@ -168,6 +169,7 @@
 	//tr클릭시 모달열어서 상세보기
 	function oprDetail(t){
 		t.setAttribute("data-bs-toggle","modal") //클릭시 모달속성이 없던 tr에 모달속성줌 
+		console.log(t);
 		t.click(); //tr한 번 더 클릭하는 효과 이떈 모달효과가 있는 tr을 클릭하는거임
 		modalTitle.innerText = '비가동상세보기';		
 		let option = document.querySelector('option'); //설비명
@@ -181,7 +183,8 @@
 		inputs[4].value = tds[5].innerText;
 		option.innerText = tds[3].innerText;
 		textarea.value = tds[6].innerText;
-		
+		document.querySelector('select').setAttribute('disabled',true); //설비명막기
+		document.querySelector('[name="noprCd"]').setAttribute('disabled',true);//비가동코드막기
 	}
 	
 	//등록시 옵션체크
@@ -201,11 +204,53 @@
 			//insertBtn.setAttribute("data-bs-dismiss", "");
 			return false;
 		}
+		let inputNoprCd = document.querySelector('input[name="noprCd"]')
+		let mainNoprCd = document.querySelectorAll('.mainNoprCd')
+		//수정 모달의비가동코드가 메인화면에 있다면 수정
+		for(let j=0; j<mainNoprCd.length;j++){
+			if(inputNoprCd.value == mainNoprCd[j].innerText){
+				 document.querySelector('[name="noprCd"]').removeAttribute('disabled'); //비가동열기
+				let oprVO = $('form[name="modalForm"]').serialize();//폼데이터 모으기
+				//console.log(oprVO);
+				updateOpr(oprVO)
+				return;
+			}
+		}
 		insertOpr(); //등록
 	}
+	//수정
+	function updateOpr(oprVO){
+		Swal.fire({
+			  title: '수정하시겠습니까?',
+			  icon: 'question',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: '수정',
+			  cancelButtonText: '취소'
+			}).then((result) => {
+				
+			  if (result.value) {
+				  $.ajax({
+				      url: 'updateOpr', 
+				      type: 'POST', 
+				      data:	oprVO,
+				      //dataType: 'json', 화면 받을 땐 없어도 됨
+				      success: function(result) { 
+				    	location.reload();
+				      },
+				      error: function(reject) { 
+				        console.log("업데이트실패");
+				      }
+				    });	
+			  }
+			})
+	}
+	
 	
 	//등록
 	function insertOpr(){
+		document.querySelector('[name="noprCd"]').removeAttribute('disabled'); //비가동열기
 			modalForm.submit();
 			resetModal();
 	}
@@ -277,10 +322,17 @@
 			}
 			modalForm.querySelector('textArea').value = '';
 			modalTitle.innerText = '설비비가동 등록';
-			listTable.querySelector('tr').setAttribute('data-bs-toggle','')//다시 tr에 모달기능 뺏기
+			let trs = listTable.querySelectorAll('tr')
+			for(j=0;j<trs.length;j++){
+				trs[j].setAttribute('data-bs-toggle','')//다시 tr에 모달기능 뺏기
+			}
+			document.querySelector('select').removeAttribute('disabled'); //설비명열기
+			document.querySelector('option').innerText='===선택===';
+			
+			
 			
 		}
-		//모달열면 설비리스트 다시 뿌리기
+		//모달열면 설비리스트 다시 뿌리기(등록버튼으로 모달열었을 때)
 		function modalOpen(){
 			$.ajax({
 				  url: "oprModal", // 호출하고자 하는 URL
@@ -290,7 +342,7 @@
 		  		let select = document.querySelector('select[name="eqmCd"]')
 		  		let options = select.querySelectorAll('option');
 				     for(let j=1; j< options.length; j++){
-				    	if(options[j].innerText.trim() != '===선택==='){
+				    	if(options[j].id =='defaultOpt' != '===선택==='){
 				    		options[j].remove();
 				    	}
 				    } 
