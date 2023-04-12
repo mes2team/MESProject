@@ -537,7 +537,7 @@ div#prcsInfo {
 			console.log(proPlanArray);
 			
 			
-
+			const orderSheetData = localStorage.getItem('orderSheetData');
 			proPlanArray.push(orderSheetData);
 			
 			 $.ajax({
