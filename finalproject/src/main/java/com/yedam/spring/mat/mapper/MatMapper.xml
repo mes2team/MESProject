@@ -171,22 +171,23 @@
 <!-- 자재 재고 현황 -->
 	<select id="matStockList" resultType="MatVO">
 		SELECT r.RSC_CD
-		     , r.RSC_NM
-		     , r.VEND_CD
-		     , r.VEND_NM
-		     , r.rsc_typ
-		     , r.rsc_spec
-		     , SUM(i.ist_cnt) AS TOTAL_IST_CNT
-		     , SUM(out.ouST_CNT) AS TOTAL_OUST_CNT
-		     , (SUM(i.ist_cnt) - SUM(out.ouST_CNT)) AS NET_STC
-		     , (SUM(o.ordr_CNT)-SUM(i.IST_CNT)) AS no_iST_CNT
-		     , r.saf_stc
-		  FROM rsc r LEFT JOIN rsc_ist i ON r.rsc_cd = i.rsc_cd
-		             LEFT JOIN rsc_oust out ON r.RSC_CD = out.RSC_CD
-		             LEFT JOIN rsc_ordr o ON r.RSC_CD = o.RSC_CD
-		 WHERE r.use_yn = 'Yes'
-		 GROUP BY r.RSC_CD, r.RSC_NM, r.VEND_CD, r.VEND_NM, r.rsc_typ, r.rsc_spec, r.saf_stc
-		 ORDER BY r.RSC_CD
+           , r.RSC_NM
+           , r.VEND_CD
+           , r.VEND_NM
+           , r.rsc_typ
+           , r.rsc_spec
+           , i.ist_cnt
+           , SUM(out.ouST_CNT) AS TOTAL_OUST_CNT
+           , (SUM(i.ist_cnt) - SUM(out.ouST_CNT)) AS NET_STC
+           , (SUM(o.ordr_CNT)-SUM(i.IST_CNT)) AS no_iST_CNT
+           , r.saf_stc
+        FROM rsc r LEFT JOIN rsc_ist i ON r.rsc_cd = i.rsc_cd
+                   LEFT JOIN rsc_oust out ON r.RSC_CD = out.RSC_CD
+                   LEFT JOIN rsc_ordr o ON r.RSC_CD = o.RSC_CD
+       WHERE r.use_yn = 'Yes'
+       GROUP BY r.RSC_CD, r.RSC_NM, r.VEND_CD, r.VEND_NM, r.rsc_typ, r.rsc_spec, i.ist_cnt, r.saf_stc
+       ORDER BY r.RSC_CD
+
 	</select>
 	
 <!-- 자재입고 현황 -->	
@@ -263,11 +264,11 @@ rsc_ist 테이블에서 ist_cnt의 총합을 구한다.
 	BEGIN 
 	  
 	  UPDATE rsc_stc stc
-	  SET stc.ist_stc = (SELECT SUM(ist_cnt) FROM rsc_ist WHERE rsc_cd = stc.rsc_cd);
+	  SET stc.ist_stc = (SELECT SUM(ist_cnt) FROM rsc_ist WHERE UPPER(rsc_cd) = UPPER(stc.rsc_cd));
 	
 	  
 	  UPDATE rsc_stc stc
-	  SET stc.oust_stc = (SELECT SUM(oust_cnt) FROM rsc_oust WHERE rsc_cd = stc.rsc_cd);
+	  SET stc.oust_stc = (SELECT SUM(oust_cnt) FROM rsc_oust WHERE UPPER(rsc_cd) = UPPER(stc.rsc_cd));
 	
 	  
 	  UPDATE rsc_stc

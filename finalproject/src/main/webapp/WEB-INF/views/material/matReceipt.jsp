@@ -241,10 +241,12 @@ form {
               cancelButtonText: '취소'
           }).then((result) => {
               if (result.value) {
-                  insertForm.submit();
+                  
                   $.ajax({
           	        url: "/updateRscStc",
-          	        type: "POST",
+          	    method: "POST",
+          	      contentType: "application/json", 
+          	      data: JSON.stringify(dataArr),
           	        success: function (response) {
           	          console.log('Success')            	          
           	        },
@@ -252,6 +254,7 @@ form {
           	        	console.log('Fail')
           	        }
           	      });
+                  insertForm.submit();
               }
           });
 
