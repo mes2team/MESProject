@@ -45,27 +45,13 @@ public class ProController {
 		resultMap.put("prdtInfo", proService.getprdtInfo());
 		return resultMap;
 	}
-	// 생산계획 등록처리
-	@PostMapping("/newPlanInsert")
-	public String empInsertProc(ProPlanVO vo, RedirectAttributes rrtt) {
-		System.out.println(vo.getOrderCnt());
-		String result = proService.newPlanInsert(vo);
-		String message = null;
-		if(result != null) {
-			message = "등록에 성공했습니다.";
-		} else {
-			message = "등록에 실패했습니다.";
-		} 
-		rrtt.addFlashAttribute("message",message);
-		return "redirect:/productionPlan";
-	}
 	
 	// 생산계획 다중등록처리
 	@PostMapping("/addnewPlans")
 	@ResponseBody 
 	public Map<String, Object> addnewPlans(@RequestBody List<ProPlanVO> proPlanArray) {
 	    Map<String, Object> resultMap = new HashMap<>();
-	    String result = null;
+	    String result = null;		
 	    for(int i=0; i<proPlanArray.size(); i++) {
 	        if(i==0){
 	            result = proService.newPlanInsert(proPlanArray.get(i));
@@ -73,9 +59,23 @@ public class ProController {
 	            result = proService.plusPlanInsert(proPlanArray.get(i));
 	        }
 	    }
+	    
 	    resultMap.put("result", result);
 	    return resultMap;
 	}
+	/*
+	 * // 주문서 처리
+	 * 
+	 * @PostMapping("/prcsOrderSheet")
+	 * 
+	 * @ResponseBody public Map<String, Object> prcsOrderSheet(@RequestBody ) {
+	 * Map<String, Object> resultMap = new HashMap<>(); String result = null;
+	 * for(int i=0; i<proPlanArray.size(); i++) { if(i==0){ result =
+	 * proService.newPlanInsert(proPlanArray.get(i)); } else { result =
+	 * proService.plusPlanInsert(proPlanArray.get(i)); } }
+	 * 
+	 * resultMap.put("result", result); return resultMap; }
+	 */
 	
 	//미지시된 주문서 조회
 	@GetMapping("/getOrderSheet")
@@ -205,5 +205,20 @@ public class ProController {
 	    resultMap.put("result", proService.getBomStock(vo));
 		System.out.println(resultMap);
 		return resultMap;
+	}
+	
+	//완제품에 대한 자재 재고정보 조회
+	@PostMapping("/getRscStock")
+	@ResponseBody
+	public Map<String, Object> getRscStock(@RequestBody List<String> edctsCds) {
+	    Map<String, Object> resultMap = new HashMap<>();
+	    
+	    for(int i = 0 ; i < edctsCds.size() ; i++) {
+	        String resultName = edctsCds.get(i);
+	        String edctsCd = edctsCds.get(i);
+	        resultMap.put(resultName, proService.getRscStock(edctsCd));
+	    }
+	    
+	    return resultMap;
 	}
 }

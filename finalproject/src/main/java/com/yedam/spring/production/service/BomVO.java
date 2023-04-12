@@ -24,11 +24,8 @@ public class BomVO {
 	private String rscTyp;
 	private String prcsNm;    
 	
-	// + lot 재고 정보
+	//  재고 정보
 	private String rscSpec;
-	private String rscLotCd;
-	private int LotRmnCnt;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date expDt;
+	private int rscStc;
 
 }
