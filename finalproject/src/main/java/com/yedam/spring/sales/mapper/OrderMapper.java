@@ -1,4 +1,4 @@
-package com.yedam.spring.order.mapper;
+package com.yedam.spring.sales.mapper;
 
 import java.util.List;
 

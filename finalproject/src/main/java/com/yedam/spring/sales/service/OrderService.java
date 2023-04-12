@@ -1,4 +1,4 @@
-package com.yedam.spring.order.service;
+package com.yedam.spring.sales.service;
 
 import java.util.List;
 

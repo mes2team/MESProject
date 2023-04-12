@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.yedam.spring.order.mapper.OrderMapper">
+<mapper namespace="com.yedam.spring.sales.mapper.OrderMapper">
 	<!-- 전체조회 -->
 	<select id="selectOrderList" resultType="OrderSheetVO">
 		SELECT 	order_no,
@@ -18,10 +18,10 @@
 	</select>
 	
 	<!-- 주문번호 조회 -->
-	<select id="selectOrderNo" resultType="OrderSheetVO">
-		SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1) as orderNo
-		FROM 	order_sheet_test
-	</select>
+<!-- 	<select id="selectOrderNo" resultType="OrderSheetVO"> -->
+<!-- 		SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1) as orderNo -->
+<!-- 		FROM 	order_sheet_test -->
+<!-- 	</select> -->
 	
 	<!-- 상품정보 조회 -->
 	<select id="selectOrderPrd" resultType="OrderSheetVO">
@@ -32,6 +32,10 @@
 	
 	<!-- 주문서 등록 -->
 	<insert id="insertOrder" parameterType="OrderSheetVO">
+		<selectKey keyProperty="orderNo" resultType="String" order="BEFORE">
+			SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1)
+			FROM 	order_sheet_test
+		</selectKey>
 		INSERT INTO order_sheet_test (order_no,
 									  order_dt,
 									  vend_cd,
@@ -40,7 +44,7 @@
 									  paprd_dt,
 									  order_nm	
 									 )
-						     VALUES (#{orderNo},
+						     VALUES ('ORD' || #{orderNo},
 						     		 #{orderDt},
 						     		 #{vendCd},
 						     		 #{vendNm},
@@ -113,7 +117,7 @@
 				AND prog_appe LIKE '%' || #{progAppe} || '%'
 			</if>
 			<if test="orderDt != null and !orderDt.equals('')">
-				AND <![CDATA[order_dt >= #{orderDt}]]> and <![CDATA[order_dt <= #{orderDt}]]>
+				AND <![CDATA[order_dt >= #{orderDt}]]> and <![CDATA[order_dt <= #{paprdDt}]]>
 			</if>
 		</where>
 	</select>

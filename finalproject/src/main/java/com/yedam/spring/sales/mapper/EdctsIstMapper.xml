@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yedam.spring.sales.mapper.EdctsIstMapper">
+	<!-- 제품 입고 조회 -->
+	<select id="getEdctsIstList" resultType="EdctsIstVO">
+		SELECT 		ei.edcts_ist_no, 
+					ei.edcts_ist_dt,
+					ei.edcts_ist_cnt, 
+					ei.edcts_cd, 
+					ei.edcts_lot_no, 
+					e.prdt_nm
+		FROM 		edcts e, edcts_ist ei
+		WHERE 		e.edcts_cd = ei.edcts_cd
+	</select>
+	
+	<!-- 포장 검사 완료된 제품 조회 -->
+	<select id="getCompletePro" resultType="EdctsIstVO">
+		SELECT 	p.prod_cnt, 
+				p.infer_cnt, 
+				p.prcs_status, 
+				id.edcts_cd, 
+				e.prdt_nm
+		FROM 	prcs_prog p, indica i, indica_dtl id, edcts e
+		WHERE 	p.indica_cd = i.indica_cd
+		AND   	i.indica_cd = id.indica_cd
+		AND   	id.edcts_cd = e.edcts_cd
+		AND 	prcs_status = '포장검사완료'
+	</select>
+	
+	<!-- 제품 입고 등록 -->
+	<insert id="insertEdctsIst" parameterType="EdctsIstVO">
+		<selectKey keyProperty="edctsIstNo" resultType="String" order="BEFORE">
+			SELECT TO_CHAR(NVL(MAX(SUBSTR(edcts_ist_no, 5)), 999) + 1)
+			FROM edcts_ist;
+		</selectKey>
+		INSERT INTO edcts_ist (edcts_ist_no,
+							   edcts_cd,
+							   edcts_ist_dt,
+							   edcts_ist_cnt,
+							   edcts_lot_no)
+						VALUES('EIST' || #{edctsIstNo},
+							   #{edctsCd},
+							   sysdate,
+							   #{edctsIstCnt},
+							   #{edctsLotNo})
+						
+	</insert>
+</mapper>

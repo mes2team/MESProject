@@ -28,26 +28,6 @@
               <i class="bi bi-circle"></i><span>BOM 관리</span>
             </a>
           </li>
-          <li>
-            <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Badges</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-breadcrumbs.html">
-              <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-buttons.html">
-              <i class="bi bi-circle"></i><span>Buttons</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-cards.html">
-              <i class="bi bi-circle"></i><span>Cards</span>
-            </a>
-          </li>
         </ul>
       </li><!-- End Components Nav -->
 
@@ -62,18 +42,18 @@
             </a>
           </li>
           <li>
-            <a href="forms-layouts.html">
-              <i class="bi bi-circle"></i><span>Form Layouts</span>
+            <a href="${pageContext.request.contextPath }/edctsIst">
+              <i class="bi bi-circle"></i><span>제품 입고 관리</span>
             </a>
           </li>
           <li>
             <a href="forms-editors.html">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
+              <i class="bi bi-circle"></i><span>제품 출고 관리</span>
             </a>
           </li>
           <li>
             <a href="forms-validation.html">
-              <i class="bi bi-circle"></i><span>Form Validation</span>
+              <i class="bi bi-circle"></i><span>완제품 조회</span>
             </a>
           </li>
         </ul>

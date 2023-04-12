@@ -96,17 +96,20 @@ uri="http://www.springframework.org/security/tags"%>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
           <div id="btnGrp" class="card-top d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" id="saveBtn">
-              저장
-            </button>
-            <button type="button" class="btn btn-primary" id="addBtn">
-              추가
-            </button>
-            <button type="button" class="btn btn-danger" id="delBtn">
-              삭제
-            </button>
+          	<sec:authorize access="hasRole('ROLE_ADMIN')">
+	            <button type="button" class="btn btn-primary" id="saveBtn">
+	              저장
+	            </button>
+	            <button type="button" class="btn btn-primary" id="addBtn">
+	              추가
+	            </button>
+	            <button type="button" class="btn btn-danger" id="delBtn">
+	              삭제
+	            </button>
+            </sec:authorize>
           </div>
           <div class="card-body">
+       		 <h6>수정 할려면 더블클릭 하세요</h6>
             <div
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
@@ -448,8 +451,17 @@ uri="http://www.springframework.org/security/tags"%>
 
     // 추가 버튼
     $(document).on("click", "#addBtn", function () {
+      if($('#bomList').children().length == 0) {
+      	  Swal.fire({
+                icon: "warning",
+                title: "상품 조회 해주세요.",
+              });
+              return;
+      }	
+    	
       let lastTr = $("#bomList tr:last").children();
       let idx = lastTr.eq(1).text();
+      let bomCd = $("#inputBomCd").val();
       if (lastTr.length == 0) {
         Swal.fire({
           icon: "warning",
@@ -462,7 +474,10 @@ uri="http://www.springframework.org/security/tags"%>
 
       tr.append(
         $("<td>").append(
-          $("<input>").attr("type", "checkbox").attr("name", "chk")
+          $("<input>")
+            .attr("type", "checkbox")
+            .attr("name", "chk")
+            .attr("value", bomCd)
         )
       );
       tr.append("<td>" + (parseInt(idx) + 1) + "</td>");
@@ -540,8 +555,9 @@ uri="http://www.springframework.org/security/tags"%>
           $("#rscModal").modal("hide");
           return isValid;
         }
-        inputRscCd.text(rscCd); // input 업데이트
+        inputRscCd.text(rscCd);
         inputRscNm.text(rscNm);
+        inputRscCd.closest("tr").attr("data-id", rscCd); // tr에 rscCd넣기
 
         $("#rscModal").modal("hide"); // 모달 닫기
       });
@@ -662,6 +678,14 @@ uri="http://www.springframework.org/security/tags"%>
 
     // 저장
     $(document).on("click", "#saveBtn", function () {
+      if($('#bomList').children().length == 0) {
+    	  Swal.fire({
+              icon: "warning",
+              title: "상품 조회 해주세요.",
+            });
+            return;
+      }
+      
       let isValid = true;
       if ($("#bomList input:not(:checkbox)").length == 0) {
         Swal.fire({
