@@ -23,4 +23,6 @@ public class OrderSheetVO {
 	private String edctsCd;
 	private int orderCnt;
 	private String prdtNm;
+	
+	private String bomCd;
 }

@@ -2,6 +2,7 @@ package com.yedam.spring.production.mapper;
 
 import java.util.List;
 
+
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -11,7 +12,7 @@ import com.yedam.spring.production.service.ProPrcsVO;
 
 public interface ProMapper {
 
-	public int InsertNewPlan(ProPlanVO vo);
+	public int InsertNewPlan(ProPlanVO proPlanArray);
 
 	public ProPlanVO getNextPlanCd();
 
@@ -48,6 +49,8 @@ public interface ProMapper {
 	public List<BomVO> selectBomStock(BomVO vo);
 
 	public int plusPlanInsert(ProPlanVO proPlanVO);
+
+	public List<BomVO> selectgetRscStock(String edctsCd);
 
 	
 

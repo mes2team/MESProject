@@ -7,7 +7,7 @@ import com.yedam.spring.common.Criteria;
 public interface ProService {
 	
 	//생산계획 등록
-	public String newPlanInsert(ProPlanVO vo);
+	public String newPlanInsert(ProPlanVO proPlanArray);
 
 	public String getNextPlanCd();
 
@@ -44,6 +44,8 @@ public interface ProService {
 	public List<BomVO> getBomStock(BomVO vo);
 
 	public String plusPlanInsert(ProPlanVO proPlanVO);
+
+	public List<BomVO> getRscStock(String edctsCd);
 
 	
 

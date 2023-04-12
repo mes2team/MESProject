@@ -18,17 +18,6 @@ public class ProServiceImpl implements ProService {
 	
 	@Autowired
 	ProMapper proMapper;
-
-	@Override
-	public String newPlanInsert(ProPlanVO vo) {
-		int result = proMapper.InsertNewPlan(vo);
-		if(result < 0) {
-			return "Success";
-		} else {
-			return "Fail";
-		}
-
-	}
 	
 	@Override
 	public String plusPlanInsert(ProPlanVO proPlanVO) {
@@ -149,6 +138,22 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public List<BomVO> getBomStock(BomVO vo) {
 		return proMapper.selectBomStock(vo);
+	}
+
+	@Override
+	public List<BomVO> getRscStock(String edctsCd) {
+		return proMapper.selectgetRscStock(edctsCd);
+	}
+
+	@Override
+	public String newPlanInsert(ProPlanVO proPlanArray) {
+		int result = proMapper.InsertNewPlan(proPlanArray);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+		
 	}
 
 	
