@@ -58,4 +58,7 @@ public interface EqmMapper {
 	//비가동 삭제 
 	public int deleteOpr(String noprCd);
 	
+	//비가동 수정
+	public int updateOpr(EqmVO eqmVO);
+	
 }

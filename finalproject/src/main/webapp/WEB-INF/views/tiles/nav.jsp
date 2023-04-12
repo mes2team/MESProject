@@ -159,7 +159,7 @@
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="${pageContext.request.contextPath }/prdtInsp">
+            <a href="${pageContext.request.contextPath }/prcsInsp">
               <i class="bi bi-circle"></i><span>제품검사관리</span>
             </a>
           </li>
@@ -175,7 +175,5 @@
           </li>
         </ul>
       </li><!-- End Icons Nav -->
-
     </ul>
-
   </aside><!-- End Sidebar-->
