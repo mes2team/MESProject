@@ -19,10 +19,18 @@ public class PrcsInspController {
 	public String prcsInspPage() { 
 		return "prcsInsp/prcsInsp";
     }
-	
+	//모달에 검사해야할 공정목록
 	@GetMapping("/selectPrcsList")
 	@ResponseBody
 	public List<PrcsInspVO> selectPrcsList(){
 		return service.selectPrcsList();
 	}
+	
+	//공정별 검사기준
+	@GetMapping("/selectPrcsStd")
+	@ResponseBody
+	public List<PrcsInspVO> selectPrcsStd(PrcsInspVO prcsCd){
+		return service.selectPrcsStd(prcsCd);
+	}
+	
 }

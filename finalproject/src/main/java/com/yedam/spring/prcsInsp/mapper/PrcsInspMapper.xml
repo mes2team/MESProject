@@ -15,6 +15,14 @@
 		JOIN edcts e ON e.edcts_cd = i.edcts_cd		
 		WHERE LENGTH(p.prcs_status) = 4    
 	</select>
+	<!-- 공정별 검사기준 -->
+	<select id="selectPrcsStd" parameterType="PrcsInspVO" resultType="PrcsInpsVO">
+		SELECT prcs_insp_cd,
+       		   prcs_insp_nm,
+       		   prcs_insp_std
+		FROM prcs_insp_std
+		WHERE prcs_cd = #{prcsCd}
+	</select>
 	
 	<!-- max 완제품LOT번호 -->
 	<select id="selectMaxEdctsLotNo" resultType="PrcsInspVO">
