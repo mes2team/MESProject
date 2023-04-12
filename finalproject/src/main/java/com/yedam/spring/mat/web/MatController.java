@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yedam.spring.masterData.service.VendVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
+import com.yedam.spring.production.service.OrderSheetVO;
 
 @Controller
 public class MatController {
@@ -160,6 +161,14 @@ public class MatController {
 		for (int i = 0; i < arr.length; i++) {
 			matService.removeMatReceipt(arr[i]);
 		}
+		return "success";
+	}
+	
+	// 자재입출고 시 자재현황테이블 업데이트
+	@PostMapping("/updateRscStc")
+	@ResponseBody
+	public String updateRscStcProcess(MatVO vo) {
+		matService.updateRscStc(vo);
 		return "success";
 	}
 

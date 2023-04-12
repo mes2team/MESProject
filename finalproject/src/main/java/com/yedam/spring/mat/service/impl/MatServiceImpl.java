@@ -116,6 +116,11 @@ public class MatServiceImpl implements MatService {
 		//자재발주 삭제
 		return matMapper.deleteMatReceiptInfo(rscLotCd);
 	}
+	@Override
+	public int updateRscStc(MatVO vo) {
+		// 자재입출고 시 자재현황테이블 업데이트
+		return matMapper.updateRscStc(vo);
+	}
 
 
 	

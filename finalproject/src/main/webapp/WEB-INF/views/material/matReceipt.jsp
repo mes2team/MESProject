@@ -242,6 +242,16 @@ form {
           }).then((result) => {
               if (result.value) {
                   insertForm.submit();
+                  $.ajax({
+          	        url: "/updateRscStc",
+          	        type: "POST",
+          	        success: function (response) {
+          	          console.log('Success')            	          
+          	        },
+          	        error: function (response) {
+          	        	console.log('Fail')
+          	        }
+          	      });
               }
           });
 
