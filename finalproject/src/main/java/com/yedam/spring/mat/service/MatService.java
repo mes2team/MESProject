@@ -40,4 +40,7 @@ public interface MatService {
 	public int updateMatReceipt(MatVO matVO);
 	//자재발주 삭제
 	public int removeMatReceipt(String rscLotCd);
+	
+	//자재입출고 시 자재현황테이블 업데이트
+	public int updateRscStc(MatVO vo);
 }

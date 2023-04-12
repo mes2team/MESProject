@@ -3,6 +3,7 @@ package com.yedam.spring.mat.mapper;
 import java.util.List;
 
 import com.yedam.spring.mat.service.MatVO;
+import com.yedam.spring.production.service.OrderSheetVO;
 
 public interface MatMapper {
 
@@ -41,6 +42,9 @@ public interface MatMapper {
 	public int updateMatReceiptInfo(MatVO matVO);
 	//자재발주 삭제
 	public int deleteMatReceiptInfo(String rscLotCd);
+	
+	//자재입출고 시 자재현황테이블 업데이트
+	public int updateRscStc(MatVO vo);
 	
 	
 }

@@ -222,7 +222,8 @@
 		#{istCnt},
 		#{istDt}
 		)
-	</insert>	
+	</insert>
+
 <!-- 자재입고 수정 -->
 	<update id="updateMatReceiptInfo" parameterType="MatVO">
 		UPDATE rsc_ist
@@ -254,5 +255,25 @@
 		WHERE rsc_lot_cd = #{rscLotCd}
 	</delete>		
 
+<!-- 자재입고 시 자재현황테이블 수정 
+rsc_ist 테이블에서 ist_cnt의 총합을 구한다.
+ rsc_oust 테이블에서 oust_cnt의 총합을 구한다.
+ rsc_stc 테이블에서 ist_stc와 oust_stc의 차이를 구한다. -->
+	<update id="updateRscStc" parameterType="MatVO">
+	BEGIN 
+	  
+	  UPDATE rsc_stc stc
+	  SET stc.ist_stc = (SELECT SUM(ist_cnt) FROM rsc_ist WHERE rsc_cd = stc.rsc_cd);
+	
+	  
+	  UPDATE rsc_stc stc
+	  SET stc.oust_stc = (SELECT SUM(oust_cnt) FROM rsc_oust WHERE rsc_cd = stc.rsc_cd);
+	
+	  
+	  UPDATE rsc_stc
+	  SET rscstc = ist_stc - oust_stc;
+	END;
+	</update>	
+		
 
 </mapper>

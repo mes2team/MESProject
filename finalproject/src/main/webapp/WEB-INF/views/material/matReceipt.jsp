@@ -242,6 +242,16 @@ form {
           }).then((result) => {
               if (result.value) {
                   insertForm.submit();
+                  $.ajax({
+          	        url: "/updateRscStc",
+          	        type: "POST",
+          	        success: function (response) {
+          	          console.log('Success')            	          
+          	        },
+          	        error: function (response) {
+          	        	console.log('Fail')
+          	        }
+          	      });
               }
           });
 
@@ -345,7 +355,7 @@ function updateBtn() {
       row
       .find("td:eq(9)")
       .html(
-        '<input type="text" class="form-control" value="' + istDt + '">'
+   		  '<input type="date" class="form-control" value="' + istDt + '">'
       );
     });
   }
@@ -388,23 +398,23 @@ function updateBtn() {
         if (result.result == "success") {
           $("tbody").empty();
           $(result.data).each(function (idx, item) {
-            var $row = $("<tr>").attr("data-id", item.ordrCd);
+            var $row = $("<tr>").attr("data-id", item.rscLotCd);
             $row.append(
               $("<td>").html(
                 '<input type="checkbox" name="chk" value="' +
-                  item.ordrCd +
+                  item.rscLotCd +
                   '" />'
               )
             );
             $row.append($("<td>").text(idx + 1));
-            $row.append($("<td>").text(item.ordrCd));
-            $row.append($("<td>").text(item.ordrReqDt));
-            $row.append($("<td>").text(item.vendCd));
-            $row.append($("<td>").text(item.vendNm));
+            $row.append($("<td>").text(item.rscLotCd));
             $row.append($("<td>").text(item.rscCd));
             $row.append($("<td>").text(item.rscNm));
+            $row.append($("<td>").text(item.ordrCd));
             $row.append($("<td>").text(item.ordrCnt));
-            $row.append($("<td>").text(item.paprdCmndDt));
+            $row.append($("<td>").text(item.rscInspCd));
+            $row.append($("<td>").text(item.istCnt));
+            $row.append($("<td>").text(new Date(item.istDt).toISOString().slice(0, 10)));
             $("tbody").append($row);
           });
           enableCheckBoxes();

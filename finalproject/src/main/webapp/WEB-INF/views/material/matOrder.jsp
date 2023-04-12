@@ -159,7 +159,7 @@ table, tr, th, td {
 								<th>납기요청일</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="matOrderTable">
 							<c:forEach var="matOrder" items="${matOrderList }"
 								varStatus="loop">
 								<tr data-id="${matOrder.ordrCd }">
@@ -258,6 +258,12 @@ table, tr, th, td {
 
 
 	<script>
+	<!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+	const today = new Date();
+    const todayString = today.toISOString().slice(0,10);
+    document.getElementById("ordrReqDt").value = todayString;
+    <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+	
 		  document.addEventListener('DOMContentLoaded', function() {
 		        var stockTable = document.getElementById('stock-table');
 		        var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -443,7 +449,7 @@ function updateBtn() {
       row
         .find("td:eq(3)")
         .html(
-          '<input type="text" class="form-control" value="' + ordrReqDt + '">'
+          '<input type="date" class="form-control" value="' + ordrReqDt + '">'
         );
       row
         .find("td:eq(4)")
@@ -473,7 +479,7 @@ function updateBtn() {
       row
       .find("td:eq(9)")
       .html(
-        '<input type="text" class="form-control" value="' + paprdCmndDt + '">'
+        '<input type="date" class="form-control" value="' + paprdCmndDt + '">'
       );
     });
   }
@@ -520,7 +526,7 @@ function updateBtn() {
       data: JSON.stringify(dataArr),
       success: function (result) {
         if (result.result == "success") {
-          $("tbody").empty();
+          $("#matOrderTable").empty();
           $(result.data).each(function (idx, item) {
             var $row = $("<tr>").attr("data-id", item.ordrCd);
             $row.append(
@@ -532,14 +538,14 @@ function updateBtn() {
             );
             $row.append($("<td>").text(idx + 1));
             $row.append($("<td>").text(item.ordrCd));
-            $row.append($("<td>").text(item.ordrReqDt));
+            $row.append($("<td>").text(new Date(item.ordrReqDt).toISOString().slice(0, 10)));
             $row.append($("<td>").text(item.vendCd));
             $row.append($("<td>").text(item.vendNm));
             $row.append($("<td>").text(item.rscCd));
             $row.append($("<td>").text(item.rscNm));
             $row.append($("<td>").text(item.ordrCnt));
-            $row.append($("<td>").text(item.paprdCmndDt));
-            $("tbody").append($row);
+            $row.append($("<td>").text(new Date(item.paprdCmndDt).toISOString().slice(0, 10)));
+            $("#matOrderTable").append($row);
           });
           enableCheckBoxes();
           $("#updateBtn").text("수정");
