@@ -170,24 +170,9 @@
 	
 <!-- 자재 재고 현황 -->
 	<select id="matStockList" resultType="MatVO">
-		SELECT r.RSC_CD
-           , r.RSC_NM
-           , r.VEND_CD
-           , r.VEND_NM
-           , r.rsc_typ
-           , r.rsc_spec
-           , i.ist_cnt
-           , SUM(out.ouST_CNT) AS TOTAL_OUST_CNT
-           , (SUM(i.ist_cnt) - SUM(out.ouST_CNT)) AS NET_STC
-           , (SUM(o.ordr_CNT)-SUM(i.IST_CNT)) AS no_iST_CNT
-           , r.saf_stc
-        FROM rsc r LEFT JOIN rsc_ist i ON r.rsc_cd = i.rsc_cd
-                   LEFT JOIN rsc_oust out ON r.RSC_CD = out.RSC_CD
-                   LEFT JOIN rsc_ordr o ON r.RSC_CD = o.RSC_CD
-       WHERE r.use_yn = 'Yes'
-       GROUP BY r.RSC_CD, r.RSC_NM, r.VEND_CD, r.VEND_NM, r.rsc_typ, r.rsc_spec, i.ist_cnt, r.saf_stc
-       ORDER BY r.RSC_CD
-
+		SELECT * 
+		  FROM rsc_stc_view     
+         ORDER BY RSC_CD
 	</select>
 	
 <!-- 자재입고 현황 -->	
@@ -204,8 +189,7 @@
 		  				 LEFT JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
 		 ORDER BY i.rsc_lot_cd
 	</select>
-
-<!-- 자재입고 등록 -->
+	<!-- 자재입고 등록 -->
 	<insert id="insertMatReceipt" parameterType="MatVO">
 		INSERT INTO rsc_ist (
 		rsc_lot_cd,
@@ -224,8 +208,7 @@
 		#{istDt}
 		)
 	</insert>
-
-<!-- 자재입고 수정 -->
+	<!-- 자재입고 수정 -->
 	<update id="updateMatReceiptInfo" parameterType="MatVO">
 		UPDATE rsc_ist
 		<set>
@@ -250,31 +233,28 @@
 		</set>
 		WHERE rsc_lot_cd = #{rscLotCd}
 	</update>
-<!-- 자재입고 삭제 -->
+	<!-- 자재입고 삭제 -->
 	<delete id="deleteMatReceiptInfo" parameterType="String">
 		DELETE FROM rsc_ist
 		WHERE rsc_lot_cd = #{rscLotCd}
-	</delete>		
-
-<!-- 자재입고 시 자재현황테이블 수정 
-rsc_ist 테이블에서 ist_cnt의 총합을 구한다.
- rsc_oust 테이블에서 oust_cnt의 총합을 구한다.
- rsc_stc 테이블에서 ist_stc와 oust_stc의 차이를 구한다. -->
-	<update id="updateRscStc" parameterType="MatVO">
-	BEGIN 
-	  
-	  UPDATE rsc_stc stc
-	  SET stc.ist_stc = (SELECT SUM(ist_cnt) FROM rsc_ist WHERE UPPER(rsc_cd) = UPPER(stc.rsc_cd));
+	</delete>
 	
-	  
-	  UPDATE rsc_stc stc
-	  SET stc.oust_stc = (SELECT SUM(oust_cnt) FROM rsc_oust WHERE UPPER(rsc_cd) = UPPER(stc.rsc_cd));
+<!-- 자재검사 현황 -->	
+	<select id="matCheckList" resultType="MatVO">
+		SELECT i.rsc_insp_cd
+		     , i.ordr_cd
+		     , i.rsc_nm
+		     , i.insp_dt
+		     , i.insp_tstr
+		     , o.ordr_cnt
+		     , i.insp_pass_cnt
+		     , i.cont
+		     , i.decay
+		     , i.pack
+		     , i.under_weight
+		  FROM rsc_insp i JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
+		 ORDER BY rsc_insp_cd DESC
+	</select>	
 	
-	  
-	  UPDATE rsc_stc
-	  SET rscstc = ist_stc - oust_stc;
-	END;
-	</update>	
-		
 
 </mapper>

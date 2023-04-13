@@ -110,9 +110,9 @@ table, tr, th, td {
 										<td>${stock.rscNm }</td>
 										<td>${stock.rscTyp }</td>
 										<td>${stock.rscSpec }</td>
-										<td>${stock.totalIstCnt }</td>
-										<td>${stock.totalOustCnt }</td>
-										<td>${stock.netStc }</td>
+										<td>${stock.istStc }</td>
+										<td>${stock.oustStc }</td>
+										<td>${stock.rscstc }</td>
 										<td>${stock.noIstCnt }</td>
 										<td>${stock.safStc }</td>
 									</tr>
