@@ -41,6 +41,16 @@ public interface MatService {
 	//자재발주 삭제
 	public int removeMatReceipt(String rscLotCd);
 	
-	//자재입출고 시 자재현황테이블 업데이트
-	public int updateRscStc(MatVO vo);
+	//자재검사목록
+	public List<MatVO> matCheckList();
+	//자재검사 단건 조회
+	public MatVO getMatCheckInfo(MatVO matVO);
+	//자재검사 추가
+	public int addMatCheck(MatVO matVO);
+	//자재검사 수정
+	public int updateMatCheckInfo(MatVO matVO);
+	//자재검사 삭제
+	public int removeMatatCheckInfo(String rscInspCd);
+	
+		
 }
