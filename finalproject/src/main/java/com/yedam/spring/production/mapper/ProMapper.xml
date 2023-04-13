@@ -3,16 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.spring.production.mapper.ProMapper">
-  	
-  	<!-- 생산계획 코드 조회 -->
-  	<select id="getNextPlanCd" resultType="ProPlanVO">
-		SELECT plan_cd
-		FROM(
-			    SELECT plan_cd 
-			    FROM plan
-			    ORDER BY ROWNUM DESC)
-		WHERE ROWNUM = 1
-	</select>
   	<!-- 생산계획 등록 -->
 	<insert id="InsertNewPlan" parameterType="ProPlanVO">
 		    <selectKey keyProperty="planCd" resultType="String" order="BEFORE">
@@ -36,15 +26,19 @@
 	  							  plan_name,
 	  							  paprd_dt,
 	  							  now_st,
+	  							  <if test="orderNo != null and !orderNo.equals('')">
+	  							  order_no,
+	  							  </if>
 	  							  plan_dt
-	
 	  							  )
 	  					VALUES	 (v_pran_cd,
 	  							  #{planName},
 	  							  #{paprdDt},
 	  							  '미지시',
+	  							  <if test="orderNo != null and !orderNo.equals('')">
+	  							  #{orderNo},
+	  							  </if>
 	  							  sysdate
-	
 	  							  );
 	  			<!-- 생산계획디테일 테이블 -->
 	  			INSERT INTO plan_dtl (plan_cd,
@@ -63,6 +57,7 @@
 		  							  #{wkToDt},
 		  							  v_prdt_nm
 		  							  );
+
 	  		END;
 	  	</insert>
  
@@ -130,11 +125,13 @@
   		  AND  ost.prog_appe = '접수완료'
   		ORDER BY ost.paprd_dt DESC
   	</select>
+  	
   	<!-- 완제품 정보 조회 -->
   	<select id="selectPrdtInfo" resultType="OrderSheetVO">
-  		SELECT 		edcts_cd , prdt_nm 
-  		FROM 		edcts
-  		ORDER BY 	edcts_cd
+  		SELECT 	b.bom_cd,	e.edcts_cd , e.prdt_nm 
+  		FROM 	edcts e, bom b
+		WHERE 	e.edcts_cd = b.edcts_cd
+		
   	</select>
   	
   	<!-- BOM 정보 조회 -->
@@ -159,10 +156,10 @@
   	<!-- 생산계획 총개수 -->
   	<select id="selectProPlanCnt" resultType="int">
   		SELECT 	COUNT(plan_cd)
-  		FROM	plan
+  		FROM	plan_dtl
   	</select>
   	
-  		<!-- 생산계획 조회 + 페이징-->
+  	<!-- 생산계획 조회 + 페이징-->
 	<select id="selectProPlans" resultType="ProPlanVO">
 	<![CDATA[
 		SELECT 	plan_cd,
@@ -193,7 +190,7 @@
 				    AND p.now_st IN ('미지시', '지시완료', '생산완료')
 				    AND rownum <= #{pageNum} * #{amount})
 		WHERE rn > (#{pageNum}-1)* #{amount}
-		ORDER BY plan_dt
+		ORDER BY plan_dt DESC
 	]]>
 	</select>
 	<!-- 생산계획 취소 -->
@@ -306,6 +303,7 @@
 		ORDER BY indica_dt
 	]]>
 	</select>
+	
 	<!-- 지시 개수 -->
 	<select id="getProOrderCnt" resultType="int">
 		SELECT COUNT(*) FROM indica
@@ -347,12 +345,11 @@
   	</select>
   	
   	<select id="selectgetRscStock" resultType="BomVO">
-  		SELECT 	r.rsc_cd, r.rsc_nm, r.rsc_spec, r.rsc_typ, rs.rscstc,bd.unit, bd.use_cnt
-		FROM 	rsc r, rsc_stc rs, bom b, bom_detail bd
-		WHERE 	r.rsc_cd = rs.rsc_cd
-		  AND 	b.bom_cd = bd.bom_cd
-		  AND 	b.edcts_cd = #{edctsCd}
-		  AND 	r.rsc_cd = bd.rsc_cd
+  		SELECT 	 r.rsc_cd, r.rsc_nm, r.rsc_spec, r.rsc_typ, r.rscstc,bd.unit, bd.use_cnt
+		FROM 	 rsc_stc_view r, bom b, bom_detail bd
+		WHERE 	 b.bom_cd = bd.bom_cd
+		  AND 	 b.edcts_cd = #{edctsCd}
+		  AND 	 r.rsc_cd = bd.rsc_cd
 		ORDER BY b.bom_cd  
   	</select>
   	
@@ -363,7 +360,14 @@
 		  	WHERE	order_no = #{orderNo}
   	</update>
   	
-  	
-  	
-  	
+  	<select id="selectPrcsFlow" resultType="ProPrcsVO">
+  		SELECT prcs_no
+  			  ,prcs_nm
+  			  ,prcs_fg
+  		FROM  prcs_flow pf, prcs p 
+		WHERE p.prcs_cd = pf.prcs_cd
+		  AND edcts_cd = #{edctsCd}
+		ORDER BY prcs_no
+  	</select>
+ 
   </mapper>

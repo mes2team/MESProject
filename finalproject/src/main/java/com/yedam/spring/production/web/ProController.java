@@ -1,6 +1,5 @@
 package com.yedam.spring.production.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +31,6 @@ public class ProController {
 	// 생산계획 페이지 이동
 	@GetMapping("/productionPlan")
 	public String proPlanPage(Criteria cri, Model model) {
-		model.addAttribute("nextPlanCd", proService.getNextPlanCd());
 		model.addAttribute("bomInfo", proService.getBomInfo());
 		int total = proService.getProPlanCnt();
 		model.addAttribute("ProPlans", proService.getProPlans(cri));
@@ -61,7 +59,6 @@ public class ProController {
 				result = proService.plusPlanInsert(proPlanArray.get(i));
 			}
 		}
-
 		resultMap.put("result", result);
 		return resultMap;
 	}
@@ -77,7 +74,7 @@ public class ProController {
 	    result = proService.modifyOrderStatus(orderArray.get(i));
 	    key = "result" + i;
 	    resultMap.put(key, result);
-	  }
+	  }	  
 	  return resultMap; 
 	}
 
@@ -87,13 +84,13 @@ public class ProController {
 	public Map<String, Object> getOrderSheet() {
 		Map<String, Object> resultMap = new HashMap<>();
 		List<OrderSheetVO> orderSheetVO = proService.getOrdSheet();
-		Set<String> orderNoSet = new HashSet<>(); // 중복되지 않는 OrderNo값을 저장할 Set
+		Set<String> orderNoSet = new HashSet<>(); 
 
 		for (OrderSheetVO vo : orderSheetVO) {
 			orderNoSet.add(vo.getOrderNo());
 		}
 
-		String[] ordCode = orderNoSet.toArray(new String[0]); // Set을 배열로 변환하여 ordCode에 저장
+		String[] ordCode = orderNoSet.toArray(new String[0]); 
 
 		resultMap.put("ordCode", ordCode);
 		resultMap.put("result", orderSheetVO);
@@ -221,6 +218,17 @@ public class ProController {
 			String edctsCd = edctsCds.get(i);
 			resultMap.put(resultName, proService.getRscStock(edctsCd));
 		}
+
+		return resultMap;
+	}
+	
+	//공정흐름 단건조회
+	@PostMapping("/getPrcsFlow")
+	@ResponseBody
+	public Map<String, Object> getPrcsFlow(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("prcsFlow", proService.getPrcsFlow(vo));
 
 		return resultMap;
 	}

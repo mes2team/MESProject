@@ -14,8 +14,6 @@ public interface ProMapper {
 
 	public int InsertNewPlan(ProPlanVO proPlanArray);
 
-	public ProPlanVO getNextPlanCd();
-
 	public List<OrderSheetVO> selectOrderSheet();
 
 	public List<BomVO> selectBomInfo();
@@ -53,6 +51,15 @@ public interface ProMapper {
 	public List<BomVO> selectgetRscStock(String edctsCd);
 
 	public int updateOrderStatus(String orderNo);
+
+	public int selectSearchProPlanCnt();
+
+	public int selectProPlanCnt(ProPlanVO vo);
+
+	public List<ProPrcsVO> selectPrcsFlow(ProPrcsVO vo);
+
+
+
 
 	
 
