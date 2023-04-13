@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 </head>
 <body>
-	<h1>설비점검내역</h1>
+	<h1>설비점검</h1>
 	<div class="card">
 		<form id="checkForm" action="insertCheck" method="post">
 			<div class="card-body">
