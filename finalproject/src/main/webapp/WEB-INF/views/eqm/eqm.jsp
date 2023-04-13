@@ -26,7 +26,7 @@
 								<th scope="col">설비코드</th>
 								<th scope="col">설비명</th>
 								<th scope="col">사용여부</th>
-								<th scope="col">점검주기</th>
+								<th scope="col">점검주기(일)</th>
 								<th scope="col">담당자</th>
 							</tr>
 						</thead>
@@ -116,8 +116,12 @@
 								<label for="inputPassword6" class="col-form-label">설비담당자*</label>
 							</div>
 							<div class="col-auto">
-								<input type="text" name="eqmMng" class="form-control"
-									placeholder="필수입력">
+								<select name="eqmMng" class="form-select">
+									<option value="" selected disabled hidden>담당자 선택<option>
+								<c:forEach items="${empList }" var="emp">
+									<option value="${emp.name }">${emp.name }</option>
+								</c:forEach>
+								</select>
 							</div>
 							<div class="col-auto">
 								<label for="inputPassword6" class="col-form-label"></label>

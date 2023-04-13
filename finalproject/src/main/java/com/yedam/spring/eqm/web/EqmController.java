@@ -19,11 +19,12 @@ public class EqmController {
 	@Autowired
 	EqmService service;
 
-	// 설비전체조회
+	// 설비페이지 ,설비 전체조회, 사원조회(담당자용)
 	@GetMapping("/eqm")
 	public String eqm(Model model) {
 		model.addAttribute("eqmList", service.selectEqmList());
 		model.addAttribute("maxCdList", service.selectMaxCd());
+		model.addAttribute("empList",service.selectEmpList());
 		return "eqm/eqm";
 	}
 

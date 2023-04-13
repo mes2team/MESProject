@@ -59,4 +59,7 @@ public interface EqmService {
 
 	// 비가동 수정
 	public int updateOpr(EqmVO eqmVO);
+
+	// 등록된 사원들
+	public List<EqmVO> selectEmpList();
 }
