@@ -12,9 +12,10 @@
 				vend_mag,
 				remk,
 				vend_typ,
+				vend_addr,
 				SUBSTR(vend_cd, 4)
 		FROM	vend
-		ORDER BY 8
+		ORDER BY 9
 	</select>
 	
 	<!-- 매입처 코드 조회 -->
@@ -38,15 +39,17 @@
 						  br_num, 
 						  vend_tel, 
 						  vend_mag, 
-						  remk, 
-						  vend_typ)
+						  remk,
+						  vend_typ,
+						  vend_addr)
 				  VALUES (#{vendCd},
 				  		  #{vendNm},
 				  		  #{brNum},
 				  		  #{vendTel},
 				  		  #{vendMag},
 				  		  #{remk},
-				  		  #{vendTyp})
+				  		  #{vendTyp},
+				  		  #{vendAddr})
 	</insert>
 	
 	<!-- 삭제 -->
@@ -64,11 +67,12 @@
 				vend_mag,
 				remk,
 				vend_typ,
+				vend_addr,
 				SUBSTR(vend_cd, 4)
 		FROM	vend
 		<where>
-			<if test="vendCd != null and !vendCd.equals('')">
-				AND vend_cd LIKE '%' || #{vendCd} || '%'
+			<if test="vendTyp != null and !vendTyp.equals('')">
+				AND vend_typ LIKE '%' || #{vendTyp} || '%'
 			</if>
 			<if test="vendNm != null and !vendNm.equals('')">
 				AND vend_nm LIKE '%' || #{vendNm} || '%'
@@ -102,8 +106,26 @@
 			<if test="vendTyp != null and !vendTyp.equals('')">
 				vend_typ = #{vendTyp},
 			</if>
+			<if test="vendAddr != null and !vendAddr.equals('')">
+				vend_addr = #{vendAddr},
+			</if>
 			remk = #{remk}
 		</set>
 		WHERE vend_cd = #{vendCd}
 	</update>
+	
+	<!-- 거래처 디테일 -->
+	<select id="getVendDetail" resultType="VendVO">
+		SELECT  vend_cd,
+				vend_nm,
+				br_num,
+				vend_tel,
+				vend_mag,
+				remk,
+				vend_typ,
+				vend_addr
+		FROM	vend
+		WHERE	vend_cd = #{vendCd}
+	
+	</select>
 </mapper>

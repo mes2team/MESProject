@@ -19,7 +19,8 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
 
   #btnGrp {
     float: right;
-    padding: 20px 0 15px 0;
+    padding: 20px 20px 15px 0;
+    text-align: right;
   }
   form {
     clear: both;
@@ -37,22 +38,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">주문서 관리</h5>
-        <div id="btnGrp">
-          <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <button
-              id="orderSheetBtn"
-              type="button"
-              class="btn btn-success"
-              data-bs-toggle="modal"
-              data-bs-target="#orderSheet"
-            >
-              주문서
-            </button>
-            <button id="deleteBtn" type="button" class="btn btn-danger">
-              삭제
-            </button>
-          </sec:authorize>
-        </div>
         <form class="row g-3" id="check">
           <div class="col-md-4">
             <label for="inputEmail5" class="form-label">주문서 명</label>
@@ -86,6 +71,22 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
           <br />
+          <div id="btnGrp">
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <button
+                id="orderSheetBtn"
+                type="button"
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#orderSheet"
+              >
+                주문서
+              </button>
+              <button id="deleteBtn" type="button" class="btn btn-danger">
+                삭제
+              </button>
+            </sec:authorize>
+          </div>
           <div class="card-body">
             <div
               class="table-responsive"
@@ -111,12 +112,11 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                     <tr data-id="${order.orderNo }">
                       <td>
                         <c:choose>
-                          <c:when test="${order.progAppe eq '접수완료'}">
+                          <c:when test="${order.progAppe eq '주문취소'}">
                             <input
                               type="checkbox"
                               name="chk"
                               value="${order.orderNo }"
-                              disabled
                             />
                           </c:when>
                           <c:otherwise>
@@ -124,6 +124,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                               type="checkbox"
                               name="chk"
                               value="${order.orderNo }"
+                              disabled
                             />
                           </c:otherwise>
                         </c:choose>
@@ -145,16 +146,16 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                       </td>
                       <td>
                         <c:choose>
-                          <c:when test="${order.progAppe eq '접수완료'}">
-                            <select name="progAppe" class="progAppe">
-                              <option value="${order.progAppe }">
-                                ${order.progAppe }
-                              </option>
+                          <c:when test="${order.progAppe eq '주문취소'}">
+                            <select name="progAppe" class="progAppe" disabled>
                               <option value="주문취소">주문취소</option>
                             </select>
                           </c:when>
                           <c:otherwise>
-                            <select name="progAppe" class="progAppe" disabled>
+                            <select name="progAppe" class="progAppe">
+                              <option value="${order.progAppe }">
+                                ${order.progAppe }
+                              </option>
                               <option value="주문취소">주문취소</option>
                             </select>
                           </c:otherwise>
@@ -206,73 +207,75 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
             onsubmit="return false"
             class="row g-3"
           >
-            <h5 class="modal-title">거래처 정보</h5>
-            <div class="col-md-6">
-              <label class="form-label">거래처 코드</label>
-              <input
-                type="text"
-                class="form-control"
-                id="vendCd"
-                name="vendCd"
-                value="PLN9000"
-                readonly
-              />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">거래처 명</label>
-              <input
-                type="text"
-                class="form-control"
-                name="vendNm"
-                id="vendNm"
-                value=""
-                readonly
-              />
-            </div>
-            <div class="col-md-12">
-              <label class="form-label">거래처 담당자</label>
-              <input
-                type="text"
-                class="form-control"
-                id="vendMag"
-                name="vendMag"
-                value=""
-                readonly
-              />
-              <input type="hidden" class="form-control" value="" readonly />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">사업자 등록번호</label>
-              <input
-                type="text"
-                class="form-control"
-                id="brNum"
-                name="brNum"
-                value=""
-                readonly
-              />
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">전화번호</label>
-              <input
-                type="text"
-                class="form-control"
-                id="vendTel"
-                name="vendTel"
-                value=""
-                readonly
-              />
-            </div>
-            <div class="col-md-12">
-              <label class="form-label">비고</label>
-              <textarea
-                name="remk"
-                id="remk"
-                rows="5"
-                class="form-control"
-                style="resize: none"
-                readonly
-              ></textarea>
+            <div style="display: none">
+              <h5 class="modal-title">거래처 정보</h5>
+              <div class="col-md-6">
+                <label class="form-label">거래처 코드</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="vendCd"
+                  name="vendCd"
+                  value="PLN9000"
+                  readonly
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">거래처 명</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="vendNm"
+                  id="vendNm"
+                  value=""
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">거래처 담당자</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="vendMag"
+                  name="vendMag"
+                  value=""
+                  readonly
+                />
+                <input type="hidden" class="form-control" value="" readonly />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">사업자 등록번호</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="brNum"
+                  name="brNum"
+                  value=""
+                  readonly
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">전화번호</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="vendTel"
+                  name="vendTel"
+                  value=""
+                  readonly
+                />
+              </div>
+              <div class="col-md-12">
+                <label class="form-label">비고</label>
+                <textarea
+                  name="remk"
+                  id="remk"
+                  rows="5"
+                  class="form-control"
+                  style="resize: none"
+                  readonly
+                ></textarea>
+              </div>
             </div>
             <hr />
             <h5 class="modal-title">주문서 정보</h5>
@@ -283,17 +286,27 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
               value="미진행"
               readonly
             />
-            <div class="col-md-6">
+            <div style="display: none" class="col-md-6">
               <label class="form-label">주문 번호</label>
               <input
                 type="text"
                 class="form-control"
                 name="orderNo"
                 id="orderNo"
+                value="ORD${orderNo }"
+                readonly
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">주문 번호</label>
+              <input
+                type="text"
+                class="form-control"
                 placeholder="자동입력"
                 readonly
               />
             </div>
+
             <div class="col-md-6">
               <label class="form-label">주문 이름</label>
               <input
@@ -301,6 +314,28 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                 name="orderNm"
                 id="orderNm"
                 class="form-control"
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">거래처 명</label>
+              <input
+                type="text"
+                class="form-control"
+                name="vendNm1"
+                id="vendNm1"
+                value=""
+                readonly
+              />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">거래처 담당자</label>
+              <input
+                type="text"
+                class="form-control"
+                id="vendMag1"
+                name="vendMag1"
+                value=""
+                readonly
               />
             </div>
             <div class="col-md-6">
@@ -771,8 +806,22 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     tr.append(
       $("<td>").css("display", "none").append($("<input>").attr("value", "add"))
     );
+    tr.append(
+      $("<td class='detailDelTd'>")
+        .css("width", "100px")
+        .append(
+          $("<button>")
+            .attr("type", "button")
+            .attr("class", "btn btn-danger deleteDetailBtn")
+            .text("삭제")
+        )
+    );
     $("#orderDetailList").append(tr);
     // button.attr("disabled", true);
+  });
+  //주문서 디테일 추가하면 삭제버튼
+  $(document).on("click", ".deleteDetailBtn", function () {
+    $(this).closest("tr").remove();
   });
 
   // 초기화 버튼
@@ -1064,6 +1113,8 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     $("#vendMag").val(orderArray[3]);
     $("#vendTel").val(orderArray[4]);
     $("#remk").val(orderArray[5]);
+    $("#vendNm1").val(orderArray[1]);
+    $("#vendMag1").val(orderArray[3]);
 
     // 현재 모달창 닫기
     $("#orderSheet").modal("hide");

@@ -57,14 +57,8 @@ public class VendController {
 	// 검색조회
 	@GetMapping("/searchVend")
 	@ResponseBody
-	public List<VendVO> searchVend(@RequestParam String vendCd,
-	                               @RequestParam String vendNm,
-	                               @RequestParam String vendMag) {
-	    VendVO vendVo = new VendVO();
-	    vendVo.setVendCd(vendCd);
-	    vendVo.setVendNm(vendNm);
-	    vendVo.setVendMag(vendMag);
-	    return vendService.getSerarchVend(vendVo);
+	public List<VendVO> searchVend(VendVO vo) {
+	    return vendService.getSerarchVend(vo);
 	}
 	
 	// 수정
@@ -85,5 +79,12 @@ public class VendController {
 	    map.put("result", "success");
     	map.put("data", list);
         return map;
+	}
+	
+	// 거래처 디테일
+	@PostMapping("vendDetail")
+	@ResponseBody
+	public VendVO vendDetailForm(VendVO vo) {
+		return vendService.getVendDetail(vo);
 	}
 }

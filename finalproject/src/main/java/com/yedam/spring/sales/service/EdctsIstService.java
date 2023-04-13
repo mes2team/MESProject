@@ -15,4 +15,7 @@ public interface EdctsIstService {
 	
 	// 입고 제품 검색
 	public List<EdctsIstVO> searchEdctsList(EdctsIstVO vo);
+	
+	// 입고 제품 삭제
+	public int deleteEdctsIst(EdctsIstVO vo);
 }

@@ -50,6 +50,11 @@ public class VendServiceImpl implements VendService {
 		return vendMapper.updateVend(vendVO);
 	}
 
+	@Override
+	public VendVO getVendDetail(VendVO vendVO) {
+		return vendMapper.getVendDetail(vendVO);
+	}
+
 
 
 }

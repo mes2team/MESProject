@@ -21,6 +21,9 @@ public interface VendService {
 	// 거래처 검색
 	public List<VendVO> getSerarchVend(VendVO vendVo);
 	
-	// 거래서 수정
+	// 거래처 수정
 	public int updateVend(VendVO vendVO);
+	
+	// 거래처 디테일
+	public VendVO getVendDetail(VendVO vendVO);
 }

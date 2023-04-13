@@ -45,14 +45,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <h5 class="card-title">제품입고 관리</h5>
         <div id="btnGrp">
           <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <button type="button" class="btn btn-secondary" id="searchBtn">
-              조회
-            </button>
             <button type="button" class="btn btn-success" id="insertBtn">
               등록
             </button>
-            <button type="button" class="btn btn-primary" id="reset">
-              초기화
+            <button type="button" class="btn btn-danger" id="delBtn">
+              삭제
             </button>
           </sec:authorize>
         </div>
@@ -80,12 +77,22 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             <label class="form-label">제품 입고 수량</label>
             <input type="text" class="form-control" id="inputCnt" disabled />
           </div>
+          <p></p>
+          <hr />
           <div class="col-md-4">
             <label for="inputEmail5" class="form-label">제품 입고 날짜</label>
             <div class="d-flex align-items-center">
               <input type="date" class="form-control mr-2" id="startDate" />
               <span class="mx-2">~</span>
               <input type="date" class="form-control ml-2" id="endDate" />
+            </div>
+            <div id="btnGrp">
+              <button type="button" class="btn btn-secondary" id="searchBtn">
+                검색
+              </button>
+              <button type="button" class="btn btn-primary" id="reset">
+                초기화
+              </button>
             </div>
           </div>
           <div class="text-center"></div>
@@ -111,13 +118,16 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               >
                 <thead>
                   <tr>
+                    <th>
+                      <input type="checkbox" id="cbx_chkAll" />
+                    </th>
                     <th>No.</th>
                     <th>제품 입고번호</th>
                     <th>제품 입고일자</th>
-                    <th>제품 입고수량</th>
                     <th>제품 코드</th>
-                    <th>완제품LOT번호</th>
                     <th>제품명</th>
+                    <th>완제품LOT번호</th>
+                    <th>제품 입고수량</th>
                   </tr>
                 </thead>
                 <tbody id="edctsIstBody">
@@ -126,7 +136,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     var="eist"
                     varStatus="loop"
                   >
-                    <tr>
+                    <tr data-id="${eist.edctsIstNo}">
+                      <td><input type="checkbox" name="chk" /></td>
                       <td>${loop.count }</td>
                       <td>${eist.edctsIstNo}</td>
                       <td>
@@ -135,10 +146,10 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                           pattern="yyyy-MM-dd"
                         />
                       </td>
-                      <td>${eist.edctsIstCnt}</td>
                       <td>${eist.edctsCd}</td>
-                      <td>${eist.edctsLotNo}</td>
                       <td>${eist.prdtNm}</td>
+                      <td>${eist.edctsLotNo}</td>
+                      <td>${eist.edctsIstCnt}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -286,14 +297,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             $("#startDate").val("");
             $("#endDate").val("");
             $(result).each(function (idx, item) {
-              let tr = $("<tr>");
+              let tr = $("<tr>").attr("data-id", item.edctsIstNo);
+              tr.append(
+                $("<td>").append(
+                  $("<input>").attr("type", "checkbox").attr("name", "chk")
+                )
+              );
               tr.append("<td>" + (idx + 1) + "</td>");
               tr.append("<td>" + item.edctsIstNo + "</td>");
               tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
-              tr.append("<td>" + item.edctsIstCnt + "</td>");
               tr.append("<td>" + item.edctsCd + "</td>");
-              tr.append("<td>" + item.edctsLotNo + "</td>");
               tr.append("<td>" + item.prdtNm + "</td>");
+              tr.append("<td>" + item.edctsLotNo + "</td>");
+              tr.append("<td>" + item.edctsIstCnt + "</td>");
 
               $("#edctsIstBody").append(tr);
             });
@@ -346,14 +362,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           $("#startDate").val("");
           $("#endDate").val("");
           $(result).each(function (idx, item) {
-            let tr = $("<tr>");
+            let tr = $("<tr>").attr("data-id", item.edctsIstNo);
+            tr.append(
+              $("<td>").append(
+                $("<input>").attr("type", "checkbox").attr("name", "chk")
+              )
+            );
             tr.append("<td>" + (idx + 1) + "</td>");
             tr.append("<td>" + item.edctsIstNo + "</td>");
             tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
-            tr.append("<td>" + item.edctsIstCnt + "</td>");
             tr.append("<td>" + item.edctsCd + "</td>");
-            tr.append("<td>" + item.edctsLotNo + "</td>");
             tr.append("<td>" + item.prdtNm + "</td>");
+            tr.append("<td>" + item.edctsLotNo + "</td>");
+            tr.append("<td>" + item.edctsIstCnt + "</td>");
 
             $("#edctsIstBody").append(tr);
           });
@@ -362,6 +383,126 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           console.log(reject);
         },
       });
+    });
+
+    // 체크박스 선택 메인꺼
+    $(document).on("click", "#cbx_chkAll", function () {
+      if ($("#cbx_chkAll").is(":checked")) {
+        $("input[name=chk]")
+          .prop("checked", true)
+          .closest("tr")
+          .addClass("selected");
+        $("input[name=chk]").closest("tr").addClass("table-danger");
+      } else {
+        $("input[name=chk]")
+          .prop("checked", false)
+          .closest("tr")
+          .removeClass("selected");
+        $("input[name=chk]").closest("tr").removeClass("table-danger");
+      }
+    });
+
+    $(document).on("click", "input[name=chk]", function () {
+      var total = $("input[name=chk]").length;
+      var checked = $("input[name=chk]:checked").length;
+
+      if (total != checked) $("#cbx_chkAll").prop("checked", false);
+      else $("#cbx_chkAll").prop("checked", true);
+    });
+
+    //체크되면 빨간색으로 바뀜
+    $(document).on("change", ":checkbox", function () {
+      if ($(this).prop("checked")) {
+        if (!$(this).closest("tr").children().eq(0).is("th")) {
+          $(this).closest("tr").addClass("table-danger");
+        }
+      } else {
+        $(this).closest("tr").removeClass("table-danger");
+      }
+    });
+
+    // tr 선택해도 체크 됨
+    $(document).on("click", "table tr", function (event) {
+      if (event.target.type !== "checkbox") {
+        const $checkbox = $(":checkbox", this);
+        const td = $(".my-td-class", this);
+        if (td.is(event.target)) {
+          event.stopPropagation();
+        } else {
+          $checkbox.trigger("click");
+        }
+      }
+    });
+
+    // 삭제
+    $(document).on("click", "#delBtn", function () {
+      let valueArr = [];
+
+      $('input[name="chk"]:checked').each(function (idx, items) {
+        let eistNo = $(items).closest("tr").children().eq(2).text();
+        let dataObj = {
+          edctsIstNo: eistNo,
+        };
+
+        // 데이터 배열에 객체 추가
+        valueArr.push(dataObj);
+      });
+      if (valueArr.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+      } else {
+        Swal.fire({
+          title: "삭제 하시겠습니까?",
+          text: "복구 할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              url: "deleteEdctsIst",
+              method: "post",
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify(valueArr),
+              success: function (result) {
+                if (result == "success") {
+                  for (let i = 0; i < valueArr.length; i++) {
+                    $('tr[data-id="' + valueArr[i].edctsIstNo + '"]').remove();
+                  }
+                } else if (result == "error") {
+                  Swal.fire({
+                    icon: "error",
+                    title: "오류가 발생했습니다.",
+                  });
+                }
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
+              },
+              error: function (reject) {
+                console.log(reject);
+              },
+            });
+          }
+        });
+      }
     });
   </script>
 </body>

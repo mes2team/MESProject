@@ -14,6 +14,7 @@
 					e.prdt_nm
 		FROM 		edcts e, edcts_ist ei
 		WHERE 		e.edcts_cd = ei.edcts_cd
+		ORDER BY ei.edcts_ist_no
 	</select>
 	
 	<!-- 포장 검사 완료된 제품 조회 -->
@@ -67,4 +68,9 @@
 		AND <![CDATA[ei.edcts_ist_dt >= #{edctsIstDt}]]> and <![CDATA[ei.edcts_ist_dt <= #{edctsIstDtEnd} + 1]]>
 	</select>
 
+	<!-- 입고 제품 삭제 -->
+	<delete id="deleteEdctsIst" parameterType="EdctsIstVO">
+		DELETE FROM edcts_ist
+		WHERE	edcts_ist_no = #{edctsIstNo}
+	</delete>
 </mapper>

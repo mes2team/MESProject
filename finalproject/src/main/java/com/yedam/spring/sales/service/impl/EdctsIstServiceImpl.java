@@ -35,4 +35,9 @@ public class EdctsIstServiceImpl implements EdctsIstService {
 		return edctsistMapper.searchEdctsList(vo);
 	}
 
+	@Override
+	public int deleteEdctsIst(EdctsIstVO vo) {
+		return edctsistMapper.deleteEdctsIst(vo);
+	}
+
 }

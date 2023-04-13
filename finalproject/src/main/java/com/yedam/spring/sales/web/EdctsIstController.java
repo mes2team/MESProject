@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.sales.service.EdctsIstService;
@@ -21,7 +22,7 @@ public class EdctsIstController {
 	@GetMapping("edctsIst")
 	public String edctsIstForm(Model model) {
 		model.addAttribute("edctsistList", edctsistService.selectEdctsIstAll());
-		return "sales/EdctsIstMag";
+		return "sales/edctsIstMag";
 	}
 	
 	@GetMapping("completePro")
@@ -41,5 +42,14 @@ public class EdctsIstController {
 	@ResponseBody
 	public List<EdctsIstVO> searchEdctsIstProcess(EdctsIstVO vo){
 		return edctsistService.searchEdctsList(vo);
+	}
+	
+	@PostMapping("deleteEdctsIst")
+	@ResponseBody
+	public String deleteEdctsIstProcess(@RequestBody EdctsIstVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			edctsistService.deleteEdctsIst(arr[i]);
+		}
+		return "success";
 	}
 }

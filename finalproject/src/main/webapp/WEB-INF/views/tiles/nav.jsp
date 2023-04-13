@@ -47,7 +47,7 @@
             </a>
           </li>
           <li>
-            <a href="forms-editors.html">
+            <a href="${pageContext.request.contextPath }/edctsOust">
               <i class="bi bi-circle"></i><span>제품 출고 관리</span>
             </a>
           </li>
