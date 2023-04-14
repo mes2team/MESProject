@@ -57,7 +57,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               </thead>
               <tbody>
                 <c:forEach items="${orderList }" var="order" varStatus="loop">
-                  <tr>
+                  <tr ondblclick="openModal('${order.orderNo }')">
                     <td>${loop.count }</td>
                     <td>${order.orderNo }</td>
                     <td>${order.orderNm }</td>
@@ -107,11 +107,125 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                   <th scope="col">유통 기한</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                <c:forEach
+                  items="${edctsOustList }"
+                  var="eoust"
+                  varStatus="loop"
+                >
+                  <tr>
+                    <td scope="col">
+                      <input type="checkbox" name="chk" />
+                    </td>
+                    <td>${loop.count }</td>
+                    <td>${eoust.orderNo }</td>
+                    <td>${eoust.edctsLotNo }</td>
+                    <td>${eoust.prdtNm }</td>
+                    <td>
+                      <fmt:formatDate
+                        value="${eoust.edctsOustDt }"
+                        pattern="yyyy-MM-dd"
+                      />
+                    </td>
+                    <td>${eoust.edctsOustCnt }</td>
+                    <td>2026-04-14 테스트</td>
+                  </tr>
+                </c:forEach>
+              </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- 모달창 -->
+  <!-- 주문 상세 조회 -->
+  <div
+    class="modal fade"
+    id="orderDetailModal"
+    tabindex="-1"
+    data-bs-backdrop="static"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">출고 등록</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <h5>주문 상세 조회</h5>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">제품 코드</th>
+                <th scope="col">제품 이름</th>
+                <th scope="col">제품 주문 수량</th>
+              </tr>
+            </thead>
+            <tbody id="orderDetailList"></tbody>
+          </table>
+          <hr />
+          <h5>완제품 상세 조회</h5>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">완제품LOT 번호</th>
+                <th scope="col">완제품 명</th>
+                <th scope="col">완제품 수량</th>
+                <th scope="col">출고량</th>
+                <th scope="col">제조일자</th>
+                <th scope="col">유통기한</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openModal(orderNo) {
+      let prdtArr = [];
+      $.ajax({
+        url: "edctsOustOrderDetail",
+        data: { orderNo: orderNo },
+        success: function (result) {
+          $("#orderDetailList").empty();
+          $(result).each(function (idx, item) {
+            let tr = $("<tr>");
+
+            tr.append("<td>" + item.edctsCd + "</td>");
+            tr.append("<td>" + item.prdtNm + "</td>");
+            tr.append("<td>" + item.orderCnt + "</td>");
+
+            $("#orderDetailList").append(tr);
+
+            let prdtObj = { prdtNm: item.prdtNm };
+
+            prdtArr.push(prdtObj);
+          });
+        },
+        error: function (reject) {
+          console.log(reject);
+        },
+      });
+
+      console.log(prdtArr);
+      $("#orderDetailModal").modal("show");
+    }
+  </script>
 </body>
