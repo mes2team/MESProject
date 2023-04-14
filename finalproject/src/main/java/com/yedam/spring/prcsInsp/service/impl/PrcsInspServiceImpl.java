@@ -24,4 +24,9 @@ public List<PrcsInspVO> selectPrcsList() {
 public PrcsInspVO selectMaxEdctsLotNo() {
 	return mapper.selectMaxEdctsLotNo();
 }
+
+@Override
+public List<PrcsInspVO> selectPrcsStd(PrcsInspVO prcsCd) {
+	return mapper.selectPrcsStd(prcsCd);
+}
 }
