@@ -12,139 +12,175 @@
 </head>
 <body>
 	<h1>공정검사관리</h1>
-	<h5 style="font-weight:;">
-		<span>공정검사등록</span>/<span>공정검사조회</span>
-	</h5>
-	<form id="mainForm">
-		<div class="card">
-			<div class="card-body">
+	<!-- ============================================ -->
+	<div class="card-body">
+		<!-- Bordered Tabs Justified -->
+		<ul class="nav nav-tabs nav-tabs-bordered d-flex"
+			id="borderedTabJustified" role="tablist">
+			<li class="nav-item flex-fill" role="presentation">
+				<button class="nav-link w-100 active" id="home-tab"
+					data-bs-toggle="tab" data-bs-target="#bordered-justified-home"
+					type="button" role="tab" aria-controls="home" aria-selected="true">공정검사등록</button>
+			</li>
+			<li class="nav-item flex-fill" role="presentation">
+				<button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab"
+					data-bs-target="#bordered-justified-profile" type="button"
+					role="tab" aria-controls="profile" aria-selected="false"
+					tabindex="-1">공정검사조회</button>
+			</li>
+		</ul>
+		<div class="tab-content pt-2" id="borderedTabJustifiedContent">
+			<div class="tab-pane fade active show" id="bordered-justified-home"
+				role="tabpanel" aria-labelledby="home-tab">
+				<!-- ========================================================================================================================= -->
+				<form id="mainForm">
+					<div class="card">
+						<div class="card-body">
 
-				<div class="row g-3 align-items-center"
-					style="margin-top: 20px; margin-bottom: 5px;">
-					<div class="form-group row">
-						<div class="col-auto">
-							<label style="font-weight: bold;">지시코드*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 15px;">
-							<input type="text" disabled readonly name="indicaCd"
-								class="form-control">
-						</div>
-						<div class="col-auto">
-							<button type="button" onclick="selectPrcsList()"
-								class="btn btn-success" data-bs-toggle="modal"
-								data-bs-target="#modalDialogScrollable">조회</button>
-						</div>
-						<div class="col-auto">
-							<label style="font-weight: bold; margin-left: 35px">공정코드*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 15px">
-							<input type="text" disabled name="prcsCd" class="form-control"
-								readonly>
-						</div>
-						<div class="col-auto">
-							<label style="font-weight: bold; margin-left: 35px">공정명*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 20px">
-							<input type="text" disabled name="prcsNm" class="form-control"
-								readonly>
+							<div class="row g-3 align-items-center"
+								style="margin-top: 20px; margin-bottom: 5px;">
+								<div class="form-group row">
+									<div class="col-auto">
+										<label style="font-weight: bold;">지시코드*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 15px;">
+										<input type="text" disabled readonly name="indicaCd"
+											class="form-control">
+									</div>
+									<div class="col-auto">
+										<button type="button" onclick="selectPrcsList()"
+											class="btn btn-success" data-bs-toggle="modal"
+											data-bs-target="#modalDialogScrollable">조회</button>
+									</div>
+									<div class="col-auto">
+										<label style="font-weight: bold; margin-left: 35px">공정코드*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 15px">
+										<input type="text" disabled name="prcsCd" class="form-control"
+											readonly>
+									</div>
+									<div class="col-auto">
+										<label style="font-weight: bold; margin-left: 35px">공정명*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 20px">
+										<input type="text" disabled name="prcsNm" class="form-control"
+											readonly>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<div class="row g-3 align-items-center"
+								style="margin-top: 20px; margin-bottom: 5px;">
+								<div class="form-group row">
+									<div class="col-auto">
+										<label style="font-weight: bold;">제품코드*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 15px">
+										<input type="text" name="edctsCd" disabled readonly
+											class="form-control">
+									</div>
+									<div class="col-auto" style="margin-left: 120px">
+										<label style="font-weight: bold;">제품명*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 28px">
+										<input type="text" name="prdtNm" disabled readonly
+											class="form-control">
+									</div>
+									<div class="col-auto"></div>
+									<div class="col-auto" style="margin-left: 10px;">
+										<label style="font-weight: bold;">검사량*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 5px;">
+										<input type="text" disabled name="prodCnt"
+											class="form-control" readonly>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<div class="row g-3 align-items-center"
+								style="margin-top: 20px; margin-bottom: 5px;">
+								<div class="form-group row">
+									<div class="col-auto">
+										<label style="font-weight: bold;">검사일자*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 15px;">
+										<input style="width: 214px" type="date" name="prcsInspDt"
+											class="form-control">
+									</div>
+
+									<div class="col-auto" style="margin-left: 117px">
+										<label style="font-weight: bold;">검사담당자*</label>
+									</div>
+									<div class="col-auto">
+										<input type="text" name="prcsInspMng" class="form-control">
+										<input type="text" style="display: none" name="prcsChkCd"
+											value="${maxChkCd.prcsChkCd }">
+									</div>
+
+									<div class="col-auto" style="margin-left: 35px" hidden>
+										<label style="font-weight: bold;">최종판정*</label>
+									</div>
+									<div class="col-auto" style="margin-left: 15px" hidden>
+										<label><input type="radio" name="chckFg" value="적합">
+											적합</label> <label><input type="radio" name="chckFg"
+											value="부적합"> 부적합</label>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-				<hr>
-				<div class="row g-3 align-items-center"
-					style="margin-top: 20px; margin-bottom: 5px;">
-					<div class="form-group row">
-						<div class="col-auto">
-							<label style="font-weight: bold;">제품코드*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 15px">
-							<input type="text" name="edctsCd" disabled readonly
-								class="form-control">
-						</div>
-						<div class="col-auto" style="margin-left: 120px">
-							<label style="font-weight: bold;">제품명*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 28px">
-							<input type="text" name="prdtNm" disabled readonly
-								class="form-control">
-						</div>
-						<div class="col-auto"></div>
-						<div class="col-auto" style="margin-left: 10px;">
-							<label style="font-weight: bold;">검사량*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 5px;">
-							<input type="text" disabled name="prodCnt" class="form-control"
-								readonly>
+					<!-- 첫번째 카드마무리 -->
+					<div class="card">
+						<div class="card-body">
+							<table class="table table-striped table-hover"
+								style="margin-top: 20px; margin-bottom: 5px;">
+								<thead>
+									<tr
+										style="position: sticky; top: 0px; background-color: #E2E2E2">
+										<th></th>
+										<th>검사코드</th>
+										<th>검사명</th>
+										<th>검사기준</th>
+										<th>검사결과</th>
+										<th>결과판정*</th>
+									</tr>
+								</thead>
+								<tbody id="mainBody">
+
+								</tbody>
+							</table>
+							<div id="inferInput" class="row g-3 align-items-center" hidden>
+								<div class="col-auto" width="" style="margin-left: 815px">
+									<label style="font-weight: bold;">총불량량*</label>
+								</div>
+								<div class="col-auto">
+									<input type="number" min=0 value=0 name="inferCnt"
+										class="form-control">
+								</div>
+								<div class="col-auto" style="margin-left: 220px;">
+									<button type="button" onclick="insertInsp()"
+										class="btn btn-primary" style="">등 록</button>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-				<hr>
-				<div class="row g-3 align-items-center"
-					style="margin-top: 20px; margin-bottom: 5px;">
-					<div class="form-group row">
-						<div class="col-auto">
-							<label style="font-weight: bold;">검사일자*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 15px;">
-							<input style="width: 214px" type="date" name="prcsInspDt"
-								class="form-control">
-						</div>
-
-						<div class="col-auto" style="margin-left: 117px">
-							<label style="font-weight: bold;">검사담당자*</label>
-						</div>
-						<div class="col-auto">
-							<input type="text" name="prcsInspMng" class="form-control">
-							<input type="text" style="display: none" name="prcsChkCd"
-								value="${maxChkCd.prcsChkCd }">
-						</div>
-
-						<div class="col-auto" style="margin-left: 35px" hidden>
-							<label style="font-weight: bold;">최종판정*</label>
-						</div>
-						<div class="col-auto" style="margin-left: 15px" hidden>
-							<label><input type="radio" name="chckFg" value="적합">
-								적합</label> <label><input type="radio" name="chckFg" value="부적합">
-								부적합</label>
-						</div>
-					</div>
-				</div>
+				</form>
+				<!-- ========================================================================================================================= -->
 			</div>
+			<div class="tab-pane fade" id="bordered-justified-profile"
+				role="tabpanel" aria-labelledby="profile-tab">Nesciunt totam
+				et. Consequuntur magnam aliquid eos nulla dolor iure eos quia.
+				Accusantium distinctio omnis et atque fugiat. Itaque doloremque
+				aliquid sint quasi quia distinctio similique. Voluptate nihil
+				recusandae mollitia dolores. Ut laboriosam voluptatum dicta.</div>
 		</div>
-		<!-- 첫번째 카드마무리 -->
-		<div class="card">
-			<div class="card-body">
-				<table class="table table-striped table-hover"
-					style="margin-top: 20px; margin-bottom: 5px;">
-					<thead>
-						<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
-							<th></th>
-							<th>검사코드</th>
-							<th>검사명</th>
-							<th>검사기준</th>
-							<th>검사결과</th>
-							<th>결과판정*</th>
-						</tr>
-					</thead>
-					<tbody id="mainBody">
+		<!-- End Bordered Tabs Justified -->
+	</div>
 
-					</tbody>
-				</table>
-				<div id="inferInput" class="row g-3 align-items-center" hidden>
-					<div class="col-auto" width="" style="margin-left: 820px">
-						<label style="font-weight: bold;">불량량</label>
-					</div>
-					<div class="col-auto">
-						<input type="number" value=0 name="inferCnt" class="form-control">
-					</div>
-					<div class="col-auto" style="margin-left: 220px;">
-						<button type="button" onclick="insertInsp()"
-							class="btn btn-primary" style="">등 록</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</form>
+
+
+	<!-- ============================================ -->
+
 
 	<!-- 모달창 -->
 	<div class="modal fade" id="modalDialogScrollable" tabindex="-1"
@@ -211,7 +247,7 @@
 			var prcsInspRst = document.querySelectorAll('[name="prcsInspRst"]');//검사결과 
 			var prcsInspJdg = document.querySelectorAll('[name="prcsInspJdg"]');//결과판정 
 			var inferCnt = document.querySelector('[name="inferCnt"]'); //불량량
-			
+
 			var DprcsChkCd = prcsChkCd.value;
 			var DindicaCd = indicaCd.value;
 			var DprcsCd = prcsCd.value;
@@ -223,18 +259,18 @@
 			var DprcsInspMng = prcsInspMng.value;
 			var DinferCnt = inferCnt.value; //불량량
 			var DprcsNm = prcsNm.value; //공정명
-			
-			
+			var DedctsExpire = makeExpireDate(prcsInspDt.value); //유통기한
+
 			var stdTrs = mainBody.querySelectorAll('tr')
 			for (let i = 0; i < stdTrs.length; i++) {
-				
+
 				let DprcsInspCd = prcsInspCd[i].innerText;
 				let DprcsInspNm = prcsInspNm[i].innerText;
 				let DprcsInspStd = prcsInspStd[i].innerText;
 				let DprcsInspRst = prcsInspRst[i].value;
 				let DprcsInspJdg = prcsInspJdg[i].value;
-				
-				//불량량을 제외한 모든 검사결과
+
+				//불량량을 제외한 모든 검사결과 ajax보낼 데이터담기
 				let data = {
 					prcsChkCd : DprcsChkCd,
 					indicaCd : DindicaCd,
@@ -249,13 +285,14 @@
 					prcsInspNm : DprcsInspNm,
 					prcsInspStd : DprcsInspStd,
 					prcsInspRst : DprcsInspRst,
-					prcsInspJdg : DprcsInspJdg
+					prcsInspJdg : DprcsInspJdg,
+					edctsExpire : DedctsExpire
 				}
 				dataList.push(data);
 
 			}
 			//불량량,공정명 ajax보낼 배열에 담기
-			
+
 			let inferData = {
 				prcsChkCd : DprcsChkCd,
 				prcsCd : DprcsCd,
@@ -265,7 +302,7 @@
 			}
 			dataList.push(inferData);
 			console.log(dataList);
-			
+
 			$.ajax({
 				type : "POST",
 				url : "/spring/chkDone",
@@ -280,6 +317,22 @@
 				}
 			});
 
+		}
+		//유통기한 만들기
+		function makeExpireDate(inspDt) {
+			// inspDt를 Date 객체로 변환
+			const inspectionDate = new Date(inspDt);
+
+			// 3년을 더하기 위해 연도에 3을 더함
+			const expireYear = inspectionDate.getFullYear() + 3;
+
+			// 연도에 3을 더한 날짜를 설정
+			inspectionDate.setFullYear(expireYear);
+
+			// 만료일자를 YYYY-MM-DD 형식으로 반환
+			const expireDate = inspectionDate.toISOString().slice(0, 10);
+
+			return expireDate;
 		}
 
 		//모달열면 검사리스트 뿌리기
@@ -345,6 +398,7 @@
 					checkedTr = checkboxes[i].closest('tr')
 				}
 			}
+			//모달에서 선택한 값들이 메인에 뿌려지게
 			let tds = checkedTr.querySelectorAll('td');
 			indicaCd.value = tds[1].innerText; //지시코드
 			prcsCd.value = tds[2].innerText; //공정코드
@@ -353,10 +407,8 @@
 			prdtNm.value = tds[5].innerText; //제품명
 			prodCnt.value = tds[6].innerText; //생산량==검사량
 			let cd = tds[2].innerText;
-			selectPrcsStd(cd);
-			
-			//검사할 공정이 포장인경우
-			
+			selectPrcsStd(cd); //공정별 검사기준 가져오기 
+
 		}
 
 		//공정별 검사기준 가져오기 
@@ -380,19 +432,45 @@
 								tr
 										.append('<td name="prcsInspStd" style="width: 500px">'
 												+ res[i].prcsInspStd + '</td>')
-								tr
-										.append('<td><input name="prcsInspRst" type="text"></td>')
-								tr
-										.append('<td><select name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
+								//포장공정일 경우 input 다르게
+								if (prcsCd.value == 'PRCS5000') {
+									tr
+											.append('<td><input class="rstInputs" min=0 placeholder="불량갯수 직접입력" name="prcsInspRst" type="number"></td>')
+									tr
+											.append('<td><select disabled name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
+								} else {
+									tr
+											.append('<td><input class="" name="prcsInspRst" type="text"></td>')
+									tr
+											.append('<td><select name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
+								}
 								mainBody.append(tr);
 							}
 							showInferInput();//불량갯수 input 보이게
+							inferSum(); //포장 불량량 자동계산되게
 						},
 						error : function(reject) {
 							console.log(reject);
 						}
 					});
 		}
+
+		//포장일때 갯수 등록하면 자동계산
+		function inferSum() {
+			let rstInputs = document.querySelectorAll('.rstInputs');
+			let inferCnt = document.querySelector('[name="inferCnt"]');
+			for (var i = 0; i < rstInputs.length; i++) {
+				rstInputs[i].addEventListener('input', function() {
+					var sum = 0;
+					// class가 rstInputs인 모든 input 태그의 값을 더함
+					for (var i = 0; i < rstInputs.length; i++) {
+						sum += parseInt(rstInputs[i].value) || 0;
+					}
+					inferCnt.value = sum;
+				});
+			}
+		}
+
 		//메인바디가 비지않았다면 불량갯수 input hidden해제
 		function showInferInput() {
 			if (mainBody.children.length != 0) {

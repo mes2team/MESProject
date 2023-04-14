@@ -74,7 +74,8 @@
 								   prcs_insp_nm,
 								   prcs_insp_std,
 								   prcs_insp_rst,
-								   prcs_insp_jdg
+								   prcs_insp_jdg,
+								   edcts_expire
 								   )
 							VALUES(
 								   #{prcsChkCd},	
@@ -89,7 +90,8 @@
 								   #{prcsInspNm},	
 								   #{prcsInspStd},	
 								   #{prcsInspRst},	
-								   #{prcsInspJdg}	
+								   #{prcsInspJdg},
+								   #{edctsExpire}	
 							)	   
 	</insert>
 
