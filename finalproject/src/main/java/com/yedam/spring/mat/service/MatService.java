@@ -43,6 +43,8 @@ public interface MatService {
 	
 	//자재검사목록
 	public List<MatVO> matCheckList();
+	//검사미완료 발주 전체 조회
+	public List<MatVO> matOrderChkList();
 	//자재검사 단건 조회
 	public MatVO getMatCheckInfo(MatVO matVO);
 	//자재검사 추가

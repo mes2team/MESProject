@@ -159,6 +159,9 @@
 			<if test="paprdCmndDt != null and !paprdCmndDt.equals('')">
 				PAPRD_CMND_DT = #{paprdCmndDt},
 			</if>
+			<if test="ordrChk != null and !ordrChk.equals('')">
+				ordr_chk = #{ordrChk},
+			</if>
 		</set>
 		WHERE ordr_cd = #{ordrCd}
 	</update>
@@ -238,7 +241,14 @@
 		DELETE FROM rsc_ist
 		WHERE rsc_lot_cd = #{rscLotCd}
 	</delete>
-	
+
+<!-- 검사미완료 발주 전체 조회	 -->
+	<select id="matOrderChkList" resultType="MatVO">
+		SELECT *
+		FROM rsc_ordr
+	   WHERE ORDR_CHK != '진행완료'
+	   ORDER BY ordr_cd
+	</select>		
 <!-- 자재검사 현황 -->	
 	<select id="matCheckList" resultType="MatVO">
 		SELECT i.rsc_insp_cd
@@ -252,6 +262,7 @@
 		     , i.decay
 		     , i.pack
 		     , i.under_weight
+		     , i.etc
 		  FROM rsc_insp i JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
 		 ORDER BY rsc_insp_cd DESC
 	</select>	

@@ -52,6 +52,7 @@ public class MatVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date oustDt; //출고일자
 	private int oustCnt; //출고수량
+	private String ordrChk; //진행상태
 	
 	private String rscInspCd; //검사코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
