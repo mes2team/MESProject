@@ -15,4 +15,7 @@ public class EdctsOustVO {
 	private Date edctsOustDt;
 	private int edctsOustCnt;
 	private String orderNo;
+	
+	// 제품이름
+	private String prdtNm;
 }

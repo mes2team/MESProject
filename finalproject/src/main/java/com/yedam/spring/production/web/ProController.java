@@ -232,4 +232,10 @@ public class ProController {
 
 		return resultMap;
 	}
+	
+	//생산공정실적 페이지
+	@GetMapping("/productionResult")
+	public String productionResultForm() {
+		return "production/productionResult";
+	}
 }

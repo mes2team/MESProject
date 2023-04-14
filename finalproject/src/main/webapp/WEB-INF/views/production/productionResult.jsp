@@ -39,7 +39,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <!-- ============================================================== -->
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">생산 지시 관리</h5>
+        <h5 class="card-title">공정 실적 관리</h5>
         <!-- Multi Columns Form -->
         <form class="row g-3">
           <div class="col-md-6">
@@ -68,6 +68,37 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <div class="card">
           <p></p>
           <div class="card-body">
+            <div
+              class="table-responsive"
+              style="width: 100%; height: 300px; overflow: auto"
+            >
+              <table
+                class="table table-striped table-bordered first table-hover"
+              >
+                <thead>
+                  <tr>
+                    <th>생산지시 코드</th>
+                    <th>생산지시 명</th>
+                    <th>공정 명</th>
+                    <th>작업 일자</th>
+                    <th>지시량</th>
+                    <th>순서</th>
+                    <th>자재코드</th>
+                    <th>자재분류</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+          <p></p>
+          <div class="card-body">
             <div id="btnGrp">
               <button type="button" class="btn btn-primary">저장</button>
               <button
@@ -88,52 +119,15 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               >
                 <thead>
                   <tr>
-                    <th>No.</th>
-                    <th>생산지시헤더 코드</th>
-                    <th>생산지시 명</th>
-                    <th>생산지시 일자</th>
-                    <th>작업자</th>
-                    <th>비고</th>
-                    <th>생산계획 명</th>
-                    <th>제품코드</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div class="card">
-          <p></p>
-          <div class="card-body">
-            <div id="btnGrp">
-              <button type="button" class="btn btn-primary">저장</button>
-            </div>
-            <div
-              class="table-responsive"
-              style="width: 100%; height: 300px; overflow: auto"
-            >
-              <table
-                class="table table-striped table-bordered first table-hover"
-              >
-                <thead>
-                  <tr>
                     <th>생산지시 코드</th>
+                    <th>현재공정 코드</th>
                     <th>공정 코드</th>
-                    <th>공정 명</th>
-                    <th>순서</th>
-                    <th>생산지시 일자</th>
-                    <th>지시량</th>
-                    <th>공정분류</th>
-                    <th>비고</th>
-                    <th>제품코드</th>
-                    <th>계획량</th>
-                    <th>미계획량</th>
-                    <th>자재분류</th>
+                    <th>작업량</th>
+                    <th>물량량</th>
+                    <th>미작업량</th>
+                    <th>작업자</th>
+                    <th>작업시작시간</th>
+                    <th>작업종료시간</th>
                   </tr>
                 </thead>
                 <tbody></tbody>
@@ -156,7 +150,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">소요할 자재 선택</h5>
+          <h5 class="modal-title">작업 등록</h5>
           <button
             type="button"
             class="btn-close"
@@ -167,30 +161,63 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <div class="modal-body">
           <form class="row g-3">
             <div class="col-md-6">
-              <!-- <label for="inputCode" class="form-label">작업일자</label> -->
+              <label for="inputCode" class="form-label">작업일자</label>
               <input type="text" class="form-control" readonly />
             </div>
             <div class="col-md-6">
-              <!-- <label for="inputEmail5" class="form-label">작업자</label> -->
+              <label for="inputEmail5" class="form-label">작업자</label>
               <input type="text" class="form-control mr-2" readonly />
+            </div>
+            <div class="col-md-6">
+              <label for="inputCode" class="form-label">설비</label>
+              <input type="text" class="form-control" readonly />
+            </div>
+            <div class="col-md-6">
+              <label for="inputEmail5" class="form-label">작업량 설정</label>
+              <input type="text" class="form-control mr-2" />
             </div>
           </form>
           <p style="margin-bottom: 30px"></p>
           <div class="row">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">LOT.NO</th>
-                  <th scope="col">입고량</th>
-                  <th scope="col">출고량</th>
-                  <th scope="col">재고량</th>
-                </tr>
-              </thead>
-              <tbody id="productList"></tbody>
-            </table>
+            <div class="col-md-4">
+              <select
+                id="multiPro"
+                class="form-select"
+                multiple=""
+                aria-label="multiple select example"
+              ></select>
+            </div>
+            <div class="col-md-8">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">공정 코드</th>
+                    <th scope="col">공정 명</th>
+                    <th scope="col">자재 명</th>
+                    <th scope="col">자재 소요량</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <hr />
+          <div id="btnGrp">
+            <input type="text" style="width: 80px" readonly />
+            <button type="button" class="btn btn-success">작업시작</button>
+            <input type="text" style="width: 80px" readonly />
+            <button type="button" class="btn btn-danger">작업종료</button>
+            <!-- <p></p>
+            <input type="text" style="width: 80px" readonly />
+            <button type="button" class="btn btn-danger">불량 (+)</button>
+            <button type="button" class="btn btn-info">불량(-)</button> -->
           </div>
         </div>
         <div class="modal-footer">
+          <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            작업 등록
+          </button> -->
           <button
             type="button"
             class="btn btn-secondary"
