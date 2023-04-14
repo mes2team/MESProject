@@ -16,4 +16,29 @@
 	ON 		eo.edcts_cd = e.edcts_cd
 	ORDER BY edcts_oust_no
   </select>
+  
+  <insert id="insertUpdateEdcts" parameterType="EdctsOustVO">
+  		<selectKey keyProperty="edctsOustNo" order="BEFORE" resultType="String">
+  			SELECT 	TO_CHAR(NVL(MAX(SUBSTR(edcts_oust_no, 5)), 999) + 1) AS "edcts_ist_no"
+			FROM 	edcts_oust
+  		</selectKey>
+  		BEGIN
+    		UPDATE 	edcts_ist
+    		SET		edcts_lot_cnt = #{edctsLotCnt}
+    		WHERE	edcts_lot_no = #{edctsLotNo};
+    		
+    		INSERT INTO edcts_oust(edcts_oust_no,
+    							   edcts_cd,
+    							   edcts_lot_no,
+    							   edcts_oust_dt,
+    							   edcts_oust_cnt,
+    							   order_no)
+    						VALUES('EOST' || #{edctsOustNo},
+    							   #{edctsCd},
+    							   #{edctsLotNo},
+    							   sysdate,
+    							   #{edctsOustCnt},
+    							   #{orderNo})
+		END;
+  </insert>
 </mapper>

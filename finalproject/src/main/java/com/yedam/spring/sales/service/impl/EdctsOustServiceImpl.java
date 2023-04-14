@@ -21,4 +21,9 @@ public class EdctsOustServiceImpl implements EdctsOustService {
 		return edctsoustMapper.selectEdctsOustAll();
 	}
 
+	@Override
+	public int insertUpdateEdcts(EdctsOustVO vo) {
+		return edctsoustMapper.insertUpdateEdcts(vo);
+	}
+
 }

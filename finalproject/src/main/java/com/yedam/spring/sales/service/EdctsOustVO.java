@@ -18,4 +18,5 @@ public class EdctsOustVO {
 	
 	// 제품이름
 	private String prdtNm;
+	private int edctsLotCnt;
 }

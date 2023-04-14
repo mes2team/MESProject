@@ -14,6 +14,7 @@ public class EdctsIstVO {
 	private Date edctsIstDt;
 	private int edctsIstCnt;
 	private String edctsLotNo;
+	private String edctsLotCnt;
 	
 	private String prdtNm; // 제품이름
 	private String prodCnt; // 생산량

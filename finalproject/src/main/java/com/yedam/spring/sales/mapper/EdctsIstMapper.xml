@@ -17,6 +17,21 @@
 		ORDER BY ei.edcts_ist_no
 	</select>
 	
+	<!-- 제품 입고 단건 조회 -->
+	<select id="selectSingleList" resultType="EdctsIstVO">
+		SELECT 		ei.edcts_ist_no, 
+					ei.edcts_ist_dt, 
+					ei.edcts_ist_cnt, 
+					ei.edcts_cd, 
+					ei.edcts_lot_no,
+					ei.edcts_lot_cnt, 
+					e.prdt_nm
+		FROM 		edcts e, edcts_ist ei
+		WHERE 		e.edcts_cd = ei.edcts_cd
+		AND 		ei.edcts_cd = #{edctsCd}
+		ORDER BY ei.edcts_ist_dt
+	</select>
+	
 	<!-- 포장 검사 완료된 제품 조회 -->
 	<select id="getCompletePro" resultType="EdctsIstVO">
 		SELECT 	p.prod_cnt, 
@@ -44,14 +59,16 @@
 									edcts_cd,
 									edcts_ist_dt,
 									edcts_ist_cnt,
-									edcts_lot_no
+									edcts_lot_no,
+									edcts_lot_cnt
 								  ) 
 						   VALUES (
 									'EIST' || #{edctsIstNo},
 									#{edctsCd},
 									sysdate,
 									#{edctsIstCnt},
-									'EDCTS-L' || #{edctsLotNo}
+									'EDCTS-L' || #{edctsLotNo},
+									#{edctsIstCnt}
 								  )
 	</insert>
 	
