@@ -164,12 +164,12 @@ public class MatController {
 		return "success";
 	}
 	
-	// 자재입출고 시 자재현황테이블 업데이트
-	@PostMapping("/updateRscStc")
-	@ResponseBody
-	public String updateRscStcProcess(MatVO vo) {
-		matService.updateRscStc(vo);
-		return "success";
-	}
+	//자재검사 전체조회
+		@GetMapping("/matCheck")
+		public String getMatCheck(Model model) {
+			model.addAttribute("matCheckList",matService.matCheckList());
+			return "material/matCheck";
+		}
+	
 
 }

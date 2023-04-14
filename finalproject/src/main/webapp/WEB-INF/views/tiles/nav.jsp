@@ -126,6 +126,11 @@
             </a>
           </li>
           <li>
+            <a href="${pageContext.request.contextPath }/matCheck">
+              <i class="bi bi-circle"></i><span>자재검사</span>
+            </a>
+          </li>
+          <li>
             <a href="${pageContext.request.contextPath }/matReceipt">
               <i class="bi bi-circle"></i><span>자재입고</span>
             </a>
