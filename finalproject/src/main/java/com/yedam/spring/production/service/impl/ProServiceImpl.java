@@ -63,7 +63,7 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public String removePlan(String planCd) {
 		String result = null;
-		if(proMapper.deleteProPlan(planCd) > 0) {
+		if(proMapper.deleteProPlan(planCd) < 0) {
 			result ="success";
 		} else {
 			result ="fail";
@@ -72,8 +72,14 @@ public class ProServiceImpl implements ProService {
 	}
 
 	@Override
-	public int modifyProPlan(ProPlanVO vo) {
-		return proMapper.updateProPlan(vo);
+	public String modifyProPlan(ProPlanVO vo) {
+		String result = null;
+		if(proMapper.updateProPlan(vo) > 0) {
+			result ="success";
+		} else {
+			result ="fail";
+		}
+		return result;
 	}
 
 	@Override
@@ -161,6 +167,26 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public List<ProPrcsVO> getPrcsFlow(ProPrcsVO vo) {
 		return proMapper.selectPrcsFlow(vo);
+	}
+
+	@Override
+	public List<ProPlanVO> getPlanDetail(ProPlanVO vo) {
+		return proMapper.selectPlanDetail(vo);
+	}
+
+	@Override
+	public String checkOrderNo(String planCd) {
+		String result = proMapper.checkOrderNo(planCd);
+		String[] arr = result.replaceAll("/", "").split("\\s+");
+		System.out.println(result);
+		System.out.println("ORDERNO : " + arr[0]);
+		
+		for (String orderNo : arr) {
+			proMapper.cancelOrderStatus(orderNo);
+		}
+
+		
+		return result;
 	}
 
 
