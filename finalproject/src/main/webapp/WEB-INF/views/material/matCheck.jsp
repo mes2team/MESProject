@@ -109,12 +109,12 @@ form {
 
 				<div class="col-md-2">
 					<label for="country" class="form-label">자재명</label> <input
-						type="text" class="form-control" id="rscNm" disabled />
+						type="text" class="form-control" id="rscNm" name="rscNm" disabled />
 				</div>
 
 				<div class="col-md-2">
 					<label for="country" class="form-label">검수량</label> <input
-						type="text" class="form-control" id="inspCnt" disabled />
+						type="text" class="form-control" id="inspCnt" name="inspCnt" disabled />
 				</div>
 
 
@@ -127,48 +127,48 @@ form {
 				<div class="col-md-2">
 					<label for="country" class="form-label">검수자</label>
 					<div class="input-group">
-						<input type="text" class="form-control" id="inspTstr" disabled />
-						<!-- <button type="button" class="btn btn-primary"
+						<input type="text" class="form-control" id="inspTstr" name="inspTstr" disabled />
+						<button type="button" class="btn btn-primary"
 							data-bs-toggle="modal" data-bs-target="#inspTstrSearch">
 							<i class="bi bi-search"></i>
-						</button> -->
+						</button>
 					</div>
 				</div>
 
 				<div class="col-md-2">
 					<label for="country" class="form-label">합격량</label> <input
-						type="text" class="form-control" id="inspPassCnt" />
+						type="number" class="form-control" id="inspPassCnt" name="inspPassCnt"  min="0" />
 				</div>
 
 				<div class="col-md-1">
 					<label for="country" class="form-label">오염</label> <input
-						type="number" class="form-control" id="cont" name="cont">
+						type="number" class="form-control" id="cont" name="cont" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label for="country" class="form-label">부패</label> <input
-						type="number" class="form-control" id="decay" name="decay">
+						type="number" class="form-control" id="decay" name="decay" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label for="country" class="form-label">포장불량</label> <input
-						type="number" class="form-control" id="pack" name="pack">
+						type="number" class="form-control" id="pack" name="pack" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label for="country" class="form-label">중량미달</label> <input
 						type="number" class="form-control" id="underWeight"
-						name="UnderWeight">
+						name="UnderWeight" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label for="country" class="form-label">기타</label> <input
-						type="number" class="form-control" id="etc" name="etc">
+						type="number" class="form-control" id="etc" name="etc" min="0" value=0>
 				</div>
 
 				<div class="col-md-7">
 					<label for="country" class="form-label">기타설명</label> <input
-						type="text" class="form-control" id="explain" name="explain">
+						type="text" class="form-control" id="etcExplain" name="etcExplain">
 				</div>
 			</form>
 		</div>
@@ -209,6 +209,37 @@ form {
 
 
 	<!-- 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호  -->
+	<!-- ============================================================== -->
+	<!-- 모달 검수자목록 모달 검수자목록 모달 검수자목록 모달 검수자목록 모달 검수자목록   -->
+	<div class="modal fade" id="inspTstrSearch" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">검수자 목록</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">이름</th>
+                            <th scope="col">아이디</th>
+                            <th scope="col">부서</th>
+                            <th scope="col" style="width: 80px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="checkerList"></tbody>
+                </table>
+                <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 	<!-- ============================================================== -->
 	<!-- 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
 
@@ -253,7 +284,7 @@ form {
 									<td><input type="checkbox" name="chk"
 										value="${matReceipt.rscInspCd }" /></td>
 									<td>${loop.count }</td>
-									<td>${Check.rscLotCd }</td>
+									<td>${Check.rscInspCd }</td>
 									<td>${Check.ordrCd }</td>
 									<td>${Check.rscNm }</td>
 									<td><fmt:formatDate value="${Check.inspDt }"
@@ -331,45 +362,118 @@ form {
     const todayString = today.toISOString().slice(0,10);
     document.getElementById("inspDt").value = todayString;
     <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+    <!-- ============================================================== -->
+    <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 -->
+	//url은 getMapping에 들어가는 주소
+	 $.ajax({
+	      url: "checkerModal",
+	      success: function (result) {
+	        $(result).each(function (idx, item) {
+	          let nameModal = item.name;
+	          let idModal = item.id;
+	          let jobModal = item.job;
+
+	          let tr = $("<tr>");
+	          tr.append("<td>" + nameModal + "</td>");
+	          tr.append("<td>" + idModal + "</td>");
+	          tr.append("<td>" + jobModal + "</td>");
+	          tr.append(
+	            $("<td>").append(
+	              $("<button>")
+	                .attr("class", "btn btn-primary choice2Btn")
+	                .text("선택")
+	            )
+	          );
+			//tbody OrderList 에 위의 ajax를 붙인다.(OrderList는 여기jsp에서만 쓴다.)
+	          $("#checkerList").append(tr);
+	        });
+	      },
+	      error: function (reject) {
+	        console.log(reject);
+	      },
+	    });
+
+	    // 선택 버튼 클릭시 input에 전달
+	    $(document).on("click", ".choice2Btn", function () {
+	      let nameModal = $(this).closest("tr").children().eq(0).text();
+
+	      $("#inspTstr").val(nameModal);
+
+	      $("#inspTstrSearch").modal("hide");
+	      
+	    });
+	    
+    <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색  -->
     <!-- ============================================================== -->	
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
       
       function formOptionChk() {
-          let rscLotCd = document.getElementsByName('rscLotCd')[0];
-          let rscCd = document.getElementsByName('rscCd')[0];
-          let ordrCd = document.getElementsByName('ordrCd')[0];
-          let rscInspCd = document.getElementsByName('rscInspCd')[0];
-          let istCnt = document.getElementsByName('istCnt')[0];
-          let istDt = document.getElementsByName('istDt')[0];
+          let ordrCd = document.getElementsByName('ordrCd');
+          let rscNm = document.getElementsByName('rscNm');
+          let inspCnt = document.getElementsByName('inspCnt');
+          let inspDt = document.getElementsByName('inspDt');
+          let inspTstr = document.getElementsByName('inspTstr');
+          let inspPassCnt = document.getElementsByName('inspPassCnt');
+          let cont = document.getElementsByName('cont');
+          let decay = document.getElementsByName('decay');
+          let pack = document.getElementsByName('pack');
+          let underWeight = document.getElementsByName('underWeight');
+          let etc = document.getElementsByName('etc');
+          let etcExplain = document.getElementsByName('etcExplain');
 
-          if (rscLotCd.value == "") {
-              alert("LOT번호가 입력되지 않았습니다.");
-              rscLotCd.focus();
-              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
-          }
-          if (rscCd.value == "") {
-              alert("자재코드가 입력되지 않았습니다.");
-              rscCd.focus();
-              return false;
-          }          
           if (ordrCd.value == "") {
               alert("발주번호가 입력되지 않았습니다.");
               ordrCd.focus();
+              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
+          }
+          if (rscNm.value == "") {
+              alert("자재명이 입력되지 않았습니다.");
+              rscNm.focus();
+              return false;
+          }          
+          if (inspCnt.value == "") {
+              alert("검수량이 입력되지 않았습니다.");
+              inspCnt.focus();
               return false;
           }
-          if (rscInspCd.value == "") {
-              alert("검사코드 입력되지 않았습니다.");
-              rscInspCd.focus();
+          if (inspDt.value == "") {
+              alert("검사일자 입력되지 않았습니다.");
+              inspDt.focus();
               return false;
           }
-          if (istCnt.value == "") {
-              alert("입고수량이 입력되지 않았습니다.");
-              istCnt.focus();
+          if (inspTstr.value == "") {
+              alert("검수자가 입력되지 않았습니다.");
+              inspTstr.focus();
               return false;
           }
-          if (istDt.value == "") {
-              alert("입고일이 입력되지 않았습니다.");
-              istDt.focus();
+          if (inspPassCnt.value == "") {
+              alert("합격량이 입력되지 않았습니다.");
+              inspPassCnt.focus();
+              return false;
+          }
+          if (cont.value == "") {
+              alert("오염이 입력되지 않았습니다.");
+              cont.focus();
+              return false;
+          }
+          if (decay.value == "") {
+              alert("부패가 입력되지 않았습니다.");
+              decay.focus();
+              return false;
+          }
+          if (pack.value == "") {
+              alert("포장불량이 입력되지 않았습니다.");
+              pack.focus();
+              return false;
+          }
+          if (underWeight.value == "") {
+              alert("중량미달이 입력되지 않았습니다.");
+              underWeight.focus();
+              return false;
+          }
+          if (etc.value == "") {
+              alert("기타가 입력되지 않았습니다.");
+              etc.focus();
               return false;
           }
           
@@ -393,8 +497,11 @@ form {
 
       $("#insertBtn").on("click", formOptionChk);
 
-<!-- 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록  -->
-<!-- ============================================================== -->      
+<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록   -->
+<!-- ============================================================== -->  
+
+<!-- ============================================================== -->	
+
 <!-- ============================================================== -->   
 <!-- 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 -->
 

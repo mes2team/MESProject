@@ -147,6 +147,11 @@ public class MatServiceImpl implements MatService {
 		// 검사미완료 발주 전체 조회
 		return matMapper.matOrderChkList();
 	}
+	@Override
+	public List<MatVO> checkerList() {
+		// 검수자 목록 조회
+		return matMapper.checkerList();
+	}
 	
 	
 
