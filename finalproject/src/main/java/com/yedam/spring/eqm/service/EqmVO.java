@@ -51,5 +51,6 @@ public class EqmVO {
 	private String eqmPsch; //비가동담당자
 	private String opertCtnt; //작업내용
 	
-	
+	//담당자 eqm table에 등록된애들로
+	private String name;
 }

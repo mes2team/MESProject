@@ -53,7 +53,13 @@ public interface EqmService {
 
 	// 비가동등록,Y업데이트
 	public int insertOprUpdateY(EqmVO eqmVO);
-	
-	//비가동 삭제 
-		public int deleteOpr(String noprCd);
+
+	// 비가동 삭제
+	public int deleteOpr(String noprCd);
+
+	// 비가동 수정
+	public int updateOpr(EqmVO eqmVO);
+
+	// 등록된 사원들
+	public List<EqmVO> selectEmpList();
 }

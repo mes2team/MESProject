@@ -3,86 +3,70 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.spring.production.mapper.ProMapper">
-  	
-  	<!-- 생산계획 코드 조회 -->
-  	<select id="getNextPlanCd" resultType="ProPlanVO">
-		SELECT plan_cd
-		FROM(
-			    SELECT plan_cd 
-			    FROM plan
-			    ORDER BY ROWNUM DESC)
-		WHERE ROWNUM = 1
-	</select>
   	<!-- 생산계획 등록 -->
-  	<insert id="InsertNewPlan" parameterType="ProPlanVO">
-  		DECLARE
-			v_prdt_nm	VARCHAR2(100);
-  		BEGIN
-  			v_prdt_nm := #{prdtNm};
-
-  			SELECT 	prdt_nm
-  			INTO	v_prdt_nm
-  			FROM 	edcts
-  			WHERE	edcts_cd = #{edctsCd};
-
-  				
-  			<!-- 생산계획테이블 -->
-  			INSERT INTO plan (plan_cd,
-  							  plan_name,
-  							  paprd_dt,
-  							  now_st,
-  							  <if test="orderNo != null and !orderNo.equals('')">
-  							  order_no,
-  							  </if>
-  							  <if test="orderNo == null or orderNo.equals('')">
-  							  order_no,
-  							  </if>
-  							  plan_dt
-
-  							  )
-  					VALUES	 (#{planCd},
-  							  #{planName},
-  							  #{paprdDt},
-  							  '미지시',
-  							  <if test="orderNo != null and !orderNo.equals('')">
-  							  #{orderNo},
-  							  </if>
-  							  <if test="orderNo == null or orderNo.equals('')">
-  							  'NOTORD',
-  							  </if>
-  							  sysdate
-
-  							  );
-  			<!-- 생산계획디테일 테이블 -->
-  			INSERT INTO plan_dtl (plan_cd,
-	  							  pref_rank,
-	  							  edcts_cd,
-	  							  bom_cd,
-	  							  order_cnt,
-	  							  wk_to_dt,
-	  							  prdt_nm
+	<insert id="InsertNewPlan" parameterType="ProPlanVO">
+		    <selectKey keyProperty="planCd" resultType="String" order="BEFORE">
+		        SELECT PRO_SEQ_PLANCD.NEXTVAL FROM DUAL
+		    </selectKey>
+	  		DECLARE
+				v_prdt_nm	VARCHAR2(100);
+				v_pran_cd	VARCHAR2(100);
+	  		BEGIN
+	  			v_prdt_nm := #{prdtNm};
+	  			v_pran_cd := 'PLN' || ${planCd};
+	
+	  			SELECT 	prdt_nm
+	  			INTO	v_prdt_nm
+	  			FROM 	edcts
+	  			WHERE	edcts_cd = #{edctsCd};
+	
+	  				
+	  			<!-- 생산계획테이블 -->
+	  			INSERT INTO plan (plan_cd,
+	  							  plan_name,
+	  							  paprd_dt,
+	  							  now_st,
+	  							  <if test="orderNo != null and !orderNo.equals('')">
+	  							  order_no,
+	  							  </if>
+	  							  plan_dt
 	  							  )
-	  					VALUES	 (#{planCd},
-	  							  #{prefRank},
-	  							  #{edctsCd},
-	  							  #{bomCd},
-	  							  #{orderCnt},
-	  							  #{wkToDt},
-	  							  v_prdt_nm
+	  					VALUES	 (v_pran_cd,
+	  							  #{planName},
+	  							  #{paprdDt},
+	  							  '미지시',
+	  							  <if test="orderNo != null and !orderNo.equals('')">
+	  							  #{orderNo},
+	  							  </if>
+	  							  sysdate
 	  							  );
-			<if test="orderNo != null and !orderNo.equals('')">
-	  		<!-- 주문서 상태 변경 -->
-	  		UPDATE 	order_sheet_test
-	  		SET	 	prog_appe = '계획완료'
-	  		WHERE	order_no = #{orderNo};
-	  		</if>
-  		END;
-  	</insert>
+	  			<!-- 생산계획디테일 테이블 -->
+	  			INSERT INTO plan_dtl (plan_cd,
+		  							  pref_rank,
+		  							  edcts_cd,
+		  							  bom_cd,
+		  							  order_cnt,
+		  							  wk_to_dt,
+		  							  prdt_nm
+		  							  )
+		  					VALUES	 (v_pran_cd,
+		  							  #{prefRank},
+		  							  #{edctsCd},
+		  							  #{bomCd},
+		  							  #{orderCnt},
+		  							  #{wkToDt},
+		  							  v_prdt_nm
+		  							  );
+
+	  		END;
+	  	</insert>
+ 
   	
   	  	<!-- 생산계획 여러 제품 저장 -->
   	<insert id="plusPlanInsert" parameterType="ProPlanVO">
   		DECLARE
 			v_prdt_nm	VARCHAR2(100);
+			v_plan_cd	VARCHAR2(100);
   		BEGIN
   			v_prdt_nm := #{prdtNm};
 
@@ -90,6 +74,15 @@
   			INTO	v_prdt_nm
   			FROM 	edcts
   			WHERE	edcts_cd = #{edctsCd};
+  			
+  			SELECT 	plan_cd
+  			INTO	v_plan_cd
+		    FROM (
+		        SELECT plan_cd
+		        FROM plan
+		        ORDER BY plan_dt DESC
+		    ) 
+		    WHERE ROWNUM = 1;
 
   			<!-- 생산계획디테일 테이블 -->
   			INSERT INTO plan_dtl (plan_cd,
@@ -100,7 +93,7 @@
 	  							  wk_to_dt,
 	  							  prdt_nm
 	  							  )
-	  					VALUES	 (#{planCd},
+	  					VALUES	 (v_plan_cd,
 	  							  #{prefRank},
 	  							  #{edctsCd},
 	  							  #{bomCd},
@@ -110,10 +103,7 @@
 	  							  );
   		END;
   	</insert>
-  	
-  	
-  	
-  	
+
   	<!-- 미지시 주문서 조회 -->
   	<select id="selectOrderSheet" resultType="OrderSheetVO">
   		SELECT ost.order_no,
@@ -124,17 +114,21 @@
   			   ost.prog_appe,
   			   ost.paprd_dt,
   			   ospt.prdt_nm,
-  			   ospt.order_cnt
-  		FROM   order_sheet_test ost, order_sheet_prd_test ospt
-  		WHERE  ost.order_no = ospt.order_no
+  			   ospt.order_cnt,
+  			   b.bom_cd
+  		FROM   order_sheet_test ost, order_sheet_prd_test ospt,bom b
+  		WHERE  b.edcts_cd = ospt.edcts_cd
+  		  AND  ost.order_no = ospt.order_no
   		  AND  ost.prog_appe = '접수완료'
   		ORDER BY ost.paprd_dt DESC
   	</select>
+  	
   	<!-- 완제품 정보 조회 -->
   	<select id="selectPrdtInfo" resultType="OrderSheetVO">
-  		SELECT 		edcts_cd , prdt_nm 
-  		FROM 		edcts
-  		ORDER BY 	edcts_cd
+  		SELECT 	b.bom_cd,	e.edcts_cd , e.prdt_nm 
+  		FROM 	edcts e, bom b
+		WHERE 	e.edcts_cd = b.edcts_cd
+		
   	</select>
   	
   	<!-- BOM 정보 조회 -->
@@ -159,10 +153,18 @@
   	<!-- 생산계획 총개수 -->
   	<select id="selectProPlanCnt" resultType="int">
   		SELECT 	COUNT(plan_cd)
-  		FROM	plan
+  		FROM	plan_dtl
   	</select>
   	
-  		<!-- 생산계획 조회 + 페이징-->
+  	<!-- 생산계획 디테일 -->
+  	<select id="selectPlanDetail" resultType="ProPlanVO">
+  		SELECT *
+  		FROM plan p , plan_dtl pd
+  		WHERE p.plan_cd = pd.plan_cd
+  		  AND p.plan_cd = #{planCd}
+  	</select>
+  	
+  	<!-- 생산계획 조회 + 페이징-->
 	<select id="selectProPlans" resultType="ProPlanVO">
 	<![CDATA[
 		SELECT 	plan_cd,
@@ -193,28 +195,23 @@
 				    AND p.now_st IN ('미지시', '지시완료', '생산완료')
 				    AND rownum <= #{pageNum} * #{amount})
 		WHERE rn > (#{pageNum}-1)* #{amount}
-		ORDER BY plan_dt
+		ORDER BY plan_cd, plan_dt DESC
 	]]>
 	</select>
 	<!-- 생산계획 취소 -->
-	<update id="deleteProPlan" parameterType="String">
-	  		UPDATE 	plan
-	  		SET	 	now_st = '계획취소'
-	  		WHERE	plan_cd = #{planCd}
-	</update>
+	<delete id="deleteProPlan" parameterType="String">
+		BEGIN
+	  		DELETE 	FROM plan
+	  		WHERE	plan_cd = #{planCd};
+	  		
+	  		DELETE FROM plan_dtl
+	  		WHERE plan_cd = #{planCd};
+	  	END;	
+	</delete>
 	
 	<!-- 생산 계획 수정 -->
 	<update id="updateProPlan" parameterType="ProPlanVO">
-		DECLARE
-			v_edcts_cd	VARCHAR2(100);
 		BEGIN
-			v_edcts_cd := #{edctsCd};
-			
-			SELECT 	edcts_cd
-			INTO 	v_edcts_cd
-			FROM 	edcts
-			WHERE 	prdt_nm = #{prdtNm};
-	
 			UPDATE 	plan
 			SET 	plan_dt = sysdate,
 					plan_name = #{planName}
@@ -222,9 +219,7 @@
 	
 			UPDATE 	plan_dtl
 			SET 	order_cnt = #{orderCnt},
-					wk_to_dt = #{wkToDt},
-					prdt_nm = #{prdtNm},
-					edcts_cd = v_edcts_cd
+					wk_to_dt = #{wkToDt}
 			WHERE 	plan_cd = #{planCd};
 		END;
 	</update>
@@ -306,6 +301,7 @@
 		ORDER BY indica_dt
 	]]>
 	</select>
+	
 	<!-- 지시 개수 -->
 	<select id="getProOrderCnt" resultType="int">
 		SELECT COUNT(*) FROM indica
@@ -345,4 +341,42 @@
 		  AND r.rsc_cd = l.rsc_cd
 		  AND b.bom_cd = #{bomCd}
   	</select>
+  	
+  	<select id="selectgetRscStock" resultType="BomVO">
+  		SELECT 	 r.rsc_cd, r.rsc_nm, r.rsc_spec, r.rsc_typ, r.rscstc,bd.unit, bd.use_cnt
+		FROM 	 rsc_stc_view r, bom b, bom_detail bd
+		WHERE 	 b.bom_cd = bd.bom_cd
+		  AND 	 b.edcts_cd = #{edctsCd}
+		  AND 	 r.rsc_cd = bd.rsc_cd
+		ORDER BY b.bom_cd  
+  	</select>
+  	
+  	<!-- 등록된 주문서 상태변경 -->
+  	<update id="updateOrderStatus" parameterType="String">
+  			UPDATE 	order_sheet_test
+		  	SET	 	prog_appe = '계획완료'
+		  	WHERE	order_no = #{orderNo}
+  	</update>
+  	
+  	<update id="cancelOrderStatus" parameterType="String">
+  			UPDATE 	order_sheet_test
+		  	SET	 	prog_appe = '접수완료'
+		  	WHERE	order_no = #{orderNo}
+  	</update>
+  	
+  	<select id="selectPrcsFlow" resultType="ProPrcsVO">
+  		SELECT prcs_no
+  			  ,prcs_nm
+  			  ,prcs_fg
+  		FROM  prcs_flow pf, prcs p 
+		WHERE p.prcs_cd = pf.prcs_cd
+		  AND edcts_cd = #{edctsCd}
+		ORDER BY prcs_no
+  	</select>
+ 
+ 	<select id="checkOrderNo" resultType="String">
+ 		SELECT 	order_no
+ 		FROM 	plan
+ 		WHERE 	plan_cd = #{planCd}
+ 	</select>
   </mapper>

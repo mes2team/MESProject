@@ -3,6 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.spring.eqm.mapper.EqmMapper">
+	<select id="selectEmpList" resultType="EqmVO">
+		SELECT name
+		FROM emp
+	</select>
 
 	<select id="selectEqmList" resultType="EqmVO" >
 		SELECT eqm_cd, 
@@ -84,9 +88,7 @@
 	
 	<update id="updateEqm" parameterType="EqmVO">
 		UPDATE eqm
-		SET eqm_cd =#{eqmCd},
-                   eqm_fg =#{eqmFg},
-                   eqm_nm = #{eqmNm},
+		SET        eqm_nm = #{eqmNm},
                    eqm_ist_dt = #{eqmIstDt},
                    eqm_min_temp = #{eqmMinTemp},
                    eqm_max_temp = #{eqmMaxTemp},
@@ -109,6 +111,7 @@
 			   CHCK_PSCH,
 			   EQM_NM
 		FROM eqm_check 
+		ORDER BY chck_dt DESC
 	</select>
 	
 	<!-- 검색조회 -->
@@ -154,9 +157,7 @@
 	
 	<update id="updateCheck" parameterType="EqmVO">
 		UPDATE eqm_check
-		SET eqm_cd = #{eqmCd}, 
-			chck_fg = #{chckFg}, 
-			chck_dt = #{chckDt}, 
+		SET chck_dt = #{chckDt}, 
 			jdgmnt = #{jdgmnt}, 
 			dispo_ctnt = #{dispoCtnt}, 
 			chck_psch = #{chckPsch}, 
@@ -220,4 +221,13 @@
 		WHERE nopr_cd = #{noprCd};
 	END;	
 	</delete>
+	
+	<update id="updateOpr" parameterType="EqmVO">
+		UPDATE eqm_opr
+		SET fr_dt = #{frDt}, 
+            to_dt = #{toDt}, 
+            eqm_psch = #{eqmPsch}, 
+            opert_ctnt = #{opertCtnt}
+        WHERE nopr_cd = #{noprCd}    
+	</update>
 </mapper>

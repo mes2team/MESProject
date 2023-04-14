@@ -18,7 +18,8 @@ uri="http://www.springframework.org/security/tags"%>
 
   #btnGrp {
     float: right;
-    padding: 20px 0 15px 0;
+    padding: 20px 20px 15px 0;
+    text-align: right;
   }
 
   form {
@@ -95,6 +96,17 @@ uri="http://www.springframework.org/security/tags"%>
                 </div>
                 <div class="col-12">
                   <label for="inputAddress2" class="form-label"
+                    >거래처 주소</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vendAddr"
+                    name="vendAddr"
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress2" class="form-label"
                     >사업자 등록번호</label
                   >
                   <input
@@ -107,7 +119,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <div class="col-12">
                   <label for="inputAddress2" class="form-label">전화번호</label>
                   <input
-                    type="text"
+                    type="tel"
                     class="form-control"
                     id="vendTel"
                     name="vendTel"
@@ -159,29 +171,11 @@ uri="http://www.springframework.org/security/tags"%>
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">거래처 관리</h5>
-        <div id="btnGrp">
-          <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <button type="button" class="btn btn-info" onclick="updateBtn()">
-              수정
-            </button>
-            <button
-              type="button"
-              class="btn btn-success"
-              data-bs-toggle="modal"
-              data-bs-target="#modalDialogScrollable"
-            >
-              등록
-            </button>
-            <button type="button" class="btn btn-danger" onclick="deleteBtn()">
-              삭제
-            </button>
-          </sec:authorize>
-        </div>
         <!-- Multi Columns Form -->
         <form class="row g-3" id="check">
           <!-- End Modal Dialog Scrollable-->
           <div class="col-md-4">
-            <label for="inputEmail5" class="form-label">거래처 코드</label>
+            <label for="inputEmail5" class="form-label">구분</label>
             <input type="text" class="form-control" id="inputVendCd" />
           </div>
           <div class="col-md-4">
@@ -209,7 +203,28 @@ uri="http://www.springframework.org/security/tags"%>
 
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
-          <h5 class="card-header">Basic Table</h5>
+          <div id="btnGrp">
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <button type="button" class="btn btn-info" onclick="updateBtn()">
+                수정
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#modalDialogScrollable"
+              >
+                등록
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                onclick="deleteBtn()"
+              >
+                삭제
+              </button>
+            </sec:authorize>
+          </div>
           <div class="card-body">
             <div
               class="table-responsive"
@@ -233,7 +248,10 @@ uri="http://www.springframework.org/security/tags"%>
                 </thead>
                 <tbody>
                   <c:forEach var="vend" items="${vendList }" varStatus="loop">
-                    <tr data-id="${vend.vendCd }">
+                    <tr
+                      data-id="${vend.vendCd }"
+                      ondblclick="openModal('${vend.vendCd}')"
+                    >
                       <td>
                         <input
                           type="checkbox"
@@ -248,7 +266,7 @@ uri="http://www.springframework.org/security/tags"%>
                       <td>${vend.vendMag }</td>
                       <td>${vend.brNum }</td>
                       <td>${vend.vendTel }</td>
-                      <td>${vend.remk }</td>
+                      <td>${vend.remk}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -262,8 +280,149 @@ uri="http://www.springframework.org/security/tags"%>
     <!-- end basic table  -->
     <!-- ============================================================== -->
   </div>
+  <!-- 모달창 상세정보
+  <div
+    class="modal fade"
+    id="vendDetailModal"
+    tabindex="-1"
+    data-bs-backdrop="static"
+  >
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">거래처 상세정보</h5>
+          <button
+            type="button"
+            class="btn-close closeBtn"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="card">
+            <div class="card-body">
+              <form class="row g-3" name="">
+                <div class="col-md-12">
+                  <label for="inputState" class="form-label">구분</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vendTyp"
+                    name="vendTyp"
+                    style="background-color: #e9e9e9"
+                    readonly
+                  />
+                </div>
+                <div class="col-md-12">
+                  <label for="inputName5" class="form-label">거래처코드</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vendCd"
+                    name="vendCd"
+                    style="background-color: #e9e9e9"
+                    readonly
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress5" class="form-label">거래처명</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vendNm"
+                    name="vendNm"
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress2" class="form-label"
+                    >거래처 담당자</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vendMag"
+                    name="vendMag"
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress2" class="form-label"
+                    >거래처 주소</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="vendAddr"
+                    name="vendAddr"
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress2" class="form-label"
+                    >사업자 등록번호</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="brNum"
+                    name="brNum"
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress2" class="form-label">전화번호</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="vendTel"
+                    name="vendTel"
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress2" class="form-label">비고</label>
+                  <textarea
+                    class="form-control"
+                    id="remk"
+                    rows="10"
+                    style="resize: none"
+                    name="remk"
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary closeBtn"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+          <button type="submit" class="btn btn-primary" id="insertBtn">
+            등록
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
 
   <script>
+    // 모달창 단건 조회
+    function openModal(vendCd) {
+      console.log(vendCd);
+      $.ajax({
+        url: "vendDetail",
+        method: "post",
+        data: { vendCd: vendCd },
+        success: function (result) {
+          $("#vendDetailModal input[name=vendTyp]").val(result.vendTyp);
+        },
+        error: function (reject) {
+          console.log(reject);
+        },
+      });
+
+      $("#vendDetailModal").modal("show");
+    }
     // 거래처 코드 조회
     $("#vendType").on("click", function () {
       let select = $("select option:selected").val();
@@ -411,14 +570,16 @@ uri="http://www.springframework.org/security/tags"%>
 
       // 검색기능
       $("#searchVend").on("click", function (event) {
-        let vendCd = $("#inputVendCd").val().toUpperCase();
+        let vendCd = $("#inputVendCd").val();
         let vendNm = $("#inputVendNm").val();
         let vendMag = $("#inputVendMag").val();
+        console.log(vendCd);
 
         $.ajax({
           url: "searchVend",
-          data: { vendCd: vendCd, vendNm: vendNm, vendMag: vendMag },
+          data: { vendTyp: vendCd, vendNm: vendNm, vendMag: vendMag },
           success: function (result) {
+            console.log(result);
             if (result.length == 0) {
               Swal.fire({
                 icon: "warning",

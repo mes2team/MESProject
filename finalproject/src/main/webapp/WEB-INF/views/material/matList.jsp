@@ -46,6 +46,7 @@ form {
 	clear: both;
 }
 
+
 #btnGrp {
 	display: inline-blcok;
 	float: right;

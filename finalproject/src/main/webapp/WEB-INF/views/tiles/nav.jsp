@@ -28,26 +28,6 @@
               <i class="bi bi-circle"></i><span>BOM 관리</span>
             </a>
           </li>
-          <li>
-            <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Badges</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-breadcrumbs.html">
-              <i class="bi bi-circle"></i><span>Breadcrumbs</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-buttons.html">
-              <i class="bi bi-circle"></i><span>Buttons</span>
-            </a>
-          </li>
-          <li>
-            <a href="components-cards.html">
-              <i class="bi bi-circle"></i><span>Cards</span>
-            </a>
-          </li>
         </ul>
       </li><!-- End Components Nav -->
 
@@ -62,18 +42,18 @@
             </a>
           </li>
           <li>
-            <a href="forms-layouts.html">
-              <i class="bi bi-circle"></i><span>Form Layouts</span>
+            <a href="${pageContext.request.contextPath }/edctsIst">
+              <i class="bi bi-circle"></i><span>제품 입고 관리</span>
             </a>
           </li>
           <li>
-            <a href="forms-editors.html">
-              <i class="bi bi-circle"></i><span>Form Editors</span>
+            <a href="${pageContext.request.contextPath }/edctsOust">
+              <i class="bi bi-circle"></i><span>제품 출고 관리</span>
             </a>
           </li>
           <li>
             <a href="forms-validation.html">
-              <i class="bi bi-circle"></i><span>Form Validation</span>
+              <i class="bi bi-circle"></i><span>완제품 조회</span>
             </a>
           </li>
         </ul>
@@ -95,13 +75,13 @@
             </a>
           </li>
           <li>
-            <a href="${pageContext.request.contextPath}/productionPlan">
+            <a href="${pageContext.request.contextPath}/productionResult">
               <i class="bi bi-circle"></i><span>공정실적</span>
             </a>
           </li>
           <li>
             <a href="${pageContext.request.contextPath}/processManage">
-              <i class="bi bi-circle"></i><span>공정관리</span>
+              <i class="bi bi-circle"></i><span>공정흐름</span>
             </a>
           </li>
         </ul>
@@ -119,7 +99,7 @@
           </li>
           <li>
             <a href="eqmCheck">
-              <i class="bi bi-circle"></i><span>설비점검내역</span>
+              <i class="bi bi-circle"></i><span>설비점검</span>
             </a>
           </li>
           <li>
@@ -146,6 +126,11 @@
             </a>
           </li>
           <li>
+            <a href="${pageContext.request.contextPath }/matCheck">
+              <i class="bi bi-circle"></i><span>자재검사</span>
+            </a>
+          </li>
+          <li>
             <a href="${pageContext.request.contextPath }/matReceipt">
               <i class="bi bi-circle"></i><span>자재입고</span>
             </a>
@@ -159,8 +144,8 @@
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="${pageContext.request.contextPath }/prdtInsp">
-              <i class="bi bi-circle"></i><span>제품검사관리</span>
+            <a href="${pageContext.request.contextPath }/prcsInsp">
+              <i class="bi bi-circle"></i><span>공정검사관리</span>
             </a>
           </li>
           <li>
@@ -175,7 +160,5 @@
           </li>
         </ul>
       </li><!-- End Icons Nav -->
-
     </ul>
-
   </aside><!-- End Sidebar-->

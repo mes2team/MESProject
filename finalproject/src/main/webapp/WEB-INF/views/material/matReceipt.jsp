@@ -75,8 +75,6 @@ form {
 			</ol>
 		</nav>
 	</div>
-	<!-- ROLE_ADMIN만 볼 수 있는 영역 -->
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
 		<!-- ============================================================== -->
 		<!-- 자재 입고 등록 자재 입고 등록 자재 입고 등록 자재 입고 등록 자재 입고 등록 자재 입고 등록 -->
 		<div class="card">
@@ -126,7 +124,6 @@ form {
 				</form>
 			</div>
 		</div>
-	</sec:authorize>
 	<!-- 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록  -->
 	<!-- ============================================================== -->
 <!-- 자재입고현황테이블 자재입고현황테이블 자재입고현황테이블 자재입고현황테이블 자재입고현황테이블  -->
@@ -245,10 +242,10 @@ form {
               }
           });
 
-          return false; // 이벤트의 기본 동작인 페이지 이동을 막기 위해 false를 반환합니다.
+          return false;
       }
 
-      $("#insertBtn").on("click", formOptionChk)
+      $("#insertBtn").on("click", formOptionChk);
 
 <!-- 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록 자재입고등록  -->
 <!-- ============================================================== -->      
@@ -345,7 +342,7 @@ function updateBtn() {
       row
       .find("td:eq(9)")
       .html(
-        '<input type="text" class="form-control" value="' + istDt + '">'
+   		  '<input type="date" class="form-control" value="' + istDt + '">'
       );
     });
   }
@@ -388,23 +385,23 @@ function updateBtn() {
         if (result.result == "success") {
           $("tbody").empty();
           $(result.data).each(function (idx, item) {
-            var $row = $("<tr>").attr("data-id", item.ordrCd);
+            var $row = $("<tr>").attr("data-id", item.rscLotCd);
             $row.append(
               $("<td>").html(
                 '<input type="checkbox" name="chk" value="' +
-                  item.ordrCd +
+                  item.rscLotCd +
                   '" />'
               )
             );
             $row.append($("<td>").text(idx + 1));
-            $row.append($("<td>").text(item.ordrCd));
-            $row.append($("<td>").text(item.ordrReqDt));
-            $row.append($("<td>").text(item.vendCd));
-            $row.append($("<td>").text(item.vendNm));
+            $row.append($("<td>").text(item.rscLotCd));
             $row.append($("<td>").text(item.rscCd));
             $row.append($("<td>").text(item.rscNm));
+            $row.append($("<td>").text(item.ordrCd));
             $row.append($("<td>").text(item.ordrCnt));
-            $row.append($("<td>").text(item.paprdCmndDt));
+            $row.append($("<td>").text(item.rscInspCd));
+            $row.append($("<td>").text(item.istCnt));
+            $row.append($("<td>").text(new Date(item.istDt).toISOString().slice(0, 10)));
             $("tbody").append($row);
           });
           enableCheckBoxes();

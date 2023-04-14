@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.yedam.spring.prcsInsp.mapper.PrcsInspMapper">
+	<!-- 모달창 검사 목록 조회 -->
+	<select id="selectPrcsList" resultType="PrcsInspVO">
+		SELECT p.indica_cd,
+		p.prcs_cd,
+		r.prcs_nm,
+		p.prod_cnt,
+		i.edcts_cd,
+		prdt_nm
+		FROM prcs_prog p JOIN prcs r ON p.prcs_cd = r.prcs_cd
+		JOIN indica_dtl i
+		ON p.indica_cd = i.indica_cd
+		JOIN edcts e ON e.edcts_cd = i.edcts_cd
+		WHERE LENGTH(p.prcs_status) = 4
+		ORDER BY prcs_cd
+	</select>
+	<!-- 공정별 검사기준 -->
+	<select id="selectPrcsStd" parameterType="PrcsInspVO"
+		resultType="PrcsInspVO">
+		SELECT prcs_insp_cd,
+		prcs_insp_nm,
+		prcs_insp_std
+		FROM prcs_insp_std
+		WHERE prcs_cd = #{prcsCd}
+	</select>
+	
+	<update id="inferUpdateInsert" parameterType="PrcsInspVO">
+		BEGIN
+			UPDATE prcs_prog
+			SET infer_cnt = #{inferCnt},
+				prcs_chk_cd = #{prcsChkCd},
+				prcs_status = #{prcsNm}||'검사완료'
+			WHERE indica_cd = #{indicaCd} AND prcs_cd = #{prcsCd};
+			
+			INSERT INTO prcs_prog_infer (
+								    	  prcs_chk_cd,
+										  prcs_cd,
+										  indica_cd,
+										  infer_cnt
+										)
+								VALUES (
+										  #{prcsChkCd},
+										  #{prcsCd},
+										  #{indicaCd},
+										  #{inferCnt}
+										);		
+		END;
+	</update>
+	
+	
+	<!-- 검사완료맥스코드 -->
+	<select id="selectMaxChkCd" resultType="PrcsInspVO">
+			SELECT 'PCK'||(TO_NUMBER(SUBSTR(NVL(MAX(prcs_chk_cd),'PCK999'),4)) + 1) prcs_chk_cd
+			FROM prcs_insp_dtl
+	</select>
+
+	<insert id="insertDtl" parameterType="PrcsInspVO">
+		
+		INSERT INTO prcs_insp_dtl (
+								   prcs_chk_cd,
+								   prcs_cd,
+								   prcs_nm,
+								   edcts_cd,
+								   prdt_nm,
+								   prod_cnt,
+								   prcs_insp_dt,
+								   prcs_insp_mng,
+								   prcs_insp_cd,
+								   prcs_insp_nm,
+								   prcs_insp_std,
+								   prcs_insp_rst,
+								   prcs_insp_jdg
+								   )
+							VALUES(
+								   #{prcsChkCd},	
+								   #{prcsCd},	
+								   #{prcsNm},	
+								   #{edctsCd},	
+								   #{prdtNm},	
+								   #{prodCnt},	
+								   #{prcsInspDt},	
+								   #{prcsInspMng},	
+								   #{prcsInspCd},	
+								   #{prcsInspNm},	
+								   #{prcsInspStd},	
+								   #{prcsInspRst},	
+								   #{prcsInspJdg}	
+							)	   
+	</insert>
+
+
+
+
+	<!-- max 완제품LOT번호 -->
+	<!-- <select id="selectMaxEdctsLotNo" resultType="PrcsInspVO"> SELECT NVL(MAX(edcts_lot_no),'EDCTS-L'||TO_CHAR(SYSDATE,'yyyyMMdd')||0) 
+		edcts_lot_no FROM prdt_insp </select> -->
+
+
+</mapper>  

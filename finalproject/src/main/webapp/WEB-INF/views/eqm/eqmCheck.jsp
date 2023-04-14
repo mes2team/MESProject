@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 </head>
 <body>
-	<h1>설비점검내역</h1>
+	<h1>설비점검</h1>
 	<div class="card">
 		<form id="checkForm" action="insertCheck" method="post">
 			<div class="card-body">
@@ -132,12 +132,13 @@
 								<th scope="col">점검구분</th>
 								<th scope="col">점검담당자</th>
 								<th scope="col">판정</th>
+								<th scope="col">다음점검</th>
 							</tr>
 						</thead>
 						<tbody id="listTable">
 							<c:forEach items="${list }" var="item">
 								<tr onclick="selectCheck('${item.checkCd}',this)">
-									<td scope="row"><input  type="checkbox"></td>
+									<td scope="row"><input type="checkbox"></td>
 									<td scope="row"><fmt:formatDate value="${item.chckDt}"
 											pattern="yyyy-MM-dd" /></td>
 									<td scope="row">${item.checkCd}</td>
@@ -146,6 +147,7 @@
 									<td scope="row">${item.chckFg}</td>
 									<td scope="row">${item.chckPsch}</td>
 									<td scope="row">${item.jdgmnt}</td>
+									<td scope="row"></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -233,6 +235,10 @@
 	var eqmCd = document.querySelector('[name="eqmCd"]');
 	var eqmNm = document.querySelector('[name="eqmNm"]');
 	var jdgmnt = document.querySelectorAll('[name="jdgmnt"]');
+	
+	
+	
+	
 	//수정
 	function updateCheck(){
 		Swal.fire({

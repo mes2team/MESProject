@@ -18,17 +18,6 @@ public class ProServiceImpl implements ProService {
 	
 	@Autowired
 	ProMapper proMapper;
-
-	@Override
-	public String newPlanInsert(ProPlanVO vo) {
-		int result = proMapper.InsertNewPlan(vo);
-		if(result < 0) {
-			return "Success";
-		} else {
-			return "Fail";
-		}
-
-	}
 	
 	@Override
 	public String plusPlanInsert(ProPlanVO proPlanVO) {
@@ -38,19 +27,6 @@ public class ProServiceImpl implements ProService {
 		} else {
 			return "Fail";
 		}
-	}
-
-	@Override
-	public String getNextPlanCd() {
-		int PlanCd = 0;
-		String NextPlanCd = null;
-		if( proMapper.getNextPlanCd() == null) {
-			NextPlanCd = "PLN1000";
-		} else {		
-			PlanCd = Integer.parseInt(proMapper.getNextPlanCd().getPlanCd().substring(3)) + 1 ;
-			NextPlanCd = "PLN" + PlanCd;
-		}
-		return NextPlanCd;
 	}
 
 	@Override
@@ -87,7 +63,7 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public String removePlan(String planCd) {
 		String result = null;
-		if(proMapper.deleteProPlan(planCd) > 0) {
+		if(proMapper.deleteProPlan(planCd) < 0) {
 			result ="success";
 		} else {
 			result ="fail";
@@ -96,8 +72,14 @@ public class ProServiceImpl implements ProService {
 	}
 
 	@Override
-	public int modifyProPlan(ProPlanVO vo) {
-		return proMapper.updateProPlan(vo);
+	public String modifyProPlan(ProPlanVO vo) {
+		String result = null;
+		if(proMapper.updateProPlan(vo) > 0) {
+			result ="success";
+		} else {
+			result ="fail";
+		}
+		return result;
 	}
 
 	@Override
@@ -150,6 +132,67 @@ public class ProServiceImpl implements ProService {
 	public List<BomVO> getBomStock(BomVO vo) {
 		return proMapper.selectBomStock(vo);
 	}
+
+	@Override
+	public List<BomVO> getRscStock(String edctsCd) {
+		return proMapper.selectgetRscStock(edctsCd);
+	}
+
+	@Override
+	public String newPlanInsert(ProPlanVO proPlanArray) {
+		int result = proMapper.InsertNewPlan(proPlanArray);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+		
+	}
+
+	@Override
+	public String modifyOrderStatus(String orderNo) {
+		int result = proMapper.updateOrderStatus(orderNo);
+		if(result > 0) {
+			return orderNo;
+		} else {
+			return orderNo + "Fail";
+		}
+	}
+
+	@Override
+	public int getProPlanCnt(ProPlanVO vo) {
+		return proMapper.selectProPlanCnt(vo);
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsFlow(ProPrcsVO vo) {
+		return proMapper.selectPrcsFlow(vo);
+	}
+
+	@Override
+	public List<ProPlanVO> getPlanDetail(ProPlanVO vo) {
+		return proMapper.selectPlanDetail(vo);
+	}
+
+	@Override
+	public String checkOrderNo(String planCd) {
+		String result = proMapper.checkOrderNo(planCd);
+		String[] arr = result.replaceAll("/", "").split("\\s+");
+		System.out.println(result);
+		System.out.println("ORDERNO : " + arr[0]);
+		
+		for (String orderNo : arr) {
+			proMapper.cancelOrderStatus(orderNo);
+		}
+
+		
+		return result;
+	}
+
+
+
+
+
 
 	
 

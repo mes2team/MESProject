@@ -110,9 +110,9 @@ table, tr, th, td {
 										<td>${stock.rscNm }</td>
 										<td>${stock.rscTyp }</td>
 										<td>${stock.rscSpec }</td>
-										<td>${stock.totalIstCnt }</td>
-										<td>${stock.totalOustCnt }</td>
-										<td>${stock.netStc }</td>
+										<td>${stock.istStc }</td>
+										<td>${stock.oustStc }</td>
+										<td>${stock.rscstc }</td>
 										<td>${stock.noIstCnt }</td>
 										<td>${stock.safStc }</td>
 									</tr>
@@ -157,9 +157,10 @@ table, tr, th, td {
 								<th>자재명</th>
 								<th>발주량</th>
 								<th>납기요청일</th>
+								<th>진행상태</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="matOrderTable">
 							<c:forEach var="matOrder" items="${matOrderList }"
 								varStatus="loop">
 								<tr data-id="${matOrder.ordrCd }">
@@ -176,6 +177,7 @@ table, tr, th, td {
 									<td>${matOrder.ordrCnt }</td>
 									<td><fmt:formatDate value="${matOrder.paprdCmndDt }"
 											pattern="yyyy-MM-dd" /></td>
+									<td>${matOrder.ordrChk }</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -258,6 +260,13 @@ table, tr, th, td {
 
 
 	<script>
+	<!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+	const today = new Date();
+    const todayString = today.toISOString().slice(0,10);
+    document.getElementById("ordrReqDt").value = todayString;
+    document.getElementById("paprdCmndDt").value = todayString;
+    <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+	
 		  document.addEventListener('DOMContentLoaded', function() {
 		        var stockTable = document.getElementById('stock-table');
 		        var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -279,8 +288,8 @@ table, tr, th, td {
 		            }
 		        }
 		    });
-		<!-- ============================================================== -->
-			 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
+<!-- ============================================================== -->
+<!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
       
       function formOptionChk() {
@@ -434,6 +443,7 @@ function updateBtn() {
       var rscNm = row.find("td:eq(7)").text().trim();
       var ordrCnt = row.find("td:eq(8)").text().trim();
       var paprdCmndDt = row.find("td:eq(9)").text().trim();
+      var ordrChk = row.find("td:eq(10)").text().trim();
            
       row
         .find("td:eq(2)")
@@ -443,7 +453,7 @@ function updateBtn() {
       row
         .find("td:eq(3)")
         .html(
-          '<input type="text" class="form-control" value="' + ordrReqDt + '">'
+          '<input type="date" class="form-control" value="' + ordrReqDt + '">'
         );
       row
         .find("td:eq(4)")
@@ -473,7 +483,12 @@ function updateBtn() {
       row
       .find("td:eq(9)")
       .html(
-        '<input type="text" class="form-control" value="' + paprdCmndDt + '">'
+        '<input type="date" class="form-control" value="' + paprdCmndDt + '">'
+      );
+      row
+      .find("td:eq(10)")
+      .html(
+        '<input type="text" class="form-control" value="' + ordrChk + '">'
       );
     });
   }
@@ -496,6 +511,7 @@ function updateBtn() {
       var rscNm = row.find("td:eq(7) input").val().trim();
       var ordrCnt = row.find("td:eq(8) input").val().trim();
       var paprdCmndDt = row.find("td:eq(9) input").val().trim();
+      var ordrChk = row.find("td:eq(10) input").val().trim();
 
       // 객체 형식으로 데이터 저장
       var dataObj = {
@@ -506,7 +522,8 @@ function updateBtn() {
     		  rscCd: rscCd,
     		  rscNm: rscNm,
     		  ordrCnt: ordrCnt,
-    		  paprdCmndDt: paprdCmndDt
+    		  paprdCmndDt: paprdCmndDt,
+    		  ordrChk: ordrChk,
       };
 
       // 데이터 배열에 객체 추가
@@ -520,7 +537,7 @@ function updateBtn() {
       data: JSON.stringify(dataArr),
       success: function (result) {
         if (result.result == "success") {
-          $("tbody").empty();
+          $("#matOrderTable").empty();
           $(result.data).each(function (idx, item) {
             var $row = $("<tr>").attr("data-id", item.ordrCd);
             $row.append(
@@ -532,14 +549,15 @@ function updateBtn() {
             );
             $row.append($("<td>").text(idx + 1));
             $row.append($("<td>").text(item.ordrCd));
-            $row.append($("<td>").text(item.ordrReqDt));
+            $row.append($("<td>").text(new Date(item.ordrReqDt).toISOString().slice(0, 10)));
             $row.append($("<td>").text(item.vendCd));
             $row.append($("<td>").text(item.vendNm));
             $row.append($("<td>").text(item.rscCd));
             $row.append($("<td>").text(item.rscNm));
             $row.append($("<td>").text(item.ordrCnt));
-            $row.append($("<td>").text(item.paprdCmndDt));
-            $("tbody").append($row);
+            $row.append($("<td>").text(new Date(item.paprdCmndDt).toISOString().slice(0, 10)));
+            $row.append($("<td>").text(item.ordrChk));
+            $("#matOrderTable").append($row);
           });
           enableCheckBoxes();
           $("#updateBtn").text("수정");

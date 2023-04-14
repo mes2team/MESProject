@@ -18,7 +18,7 @@ public class MatVO {
 	private String vendCd; //거래처코드
 	private String vendNm; //거래처이름
 	
-	private int rscStc; //재고량
+	private int rscstc; //재고량
 	private int istStc; //입고재고량
 	private int oustStc; //출고재고량
 	private int netStc; //현재재고
@@ -52,6 +52,7 @@ public class MatVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date oustDt; //출고일자
 	private int oustCnt; //출고수량
+	private String ordrChk; //진행상태
 	
 	private String rscInspCd; //검사코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -64,6 +65,13 @@ public class MatVO {
 	
 	private String infCd; //불량코드
 	private int infNm; // 불량명
+	private int cont; // 오염
+	private int decay; // 부패
+	private int pack; // 포장불량
+	private int underWeight; // 중량미달
+	private int etc; // 기타
+	private String explain; //사유
+	
 	
 	
 }
