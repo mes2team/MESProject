@@ -29,7 +29,7 @@ public class OrderController {
 	public String getOrderAllList(Model model) {
 		model.addAttribute("orderList", orderService.selectOrderList());
 		model.addAttribute("vendList", vendService.getVendAll());
-//		model.addAttribute("orderNo", orderService.selectOrderNo().getOrderNo());
+		model.addAttribute("orderNo", orderService.selectOrderNo().getOrderNo());
 		model.addAttribute("orderPrdList", orderService.selectOrderPrd());
 		return "sales/orderMag";
 	}

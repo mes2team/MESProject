@@ -25,4 +25,7 @@ public interface VendMapper {
 
 	// 거래서 수정
 	public int updateVend(VendVO vendVO);
+
+	// 거래처 디테일
+	public VendVO getVendDetail(VendVO vendVO);
 }

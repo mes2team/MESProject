@@ -11,4 +11,5 @@ public class VendVO {
 	private String vendMag;
 	private String remk;
 	private String vendTyp;
+	private String vendAddr;
 }

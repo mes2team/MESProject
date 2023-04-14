@@ -18,5 +18,7 @@ public class EdctsIstVO {
 	private String prdtNm; // 제품이름
 	private String prodCnt; // 생산량
 	private String inferCnt; // 불량량
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date edctsIstDtEnd; // 날짜 검색할때
 	
 }
