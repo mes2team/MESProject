@@ -50,7 +50,7 @@ td {
 }
 
 tbody#processList input:not([readonly]) {
-	border: 1px solid green;
+	border-bottom: 1px solid green;
 }
 
 #processList td {

@@ -309,20 +309,25 @@
 	
 	<!-- 미지시 생산 계획 조회 -->
   	<select id="selectPlanToOrder" resultType="ProPlanVO">
-  		SELECT p.plan_cd,
-  			   p.paprd_dt,
-  			   p.now_st,
-  			   pref_rank,
-  			   pd.edcts_cd,
-  			   pd.bom_cd,
-  			   pd.order_cnt,
-  			   pd.wk_to_dt,
-  			   e.prdt_nm
-  		FROM   plan p, plan_dtl pd, edcts e
-  		WHERE  p.plan_cd = pd.plan_cd
-  		  AND  pd.edcts_cd = e.edcts_cd
-  		  AND  p.now_st = '미지시'
-  		ORDER BY p.plan_cd
+  	<![CDATA[
+  	  SELECT p.plan_cd,
+	         p.paprd_dt,
+	         p.now_st,
+	         pref_rank,
+	         p.plan_name,
+	         pd.edcts_cd,
+	         pd.bom_cd,
+	         pd.order_cnt,
+	         pd.indica_cnt,
+	         pd.wk_to_dt,
+	         e.prdt_nm
+	  FROM   plan p, plan_dtl pd, edcts e
+	  WHERE  p.plan_cd = pd.plan_cd
+	    AND  pd.edcts_cd = e.edcts_cd
+	    AND  (p.now_st = '미지시' OR p.now_st = '지시진행중')
+	    AND  pd.order_cnt > pd.indica_cnt
+	  ORDER BY pd.wk_to_dt, pref_rank
+  	]]>	
   	</select>
   	
   	<select id="selectBomStock" resultType="BomVO">
