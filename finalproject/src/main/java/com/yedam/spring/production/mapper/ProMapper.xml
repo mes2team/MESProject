@@ -103,10 +103,7 @@
 	  							  );
   		END;
   	</insert>
-  	
-  	
-  	
-  	
+
   	<!-- 미지시 주문서 조회 -->
   	<select id="selectOrderSheet" resultType="OrderSheetVO">
   		SELECT ost.order_no,
@@ -159,6 +156,14 @@
   		FROM	plan_dtl
   	</select>
   	
+  	<!-- 생산계획 디테일 -->
+  	<select id="selectPlanDetail" resultType="ProPlanVO">
+  		SELECT *
+  		FROM plan p , plan_dtl pd
+  		WHERE p.plan_cd = pd.plan_cd
+  		  AND p.plan_cd = #{planCd}
+  	</select>
+  	
   	<!-- 생산계획 조회 + 페이징-->
 	<select id="selectProPlans" resultType="ProPlanVO">
 	<![CDATA[
@@ -190,28 +195,23 @@
 				    AND p.now_st IN ('미지시', '지시완료', '생산완료')
 				    AND rownum <= #{pageNum} * #{amount})
 		WHERE rn > (#{pageNum}-1)* #{amount}
-		ORDER BY plan_dt DESC
+		ORDER BY plan_cd, plan_dt DESC
 	]]>
 	</select>
 	<!-- 생산계획 취소 -->
-	<update id="deleteProPlan" parameterType="String">
-	  		UPDATE 	plan
-	  		SET	 	now_st = '계획취소'
-	  		WHERE	plan_cd = #{planCd}
-	</update>
+	<delete id="deleteProPlan" parameterType="String">
+		BEGIN
+	  		DELETE 	FROM plan
+	  		WHERE	plan_cd = #{planCd};
+	  		
+	  		DELETE FROM plan_dtl
+	  		WHERE plan_cd = #{planCd};
+	  	END;	
+	</delete>
 	
 	<!-- 생산 계획 수정 -->
 	<update id="updateProPlan" parameterType="ProPlanVO">
-		DECLARE
-			v_edcts_cd	VARCHAR2(100);
 		BEGIN
-			v_edcts_cd := #{edctsCd};
-			
-			SELECT 	edcts_cd
-			INTO 	v_edcts_cd
-			FROM 	edcts
-			WHERE 	prdt_nm = #{prdtNm};
-	
 			UPDATE 	plan
 			SET 	plan_dt = sysdate,
 					plan_name = #{planName}
@@ -219,9 +219,7 @@
 	
 			UPDATE 	plan_dtl
 			SET 	order_cnt = #{orderCnt},
-					wk_to_dt = #{wkToDt},
-					prdt_nm = #{prdtNm},
-					edcts_cd = v_edcts_cd
+					wk_to_dt = #{wkToDt}
 			WHERE 	plan_cd = #{planCd};
 		END;
 	</update>
@@ -360,6 +358,12 @@
 		  	WHERE	order_no = #{orderNo}
   	</update>
   	
+  	<update id="cancelOrderStatus" parameterType="String">
+  			UPDATE 	order_sheet_test
+		  	SET	 	prog_appe = '접수완료'
+		  	WHERE	order_no = #{orderNo}
+  	</update>
+  	
   	<select id="selectPrcsFlow" resultType="ProPrcsVO">
   		SELECT prcs_no
   			  ,prcs_nm
@@ -370,4 +374,9 @@
 		ORDER BY prcs_no
   	</select>
  
+ 	<select id="checkOrderNo" resultType="String">
+ 		SELECT 	order_no
+ 		FROM 	plan
+ 		WHERE 	plan_cd = #{planCd}
+ 	</select>
   </mapper>

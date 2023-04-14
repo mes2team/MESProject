@@ -58,6 +58,12 @@ public interface ProMapper {
 
 	public List<ProPrcsVO> selectPrcsFlow(ProPrcsVO vo);
 
+	public List<ProPlanVO> selectPlanDetail(ProPlanVO vo);
+
+	public String checkOrderNo(String planCd);
+
+	public int cancelOrderStatus(String orderNo);
+
 
 
 

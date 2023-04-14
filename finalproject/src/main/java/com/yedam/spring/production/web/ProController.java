@@ -27,6 +27,29 @@ public class ProController {
 
 	@Autowired
 	ProService proService;
+	
+	// 생산계획 수정
+	@PostMapping("/modifyProPlan")
+	@ResponseBody
+	public Map<String, Object> modifyProPlan(@RequestBody List<ProPlanVO> proPlanArray) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String result = null;
+		for (int i = 0; i < proPlanArray.size(); i++) {
+			result = proService.modifyProPlan(proPlanArray.get(i));;
+			
+		}
+		resultMap.put("result", result);
+		return resultMap;
+	}
+	
+	// 생산계획 상세정보
+	@PostMapping("/getPlanDetail")
+	@ResponseBody
+	public Map<String, Object> getPlanDetail(ProPlanVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("result", proService.getPlanDetail(vo));
+		return resultMap;
+	}
 
 	// 생산계획 페이지 이동
 	@GetMapping("/productionPlan")
@@ -113,26 +136,12 @@ public class ProController {
 		String result = null;
 
 		for (String planCd : planCdList) {
-			result = proService.removePlan(planCd);
+			if(proService.checkOrderNo(planCd) != null) {
+				result = proService.removePlan(planCd);
+			}
 		}
 
 		return result;
-	}
-
-	// 생산계획 수정
-	@PostMapping("/updateProPlan")
-	@ResponseBody
-	public Map<String, Object> updateProPlan(@RequestBody ProPlanVO[] voArr) {
-		Map<String, Object> resultMap = new HashMap<>();
-		if (voArr == null) {
-			resultMap.put("result", "false");
-			return resultMap;
-		}
-		for (int i = 0; i < voArr.length; i++) {
-			proService.modifyProPlan(voArr[i]);
-		}
-		resultMap.put("result", "success");
-		return resultMap;
 	}
 
 	// 제품별 BOM 조회

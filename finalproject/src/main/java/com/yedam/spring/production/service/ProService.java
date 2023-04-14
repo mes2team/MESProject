@@ -23,7 +23,7 @@ public interface ProService {
 
 	public String removePlan(String planCd);
 
-	public int modifyProPlan(ProPlanVO vo);
+	public String modifyProPlan(ProPlanVO vo);
 
 	public List<OrderSheetVO> getprdtInfo();
 
@@ -50,6 +50,10 @@ public interface ProService {
 	public int getProPlanCnt(ProPlanVO vo);
 
 	public List<ProPrcsVO> getPrcsFlow(ProPrcsVO vo);
+
+	public List<ProPlanVO> getPlanDetail(ProPlanVO vo);
+
+	public String checkOrderNo(String planCd);
 
 
 

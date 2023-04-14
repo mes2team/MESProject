@@ -97,10 +97,7 @@ div#prcsInfo {
 		<div class="card-body">
 			<h5 class="card-title">생산계획조회</h5>
 			<div class="btnGrp">
-				<button id="deleteList" type="button" class="btn btn-primary">계획취소</button>
-				<button id="updateList" type="button" class="btn btn-primary">계획수정</button>
-				<button id="updateComplete" type="button" class="btn btn-primary"
-					style="display: none">수정완료</button>
+				<button id="deleteList" type="button" class="btn btn-primary">계획삭제</button>
 			</div>
 			<!-- Table with hoverable rows -->
 			<table id="selectPlanTable" class="table table-hover">
@@ -108,38 +105,36 @@ div#prcsInfo {
 					<tr>
 						<th scope="col"><input type="checkbox"></th>
 						<th scope="col">생산계획일자</th>
+						<th scope="col">생산계획코드</th>
 						<th scope="col">생산계획명</th>
-						<th scope="col">제품명</th>
-						<th scope="col">주문수량</th>
 						<th scope="col">현재상황</th>
 						<th scope="col">생산시작예정일자</th>
 						<th scope="col">생산종료일자</th>
 					</tr>
 				</thead>
 				<tbody id="proPlanChk">
+					<c:set var="prevPlanCd" value="" />
 					<c:forEach var="item" items="${ProPlans}">
-						<tr>
-							<td id="hiddenPlanCd" hidden=true>${item.planCd }</td>
-							<td hidden=true>${item.edctsCd }</td>
-							<td><input type="checkbox"></td>
-							<td><fmt:formatDate value="${item.planDt }"
-									pattern="yyyy-MM-dd" /></td>
-							<td>${item.planName }(${item.planCd })</td>
-							<td>${item.prdtNm }</td>
-							<td>${item.orderCnt }</td>
-							<td>${item.nowSt }</td>
-							<td><fmt:formatDate value="${item.wkToDt }"
-									pattern="yyyy-MM-dd" /></td>
-							<c:choose>
-								<c:when test="${empty item.wkFrDt}">
-									<td>-</td>
-								</c:when>
-								<c:otherwise>
-									<td><fmt:formatDate value="${item.wkFrDt}"
-											pattern="yyyy-MM-dd" /></td>
-								</c:otherwise>
-							</c:choose>
-						</tr>
+						<c:if test="${item.planCd ne prevPlanCd}">
+							<tr>
+								<td><input type="checkbox"></td>
+								<td id="hiddenPlanCd" hidden="true">${item.planCd}</td>
+								<td><fmt:formatDate value="${item.planDt}" pattern="yyyy-MM-dd" /></td>
+								<td>${item.planCd}</td>
+								<td>${item.planName}</td>
+								<td>${item.nowSt}</td>
+								<td><fmt:formatDate value="${item.wkToDt}" pattern="yyyy-MM-dd" /></td>
+								<c:choose>
+									<c:when test="${empty item.wkFrDt}">
+										<td>-</td>
+									</c:when>
+									<c:otherwise>
+										<td><fmt:formatDate value="${item.wkFrDt}" pattern="yyyy-MM-dd" /></td>
+									</c:otherwise>
+								</c:choose>
+							</tr>
+						</c:if>
+						<c:set var="prevPlanCd" value="${item.planCd}" />
 					</c:forEach>
 				</tbody>
 			</table>
@@ -182,8 +177,6 @@ div#prcsInfo {
 			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title">미지시 주문서 조회</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
 					<table id="orderSheetTable" class="table table-hover">
@@ -217,9 +210,8 @@ div#prcsInfo {
 		<div class="modal-dialog modal-xl modal-dialog-scrollable">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title">새로운 생산계획 작성</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<h5 id="textA" class="modal-title">새로운 생산계획 작성</h5>
+					<h5 id="textB"class="modal-title" style="display:none">생산 상세계획</h5>
 				</div>
 				<div class="modal-body">
 					<form id="planForm" name="newPlan" action="newPlanInsert"
@@ -233,7 +225,7 @@ div#prcsInfo {
 							</select>
 						</div>
 						<div class="col-md-5">
-							<label class="form-label">생산수량*</label> <input type="text"
+							<label class="form-label">생산수량*</label> <input type="number"
 								class="form-control" id="orderCnt"  value="">
 						</div>
 						<div class="col-md-2">
@@ -248,6 +240,8 @@ div#prcsInfo {
 						<div class="col-md-6">
 							<label class="form-label">생산계획명</label> <input id="planNameInput" type="text"
 								name="planName" class="form-control">
+								<input id="planCdInput" type="hidden"
+								name="planCd" class="form-control">
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">생산계획일자</label> <input type="date"
@@ -309,6 +303,7 @@ div#prcsInfo {
 				</div>
 				<div class="modal-footer">
 					<button id="newPlanSubmit" type="button" class="btn btn-primary">등록</button>
+					<button id="modifyPlanSubmit" type="button" class="btn btn-primary" style="display:none">수정</button>
 					<button id="cancelPlan" type="button" class="btn btn-secondary">취소</button>
 				</div>
 			</div>
@@ -320,8 +315,145 @@ div#prcsInfo {
 
 	
 	$(document).ready(function() {
+		$('#modifyPlanSubmit').click(function() {
+			if(formOptionchk() != false){
+				var options = $('#multiPro option');
+				var selectedOptions = $('#multiPro option:selected');
+
+				if (options.length != selectedOptions.length) {
+					alert("모든 제품항목을 선택해주세요.");
+					return;
+				} 
+				var selectedValues = $('#multiPro').val();
+				var productArray = [];
+				
+				$('#multiPro option:selected').each(function() {
+				  var value = $(this).val();
+				  var sum = $(this).data('sum');
+				  var bom = $(this).data('bom');
+				  var productInfo = {
+				    edctsCd: value,
+				    orderCnt: sum,
+				    BomCd: bom
+				  };
+				  productArray.push(productInfo);
+				});
+				
+
+				console.log(productArray);
+				
+				var proPlanArray = [];
+				for (var i = 0; i < productArray.length; i++) {
+				    var proPlanVO = {};
+				    $("#planForm [name]").each(function() {
+				      proPlanVO[this.name] = $(this).val();
+				    });
+				    proPlanVO.edctsCd = productArray[i].edctsCd;
+				    proPlanVO.orderCnt = productArray[i].orderCnt;
+				    proPlanVO.bomCd = productArray[i].BomCd;
+				    proPlanArray.push(proPlanVO);
+				    // 이후에 해당 배열을 서버로 보내는 ajax 코드 작성
+				}
+				console.log(proPlanArray);
+				
+				
+				 $.ajax({
+					    url: "${pageContext.request.contextPath }/modifyProPlan",
+					    type: "POST",
+					    data: JSON.stringify(proPlanArray),
+					    contentType: "application/json",
+					    success: function(response) {
+					      console.log(response.result);
+					      if(response.result == 'fail'){
+					    	$('#newPlanSubmit').show(); // 등록 버튼 숨김
+						    $('#modifyPlanSubmit').hide();
+					    	$('#textA').show();
+					    	$('#textB').hide();
+					    	$('#rscTable').empty();
+						    $('#createPlan').modal('hide');
+					      }
+					    },
+					    error: function(jqXHR, textStatus, error) {
+					      console.error('요청 실패:', error);
+					    }
+					});
+				} 
+		});
+		
+		
+		$('#proPlanChk tr td:not(:first-child)').click(function() {
+			  var td = $(this).find('td:first-child');
+			  if (!td.find('input[type="checkbox"]').length) {
+			    $(this).click(function() {
+			    	var planCd = $(this).closest('tr').find('#hiddenPlanCd').text();
+				    $.ajax({
+				      type: "post",
+				      url: "getPlanDetail",
+				      data: { planCd: planCd },
+				      success: function(result) {
+				    	$('#newPlanSubmit').hide(); // 등록 버튼 숨김
+				    	$('#modifyPlanSubmit').show(); // 수정 버튼 보임
+				    	$('#textA').hide();
+				    	$('#textB').show(); 
+				        console.log(result);
+				        $('#planForm input[type=text], #planForm input[type=date]').val('');
+				     	// 생산계획명
+				        $("#planNameInput").val(result.result[0].planName);
+				        $("#planCdInput").val(result.result[0].planCd);
+
+				     	// 생산계획일자
+				        var currentDate = new Date(result.result[0].planDt);
+				        var formattedCurrentDate = currentDate.toISOString().slice(0,10);
+				        $("#currentDate").val(formattedCurrentDate);
+
+				        // 생산시작 예정일
+				        var wkToDt = new Date(result.result[0].wkToDt);
+				        var formattedWkToDt = wkToDt.toISOString().slice(0,10);
+				        $("#myDate").val(formattedWkToDt);
+
+				        // 우선순위
+				        $("[name='prefRank'] option[value='" + result.result[0].prefRank + "']").prop("selected", true);
+				        
+				        for (var i = 0; i < result.result.length; i++) {
+					        	var edctsCd = result.result[i].edctsCd;
+					        	var prdtNm = result.result[i].prdtNm;
+					        	var orderCnt = result.result[i].orderCnt;
+					        	var bomCd = result.result[i].bomCd;
+		
+					        	var newOption = $('<option>', {
+					        	value: edctsCd,
+					        	text: prdtNm + ' / ' + orderCnt + ' / ' + bomCd,
+					        	'data-sum': orderCnt,
+					        	'data-bom': bomCd,
+					        	'data-nm': prdtNm
+					        	});
+		
+					        	$('#multiPro').append(newOption);
+				        	}
+				        $('#multiPro option').prop('selected', true);
+				        $('#createPlan').modal('show');
+				        
+				      },
+				      error: function(jqXHR, textStatus, errorThrown) {
+				        console.log(textStatus, errorThrown);
+				      }
+				    });
+			      
+			    });
+			  }
+			    
+		  });
+		
+		
+		
+		
 		  $('#multiPro').on('click', 'option', function(e) {
-			  console.log(e.target);
+			  $('#orderCnt').val('');
+			  if(localStorage.getItem('selectedOrders') != null){ 
+				  var sum = $(e.target).data('sum');
+				  console.log(sum); // 클릭된 option의 data-sum 값 출력
+				  $('#orderCnt').attr('min',sum);
+			  }
 			  let edctsCd = e.target.value
 			  console.log(edctsCd);
 			  $.ajax({
@@ -346,6 +478,7 @@ div#prcsInfo {
 					 }
 					 
 				 })
+				 
 		 })
 		
 		 $("#searchOption").submit(function(event) {
@@ -568,7 +701,7 @@ div#prcsInfo {
 			    var isExist = false;
 			    $('#multiPro option').each(function() {
 			      if ($(this).data('nm') == selectedOptionText) {
-			        var sum = parseInt($(this).data('sum')) + parseInt(orderCntValue);
+			        var sum = orderCntValue;
 			        $(this).data('sum', sum);
 			        $(this).text(selectedOptionText + ' / ' + sum + ' / ' + selectedBomValue);
 			        isExist = true;
@@ -666,24 +799,24 @@ div#prcsInfo {
 			var orderArray = JSON.parse(selectedOrders);
 	    	console.log(orderArray);
 	    	
-	    	// 결과 값을 저장할 변수
-	    	var resultString = '';
-
-	    	// orderArray 값이 null이거나 빈 배열인 경우
-	    	if (orderArray == null || orderArray.length === 0) {
-	    	  resultString = 'NOTORD';
-	    	} else {
-	    	  // 각 항목을 하나씩 꺼내서 문자열로 만들어 resultString에 추가
-	    	  orderArray.forEach(function(order) {
-	    	    resultString += order + '/';
-	    	  });
-	    	  
-	    	  // 마지막에 추가된 ' / ' 문자열 제거
-		      resultString = resultString.slice(0, -3);
-
-		      // 결과 출력
-		      console.log(resultString);
-	    	}
+			// 결과 값을 저장할 변수
+			var resultString = '';
+			
+			// orderArray 값이 null이거나 빈 배열인 경우
+			if (orderArray == null || orderArray.length === 0) {
+			  resultString = 'NOTORD';
+			} else {
+			  // 각 항목을 하나씩 꺼내서 문자열로 만들어 resultString에 추가
+			  orderArray.forEach(function(order, index) {
+			    resultString += order;
+			    if (index < orderArray.length - 1) {
+			      resultString += '/';
+			    }
+			  });
+			
+			  // 결과 출력
+			  console.log(resultString);
+			}
 
 	    	
 			
@@ -725,7 +858,9 @@ div#prcsInfo {
 				    success: function(response) {
 				      console.log(response.result);
 				      if(response.result == 'Success'){
-				    	  if (!orderArray == null) {
+				    	  console.log(orderArray);
+				    	  if (orderArray != null) {
+				    	  console.log(orderArray);
 				    	  $.ajax({
 				    		    url: "prcsOrderSheet",
 				    		    type: "POST",
@@ -937,7 +1072,6 @@ div#prcsInfo {
 
 		    if (orderCntSum.hasOwnProperty(edctsCd)) {
 		        const select = $('#multiPro');
-
 		        select.append($('<option>', {
 		            value: edctsCd,
 		            text: orderCntSum[edctsCd].prdtNm + " / " + orderCntSum[edctsCd].sum + " / " + bomCd,
@@ -1136,108 +1270,6 @@ div#prcsInfo {
 		  });
 		});
     
-    //수정 
-    $(document).ready(function() { 	
-    	
-	  $("#updateList").on("click", function() {
-			var checkboxes = document.querySelectorAll('#proPlanChk input[type="checkbox"]');
-			  
-			// 체크박스가 선택되었는지 확인합니다.
-			var isChecked = false;
-			checkboxes.forEach(function(checkbox) {
-			  if (checkbox.checked) {
-			    isChecked = true;
-			    return;
-			  }
-			});
-
-			// 체크박스가 선택되지 않았다면 함수를 종료합니다.
-			if (!isChecked) {
-			  alert('수정할 항목을 선택해주세요.')
-			  return;
-			}		
-	    // 체크된 tr 태그의 td들을 input 태그로 변경
-	    $("table").find("tr").each(function() {
-	      if ($(this).find("td").eq(2).find("input[type='checkbox']").prop("checked")) {
-	        $(this).find("td").eq(4).html("<input type='text' name='planName' value='" + $(this).find("td").eq(4).text() + "'>");
-	        $(this).find("td").eq(6).html("<input type='text' name='prdtNm' value='" + $(this).find("td").eq(6).text() + "'>");
-	        $(this).find("td").eq(7).html("<input type='text' style='width:90px;' name='orderCnt' value='" + $(this).find("td").eq(7).text() + "'>");
-	        $(this).find("td").eq(10).html("<input type='date' name='wkToDt' value='" + $(this).find("td").eq(10).text() + "'>");
-	      }	
-	    });
-	    $(this).hide();
-	    $("#updateComplete").show();
-	  });
-	  
-	  $("#updateComplete").on("click", function() {
-			var checkboxes = document.querySelectorAll('#proPlanChk input[type="checkbox"]');
-			  
-			// 체크박스가 선택되었는지 확인합니다.
-			var isChecked = false;
-			checkboxes.forEach(function(checkbox) {
-			  if (checkbox.checked) {
-			    isChecked = true;
-			    return;
-			  }
-			});
-
-			// 체크박스가 선택되지 않았다면 함수를 종료합니다.
-			if (!isChecked) {
-			  alert('수정할 항목을 선택해주세요.')
-			  return;
-			}
-		  // 데이터를 저장할 배열 선언
-	      var dataArr = [];
-
-	      // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
-		  $("table").find("tr").each(function() {
-			  if ($(this).find("td").eq(2).find("input[type='checkbox']").prop("checked")) {
-				var planCd =  $(this).find("td").eq(0).html(); 
-				var planName =  $(this).find("td").eq(4).find("input").val().trim();
-				var prdtNm =  $(this).find("td").eq(6).find("input").val().trim();
-				var orderCnt =  $(this).find("td").eq(7).find("input").val().trim();
-				var wkToDt =  $(this).find("td").eq(10).find("input").val().trim();
-				
-				// 객체 형식으로 데이터 저장
-		        var dataObj = {
-		        		planCd : planCd,
-		        		planName : planName,
-		        		prdtNm : prdtNm,
-		        		orderCnt : orderCnt,
-		        		wkToDt : wkToDt
-		        }
-		     // 데이터 배열에 객체 추가
-		        dataArr.push(dataObj);
-		      }
-		  });
-		/* 수정 통신 */
-	  $.ajax({
-	        url: "updateProPlan",
-	        method: "POST",
-	        headers: { "Content-Type": "application/json" },
-	        data: JSON.stringify(dataArr),
-	        success: function (data) {
-	        	if (data.result == "success") {
-	                $("#proPlanChk").find("tr").each(function() {
-	                    if ($(this).find("td").eq(2).find("input[type='checkbox']").prop("checked")) {
-	                        $(this).find("td").eq(4).html($(this).find("td").eq(4).find("input").val());
-	                        $(this).find("td").eq(6).html($(this).find("td").eq(6).find("input").val());
-	                        $(this).find("td").eq(7).html($(this).find("td").eq(7).find("input").val());
-	                        $(this).find("td").eq(10).html($(this).find("td").eq(10).find("input").val());
-	                    }
-	                });
-				    
-	              $("table").find("input:not([type='checkbox']):checked").closest("tr").find("input").remove();
-				  $("#updateList").show(); 	
-				  $("#updateComplete").hide(); 
-	        	}
-	        },
-	        error: function (reject) {
-	          console.log(reject);
-	        },
-	      });
-	  });
-	});
     
     function getProductBOM(edctsCd) {
     	  $.ajax({
