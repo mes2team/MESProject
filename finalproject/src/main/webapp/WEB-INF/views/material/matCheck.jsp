@@ -12,24 +12,31 @@
 <script
 	src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 <script>
-        jQuery(function($){
-            $("#check").DataTable({
-               lengthChange: false,
-                info: false,
-            });
-        });
-    </script>
+jQuery(function($){
+	  $("#check").DataTable({
+	    lengthChange: false,
+	    info: false,
+	    columnDefs: [
+	      {
+	        targets: [1], // 두 번째 컬럼 (0부터 시작하는 인덱스)
+	        orderable: false, // 정렬 옵션을 비활성화합니다.
+	      },
+	    ],
+	  });
+	});
+        
+</script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 
 
 
 <!-- jQuery and Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<!-- <script
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
 
 
 <meta charset="UTF-8">
@@ -48,18 +55,18 @@ form {
 	clear: both;
 }
 
+#check th:first-child::after {
+	display: none;
+}
+
+#check th:first-child::before {
+	display: none;
+}
+
 #btnGrp {
 	display: inline-blcok;
 	float: right;
 	text-align: right;
-}
-
-#receipt th:first-child::after {
-	display: none;
-}
-
-#receipt th:first-child::before {
-	display: none;
 }
 </style>
 </head>
@@ -75,97 +82,133 @@ form {
 			</ol>
 		</nav>
 	</div>
-		<!-- ============================================================== -->
-		<!-- 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 -->
-		<div class="card">
-			<div class="card-body">
-				<h3 class="insert">자재검사</h3>
-				<div id="btnGrp">
-					<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-					<button type="reset" class="btn btn-secondary">초기화</button>
-					<button type="submit" class="btn btn-primary" id="checkBtn">검사조건</button>
-				</div>
-				<form class="row g-3" name="insertForm" action="matCheckInsert"
-					method="post" onsubmit="return false"
-					style="margin: 0px 5px 5px 5px;">
-
-					<div class="col-md-2">
-						<label for="country" class="form-label">발주번호</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="ordrCd" disabled />
-							<button type="button" class="btn btn-primary"
-								data-bs-toggle="modal" data-bs-target="#ordrCdSearch">
-								<i class="bi bi-search"></i>
-							</button>
-						</div>
-					</div>
-					
-					<div class="col-md-2">
-						<label for="country" class="form-label">자재명</label>
-						<input type="text" class="form-control" id="rscNm" disabled />
-					</div>
-					
-					<div class="col-md-2">
-						<label for="country" class="form-label">검수량</label>
-						<input type="text" class="form-control" id="inspCnt" disabled />
-					</div>
-					
-
-					<div class="col-md-2">
-						<label for="country" class="form-label">검사일자</label> <input
-							type="date" class="form-control" id="inspDt" name="inspDt"
-							placeholder="">
-					</div>
-
-					<div class="col-md-2">
-						<label for="country" class="form-label">검수자</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="inspTstr" disabled />
-							<button type="button" class="btn btn-primary"
-								data-bs-toggle="modal" data-bs-target="#inspTstrSearch">
-								<i class="bi bi-search"></i>
-							</button>
-						</div>
-					</div>
-					
-					<div class="col-md-2">
-						<label for="country" class="form-label">불량수</label>
-						<input type="text" class="form-control" id="inspCnt" disabled />
-					</div>
-					
-					<div class="col-md-1">
-						<label for="country" class="form-label">오염</label>
-						<input type="number" class="form-control" id="cont" name="cont">
-					</div>
-
-					<div class="col-md-1">
-						<label for="country" class="form-label">부패</label> <input
-							type="number" class="form-control" id="decay" name="decay">
-					</div>
-
-					<div class="col-md-1">
-						<label for="country" class="form-label">포장불량</label> <input
-							type="number" class="form-control" id="pack" name="pack">
-					</div>
-
-					<div class="col-md-1">
-						<label for="country" class="form-label">중량미달</label> <input
-							type="number" class="form-control" id="underWeight" name="UnderWeight">
-					</div>
-					
-					<div class="col-md-1">
-						<label for="country" class="form-label">기타</label> <input
-							type="number" class="form-control" id="etc" name="etc">
-					</div>
-					
-					<div class="col-md-7">
-						<label for="country" class="form-label">기타설명</label> <input
-							type="text" class="form-control" id="explain" name="explain">
-					</div>	
-				</form>
+	<!-- ============================================================== -->
+	<!-- 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 자재 검사 -->
+	<div class="card">
+		<div class="card-body">
+			<h3 class="insert">자재검사</h3>
+			<div id="btnGrp">
+				<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
+				<button type="reset" class="btn btn-secondary">초기화</button>
+				<button type="submit" class="btn btn-primary" id="checkBtn">검사조건</button>
 			</div>
+			<form class="row g-3" name="insertForm" action="matCheckInsert"
+				method="post" onsubmit="return false"
+				style="margin: 0px 5px 5px 5px;">
+
+				<div class="col-md-2">
+					<label for="country" class="form-label">발주번호</label>
+					<div class="input-group">
+						<input type="text" class="form-control" id="ordrCd" disabled />
+						<button type="button" class="btn btn-primary"
+							data-bs-toggle="modal" data-bs-target="#ordrCdSearch">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="col-md-2">
+					<label for="country" class="form-label">자재명</label> <input
+						type="text" class="form-control" id="rscNm" disabled />
+				</div>
+
+				<div class="col-md-2">
+					<label for="country" class="form-label">검수량</label> <input
+						type="text" class="form-control" id="inspCnt" disabled />
+				</div>
+
+
+				<div class="col-md-2">
+					<label for="country" class="form-label">검사일자</label> <input
+						type="date" class="form-control" id="inspDt" name="inspDt"
+						placeholder="">
+				</div>
+
+				<div class="col-md-2">
+					<label for="country" class="form-label">검수자</label>
+					<div class="input-group">
+						<input type="text" class="form-control" id="inspTstr" disabled />
+						<!-- <button type="button" class="btn btn-primary"
+							data-bs-toggle="modal" data-bs-target="#inspTstrSearch">
+							<i class="bi bi-search"></i>
+						</button> -->
+					</div>
+				</div>
+
+				<div class="col-md-2">
+					<label for="country" class="form-label">합격량</label> <input
+						type="text" class="form-control" id="inspPassCnt" />
+				</div>
+
+				<div class="col-md-1">
+					<label for="country" class="form-label">오염</label> <input
+						type="number" class="form-control" id="cont" name="cont">
+				</div>
+
+				<div class="col-md-1">
+					<label for="country" class="form-label">부패</label> <input
+						type="number" class="form-control" id="decay" name="decay">
+				</div>
+
+				<div class="col-md-1">
+					<label for="country" class="form-label">포장불량</label> <input
+						type="number" class="form-control" id="pack" name="pack">
+				</div>
+
+				<div class="col-md-1">
+					<label for="country" class="form-label">중량미달</label> <input
+						type="number" class="form-control" id="underWeight"
+						name="UnderWeight">
+				</div>
+
+				<div class="col-md-1">
+					<label for="country" class="form-label">기타</label> <input
+						type="number" class="form-control" id="etc" name="etc">
+				</div>
+
+				<div class="col-md-7">
+					<label for="country" class="form-label">기타설명</label> <input
+						type="text" class="form-control" id="explain" name="explain">
+				</div>
+			</form>
 		</div>
+	</div>
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
+	<!-- ============================================================== -->
+	<!-- 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호  -->
+	<div class="modal fade" id="ordrCdSearch" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">발주번호 조회</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">발주번호</th>
+                            <th scope="col">거래처명</th>
+                            <th scope="col">자재명</th>
+                            <th scope="col">발주량</th>
+                            <th scope="col" style="width: 80px"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="OrderList"></tbody>
+                </table>
+                <!-- End Multi Columns Form -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+	<!-- 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호  -->
 	<!-- ============================================================== -->
 	<!-- 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
 
@@ -184,11 +227,11 @@ form {
 					</div>
 				</div>
 				<div class="table-responsive">
-					<table id="receipt"
-						class="table table-striped table-bordered first">
+					<table id="check" class="table table-striped table-bordered first">
 						<thead>
 							<tr>
-								<th><input type="checkbox" id="cbx_chkAll" /></th>
+								<th data-orderable="false" class="no-sort"><input
+									type="checkbox" id="cbx_chkAll" /></th>
 								<th>No.</th>
 								<th>검사코드</th>
 								<th>발주번호</th>
@@ -201,11 +244,11 @@ form {
 								<th>부패</th>
 								<th>포장불량</th>
 								<th>중량미달</th>
+								<th>기타</th>
 							</tr>
 						</thead>
 						<tbody>
-							<c:forEach var="Check" items="${matCheckList }"
-								varStatus="loop">
+							<c:forEach var="Check" items="${matCheckList }" varStatus="loop">
 								<tr data-id="${Check.rscInspCd }">
 									<td><input type="checkbox" name="chk"
 										value="${matReceipt.rscInspCd }" /></td>
@@ -221,7 +264,8 @@ form {
 									<td>${Check.cont }</td>
 									<td>${Check.decay }</td>
 									<td>${Check.pack }</td>
-									<td>${Check.underWeight }</td>									
+									<td>${Check.underWeight }</td>
+									<td>${Check.etc }</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -230,11 +274,65 @@ form {
 			</div>
 		</div>
 	</div>
-
+	<!-- 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
+	<!-- ============================================================== -->
 
 	<script>
-	<!-- ============================================================== -->
-			<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
+	<!-- 발주번호 검색 모달  발주번호 검색 모달  발주번호 검색 모달 -->
+	//url은 getMapping에 들어가는 주소
+	 $.ajax({
+	      url: "orderModal",
+	      success: function (result) {
+	        $(result).each(function (idx, item) {
+	          let ordrCdModal = item.ordrCd;
+	          let rscNmModal = item.rscNm;
+	          let vendNmModal = item.vendNm;
+	          let ordrCntModal = item.ordrCnt;
+
+	          let tr = $("<tr>");
+	          tr.append("<td>" + ordrCdModal + "</td>");
+	          tr.append("<td>" + rscNmModal + "</td>");
+	          tr.append("<td>" + vendNmModal + "</td>");
+	          tr.append("<td>" + ordrCntModal + "</td>");
+	          tr.append(
+	            $("<td>").append(
+	              $("<button>")
+	                .attr("class", "btn btn-primary choiceBtn")
+	                .text("선택")
+	            )
+	          );
+			//tbody OrderList 에 위의 ajax를 붙인다.(OrderList는 여기jsp에서만 쓴다.)
+	          $("#OrderList").append(tr);
+	        });
+	      },
+	      error: function (reject) {
+	        console.log(reject);
+	      },
+	    });
+
+	    // 선택 버튼 클릭시 input에 전달
+	    $(document).on("click", ".choiceBtn", function () {
+	      let ordrCdModal = $(this).closest("tr").children().eq(0).text();
+	      let rscNmModal = $(this).closest("tr").children().eq(1).text();
+	      let ordrCntModal = $(this).closest("tr").children().eq(3).text();
+
+	      $("#ordrCd").val(ordrCdModal);
+	      $("#rscNm").val(rscNmModal);
+	      $("#inspCnt").val(ordrCntModal);
+
+	      $("#ordrCdSearch").modal("hide");
+	      
+	    });
+	    
+    <!-- 발주번호 검색 모달  발주번호 검색 모달  발주번호 검색 모달 발주번호 검색 모달 -->	    
+	<!-- ============================================================== -->	
+	<!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+	const today = new Date();
+    const todayString = today.toISOString().slice(0,10);
+    document.getElementById("inspDt").value = todayString;
+    <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
+    <!-- ============================================================== -->	
+	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
       
       function formOptionChk() {
           let rscLotCd = document.getElementsByName('rscLotCd')[0];
@@ -560,6 +658,10 @@ function updateBtn() {
     }
   <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
   <!-- ============================================================== --> 	
+	
+	
+	
+	
 	
 	
 	</script>

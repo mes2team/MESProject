@@ -19,6 +19,7 @@ import com.yedam.spring.masterData.service.VendVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.OrderSheetVO;
+import com.yedam.spring.sales.service.EdctsIstVO;
 
 @Controller
 public class MatController {
@@ -170,6 +171,12 @@ public class MatController {
 			model.addAttribute("matCheckList",matService.matCheckList());
 			return "material/matCheck";
 		}
+	//자재검사 전체조회
+			@GetMapping("/orderModal")
+			@ResponseBody
+			public List<MatVO> orderChkList(){
+				return matService.matOrderChkList();
+			}
 	
 
 }

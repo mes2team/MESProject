@@ -142,6 +142,11 @@ public class MatServiceImpl implements MatService {
 		//자재검사 삭제
 		return matMapper.deleteMatatCheckInfo(rscInspCd);
 	}
+	@Override
+	public List<MatVO> matOrderChkList() {
+		// 검사미완료 발주 전체 조회
+		return matMapper.matOrderChkList();
+	}
 	
 	
 
