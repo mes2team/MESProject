@@ -30,4 +30,8 @@ public class ProPrcsVO {
 	private int prodCnt;
 	private String inferCd;
 	private int inferCnt;
+	
+	//공정흐름
+	private int prcsNo;
+	private String edctsCd;
 }

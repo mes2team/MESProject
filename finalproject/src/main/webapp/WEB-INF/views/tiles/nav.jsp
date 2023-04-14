@@ -81,7 +81,7 @@
           </li>
           <li>
             <a href="${pageContext.request.contextPath}/processManage">
-              <i class="bi bi-circle"></i><span>공정관리</span>
+              <i class="bi bi-circle"></i><span>공정흐름</span>
             </a>
           </li>
         </ul>

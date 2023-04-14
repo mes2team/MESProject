@@ -9,8 +9,6 @@ public interface ProService {
 	//생산계획 등록
 	public String newPlanInsert(ProPlanVO proPlanArray);
 
-	public String getNextPlanCd();
-
 	public List<OrderSheetVO> getOrdSheet();
 
 	public List<BomVO> getBomInfo();
@@ -46,6 +44,15 @@ public interface ProService {
 	public String plusPlanInsert(ProPlanVO proPlanVO);
 
 	public List<BomVO> getRscStock(String edctsCd);
+
+	public String modifyOrderStatus(String orderNo);
+
+	public int getProPlanCnt(ProPlanVO vo);
+
+	public List<ProPrcsVO> getPrcsFlow(ProPrcsVO vo);
+
+
+
 
 	
 

@@ -30,19 +30,6 @@ public class ProServiceImpl implements ProService {
 	}
 
 	@Override
-	public String getNextPlanCd() {
-		int PlanCd = 0;
-		String NextPlanCd = null;
-		if( proMapper.getNextPlanCd() == null) {
-			NextPlanCd = "PLN1000";
-		} else {		
-			PlanCd = Integer.parseInt(proMapper.getNextPlanCd().getPlanCd().substring(3)) + 1 ;
-			NextPlanCd = "PLN" + PlanCd;
-		}
-		return NextPlanCd;
-	}
-
-	@Override
 	public List<OrderSheetVO> getOrdSheet() {
 		return proMapper.selectOrderSheet();
 	}
@@ -155,6 +142,31 @@ public class ProServiceImpl implements ProService {
 		}
 		
 	}
+
+	@Override
+	public String modifyOrderStatus(String orderNo) {
+		int result = proMapper.updateOrderStatus(orderNo);
+		if(result > 0) {
+			return orderNo;
+		} else {
+			return orderNo + "Fail";
+		}
+	}
+
+	@Override
+	public int getProPlanCnt(ProPlanVO vo) {
+		return proMapper.selectProPlanCnt(vo);
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsFlow(ProPrcsVO vo) {
+		return proMapper.selectPrcsFlow(vo);
+	}
+
+
+
+
+
 
 	
 

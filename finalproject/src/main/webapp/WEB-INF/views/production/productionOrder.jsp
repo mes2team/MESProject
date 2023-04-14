@@ -195,8 +195,8 @@ tbody#processList input:not([readonly]) {
 								<th hidden="true" scope="col">제품코드</th>
 								<th hidden="true" scope="col">BOM</th>
 								<th scope="col">제품명</th>
-								<th scope="col">주문수량</th>
-								<th scope="col">납기일자</th>
+								<th scope="col">생산계획수량</th>
+								<th scope="col">잔여계획수량</th>
 								<th scope="col">등록</th>
 							</tr>
 						</thead>
@@ -249,11 +249,7 @@ tbody#processList input:not([readonly]) {
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">생산지시수량</label> 
-							<input type="text" class="form-control" id="indicaCnt" value="" readonly> 
-						</div>
-						<div class="col-md-6">
-							<label class="form-label">납기일자</label> <input type="date"
-								class="form-control" id="paprdDt" name="paprdDt" value="">
+							<input type="text" class="form-control" id="indicaCnt" value="" > 
 						</div>
 						<div class="col-md-6">
 							<label class="form-label">우선순위</label> <input type="text"
@@ -348,12 +344,9 @@ tbody#processList input:not([readonly]) {
 		      bomCd: bomCd
 		    },
 		    success: function(response) {
-		      // 요청 성공 시 처리할 코드
 		      console.log(response.result)
-		        // 기존에 있는 행 삭제
 			    $("#rscTable tr").remove();
 			
-			    // 통신 결과로 테이블에 행 추가
 			    $.each(response.result, function(index, item) {
 			      var tr = $("<tr>");
 			      var checkbox = $("<input>").attr({
@@ -428,27 +421,20 @@ tbody#processList input:not([readonly]) {
 			  type: 'GET', 
 			  dataType: 'json',
 			  success: function(data) {
-			    // 성공적으로 응답 받았을 때 처리할 로직
 			    console.log(data);
-			    var tbody = $("#proPlanTable"); // tbody 선택
-				  tbody.empty(); // tbody 비우기
+			    localStorage.removeItem("proPlanResult");
+			    localStorage.setItem("proPlanResult", JSON.stringify(data.result));
+			    var tbody = $("#proPlanTable");
+				  tbody.empty(); 
 				  
-				  
-				  // 데이터 반복문 처리
 				  $.each(data.result, function(index, item) {
 				    var row = $("<tr>"); 
-				    
-				    // td 생성		
 
 				    row.append($("<th scope='row'>").text(index + 1));
 				    row.append($("<td>").text(item.planCd));
 				    row.append($("<td>").text(item.prefRank));
-				    row.append($("<td>").attr("hidden", true).text(item.edctsCd));
-				    row.append($("<td>").attr("hidden", true).text(item.bomCd));
 				    row.append($("<td>").text(item.prdtNm));
 				    row.append($("<td>").text(item.orderCnt));
-				    var paprdDt = formatDate(item.paprdDt)
-				    row.append($("<td>").text(paprdDt));
 				    var button = $("<button>", {
 				        type: "button",
 				        class: "btn btn-primary addBtn",
@@ -461,8 +447,7 @@ tbody#processList input:not([readonly]) {
 				  })
 
 			  },
-			  error: function(xhr, status, error) {
-			    // 요청이 실패했을 때 처리할 로직
+			  error: function(error) {
 			    console.error('요청 실패:', error);
 			  }
 			});
