@@ -19,9 +19,14 @@ public class PrcsInspVO {
 	private String prcsInspCd; //검사코드
 	private String prcsInspNm; //검사명
 	private String prcsInspStd; //검사기준
+	private String prcsInspRst; //검사결과
+	private String prcsInspJdg; //판정
 	
+	//공정검사완료 후 dtl에 넣기
+	private String prcsChkCd;//검사완료코드
+	//검사완료 후 불량량 넣기
+	private int inferCnt; //불량량
 	
-	//max 완제품lot
-	private String edctsLotNo;
+
 	
 }

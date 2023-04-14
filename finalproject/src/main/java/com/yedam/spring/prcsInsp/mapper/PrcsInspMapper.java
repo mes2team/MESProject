@@ -11,6 +11,11 @@ public interface PrcsInspMapper {
 	//공정별 검사기준
 	public List<PrcsInspVO> selectPrcsStd(PrcsInspVO prcsCd);
 	
-	//최대 완제품LOT번호
-	public PrcsInspVO selectMaxEdctsLotNo();
+	//공정검사완료 검사디테일등록
+	public int insertDtl(PrcsInspVO prcsInspVO);
+	
+	//공정검사완료 불량등록 / 불량,검사완료 업데이트
+	public int inferUpdateInsert(PrcsInspVO prcsInspVO);
+	//맥스검사완료코드
+	public PrcsInspVO selectMaxChkCd();
 }

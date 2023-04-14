@@ -19,14 +19,23 @@ public List<PrcsInspVO> selectPrcsList() {
 	return mapper.selectPrcsList();
 }
 
-//max 완제품LOT 번호
-@Override
-public PrcsInspVO selectMaxEdctsLotNo() {
-	return mapper.selectMaxEdctsLotNo();
-}
-
 @Override
 public List<PrcsInspVO> selectPrcsStd(PrcsInspVO prcsCd) {
 	return mapper.selectPrcsStd(prcsCd);
+}
+
+@Override
+public int insertDtl(PrcsInspVO prcsInspVO) {
+	return mapper.insertDtl(prcsInspVO);
+}
+
+@Override
+public PrcsInspVO selectMaxChkCd() {
+	return mapper.selectMaxChkCd();
+}
+
+@Override
+public int inferUpdateInsert(PrcsInspVO prcsInspVO) {
+	return mapper.inferUpdateInsert(prcsInspVO);
 }
 }

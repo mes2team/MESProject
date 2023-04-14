@@ -70,7 +70,7 @@
 						</div>
 						<div class="col-auto"></div>
 						<div class="col-auto" style="margin-left: 10px;">
-							<label style="font-weight: bold;">검사수량*</label>
+							<label style="font-weight: bold;">검사량*</label>
 						</div>
 						<div class="col-auto" style="margin-left: 5px;">
 							<input type="text" disabled name="prodCnt" class="form-control"
@@ -95,6 +95,8 @@
 						</div>
 						<div class="col-auto">
 							<input type="text" name="prcsInspMng" class="form-control">
+							<input type="text" style="display: none" name="prcsChkCd"
+								value="${maxChkCd.prcsChkCd }">
 						</div>
 
 						<div class="col-auto" style="margin-left: 35px" hidden>
@@ -130,10 +132,10 @@
 				</table>
 				<div id="inferInput" class="row g-3 align-items-center" hidden>
 					<div class="col-auto" width="" style="margin-left: 820px">
-						<label style="font-weight: bold;">불량수량</label>
+						<label style="font-weight: bold;">불량량</label>
 					</div>
 					<div class="col-auto">
-						<input type="number" name="" class="form-control">
+						<input type="number" value=0 name="inferCnt" class="form-control">
 					</div>
 					<div class="col-auto" style="margin-left: 220px;">
 						<button type="button" onclick="insertInsp()"
@@ -192,7 +194,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary closeBtn"
-						data-bs-dismiss="modal" onclick="modalReset()">닫기</button>
+						data-bs-dismiss="modal" onclick="">닫기</button>
 					<button type="button" class="btn btn-primary"
 						onclick="modalPrcsSelect()" data-bs-dismiss="modal">확인</button>
 				</div>
@@ -200,32 +202,41 @@
 		</div>
 	</div>
 	<script>
-		
+		//검사완료 등록
 		function insertInsp() {
-			let insertData = [];
+			let dataList = [];
 			var prcsInspCd = document.querySelectorAll('[name="prcsInspCd"]');//공정검사코드 
 			var prcsInspNm = document.querySelectorAll('[name="prcsInspNm"]');//검사명 
 			var prcsInspStd = document.querySelectorAll('[name="prcsInspStd"]');//기준 
 			var prcsInspRst = document.querySelectorAll('[name="prcsInspRst"]');//검사결과 
 			var prcsInspJdg = document.querySelectorAll('[name="prcsInspJdg"]');//결과판정 
-			let stdTrs = mainBody.querySelectorAll('tr')
+			var inferCnt = document.querySelector('[name="inferCnt"]'); //불량량
+			
+			var DprcsChkCd = prcsChkCd.value;
+			var DindicaCd = indicaCd.value;
+			var DprcsCd = prcsCd.value;
+			var DprcsNm = prcsNm.value;
+			var DedctsCd = edctsCd.value;
+			var DprdtNm = prdtNm.value;
+			var DprodCnt = prodCnt.value;
+			var DprcsInspDt = prcsInspDt.value;
+			var DprcsInspMng = prcsInspMng.value;
+			var DinferCnt = inferCnt.value; //불량량
+			var DprcsNm = prcsNm.value; //공정명
+			
+			
+			var stdTrs = mainBody.querySelectorAll('tr')
 			for (let i = 0; i < stdTrs.length; i++) {
 				
-				let DindicaCd = indicaCd.value;
-				let DprcsCd = prcsCd.value;
-				let DprcsNm = prcsNm.value;
-				let DedctsCd = edctsCd.value;
-				let DprdtNm = prdtNm.value;
-				let DprodCnt = prodCnt.value;
-				let DprcsInspDt = prcsInspDt.value;
-				let DprcsInspMng = prcsInspMng.value;
 				let DprcsInspCd = prcsInspCd[i].innerText;
 				let DprcsInspNm = prcsInspNm[i].innerText;
 				let DprcsInspStd = prcsInspStd[i].innerText;
 				let DprcsInspRst = prcsInspRst[i].value;
 				let DprcsInspJdg = prcsInspJdg[i].value;
-			
+				
+				//불량량을 제외한 모든 검사결과
 				let data = {
+					prcsChkCd : DprcsChkCd,
 					indicaCd : DindicaCd,
 					prcsCd : DprcsCd,
 					prcsNm : DprcsNm,
@@ -240,10 +251,37 @@
 					prcsInspRst : DprcsInspRst,
 					prcsInspJdg : DprcsInspJdg
 				}
-				insertData.push(data)
+				dataList.push(data);
+
 			}
-			console.log(insertData);
+			//불량량,공정명 ajax보낼 배열에 담기
+			
+			let inferData = {
+				prcsChkCd : DprcsChkCd,
+				prcsCd : DprcsCd,
+				indicaCd : DindicaCd,
+				inferCnt : DinferCnt,
+				prcsNm : DprcsNm
+			}
+			dataList.push(inferData);
+			console.log(dataList);
+			
+			$.ajax({
+				type : "POST",
+				url : "/spring/chkDone",
+				data : JSON.stringify(dataList),
+				contentType : "application/json; charset=utf-8",
+				//dataType: "json",
+				success : function(res) {
+					console.log(res)
+				},
+				error : function(error) {
+					console.log(error)
+				}
+			});
+
 		}
+
 		//모달열면 검사리스트 뿌리기
 		function selectPrcsList() {
 			$.ajax({
@@ -294,8 +332,8 @@
 		var prodCnt = document.querySelector('[name="prodCnt"]'); //생산량==검사량
 		var prcsInspDt = document.querySelector('[name="prcsInspDt"]'); //검사일자
 		var prcsInspMng = document.querySelector('[name="prcsInspMng"]'); //검사담당자	    
-		
-		
+		var prcsChkCd = document.querySelector('[name="prcsChkCd"]');//맥스검사완료코드
+
 		//모달
 		//검사할 공정 선택 확인버튼 
 		function modalPrcsSelect() {
@@ -316,6 +354,9 @@
 			prodCnt.value = tds[6].innerText; //생산량==검사량
 			let cd = tds[2].innerText;
 			selectPrcsStd(cd);
+			
+			//검사할 공정이 포장인경우
+			
 		}
 
 		//공정별 검사기준 가져오기 
@@ -331,13 +372,18 @@
 							for (let i = 0; i < res.length; i++) {
 								let tr = $('<tr>');
 								tr.append('<td></td>')
-								tr.append('<td name="prcsInspCd">' + res[i].prcsInspCd + '</td>')
-								tr.append('<td name="prcsInspNm" style="width: 200px">'
-										+ res[i].prcsInspNm + '</td>')
-								tr.append('<td name="prcsInspStd" style="width: 500px">'
-										+ res[i].prcsInspStd + '</td>')
-								tr.append('<td><input name="prcsInspRst" type="text"></td>')
-								tr.append('<td><select name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
+								tr.append('<td name="prcsInspCd">'
+										+ res[i].prcsInspCd + '</td>')
+								tr
+										.append('<td name="prcsInspNm" style="width: 200px">'
+												+ res[i].prcsInspNm + '</td>')
+								tr
+										.append('<td name="prcsInspStd" style="width: 500px">'
+												+ res[i].prcsInspStd + '</td>')
+								tr
+										.append('<td><input name="prcsInspRst" type="text"></td>')
+								tr
+										.append('<td><select name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
 								mainBody.append(tr);
 							}
 							showInferInput();//불량갯수 input 보이게
