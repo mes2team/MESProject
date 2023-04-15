@@ -97,7 +97,7 @@ form {
 				style="margin: 0px 5px 5px 5px;">
 
 				<div class="col-md-2">
-					<label class="form-label">발주번호</label>
+					<label for="country" class="form-label">발주번호</label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="ordrCd" disabled />
 						<button type="button" class="btn btn-primary"
@@ -108,24 +108,24 @@ form {
 				</div>
 
 				<div class="col-md-2">
-					<label class="form-label">자재명</label> <input
+					<label for="country" class="form-label">자재명</label> <input
 						type="text" class="form-control" id="rscNm" name="rscNm" disabled />
 				</div>
 
 				<div class="col-md-2">
-					<label class="form-label">검수량</label> <input
+					<label for="country" class="form-label">검수량</label> <input
 						type="text" class="form-control" id="inspCnt" name="inspCnt" disabled />
 				</div>
 
 
 				<div class="col-md-2">
-					<label class="form-label">검사일자</label> <input
+					<label for="country" class="form-label">검사일자</label> <input
 						type="date" class="form-control" id="inspDt" name="inspDt"
 						placeholder="">
 				</div>
 
 				<div class="col-md-2">
-					<label class="form-label">검수자</label>
+					<label for="country" class="form-label">검수자</label>
 					<div class="input-group">
 						<input type="text" class="form-control" id="inspTstr" name="inspTstr" disabled />
 						<button type="button" class="btn btn-primary"
@@ -136,38 +136,38 @@ form {
 				</div>
 
 				<div class="col-md-2">
-					<label class="form-label">합격량</label> <input
+					<label for="country" class="form-label">합격량</label> <input
 						type="number" class="form-control" id="inspPassCnt" name="inspPassCnt"  min="0" />
 				</div>
 
 				<div class="col-md-1">
-					<label class="form-label">오염</label> <input
+					<label for="country" class="form-label">오염</label> <input
 						type="number" class="form-control" id="cont" name="cont" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
-					<label class="form-label">부패</label> <input
+					<label for="country" class="form-label">부패</label> <input
 						type="number" class="form-control" id="decay" name="decay" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
-					<label class="form-label">포장불량</label> <input
+					<label for="country" class="form-label">포장불량</label> <input
 						type="number" class="form-control" id="pack" name="pack" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
-					<label class="form-label">중량미달</label> <input
+					<label for="country" class="form-label">중량미달</label> <input
 						type="number" class="form-control" id="underWeight"
 						name="UnderWeight" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
-					<label class="form-label">기타</label> <input
+					<label for="country" class="form-label">기타</label> <input
 						type="number" class="form-control" id="etc" name="etc" min="0" value=0>
 				</div>
 
 				<div class="col-md-7">
-					<label class="form-label">기타설명</label> <input
+					<label for="country" class="form-label">기타설명</label> <input
 						type="text" class="form-control" id="etcExplain" name="etcExplain">
 				</div>
 			</form>
@@ -278,7 +278,7 @@ form {
 								<th>기타</th>
 							</tr>
 						</thead>
-						<tbody id="">
+						<tbody>
 							<c:forEach var="Check" items="${matCheckList }" varStatus="loop">
 								<tr data-id="${Check.rscInspCd }">
 									<td><input type="checkbox" name="chk"

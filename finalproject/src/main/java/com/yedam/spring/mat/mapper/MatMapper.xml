@@ -280,12 +280,12 @@
     FROM rsc_insp
   </selectKey>
   INSERT INTO rsc_infer (rsc_insp_cd, ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
-  VALUES (#{rscInspCd}, #{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etc_explain})
+  VALUES (#{rscInspCd}, #{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
 </insert> -->
 
-<insert id="insertRscInsp" parameterType="MatVO">
+<insert id="insertMatCheck" parameterType="MatVO">
   
   INSERT INTO rsc_insp (ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
-  VALUES (#{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etc_explain})
+  VALUES (#{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
 </insert>    
 </mapper>
