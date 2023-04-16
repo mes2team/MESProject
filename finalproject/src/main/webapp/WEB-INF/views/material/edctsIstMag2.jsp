@@ -211,6 +211,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
 
   <script>
+  <!-- 조회 후 모달창에 보일 내용-->
     $.ajax({
       url: "completePro",
       success: function (result) {

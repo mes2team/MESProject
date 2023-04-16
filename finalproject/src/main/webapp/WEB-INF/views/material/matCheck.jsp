@@ -99,7 +99,7 @@ form {
 				<div class="col-md-2">
 					<label class="form-label">발주번호</label>
 					<div class="input-group">
-						<input type="text" class="form-control" id="ordrCd" disabled />
+						<input type="text" class="form-control" id="ordrCdInput" name="ordrCdInput" disabled />
 						<button type="button" class="btn btn-primary"
 							data-bs-toggle="modal" data-bs-target="#ordrCdSearch">
 							<i class="bi bi-search"></i>
@@ -109,25 +109,25 @@ form {
 
 				<div class="col-md-2">
 					<label class="form-label">자재명</label> <input
-						type="text" class="form-control" id="rscNm" name="rscNm" disabled />
+						type="text" class="form-control" id="rscNmInput" name="rscNmInput" disabled />
 				</div>
 
 				<div class="col-md-2">
 					<label class="form-label">검수량</label> <input
-						type="text" class="form-control" id="inspCnt" name="inspCnt" disabled />
+						type="text" class="form-control" id="inspCntInput" name="inspCntInput" disabled />
 				</div>
 
 
 				<div class="col-md-2">
 					<label class="form-label">검사일자</label> <input
-						type="date" class="form-control" id="inspDt" name="inspDt"
+						type="date" class="form-control" id="inspDtInput" name="inspDtInput"
 						placeholder="">
 				</div>
 
 				<div class="col-md-2">
 					<label class="form-label">검수자</label>
 					<div class="input-group">
-						<input type="text" class="form-control" id="inspTstr" name="inspTstr" disabled />
+						<input type="text" class="form-control" id="inspTstrInput" name="inspTstrInput" disabled />
 						<button type="button" class="btn btn-primary"
 							data-bs-toggle="modal" data-bs-target="#inspTstrSearch">
 							<i class="bi bi-search"></i>
@@ -137,38 +137,38 @@ form {
 
 				<div class="col-md-2">
 					<label class="form-label">합격량</label> <input
-						type="number" class="form-control" id="inspPassCnt" name="inspPassCnt"  min="0" />
+						type="number" class="form-control" id="inspPassCntInput" name="inspPassCntInput"  min="0" />
 				</div>
 
 				<div class="col-md-1">
 					<label class="form-label">오염</label> <input
-						type="number" class="form-control" id="cont" name="cont" min="0" value=0>
+						type="number" class="form-control" id="contInput" name="contInput" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label class="form-label">부패</label> <input
-						type="number" class="form-control" id="decay" name="decay" min="0" value=0>
+						type="number" class="form-control" id="decayInput" name="decayInput" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label class="form-label">포장불량</label> <input
-						type="number" class="form-control" id="pack" name="pack" min="0" value=0>
+						type="number" class="form-control" id="packInput" name="packInput" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label class="form-label">중량미달</label> <input
-						type="number" class="form-control" id="underWeight"
-						name="UnderWeight" min="0" value=0>
+						type="number" class="form-control" id="underWeightInput"
+						name="UnderWeightInput" min="0" value=0>
 				</div>
 
 				<div class="col-md-1">
 					<label class="form-label">기타</label> <input
-						type="number" class="form-control" id="etc" name="etc" min="0" value=0>
+						type="number" class="form-control" id="etcInput" name="etcInput" min="0" value=0>
 				</div>
 
 				<div class="col-md-7">
 					<label class="form-label">기타설명</label> <input
-						type="text" class="form-control" id="etcExplain" name="etcExplain">
+						type="text" class="form-control" id="etcExplainInput" name="etcExplainInput">
 				</div>
 			</form>
 		</div>
@@ -241,7 +241,7 @@ form {
     </div>
 </div>
 	<!-- ============================================================== -->
-	<!-- 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
+	<!-- 자재검사목록테이블 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
 
 	<div class="row">
 		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -278,23 +278,23 @@ form {
 								<th>기타</th>
 							</tr>
 						</thead>
-						<tbody id="">
-							<c:forEach var="Check" items="${matCheckList }" varStatus="loop">
-								<tr data-id="${Check.rscInspCd }">
+						<tbody id="checkBody">
+							<c:forEach var="check" items="${matCheckList }" varStatus="loop">
+								<tr data-id="${check.rscInspCd }">
 									<td><input type="checkbox" name="chk"
-										value="${matReceipt.rscInspCd }" /></td>
+										value="${check.rscInspCd }" /></td>
 									<td>${loop.count }</td>
-									<td>${Check.rscInspCd }</td>
-									<td>${Check.ordrCd }</td>
-									<td>${Check.rscNm }</td>
-									<td><fmt:formatDate value="${Check.inspDt }"
+									<td>${check.rscInspCd }</td>
+									<td>${check.ordrCd }</td>
+									<td>${check.rscNm }</td>
+									<td><fmt:formatDate value="${check.inspDt }"
 											pattern="yyyy-MM-dd" /></td>
-									<td>${Check.inspTstr }</td>
-									<td>${Check.ordrCnt }</td>
-									<td>${Check.inspPassCnt }</td>
-									<td>${Check.cont }</td>
-									<td>${Check.decay }</td>
-									<td>${Check.pack }</td>
+									<td>${check.inspTstr }</td>
+									<td>${check.ordrCnt }</td>
+									<td>${check.inspPassCnt }</td>
+									<td>${check.cont }</td>
+									<td>${check.decay }</td>
+									<td>${check.pack }</td>
 									<td>${Check.underWeight }</td>
 									<td>${Check.etc }</td>
 								</tr>
@@ -347,9 +347,9 @@ form {
 	      let rscNmModal = $(this).closest("tr").children().eq(1).text();
 	      let ordrCntModal = $(this).closest("tr").children().eq(3).text();
 
-	      $("#ordrCd").val(ordrCdModal);
-	      $("#rscNm").val(rscNmModal);
-	      $("#inspCnt").val(ordrCntModal);
+	      $("#ordrCdInput").val(ordrCdModal);
+	      $("#rscNmInput").val(rscNmModal);
+	      $("#inspCntInput").val(ordrCntModal);
 
 	      $("#ordrCdSearch").modal("hide");
 	      
@@ -360,7 +360,7 @@ form {
 	<!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
 	const today = new Date();
     const todayString = today.toISOString().slice(0,10);
-    document.getElementById("inspDt").value = todayString;
+    document.getElementById("inspDtInput").value = todayString;
     <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
     <!-- ============================================================== -->
     <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 -->
@@ -397,7 +397,7 @@ form {
 	    $(document).on("click", ".choice2Btn", function () {
 	      let nameModal = $(this).closest("tr").children().eq(0).text();
 
-	      $("#inspTstr").val(nameModal);
+	      $("#inspTstrInput").val(nameModal);
 
 	      $("#inspTstrSearch").modal("hide");
 	      
@@ -405,77 +405,109 @@ form {
 	    
     <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색  -->
     <!-- ============================================================== -->	
+	  //날짜 변환
+	    function productDate(timestamp) {
+	      let date = new Date(timestamp);
+	      let year = date.getFullYear();
+	      let month = String(date.getMonth() + 1).padStart(2, "0");
+	      let day = String(date.getDate()).padStart(2, "0");
+	      let formattedDate = year + "-" + month + "-" + day;
+	      return formattedDate;
+	    }
+    <!-- ============================================================== -->	
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
       
-	function formOptionChk() {
-          let ordrCd = document.getElementsByName('ordrCd');
-          let rscNm = document.getElementsByName('rscNm');
-          let inspCnt = document.getElementsByName('inspCnt');
-          let inspDt = document.getElementsByName('inspDt');
-          let inspTstr = document.getElementsByName('inspTstr');
-          let inspPassCnt = document.getElementsByName('inspPassCnt');
-          let cont = document.getElementsByName('cont');
-          let decay = document.getElementsByName('decay');
-          let pack = document.getElementsByName('pack');
-          let underWeight = document.getElementsByName('underWeight');
-          let etc = document.getElementsByName('etc');
-          let etcExplain = document.getElementsByName('etcExplain');
+	$("#insertBtn").on("click", function () {
+		  let ordrCdData = $("input[name='ordrCdInput']").val();
+		  let rscNmData = $("input[name='rscNmInput']").val();
+		  let inspCntData = $("input[name='inspCntInput']").val();
+		  let inspDtData = $("input[name='inspDtInput']").val();
+		  let inspTstrData = $("input[name='inspTstrInput']").val();
+		  let inspPassCntData = $("input[name='inspPassCntInput']").val();
+		  let contData = $("input[name='contInput']").val();
+		  let decayData = $("input[name='decayInput']").val();
+		  let packData = $("input[name='packInput']").val();
+		  let underWeightData = $("input[name='underWeightInput']").val();
+		  let etcData = $("input[name='etcInput']").val();
+		  let etcExplainData = $("input[name='etcExplainInput']").val();
 
-          if (ordrCd.value == "") {
-              alert("발주번호가 입력되지 않았습니다.");
-              ordrCd.focus();
-              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
-          }
-          if (rscNm.value == "") {
-              alert("자재명이 입력되지 않았습니다.");
-              rscNm.focus();
-              return false;
-          }          
-          if (inspCnt.value == "") {
-              alert("검수량이 입력되지 않았습니다.");
-              inspCnt.focus();
-              return false;
-          }
-          if (inspDt.value == "") {
-              alert("검사일자 입력되지 않았습니다.");
-              inspDt.focus();
-              return false;
-          }
-          if (inspTstr.value == "") {
-              alert("검수자가 입력되지 않았습니다.");
-              inspTstr.focus();
-              return false;
-          }
-          if (inspPassCnt.value == "") {
-              alert("합격량이 입력되지 않았습니다.");
-              inspPassCnt.focus();
-              return false;
-          }
-          if (cont.value == "") {
-              alert("오염이 입력되지 않았습니다.");
-              cont.focus();
-              return false;
-          }
-          if (decay.value == "") {
-              alert("부패가 입력되지 않았습니다.");
-              decay.focus();
-              return false;
-          }
-          if (pack.value == "") {
-              alert("포장불량이 입력되지 않았습니다.");
-              pack.focus();
-              return false;
-          }
-          if (underWeight.value == "") {
-              alert("중량미달이 입력되지 않았습니다.");
-              underWeight.focus();
-              return false;
-          }
-          if (etc.value == "") {
-              alert("기타가 입력되지 않았습니다.");
-              etc.focus();
-              return false;
-          }
+		  if (ordrCdData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "발주번호가 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+		  if (rscNmData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "자재명이 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (inspCntData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "검수량이 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (inspDtData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "검사일자가 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (inspTstrData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "검수자가 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (inspPassCntData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "합격량이 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (contData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "오염이 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (decayData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "부패가 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (packData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "포장불량이 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (underWeightData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "중량미달이 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
+		  if (etcData == "") {
+		    Swal.fire({
+		      icon: "warning",
+		      title: "기타가 입력되지 않았습니다.",
+		    });
+		    return;
+		  }
           
           // Swal.fire를 추가합니다.
           Swal.fire({
@@ -487,15 +519,74 @@ form {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
-              if (result.value) {
-                  insertForm.submit();
-              }
-          });
+        	  $.ajax({
+        		  //MatController 의 @PostMapping("/matCheckInsert")
+                  url: "matCheckInsert",
+                  method: "post",
+                  contentType: "application/json",
+                  data: JSON.stringify(dataArr),
+                  /*{
+                	  rscInspCd: rscInspCd,
+                	  ordrCd: ordrCdData,
+                	  rscNm: rscNmData,
+                	  inspCnt: inspCntData,
+                	  inspDt: inspDtData,
+                	  inspTstr: inspTstrData,
+                	  inspPassCnt: inspPassCntData,
+                	  cont: contData,
+                	  decay: decayData,
+                	  pack: packData,
+                	  underWeight: underWeightData,
+                	  etc: etcData,
+                	  etcExplain: etcExplainData,
+                  }  */
+                  success: function (result) {
+                	  //테이블 데이터 지우기
+                    $("#checkBody").empty();
+                	  //input 내 데이터 지우기
+                    $("#ordrCdData").val("");
+                    $("#rscNmData").val("");
+                    $("#inspCntData").val("");
+                    $("#inspDtData").val("");
+                    $("#inspTstrData").val("");
+                    $("#inspPassCntData").val("");
+                    $("#contData").val("");
+                    $("#decayData").val("");
+                    $("#packData").val("");
+                    $("#underWeightData").val("");
+                    $("#etcData").val("");
+                    $("#etcExplainData").val("");
+                    //테이블 데이터 채우기
+                    $(result).each(function (idx, item) {
+                      let tr = $("<tr>").attr("data-id", item.edctsIstNo);
+                      tr.append(
+                        $("<td>").append(
+                          $("<input>").attr("type", "checkbox").attr("name", "chk")
+                        )
+                      );
+                      tr.append("<td>" + (idx + 1) + "</td>");
+                      tr.append("<td>" + item.rscInspCd + "</td>");
+                      tr.append("<td>" + item.ordrCdData + "</td>");
+                      tr.append("<td>" + item.rscNmData + "</td>");
+                   	  tr.append("<td>" + productDate(item.inspDtData) + "</td>");
+                      tr.append("<td>" + item.inspTstrData + "</td>");
+                      tr.append("<td>" + item.inspCntData + "</td>");
+                      tr.append("<td>" + item.inspPassCntData + "</td>");
+                      tr.append("<td>" + item.contData + "</td>");
+                      tr.append("<td>" + item.decayData + "</td>");
+                      tr.append("<td>" + item.packData + "</td>");
+                      tr.append("<td>" + item.underWeightData + "</td>");
+                      tr.append("<td>" + item.etcData + "</td>");
 
-          return false;
-      }
-
-      $("#insertBtn").on("click", formOptionChk);
+                      $("#checkBody").append(tr);
+                    });
+                  },
+                  error: function (reject) {
+                    console.log(reject);
+                  },
+                });
+              });
+            });
 
 <!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록   -->
 <!-- ============================================================== -->  

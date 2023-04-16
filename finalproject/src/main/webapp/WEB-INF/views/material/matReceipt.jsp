@@ -65,7 +65,7 @@ form {
 </head>
 <body>
 	<!-- ============================================================== -->
-	<!-- pageheader -->
+	<!-- 페이지 헤더 -->
 	<!-- ============================================================== -->
 	<div class="row">
 		<nav aria-label="breadcrumb">
@@ -162,8 +162,7 @@ form {
 						<c:forEach var="matReceipt" items="${matReceiptList }"
 							varStatus="loop">
 							<tr data-id="${matReceipt.rscLotCd }">
-								<td><input type="checkbox" name="chk"
-									value="${matReceipt.rscLotCd }" /></td>
+								<td><input type="checkbox" name="chk"/></td>
 								<td>${loop.count }</td>
 								<td>${matReceipt.rscLotCd }</td>
 								<td>${matReceipt.rscCd }</td>
@@ -253,40 +252,53 @@ form {
 <!-- 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 -->
 
 //체크박스 전체 선택
-$(document).ready(function () {
+$(document).on("click", "#cbx_chkAll", function () {
+      if ($("#cbx_chkAll").is(":checked")) {
+        $("input[name=chk]")
+          .prop("checked", true)
+          .closest("tr")
+          .addClass("selected");
+        $("input[name=chk]").closest("tr").addClass("table-danger");
+      } else {
+        $("input[name=chk]")
+          .prop("checked", false)
+          .closest("tr")
+          .removeClass("selected");
+        $("input[name=chk]").closest("tr").removeClass("table-danger");
+      }
+    });
 
-  $("#cbx_chkAll").click(function () {
-    if ($(this).is(":checked"))
-      $("input[name=chk]")
-        .prop("checked", true)
-        .closest("tr")
-        .addClass("selected");
-    else
-      $("input[name=chk]")
-        .prop("checked", false)
-        .closest("tr")
-        .removeClass("selected");
-  });
+    $(document).on("click", "input[name=chk]", function () {
+      var total = $("input[name=chk]").length;
+      var checked = $("input[name=chk]:checked").length;
 
-  $(document).on("click", "input[name=chk]", function () {
-    var total = $("input[name=chk]").length;
-    var checked = $("input[name=chk]:checked").length;
+      if (total != checked) $("#cbx_chkAll").prop("checked", false);
+      else $("#cbx_chkAll").prop("checked", true);
+    });
 
-    if (total != checked) $("#cbx_chkAll").prop("checked", false);
-    else $("#cbx_chkAll").prop("checked", true);
-  });
-});
+    //체크되면 빨간색으로 바뀜
+    $(document).on("change", ":checkbox", function () {
+      if ($(this).prop("checked")) {
+        if (!$(this).closest("tr").children().eq(0).is("th")) {
+          $(this).closest("tr").addClass("table-danger");
+        }
+      } else {
+        $(this).closest("tr").removeClass("table-danger");
+      }
+    });
 
-//행 선택하면 체크
-$(document).on("click", "table tr", function (event) {
-  if (event.target.type !== "checkbox") {
-    $(":checkbox", this).trigger("click");
-  }
-});
-
-$(document).on("change", "table tr :checkbox", function (event) {
-  $(this).closest("tr").toggleClass("selected", this.checked);
-});
+    // tr 선택해도 체크 됨
+    $(document).on("click", "table tr", function (event) {
+      if (event.target.type !== "checkbox") {
+        const $checkbox = $(":checkbox", this);
+        const td = $(".my-td-class", this);
+        if (td.is(event.target)) {
+          event.stopPropagation();
+        } else {
+          $checkbox.trigger("click");
+        }
+      }
+    });
 <!-- 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 -->
 <!-- ============================================================== -->
 <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->

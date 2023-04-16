@@ -182,9 +182,10 @@ public class MatController {
 	}
 	//자재검사등록	
 		@PostMapping("/matCheckInsert")
-		public String matCheckProcess(MatVO matVO) {
+		@ResponseBody
+		public List<MatVO> insertMatCheckProcess(MatVO matVO) {
 			matService.addMatCheck(matVO);
-			return "redirect:matCheck";
+			return matService.matCheckList();
 		}
 	
 
