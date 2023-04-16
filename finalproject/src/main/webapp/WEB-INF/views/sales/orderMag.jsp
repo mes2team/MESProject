@@ -298,16 +298,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
               />
             </div>
             <div class="col-md-6">
-              <label class="form-label">주문 번호</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="자동입력"
-                readonly
-              />
-            </div>
-
-            <div class="col-md-6">
               <label class="form-label">주문 이름</label>
               <input
                 type="text"
@@ -326,6 +316,10 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                 value=""
                 readonly
               />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">거래처 주소</label>
+              <input type="text" class="form-control" id="vendAddr1" readonly />
             </div>
             <div class="col-md-6">
               <label class="form-label">거래처 담당자</label>
@@ -433,6 +427,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                 <th scope="col">사업자 번호</th>
                 <th scope="col">거래처 담당자</th>
                 <th scope="col">전화번호</th>
+                <th scope="col">거래처 주소</th>
               </tr>
             </thead>
             <tbody id="ordSheetTable"></tbody>
@@ -1106,7 +1101,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     row.find("td").each(function () {
       orderArray.push($(this).text());
     });
-
+    console.log(orderArray);
     $("#vendCd").val(orderArray[0]);
     $("#vendNm").val(orderArray[1]);
     $("#brNum").val(orderArray[2]);
@@ -1115,6 +1110,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     $("#remk").val(orderArray[5]);
     $("#vendNm1").val(orderArray[1]);
     $("#vendMag1").val(orderArray[3]);
+    $("#vendAddr1").val(orderArray[5]);
 
     // 현재 모달창 닫기
     $("#orderSheet").modal("hide");
@@ -1144,6 +1140,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
             row.append($("<td>").text(item.brNum));
             row.append($("<td>").text(item.vendMag));
             row.append($("<td>").text(item.vendTel));
+            row.append($("<td>").text(item.vendAddr));
             var button = $("<button>", {
               type: "button",
               class: "btn btn-primary addBtn",

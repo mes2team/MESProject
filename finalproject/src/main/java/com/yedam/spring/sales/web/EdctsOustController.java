@@ -15,6 +15,7 @@ import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.sales.service.EdctsIstService;
 import com.yedam.spring.sales.service.EdctsIstVO;
 import com.yedam.spring.sales.service.EdctsOustService;
+import com.yedam.spring.sales.service.EdctsOustVO;
 import com.yedam.spring.sales.service.OrderService;
 
 @Controller
@@ -49,12 +50,29 @@ public class EdctsOustController {
 	@ResponseBody
 	public List<EdctsIstVO> edctsOustProductList(@RequestBody EdctsIstVO[] arr){
 	    List<EdctsIstVO> result = new ArrayList<EdctsIstVO>();
-	    System.out.println("여기 출력==!!!!===" + arr);
 	    for(int i = 0; i < arr.length; i++) {
-	    	System.out.println("여기 출력=====" + arr[i]);
 	        result.addAll(edctsistService.selectSingleList(arr[i]));
 	    }
 	    return result;
+	}
+	
+	@PostMapping("insertUpdateedctsOust")
+	@ResponseBody
+	public String insertUpdateProcess(@RequestBody EdctsOustVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			edctsoustService.insertUpdateEdcts(arr[i]);
+		}
+		return "success";
+	}
+	
+	// 출고 삭제
+	@PostMapping("edctsOustDel")
+	@ResponseBody
+	public String edctsOustDelProcess(@RequestBody EdctsOustVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			edctsoustService.deleteEdctsOust(arr[i]);
+		}
+		return "success";
 	}
 
 

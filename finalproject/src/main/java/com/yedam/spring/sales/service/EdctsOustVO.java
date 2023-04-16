@@ -15,6 +15,7 @@ public class EdctsOustVO {
 	private Date edctsOustDt;
 	private int edctsOustCnt;
 	private String orderNo;
+	private int resultCnt; // 완제품 수량 업데이트 할 때
 	
 	// 제품이름
 	private String prdtNm;

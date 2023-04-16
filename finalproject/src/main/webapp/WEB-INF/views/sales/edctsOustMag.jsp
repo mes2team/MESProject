@@ -88,6 +88,13 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       <div class="card">
         <h5 class="card-header">출고 현황</h5>
         <div class="card-body">
+          <div id="btnGrp">
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <button type="button" class="btn btn-danger" id="delBtn">
+                삭제
+              </button>
+            </sec:authorize>
+          </div>
           <div
             class="table-responsive"
             style="width: 100%; height: 300px; overflow: auto"
@@ -103,8 +110,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                   <th scope="col">완제품 LOT 번호</th>
                   <th scope="col">완제품 이름</th>
                   <th scope="col">완제품 출고 일자</th>
+                  <th scope="col">완제품 유통 기한</th>
                   <th scope="col">완제품 출고 수량</th>
-                  <th scope="col">유통 기한</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,7 +122,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 >
                   <tr>
                     <td scope="col">
-                      <input type="checkbox" name="chk" />
+                      <input
+                        type="checkbox"
+                        name="chk"
+                        value="${eoust.edctsOustNo}"
+                      />
                     </td>
                     <td>${loop.count }</td>
                     <td>${eoust.orderNo }</td>
@@ -127,8 +138,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                         pattern="yyyy-MM-dd"
                       />
                     </td>
-                    <td>${eoust.edctsOustCnt }</td>
                     <td>2026-04-14 테스트</td>
+                    <td>${eoust.edctsOustCnt }</td>
                   </tr>
                 </c:forEach>
               </tbody>
@@ -158,7 +169,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           ></button>
         </div>
         <div class="modal-body">
-          <input type="text" id="orderNo" />
+          <input type="text" id="orderNo" style="display: none" />
           <h5>주문 상세 조회</h5>
           <table class="table table-hover">
             <thead>
@@ -207,7 +218,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   <script>
     // 등록
     $(document).on("click", "#insertBtn", function () {
-      console.log("클릭");
+      let ck = true;
       if ($('input[name="chk1"]:checked').length == 0) {
         Swal.fire({
           icon: "warning",
@@ -216,40 +227,76 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         return;
       }
 
-      let arrData = []
+      let arrData = [];
       $('input[name="chk1"]:checked').each(function (idx, item) {
-
         let outCnt = $(item).closest("tr").children().eq(4).find("input").val();
-        제품CD, 제품로트번호, 출고량, 주문번호
-        let
-
+        let edctsCd = $(item).closest("tr").children().eq(7).text();
+        let edctsLotNo = $(item).closest("tr").children().eq(1).text();
+        let orderNo = $("#orderNo").val();
+        let inCnt = $(item).closest("tr").children().eq(3).text();
+        let resultCnt = parseInt(inCnt) - parseInt(outCnt);
 
         if (outCnt == "") {
           Swal.fire({
             icon: "warning",
             title: "출고량을 입력 해주세요.",
           });
+          ck = false;
           return;
         }
 
-        Swal.fire({
-          title: "등록 하시겠습니까?",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "등록",
-          cancelButtonText: "취소",
-        }).then((result) => {
-          console.log("등록");
+        if (resultCnt < 0) {
+          Swal.fire({
+            icon: "warning",
+            title: "완제품 수량이 부족합니다.",
+          });
+          ck = false;
+          return;
+        }
+
+        let dataObj = {
+          orderNo: orderNo,
+          edctsCd: edctsCd,
+          edctsLotNo: edctsLotNo,
+          edctsOustCnt: parseInt(outCnt),
+          resultCnt: resultCnt,
+        };
+
+        arrData.push(dataObj);
+      });
+      if (ck == false) {
+        return;
+      }
+
+      Swal.fire({
+        title: "등록 하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "등록",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        $.ajax({
+          url: "insertUpdateedctsOust",
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          data: JSON.stringify(arrData),
+          success: function (result) {
+            if (result == "success") {
+              location.reload();
+            }
+          },
+          error: function (reject) {
+            console.log(reject);
+          },
         });
-        console.log(outCnt);
       });
     });
 
     // 더블클릭하면 모달창
     function openModal(orderNo) {
-      $('#orderNo').val(orderNo)
+      $("#orderNo").val(orderNo);
       let prdtArr = [];
       $.ajax({
         url: "edctsOustOrderDetail",
@@ -303,7 +350,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 );
                 tr.append("<td>" + dateChange(item.edctsIstDt) + "</td>");
                 tr.append($("<td>").text("2026-04-01"));
-                  tr.append($("<td>").text(item.edctsCd));
+                tr.append($("<td>").text(item.edctsCd).css("display", "none"));
 
                 $("#productDetailList").append(tr);
               });
@@ -379,6 +426,106 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           $checkbox.trigger("click");
         }
       }
+    });
+
+    // 체크 메인꺼
+    $(document).on("click", "#cbx_chkAll", function () {
+      if ($("#cbx_chkAll").is(":checked")) {
+        $("input[name=chk]")
+          .prop("checked", true)
+          .closest("tr")
+          .addClass("selected");
+        $("input[name=chk]").closest("tr").addClass("table-danger");
+      } else {
+        $("input[name=chk]")
+          .prop("checked", false)
+          .closest("tr")
+          .removeClass("selected");
+        $("input[name=chk]").closest("tr").removeClass("table-danger");
+      }
+    });
+
+    $(document).on("click", "input[name=chk]", function () {
+      var total = $("input[name=chk]").length;
+      var checked = $("input[name=chk]:checked").length;
+
+      if (total != checked) $("#cbx_chkAll").prop("checked", false);
+      else $("#cbx_chkAll").prop("checked", true);
+    });
+
+    // 삭제
+    $(document).on("click", "#delBtn", function () {
+      let dataArr = [];
+
+      if ($('input[name="chk"]:checked').length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "체크해주세요",
+        });
+        return;
+      }
+
+      $('input[name="chk"]:checked').each(function (idx, item) {
+        let edctsLotNo = $(item).closest("tr").children().eq(3).text();
+        let edctsOustNo = $(item).val();
+        let orderNo = $(item).closest("tr").children().eq(2).text();
+
+        let dataObj = {
+          edctsLotNo: edctsLotNo,
+          edctsOustNo: edctsOustNo,
+          orderNo: orderNo,
+        };
+
+        dataArr.push(dataObj);
+      });
+
+      Swal.fire({
+        title: "삭제 하시겠습니까?",
+        text: "복구 할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            url: "edctsOustDel",
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            data: JSON.stringify(dataArr),
+            success: function (result) {
+              if (result == "success") {
+                $('input[name="chk"]:checked').each(function (idx, item) {
+                  let tr = $(item).closest("tr");
+
+                  tr.remove();
+                });
+
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
+              }
+            },
+            error: function (reject) {
+              console.log(reject);
+            },
+          });
+        }
+      });
     });
   </script>
 </body>

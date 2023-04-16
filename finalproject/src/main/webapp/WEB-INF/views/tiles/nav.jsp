@@ -52,7 +52,7 @@
             </a>
           </li>
           <li>
-            <a href="forms-validation.html">
+            <a href="${pageContext.request.contextPath }/finishedPrd">
               <i class="bi bi-circle"></i><span>완제품 조회</span>
             </a>
           </li>
