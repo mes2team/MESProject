@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.spring.common.Criteria;
+import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.mapper.ProMapper;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -188,6 +189,45 @@ public class ProServiceImpl implements ProService {
 		
 		return result;
 	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsFlow(String edctsCd) {
+		ProPrcsVO vo = new ProPrcsVO();
+		vo.setEdctsCd(edctsCd);
+		return proMapper.selectPrcsFlow(vo);
+	}
+
+	@Override
+	public List<BomVO> getLotStock(String edctsCd) {
+		return proMapper.selectLotStock(edctsCd);
+	}
+
+	@Override
+	public List<BomVO> getLotStk(String rscCd) {
+		return proMapper.selectLotStk(rscCd);
+	}
+
+	@Override
+	public String newProOrderInsert(ProOrderVO proOrderVO) {
+		int result = proMapper.InsertNewProOrder(proOrderVO);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
+	@Override
+	public List<ProOrderVO> getIndica() {
+		return proMapper.selectIndica();
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsProg(ProPrcsVO vo) {
+		return proMapper.selectPrcsProg(vo);
+	}
+
+
 
 
 

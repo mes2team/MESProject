@@ -10,14 +10,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   h5 {
     float: left;
   }
-
-  table,
-  tr,
-  th,
-  td {
-    border: 1px solid black;
-  }
-
   #btnGrp {
     float: right;
     padding: 20px 0 15px 0;
@@ -25,6 +17,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   form {
     clear: both;
   }
+  .active {
+  background-color: #e1efff;
+}
 </style>
 <body>
   <div>
@@ -72,22 +67,29 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
-              <table
-                class="table table-striped table-bordered first table-hover"
-              >
+              <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>생산지시 코드</th>
-                    <th>생산지시 명</th>
-                    <th>공정 명</th>
-                    <th>작업 일자</th>
+                    <th>생산지시코드</th>
+                    <th>생산지시명</th>
+                    <th>제품명</th>
+                    <th>작업일자</th>
                     <th>지시량</th>
-                    <th>순서</th>
-                    <th>자재코드</th>
-                    <th>자재분류</th>
+                    <th>현재상태</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="indicaList">
+                <c:forEach var="item" items="${indicaList}">
+                	<tr>
+                		<td>${item.indicaCd }</td>
+                		<td>${item.indicaName }</td>
+                		<td>${item.prdtNm }</td>
+                		<td><fmt:formatDate value="${item.indicaDt }" pattern="yyyy-MM-dd" /></td>
+                		<td>${item.indicaCnt }</td>
+                		<td>${item.nowSt }</td>
+                	</tr>
+                </c:forEach>
+                </tbody>
               </table>
             </div>
           </div>
@@ -114,13 +116,12 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
+            <h5 id="indicaCdText"></h5>
               <table
-                class="table table-striped table-bordered first table-hover"
+                class="table table-hover"
               >
                 <thead>
                   <tr>
-                    <th>생산지시 코드</th>
-                    <th>현재공정 코드</th>
                     <th>공정 코드</th>
                     <th>작업량</th>
                     <th>물량량</th>
@@ -130,7 +131,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>작업종료시간</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="prcsProgList"></tbody>
               </table>
             </div>
           </div>
@@ -229,4 +230,53 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       </div>
     </div>
   </div>
+  
+  <script>
+  $(document).ready(function(){
+	  $('#indicaList tr').click(function(){
+		$(this).addClass('active').siblings().removeClass('active');
+		
+		 
+	    var indicaCd = $(this).find('td:eq(0)').text(); 
+	    var indicaName = $(this).find('td:eq(1)').text(); 
+	    var prdtNm = $(this).find('td:eq(2)').text(); 
+	    var indicaDt = $(this).find('td:eq(3)').text(); 
+	    var indicaCnt = $(this).find('td:eq(4)').text(); 
+	    var nowSt = $(this).find('td:eq(5)').text(); 
+		
+	    $('#indicaCdText').text(indicaName);
+	    
+		  $.ajax({
+				 url:'getPrcsProg',
+				 type:'post',
+				 data: {indicaCd : indicaCd},
+				 success: function(data) {
+					 console.log(data.PrcsProg);
+					 var data = data.PrcsProg;
+					 var tbody = $('#prcsProgList');
+					 tbody.empty(); // 기존에 있던 tr과 td를 모두 제거
+
+ 				 // 데이터를 반복문으로 처리하여 tr과 td 생성
+					 for (var i = 0; i < data.length; i++) {
+					   var tr = $('<tr>');
+					   tr.append('<td>' + data[i].prcsCd + '</td>');
+					   tr.append('<td>' + data[i].prodCnt + '</td>');
+					   tr.append('<td>' + data[i].inferCnt + '</td>');
+					   tr.append('<td>' + '0' + '</td>');
+					   tr.append('<td>' + data[i].prcsPsch + '</td>');
+					   tr.append('<td>' + data[i].wkToTm + '</td>');
+					   tr.append('<td>' + data[i].wkFrTm + '</td>');
+					   tbody.append(tr);
+					 } 
+
+				 },
+				 error: function(error) {
+					 console.log(error);
+				 }
+				 
+			 })
+	    
+	  });
+	});
+  </script>
 </body>
