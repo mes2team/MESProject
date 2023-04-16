@@ -50,8 +50,8 @@
 		<hr>
 		<div class="card">
 			<div class="card-body">
-				<form id="insertForm" name="insertForm" action="eqm" method="POST" style="margin-top: 20px; margin-bottom: 5px;">
-					<input type="file" name="eqmImg" id="profile_pt"
+				<form id="insertForm" name="insertForm" action="eqm" method="POST" enctype="multipart/form-data" style="margin-top: 20px; margin-bottom: 5px;">
+					<input type="file" name="file" id="profile_pt"
 						onchange="previewImage(this,'View_area')">
 					<div id='View_area'
 						style='position: relative; width: 200px; height: 200px; color: black; border: 0px solid black; dispaly: inline;'>
