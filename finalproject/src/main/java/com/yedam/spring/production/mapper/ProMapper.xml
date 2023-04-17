@@ -522,7 +522,7 @@
 			ORDER BY pp.indica_cd, pp.prcs_cd
  		</select>
  		
- 		<!-- 진행공정 단건 조회 -->
+ 		<!-- 진행공정 자재 -->
  		<select id="selectPrcsAndRsc" resultType="ProPrcsVO">
 			SELECT e.edcts_cd, e.prdt_nm, b.bom_cd, bd.rsc_cd,r.rsc_typ ,r.rsc_nm, bd.use_cnt, bd.prcs_cd, p.prcs_nm
 			FROM  edcts e ,bom b, bom_detail bd, rsc r, prcs p
@@ -544,9 +544,44 @@
  		</select>
  		
  		<update id="updatePrcsStart" parameterType="ProPrcsVO">
- 			UPDATE
+ 		DECLARE
+ 			v_prcs_fg	VARCHAR2(50);
+ 		BEGIN
+ 			v_prcs_fg := #{prcsFg};
+ 			
+ 			SELECT prcs_fg
+ 			INTO v_prcs_fg
+ 			FROM prcs
+ 			WHERE prcs_cd = #{prcsCd};
  		
+ 			UPDATE prcs_prog
+			SET prcs_psch = #{prcsPsch},
+			    wk_to_tm = #{wkToTm},
+			    prcs_status = v_prcs_fg || '중',
+			    use_eqm = #{useEqm}
+			WHERE prcs_cd = #{prcsCd}
+			  AND indica_cd = #{indicaCd};
+			  
+			UPDATE indica
+			SET	now_st = v_prcs_fg || '중'
+			WHERE indica_cd = #{indicaCd};
+		END;
+ 		</update>
+ 		
+ 		<update id="updateUseEqm" parameterType="String">
+ 			UPDATE eqm
+ 			SET use_yn = 'N'
+ 			WHERE eqm_cd = #{eqmCd}
  		</update>
  	
+ 		<update id="updateUseRsc" parameterType="MatVO">
+ 		{CALL updateUseRscProc(
+ 		    #{oustCnt, mode=IN, jdbcType=INTEGER},
+      		#{rscCd, mode=IN, jdbcType=VARCHAR}
+      		
+    	)}
+
+
+		</update>
  	
   </mapper>

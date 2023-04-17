@@ -32,32 +32,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <!-- ============================================================== -->
     <!-- end pageheader -->
     <!-- ============================================================== -->
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">공정 실적 관리</h5>
-        <!-- Multi Columns Form -->
-        <form class="row g-3">
-          <div class="col-md-6">
-            <label for="inputCode" class="form-label">생산 지시 명</label>
-            <input type="text" class="form-control" id="inputCode" />
-          </div>
-          <div class="col-md-6">
-            <label for="inputEmail5" class="form-label">지시 일자</label>
-            <div class="d-flex align-items-center">
-              <input type="date" class="form-control mr-2" id="startDate" />
-              <span class="mx-2">~</span>
-              <input type="date" class="form-control ml-2" id="endDate" />
-            </div>
-            <div id="btnGrp">
-              <button type="button" class="btn btn-primary">검색</button>
-              <button type="button" class="btn btn-secondary">초기화</button>
-            </div>
-          </div>
-          <div class="text-center"></div>
-        </form>
-        <!-- End Multi Columns Form -->
-      </div>
-    </div>
+    
     <div class="row">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
@@ -101,18 +76,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <div class="card">
           <p></p>
           <div class="card-body">
-            <div id="btnGrp">
-              <button type="button" class="btn btn-primary">저장</button>
-              <button
-                type="button"
-                class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#prcsModal"
-              >
-                추가
-              </button>
-            </div>
-            <div
+            <div 
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
@@ -193,8 +157,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                   <tr>
                   	<th scope="col">자재분류</th>
                     <th scope="col">자재명</th>
-                    <th scope="col">예상소모량</th>
-                    <th scope="col">실자재소모량</th>
+                    <th scope="col">자재소모량</th>
                   </tr>
                 </thead>
                 <tbody id="modalInTbody"></tbody>
@@ -204,11 +167,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           <hr />
           <div>
           	<div class="form-inline">
-			  <input id="startTime" class="form-control mr-2" type="text" style="width: 80px" readonly />
+			  <input id="startTime" class="form-control mr-2" type="text"  readonly />
 			  <button id="workStart" type="button" class="btn btn-success">작업시작</button>
 			</div>
           	<div class="form-inline">
-	            <input class="form-control mr-2" type="text" style="width: 80px" readonly />
+	            <input class="form-control mr-2" type="text"  readonly />
 	            <button type="button" class="btn btn-danger">작업종료</button>
           	</div>
           </div>
@@ -231,62 +194,116 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
   
   <script>
-  function getCurrentDate() {
-	  var now = new Date();
-	  var year = now.getFullYear();
-	  var month = now.getMonth() + 1;
-	  var day = now.getDate();
+  function getCurrentTime() {
+	  var currentDate = new Date();
+	  var year = currentDate.getFullYear();
+	  var month = currentDate.getMonth() + 1;
+	  var day = currentDate.getDate();
+	  var hours = currentDate.getHours();
+	  var minutes = currentDate.getMinutes();
+	  var seconds = currentDate.getSeconds();
 
+	  // 월, 일, 시, 분, 초가 10보다 작을 경우 앞에 0 추가
 	  if (month < 10) {
-	    month = '0' + month;
+	    month = "0" + month;
 	  }
-
 	  if (day < 10) {
-	    day = '0' + day;
+	    day = "0" + day;
+	  }
+	  if (hours < 10) {
+	    hours = "0" + hours;
+	  }
+	  if (minutes < 10) {
+	    minutes = "0" + minutes;
+	  }
+	  if (seconds < 10) {
+	    seconds = "0" + seconds;
 	  }
 
-	  var formattedDate = year + '-' + month + '-' + day;
+	  // yyyy-MM-dd hh:mm:ss 형식으로 출력
+	  var formattedDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 	  return formattedDate;
 	}
   $(document).ready(function(){
+	  var time = getCurrentTime();
 	  $('#workStart').on('click', function() {	  
-		  var now = new Date();
-		  var hours = now.getHours();
-		  var minutes = now.getMinutes();
-		  var seconds = now.getSeconds();
-		  hours = ('0' + hours).slice(-2);
-		  minutes = ('0' + minutes).slice(-2);
-		  seconds = ('0' + seconds).slice(-2);
-		  var wkToTm = hours + ':' + minutes + ':' + seconds;
+		  
+		  var trList = $('#modalInTbody tr');
+		  //사용할 자재 배열
+		  var rscArr = [];
+
+		  trList.each(function(index, element) {
+		    var $this = $(this);
+		    var rscOut = {
+		      oustCnt: $this.find('td:nth-child(3)').text(),
+		      rscCd: $this.find('td:nth-child(4)').text()
+		    };
+		    rscArr.push(rscOut);
+		  });
+
+		  console.log(rscArr);
+		  var wkToTm = time.substr(time.length - 8);
 		  $('#startTime').val(wkToTm);
 		  $(this).attr('disabled','disabled');
+		  
+		  var indicaCd = $('.active').find('td:first-child').text()
 		  
 		  var prcsPsch = $('#prcsWorker').val();
 		  var prcsCd = $('#prcsSelect').val();
 		  var prodCnt = $('#workAmount').val();
 		  console.log(prcsPsch+"/"+prcsCd+"/"+prodCnt+"/"+wkToTm);
 		  
-		  var selectedValues = $('#multiPro').val();
+		  //사용할 설비 배열
+		  var selectedEqm = $('#multiPro').val();
 		  var useEqm = ""; 
 
-		  for (var i = 0; i < selectedValues.length; i++) {
-			  useEqm += selectedValues[i]; 
+		  for (var i = 0; i < selectedEqm.length; i++) {
+			  useEqm += selectedEqm[i]; 
 
-		    if (i != selectedValues.length - 1) {
+		    if (i != selectedEqm.length - 1) {
 		    	useEqm += "/";
 		    }
 		  }
-		  console.log(selectedValues);
+		  console.log(useEqm);
 		  
 		  $.ajax({
 			  url:'modifyPrcsStart',
 			  type:'post',
 			  data:{prcsPsch:prcsPsch,
 				    prcsCd:prcsCd,
-				    prodCnt:prodCnt,
-				    useEqm:useEqm},
+				    useEqm:useEqm,
+				    indicaCd:indicaCd,
+				    wkToTm:wkToTm},
 			  success:function(data){
 				  console.log(data);
+				  //설비
+				  $.ajax({
+					  url: 'modifyUseEqm',
+					  type: 'post',
+					  data: JSON.stringify(selectedEqm),
+					  contentType: "application/json",
+					  success:function(data) {
+						  console.log("설비"+data.result);
+						  //자재
+						  $.ajax({
+							  url: 'modifyUseRsc',
+							  type: 'post',
+							  data: JSON.stringify(rscArr),
+							  contentType: "application/json",
+							  success:function(data) {
+								  console.log("자재"+data);
+							  },
+							  error:function(error) {
+								  console.log(error);
+							  }
+						  })
+					  },
+					  error:function(error) {
+						  console.log(error);
+					  }
+				  })
+				  
+				  
 			  },
 			  error:function(error){
 				  console.log(error);
@@ -310,7 +327,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		});
 	  
 	  
-	  $('#workDate').val(getCurrentDate);
+	  $('#workDate').val(time.substr(0, time.length - 9));
 	  
 	  $('#indicaList tr').click(function(){
 		$('#prcsSelect').empty();  
@@ -420,7 +437,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 							   var eqmCd = obj.eqmCd;
 							   var eqmFg = obj.eqmFg;
 							   
-							   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd);
+							   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd).data('fg', eqmFg);
 							   
 							   multiPro.append(option);
 							 });
@@ -429,19 +446,17 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 							 console.log(error)
 						 }
 					 })
+					 let workAmount = parseInt($('#workAmount').val());
 					 var tbody = $('#modalInTbody');
 					 for (var i = 0; i < data.result.length; i++) {
 					    var obj = data.result[i];
 					    var tr = $('<tr>').appendTo(tbody);
+					    var useCnt = parseInt(obj.useCnt);
+					    var calcRsc = useCnt * workAmount;
 					    tr.append($('<td>').text(obj.rscTyp));
 					    tr.append($('<td>').text(obj.rscNm));
-					    tr.append($('<td>').text(obj.useCnt).attr('data-cnt',obj.useCnt));
-					    var input = $('<input>').attr({
-											    	  type: 'number',
-											    	  class: 'form-control mr-2'
-											    	});
-					    tr.append($('<td>').append(input));
-					    
+					    tr.append($('<td>').text(calcRsc).attr('data-cnt',obj.useCnt));
+					    tr.append($('<td hidden="true">').text(obj.rscCd));
 					 }
 					 $('#prcsModal').modal('show');
 				 },

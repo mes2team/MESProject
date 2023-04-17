@@ -248,6 +248,26 @@ public class ProServiceImpl implements ProService {
 		}
 	}
 
+	@Override
+	public String modifyUseEqm(String eqmCd) {
+		int result = proMapper.updateUseEqm(eqmCd);
+		if(result > 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
+	@Override
+	public String modifyUseRsc(MatVO matVO) {
+		int result = proMapper.updateUseRsc(matVO);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
 
 
 
