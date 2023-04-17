@@ -242,13 +242,6 @@
 		WHERE rsc_lot_cd = #{rscLotCd}
 	</delete>
 
-<!-- 검사미완료 발주 전체 조회	 -->
-	<select id="matOrderChkList" resultType="MatVO">
-		SELECT *
-		FROM rsc_ordr
-	   WHERE ORDR_CHK != '진행완료'
-	   ORDER BY ordr_cd
-	</select>		
 <!-- 자재검사 현황 -->	
 	<select id="matCheckList" resultType="MatVO">
 		SELECT i.rsc_insp_cd
@@ -266,6 +259,33 @@
 		  FROM rsc_insp i JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
 		 ORDER BY rsc_insp_cd DESC
 	</select>	
-	
+<!-- 검사미완료 발주 전체 조회	 -->
+	<select id="matOrderChkList" resultType="MatVO">
+		SELECT *
+		FROM rsc_ordr
+	   WHERE ORDR_CHK != '진행완료'
+	   ORDER BY ordr_cd
+	</select>
+<!-- 검수자 목록 -->			
+	<select id="checkerList" resultType="MatVO">
+		SELECT *
+		FROM emp
+	   WHERE job = '품질'
+	   ORDER BY name
+	</select>
+<!-- 자재검사 등록 -->
+	<insert id="insertMatCheck" parameterType="MatVO">
+  <selectKey keyProperty="rscInspCd" resultType="String" order="BEFORE">
+    SELECT CONCAT('RIC', LPAD(NVL(MAX(SUBSTR(rsc_insp_cd, 4)), '0000') + 1, 4, '0'))
+    FROM rsc_insp
+  </selectKey>
+  INSERT INTO rsc_insp (rsc_insp_cd, ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
+  VALUES (#{rscInspCd}, #{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
+</insert>
 
+<!-- <insert id="insertMatCheck" parameterType="MatVO">
+  
+  INSERT INTO rsc_insp (ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
+  VALUES (#{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
+</insert>   -->  
 </mapper>
