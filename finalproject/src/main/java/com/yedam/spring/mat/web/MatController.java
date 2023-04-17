@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yedam.spring.eqm.service.EqmVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
 
@@ -128,7 +129,7 @@ public class MatController {
 		matService.addMatReceipt(matVO);
 		return "redirect:matReceipt";
 	}
-	// 자재입고수정
+	// 자재입고수정(여러개 동시에 수정할 때 @RequestBody MatVO[] arr)
 	@PostMapping("/updateMatReceipt")
 	@ResponseBody
 	public Map<String, Object> updateMatReceipt(@RequestBody MatVO[] arr) {
@@ -174,19 +175,48 @@ public class MatController {
 		public List<MatVO> orderChkList(){
 			return matService.matOrderChkList();
 			}
-	//자재검사 전체조회
+	//자재 검수자 전체조회
 	@GetMapping("/checkerModal")
 	@ResponseBody
 	public List<MatVO> checkerModal(){
 		return matService.checkerList();
 	}
 	//자재검사등록	
-		@PostMapping("/matCheckInsert")
-		@ResponseBody
-		public List<MatVO> insertMatCheckProcess(MatVO matVO) {
-			matService.addMatCheck(matVO);
-			return matService.matCheckList();
-		}
+	@PostMapping("/matCheckInsert")
+	@ResponseBody
+	public List<MatVO> insertMatCheckProcess(MatVO matVO) {
+		matService.addMatCheck(matVO);
+		return matService.matCheckList();
+	}
+	//자재검사 단건조회
+	@GetMapping("/selectMatCheck")
+	@ResponseBody
+	public MatVO selectMatCheck(MatVO matVO) {
+		return matService.getMatCheckInfo(matVO);
+	}
 	
+	// 자재검사 수정(단건수정)
+	@PostMapping("/updateMatCheckInfo")
+	@ResponseBody
+	public List<MatVO> updateMatCheckInfo(MatVO arr) {
+		System.out.println("출력" +arr);
+	    	matService.updateMatCheckInfo(arr);
+	    
+	    
+        return matService.matCheckList();
+	}
+	//자재검사삭제
+	@PostMapping("/removeMatatCheck")
+	@ResponseBody
+	public String matCheckDeleteProcess(HttpServletRequest request) {
+		String[] arr = request.getParameterValues("valueArr");
+		if (arr == null) {
+			return "error";
+		}
+		for (int i = 0; i < arr.length; i++) {
+			matService.removeMatatCheckInfo(arr[i]);
+		}
+		return "success";
+	}
 
 }

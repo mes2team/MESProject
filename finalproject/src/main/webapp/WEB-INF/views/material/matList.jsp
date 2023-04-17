@@ -213,6 +213,7 @@ form {
                                  <button type="button" class="btn-close"
                                     data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
+                               <!-- action은 서비스 인터페이스 이름 갖고 오기 -->
                               <form class="row g-3" name="updateForm" action="updateMat"
                                  method="post" onsubmit="return false"
                                  style="margin: 0px 5px 5px 5px;">
@@ -309,7 +310,7 @@ form {
 
       <script>
       <!-- ============================================================== -->
-                  <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
+    <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
       
       function formOptionChk() {

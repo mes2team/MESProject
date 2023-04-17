@@ -422,8 +422,8 @@ function updateBtn() {
       });
       return;
     }
-    $("#cbx_chkAll").prop("disabled", true);
-    disableCheckBoxes();
+    /* $("#cbx_chkAll").prop("disabled", true);*/
+    disableCheckBoxes(); 
 
     // 수정 버튼의 텍스트를 "수정완료"로 변경
     $("#updateBtn").text("수정완료");
@@ -432,6 +432,7 @@ function updateBtn() {
     // $(".btn-info").off("click").on("click", submitBtn);
     $("#updateBtn").removeAttr("onclick");
     $("#updateBtn").attr("onclick", "submitBtn();");
+    
 
     $('input[name="chk"]:checked').each(function () {
       var row = $(this).closest("tr");
@@ -594,6 +595,10 @@ function updateBtn() {
 
   function enableCheckBoxes() {
     $('input[name="chk"]').prop("disabled", false);
+    
+    
+    
+    
   }
       
   <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
