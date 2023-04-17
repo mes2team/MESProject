@@ -52,4 +52,17 @@ public class PrcsInspController {
 		return "success";
 	}
 	
+	//검사완료 전체리스트
+	@GetMapping("/selectCompletedList")
+	@ResponseBody
+	public List<PrcsInspVO> selectCompletedList(){
+		return service.selectCompletedPrcs();
+	}
+	
+	@GetMapping("/inspDtl")
+	@ResponseBody
+	public List<PrcsInspVO> inspDtl(PrcsInspVO prcsCd){
+		return service.inspDtl(prcsCd);
+	}
+	
 }

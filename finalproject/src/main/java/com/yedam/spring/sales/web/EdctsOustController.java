@@ -1,16 +1,21 @@
 package com.yedam.spring.sales.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.sales.service.EdctsIstService;
+import com.yedam.spring.sales.service.EdctsIstVO;
 import com.yedam.spring.sales.service.EdctsOustService;
+import com.yedam.spring.sales.service.EdctsOustVO;
 import com.yedam.spring.sales.service.OrderService;
 
 @Controller
@@ -41,8 +46,34 @@ public class EdctsOustController {
 	}
 	
 	// 완제품 입고 조회
-//	@GetMapping("edctsOustProduct")
-//	@ResponseBody
-//	public List<EdctsIstVO> edctsOustProductList
+	@PostMapping("edctsOustProduct")
+	@ResponseBody
+	public List<EdctsIstVO> edctsOustProductList(@RequestBody EdctsIstVO[] arr){
+	    List<EdctsIstVO> result = new ArrayList<EdctsIstVO>();
+	    for(int i = 0; i < arr.length; i++) {
+	        result.addAll(edctsistService.selectSingleList(arr[i]));
+	    }
+	    return result;
+	}
 	
+	@PostMapping("insertUpdateedctsOust")
+	@ResponseBody
+	public String insertUpdateProcess(@RequestBody EdctsOustVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			edctsoustService.insertUpdateEdcts(arr[i]);
+		}
+		return "success";
+	}
+	
+	// 출고 삭제
+	@PostMapping("edctsOustDel")
+	@ResponseBody
+	public String edctsOustDelProcess(@RequestBody EdctsOustVO[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			edctsoustService.deleteEdctsOust(arr[i]);
+		}
+		return "success";
+	}
+
+
 }

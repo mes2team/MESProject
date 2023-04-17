@@ -60,7 +60,8 @@
                    chck_perd,
                    use_yn,
                    eqm_mng,
-                   eqm_img
+                   eqm_img,
+                   eqm_img_path
                   )
                   values (
                           #{eqmCd},
@@ -77,7 +78,8 @@
                           #{chckPerd},
                           #{useYn},
                           #{eqmMng},
-                          #{eqmImg}
+                          #{eqmImg},
+                          #{eqmImgPath}
                          )
 	</insert>
 	
@@ -135,6 +137,10 @@
 	
 	<!-- 점검등록 -->
 	<insert id="insertCheck" parameterType="EqmVO">
+		<selectKey keyProperty="checkCd" resultType="String" order="BEFORE">
+			SELECT 'CHK'||(TO_NUMBER(SUBSTR(NVL(MAX(check_cd),'CHK999'),4)) + 1) check_cd
+			FROM eqm_check
+		</selectKey>
 		INSERT INTO eqm_check (
 								check_cd, 
 							    eqm_cd, 
@@ -145,8 +151,16 @@
 							    chck_psch, 
 							    eqm_nm
 							    )
-		SELECT CONCAT('CHK', CAST(SUBSTR(MAX(check_cd), 4) + 1 AS NUMBER)),#{eqmCd},#{chckFg}, #{chckDt},#{jdgmnt},#{dispoCtnt},#{chckPsch},#{eqmNm}
-		FROM eqm_check
+				VALUES (
+						#{checkCd},
+						#{eqmCd},
+						#{chckFg}, 
+						#{chckDt},
+						#{jdgmnt},
+						#{dispoCtnt},
+						#{chckPsch},
+						#{eqmNm}
+						)
 	</insert>
 	
 	<!-- 점검삭제 -->
@@ -160,8 +174,7 @@
 		SET chck_dt = #{chckDt}, 
 			jdgmnt = #{jdgmnt}, 
 			dispo_ctnt = #{dispoCtnt}, 
-			chck_psch = #{chckPsch}, 
-			eqm_nm = #{eqmNm} 
+			chck_psch = #{chckPsch}
 		WHERE check_cd = #{checkCd}
 	</update>
 	
