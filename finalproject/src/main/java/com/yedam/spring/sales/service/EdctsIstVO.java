@@ -21,5 +21,8 @@ public class EdctsIstVO {
 	private String inferCnt; // 불량량
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date edctsIstDtEnd; // 날짜 검색할때
-	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date edctsExpire; // 제품 유통기한
+	private String indicaCd; // 생산지시 코드
+	private String nowSt; // 생산지시 현재상태
 }

@@ -151,6 +151,13 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                               <option value="주문취소">주문취소</option>
                             </select>
                           </c:when>
+                          <c:when test="${order.progAppe eq '출고완료'}">
+                            <select name="progAppe" class="progAppe" disabled>
+                              <option value="${order.progAppe }">
+                                ${order.progAppe }
+                              </option>
+                            </select>
+                          </c:when>
                           <c:otherwise>
                             <select name="progAppe" class="progAppe">
                               <option value="${order.progAppe }">
@@ -926,7 +933,13 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     let orderNo = $(this).closest("tr").children().eq(1).text().trim();
     let orderNm = $(this).closest("tr").children().eq(3).text().trim();
     let paprdDt = $(this).closest("tr").children().eq(5).text().trim();
+    let progAppe = $(this).closest("tr").children().eq(6).find("select").val();
 
+    if (progAppe == "출고완료") {
+      $("#updateOrder").prop("disabled", true);
+    } else {
+      $("#updateOrder").prop("disabled", false);
+    }
     $.ajax({
       url: "orderDetail",
       data: { orderNo: orderNo },

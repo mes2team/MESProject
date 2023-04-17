@@ -11,6 +11,7 @@
 		AND 	bd.prcs_cd = p.prcs_cd
 		AND 	bd.rsc_cd = r.rsc_cd
 		AND 	b.edcts_cd = #{edctsCd}
+		AND     b.standard = #{standard}
 		ORDER BY rsc_cd
 	</select>
 	

@@ -19,7 +19,7 @@
 	
 	<!-- 주문번호 조회 -->
 	<select id="selectOrderNo" resultType="OrderSheetVO">
-		SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1) as orderNo
+		SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),999) + 1) as orderNo
 		FROM 	order_sheet_test
 	</select>
 	
@@ -33,7 +33,7 @@
 	<!-- 주문서 등록 -->
 	<insert id="insertOrder" parameterType="OrderSheetVO">
 		<selectKey keyProperty="orderNo" resultType="String" order="BEFORE">
-			SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),0) + 1)
+			SELECT 	TO_CHAR(NVL(MAX(SUBSTR(order_no, 4)),999) + 1)
 			FROM 	order_sheet_test
 		</selectKey>
 		INSERT INTO order_sheet_test (order_no,

@@ -38,8 +38,8 @@ public class BomController {
 	
 	@GetMapping("bomList")
 	@ResponseBody
-	public List<BomVO> bomList(@RequestParam String edctsCd){
-		return bomService.getBomList(edctsCd);
+	public List<BomVO> bomList(BomVO vo){
+		return bomService.getBomList(vo);
 	}
 	
 	@PostMapping("deleteBom")

@@ -363,8 +363,9 @@ uri="http://www.springframework.org/security/tags"%>
 
       $.ajax({
         url: "bomList",
-        data: { edctsCd: edctsCd },
+        data: { edctsCd: edctsCd, standard: edctsSpec },
         success: function (result) {
+          console.log(result);
           $("#inputBomCd").val(result[0].bomCd);
           $("#bomList").empty();
           $.each(result, function (idx, item) {
