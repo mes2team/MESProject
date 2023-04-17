@@ -105,7 +105,7 @@
 										<label style="font-weight: bold;">검사일자*</label>
 									</div>
 									<div class="col-auto" style="margin-left: 15px;">
-										<input style="width: 214px" type="date" name="prcsInspDt"
+										<input box="mainInput" style="width: 214px" type="date" name="prcsInspDt"
 											class="form-control">
 									</div>
 
@@ -113,10 +113,15 @@
 										<label style="font-weight: bold;">검사담당자*</label>
 									</div>
 									<div class="col-auto">
-										<input type="text" name="prcsInspMng" class="form-control">
-										<input type="text" style="display: none" name="prcsChkCd"
+										<select box="mainInput" name="prcsInspMng" class="form-select" style="width:216px;">
+											<option value="" selected disabled hidden>담당자 선택<option>
+												<c:forEach items="${empList }" var="emp">
+													<option value="${emp.name }">${emp.name }</option>
+												</c:forEach>
+										</select> <input type="text" style="display: none" name="prcsChkCd"
 											value="${maxChkCd.prcsChkCd }">
 									</div>
+
 
 									<div class="col-auto" style="margin-left: 35px" hidden>
 										<label style="font-weight: bold;">최종판정*</label>
@@ -155,11 +160,11 @@
 									<label style="font-weight: bold;">총불량량*</label>
 								</div>
 								<div class="col-auto">
-									<input type="number" min=0 value=0 name="inferCnt"
+									<input box="mainInput" type="number" min=0 value=0 name="inferCnt"
 										class="form-control">
 								</div>
 								<div class="col-auto" style="margin-left: 220px;">
-									<button type="button" onclick="insertInsp()"
+									<button type="button" onclick="formOptCheck()"
 										class="btn btn-primary" style="">등 록</button>
 								</div>
 							</div>
@@ -180,6 +185,9 @@
 							</div>
 							<div class="col-auto" style="margin-left: 15px;">
 								<input id="completedSearch" type="text" class="form-control">
+							</div>
+							<div class="col-auto" style="margin-left: 15px;">
+								<button type="button" class="btn btn-danger" onclick="deleteCompleted()">삭제</button>
 							</div>
 						</div>
 						<hr>
@@ -271,28 +279,46 @@
 				<!-- 위로는 첫번째 등록시 모달창 아래로는 검사완료 상세보기 모달창-->
 				<div id="selectModal" class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title">검사상세보기</h5>
+						<h5 class="modal-title"></h5>
 						<button type="button" class="btn-close closeBtn"
 							data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary closeBtn"
+							data-bs-dismiss="modal" onclick="">닫기</button>
+						<button type="button" class="btn btn-primary" onclick=""
+							data-bs-dismiss="modal">확인</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		
+<button hidden type="button" id="detail" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+                Large Modal
+              </button>
+
+		<div class="modal fade" id="largeModal" tabindex="-1"
+			style="display: none;" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">검사상세보기</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<div class="card">
 							<div class="card-body" style="margin-top: 30px;">
-								<div class="form-group row">
-									<div class="col-auto">
-										<label style="font-weight: bold;">검색</label>
-									</div>
-									<div class="col-auto">
-										<input type="text" id="" class="form-control">
-									</div>
-								</div>
+
 								<p>
 								<div style="width: 100%; height: 200px; overflow: auto;">
 									<table class="table table-striped table-hover">
 										<thead>
 											<tr
 												style="position: sticky; top: 0px; background-color: #E2E2E2">
-												<th scope="col"></th>
+												<th scope="col">No</th>
 												<th scope="col">검사코드</th>
 												<th scope="col">검사명</th>
 												<th scope="col">검사기준</th>
@@ -308,71 +334,92 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary closeBtn"
-							data-bs-dismiss="modal" onclick="">닫기</button>
-						<button type="button" class="btn btn-primary" onclick=""
-							data-bs-dismiss="modal">확인</button>
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
 					</div>
 				</div>
-
 			</div>
 		</div>
-		
-		
-		<div class="modal fade" id="largeModal" tabindex="-1" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Large Modal</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      Non omnis incidunt qui sed occaecati magni asperiores est mollitia. Soluta at et reprehenderit. Placeat autem numquam et fuga numquam. Tempora in facere consequatur sit dolor ipsum. Consequatur nemo amet incidunt est facilis. Dolorem neque recusandae quo sit molestias sint dignissimos.
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
-                Extra Large Modal
-              </button>
-              
+
+
+
 		<script>
-			//검사완료 단건조회
+		//삭제 체크된것만 담기
+		function deleteCompleted(){
+			let checkList = completedBody.querySelectorAll('[type="checkbox"]');			
+			let deleteList = [];
+			for(let i=0; i<checkList.length; i++){
+				if(checkList[i].checked){
+					deleteList.push(checkList[i].closest('tr').children[2].innerText);
+				}
+			}
+			Swal.fire({
+				  title: '선택항목들을 삭제 하시겠습니까?',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: '삭제',
+				  cancelButtonText: '취소'
+				}).then((result) => {
+				  if (result.value) {
+					//삭제
+					   $.ajax({
+					  type: "POST",
+					  url: "/spring/deleteCompleted",
+					  data: JSON.stringify(deleteList),
+					  contentType: "application/json; charset=utf-8",
+					  success: function(response) {
+						  console.log(response)
+						 
+						   for(let j=0;j<checkList.length;j++){
+							  if(checkList[j].checked){
+							  checkList[j].closest('tr').remove();
+							  }
+						  }	 
+					  },
+					  error: function(error) {
+						  console.log(error)
+					  }
+					});  
+				  }
+				})
+		}
+		
+			//검사완료 단건조회 tr클릭
 			function seeInspDtl(t) {
 				let selectModal = $('#selectModal'); //검사완료 상세보기 모달 안 보이게
 				selectModal.attr('hidden', false);
 
 				let insertModal = $('#insertModal'); //검사등록할 리스트모달 보이게
 				insertModal.attr('hidden', true);
-				
+
 				let chkCd = t.children[2].innerText
-				
-				 $.ajax({
+
+				$.ajax({
 					type : "GET",
-					url : "/spring/inspDtl?prcsChkCd="+chkCd,
+					url : "/spring/inspDtl?prcsChkCd=" + chkCd,
 					dataType : "json",
 					success : function(res) {
 						console.log(res);
-						let tr = $('<tr>')
-						for(let i=0;i<res.length;i++){
-							tr.append('<td>'+i+1+'</td>')
-							tr.append('<td>' +res[i].prcsInspCd+ '</td>')
-							tr.append('<td>' +res[i].prcsInspNm+ '</td>')
-							tr.append('<td>' +res[i].prcsInspStd+ '</td>')
-							tr.append('<td>' +res[i].prcsInspRst+ '</td>')
-							tr.append('<td>' +res[i].prcsInspJdg+ '</td>')
+						$('#prcsDtlBody').empty();
+						for (let i = 0; i < res.length; i++) {
+							let tr = $('<tr>')
+							tr.append('<td>' + i + '</td>')
+							tr.append('<td>' + res[i].prcsInspCd + '</td>')
+							tr.append('<td>' + res[i].prcsInspNm + '</td>')
+							tr.append('<td>' + res[i].prcsInspStd + '</td>')
+							tr.append('<td>' + res[i].prcsInspRst + '</td>')
+							tr.append('<td>' + res[i].prcsInspJdg + '</td>')
 							$('#prcsDtlBody').append(tr);
 						}
+						document.querySelector('#detail').click();
+						
 					},
 					error : function(error) {
 						console.log(error)
 					}
-				}); 
+				});
 			}
 
 			//조회페이지이동시 검사완료리스트 호출
@@ -389,14 +436,14 @@
 					}
 				});
 			}
-
+			
 			//검사완료리스트 만들기
 			function makeCompletedList(res) {
 				let completedBody = $('#completedBody');
 				completedBody.empty();
 				for (let i = 0; i < res.length; i++) {
-					let tr = $('<tr onclick="seeInspDtl(this)" data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">')
-					tr.append('<td></td>')
+					let tr = $('<tr ondblclick="seeInspDtl(this)" >')
+					tr.append('<td><input type="checkbox"></td>')
 					let prcsInspDt = new Date(res[i].prcsInspDt);
 					let formattedDate = prcsInspDt.toISOString().substring(0,
 							10);
@@ -407,6 +454,19 @@
 					tr.append('<td>' + res[i].prodCnt + '</td>')
 					completedBody.append(tr);
 				}
+			}
+			function formOptCheck(){
+				let options = document.querySelectorAll('[box="mainInput"]');
+				for(let i=0;i<options.length;i++){
+					if(options[i].value == ''){
+						Swal.fire({
+					          icon: "warning",
+					          title: "필수항목을 확인해주세요.",
+					        });
+						return;
+					}else insertInsp();
+				}
+				
 			}
 
 			//검사완료 등록
@@ -486,10 +546,10 @@
 					contentType : "application/json; charset=utf-8",
 					//dataType: "json",
 					success : function(res) {
-						console.log(res)
+						location.reload();
 					},
 					error : function(error) {
-						console.log(error)
+						console.log(error);
 					}
 				});
 
@@ -593,7 +653,7 @@
 
 			}
 
-			//공정별 검사기준 가져오기 
+			//공정별 검사기준 그리기 
 			function selectPrcsStd(cd) {
 				$
 						.ajax({
@@ -619,12 +679,12 @@
 									//포장공정일 경우 input 다르게
 									if (prcsCd.value == 'PRCS5000') {
 										tr
-												.append('<td><input class="rstInputs" min=0 placeholder="불량갯수 직접입력" name="prcsInspRst" type="number"></td>')
+												.append('<td><input box="mainInput" class="rstInputs" min=0 placeholder="불량갯수 직접입력" name="prcsInspRst" type="number"></td>')
 										tr
 												.append('<td><select disabled name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
 									} else {
 										tr
-												.append('<td><input class="" name="prcsInspRst" type="text"></td>')
+												.append('<td><input class="" box="mainInput" name="prcsInspRst" type="text"></td>')
 										tr
 												.append('<td><select name="prcsInspJdg"><option value="적합">적합</option><option value="부적합">부적합</option></select></td>')
 									}

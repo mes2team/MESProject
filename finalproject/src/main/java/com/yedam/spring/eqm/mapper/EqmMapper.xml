@@ -61,7 +61,8 @@
                    use_yn,
                    eqm_mng,
                    eqm_img,
-                   eqm_img_path
+                   eqm_img_path,
+                   prcs_cd
                   )
                   values (
                           #{eqmCd},
@@ -79,7 +80,22 @@
                           #{useYn},
                           #{eqmMng},
                           #{eqmImg},
-                          #{eqmImgPath}
+                          #{eqmImgPath},
+                          <if test="eqmFg == '분쇄기'">
+                          'PRCS1000'
+                          </if>
+                          <if test="eqmFg == '계량기'">
+                          'PRCS2000'
+                          </if>
+                          <if test="eqmFg == '배합기'">
+                          'PRCS3000'
+                          </if>
+                          <if test="eqmFg == '건조기'">
+                          'PRCS4000'
+                          </if>
+                          <if test="eqmFg == '포장기'">
+                          'PRCS5000'
+                          </if>
                          )
 	</insert>
 	
@@ -184,7 +200,9 @@
                e.eqm_cd, 
                e.eqm_nm, 
                fr_dt, 
+               fr_hm, 
                to_dt, 
+               to_hm, 
                eqm_psch, 
                opert_ctnt
         FROM eqm e JOIN eqm_opr
@@ -208,14 +226,18 @@
 	BEGIN
 		insert into eqm_opr (nopr_cd, 
                      eqm_cd,                     
-                     fr_dt, 
-                     to_dt, 
+                     fr_dt,
+                     fr_hm, 
+                     to_dt,
+                     to_hm, 
                      eqm_psch, 
                      opert_ctnt) 
              values( #{noprCd},
                      #{eqmCd},                   
                      #{frDt},
+                     #{frHm},
                      #{toDt},
+                     #{toHm},
                      #{eqmPsch},
                      #{opertCtnt} );
         UPDATE eqm 
@@ -238,7 +260,9 @@
 	<update id="updateOpr" parameterType="EqmVO">
 		UPDATE eqm_opr
 		SET fr_dt = #{frDt}, 
+			fr_hm = #{frHm}, 
             to_dt = #{toDt}, 
+            to_hm = #{toHm}, 
             eqm_psch = #{eqmPsch}, 
             opert_ctnt = #{opertCtnt}
         WHERE nopr_cd = #{noprCd}    

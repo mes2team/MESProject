@@ -117,6 +117,12 @@
 		FROM prcs_insp_dtl
 		WHERE prcs_chk_cd = #{prcsChkCd}
 	</select>
+	
+	<delete id="deleteCompleted" parameterType="String">
+		DELETE 
+		FROM prcs_insp_dtl
+		WHERE prcs_chk_cd = #{prcsChkCd}
+	</delete>
 
 
 

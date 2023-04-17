@@ -93,7 +93,7 @@
 						<button type="button" onclick="formOptionChk()"
 							class="btn btn-primary">저장</button>
 						<button type="button" onclick="inputClean()"
-							class="btn btn-secondary">클린</button>
+							class="btn btn-secondary">초기화</button>
 					</div>
 
 				</div>
@@ -267,7 +267,10 @@
 					    	console.log("업데이트성공");
 							updateTr();	//수정된tr 그리고 기존tr 지우기
 							inputClean();
-							
+							Toast.fire({
+				                  icon: "success",
+				                  title: "수정이 정상적으로 되었습니다.",
+				                });  
 					      },
 					      error: function(reject) { 
 					        console.log("업데이트실패");
@@ -402,7 +405,10 @@
 					    	  for(let j=0;j<disableds.length;j++){
 					  		    disableds[j].disabled = true;
 					  			}
-					    	 
+					    	  Toast.fire({
+				                  icon: "success",
+				                  title: "추가가 정상적으로 되었습니다.",
+				                });  
 					    	  
 					      },
 					      error: function(reject) { 
@@ -478,6 +484,12 @@
 							  }
 						  }	
 						  inputClean();
+						  
+			                Toast.fire({
+			                  icon: "success",
+			                  title: "삭제가 정상적으로 되었습니다.",
+			                });  
+						  
 					  },
 					  error: function(error) {
 						  console.log(error)
@@ -673,7 +685,7 @@
 			let formattedDate = year + '-' + month + '-' + day;
 			return formattedDate;
 		}
-		//allCheck
+		//전체체크
 		function allCheck(allCheck) {
 			let checkes = listTable.querySelectorAll('[type="checkbox"]')
 			for (let i = 0; i < checkes.length; i++) {
@@ -713,6 +725,18 @@
 
 		}
 		
+		
+		var Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
 		
 	</script>
 </body>

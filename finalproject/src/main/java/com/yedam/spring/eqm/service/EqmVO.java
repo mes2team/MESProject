@@ -19,6 +19,7 @@ public class EqmVO {
 	private String chckPerd; //점검주기
 	private String useYn; //사용여부
 	private String eqmMng; // 설비 담당자
+	private String prcsCd; //공정코드
 	//private MultipartFile eqmImg;
 	
 	private String eqmImg; //설비이미지명
@@ -50,8 +51,10 @@ public class EqmVO {
 	private String noprCd; //점검코드? 비가동코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date frDt; //시작일시
+	private String frHm; //시작시간
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date toDt; //종료일시
+	private String toHm; //종료시간
 	private String eqmPsch; //비가동담당자
 	private String opertCtnt; //작업내용
 	
