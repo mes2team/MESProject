@@ -42,17 +42,31 @@ public class MatController {
 		matVO = matService.getMat(matVO);
 		return matVO; 
 	}
+	//자재거래처 전체조회
+	@GetMapping("/VendModal")
+	@ResponseBody
+	public List<MatVO> matVendList(){
+		return matService.matVendList();
+		}
 	//등록 - form이동
 //	@GetMapping("/matInsert")
 //	public String matInsertForm() {
 //		return "material/matInsert";
 //	}
-	//자재정보 등록 - Process
+	//자재정보등록	
 	@PostMapping("/matInsert")
-	public String matInsertProcess(MatVO matVO) {
+	@ResponseBody
+	public List<MatVO> matInsertProcess(MatVO matVO) {
 		matService.insertMat(matVO);
-		return "redirect:matList";
+		return matService.matList();
 	}
+	//자재정보 등록 - Process
+//	@PostMapping("/matInsert")
+//	@ResponseBody
+//	public String matInsertProcess(MatVO matVO) {
+//		matService.insertMat(matVO);
+//		return "redirect:matList";
+//	}
 	//자재정보 수정 - process /
 	//비동기식 - JSON반환 방식 (굳이 써보는것)
 	//1) client - JSON -> Server
@@ -164,18 +178,18 @@ public class MatController {
 	}
 	
 	//자재검사 전체조회
-		@GetMapping("/matCheck")
-		public String getMatCheck(Model model) {
-			model.addAttribute("matCheckList",matService.matCheckList());
-			return "material/matCheck";
+	@GetMapping("/matCheck")
+	public String getMatCheck(Model model) {
+		model.addAttribute("matCheckList",matService.matCheckList());
+		return "material/matCheck";
 		}
 	//검사미완료 발주 전체 조회
-		@GetMapping("/orderModal")
-		@ResponseBody
-		public List<MatVO> orderChkList(){
-			return matService.matOrderChkList();
-			}
-	//자재 검수자 전체조회
+	@GetMapping("/orderModal")
+	@ResponseBody
+	public List<MatVO> orderChkList(){
+		return matService.matOrderChkList();
+		}
+	//자재 검수자 조회
 	@GetMapping("/checkerModal")
 	@ResponseBody
 	public List<MatVO> checkerModal(){

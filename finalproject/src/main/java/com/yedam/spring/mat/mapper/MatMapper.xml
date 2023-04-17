@@ -24,6 +24,15 @@
 	  FROM rsc
      WHERE rsc_cd = #{rscCd}
 	</select>
+<!-- 자재정보 단건 조회 -->
+	<select id="matVendList" resultType="MatVO">
+	SELECT vend_cd,
+		   vend_nm,
+		   vend_typ		   
+	  FROM vend
+     WHERE vend_typ = '매입처'
+     ORDER BY vend_cd
+	</select>	
 <!-- 자재정보 등록 -->
 	<insert id="insertMatInfo" parameterType="MatVO">
 		INSERT INTO rsc (

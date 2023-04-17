@@ -572,7 +572,7 @@ form {
                     $("#etcExplainData").val("");
                     //테이블 데이터 채우기
                     $(result).each(function (idx, item) {
-                      let tr = $("<tr>").attr("data-id", item.edctsIstNo);
+                      let tr = $("<tr>").attr("data-id", item.rscInspCd);
                       tr.append(
                         $("<td>").append(
                           $("<input>").attr("type", "checkbox").attr("name", "chk")
@@ -591,6 +591,7 @@ form {
                       tr.append("<td>" + item.pack + "</td>");
                       tr.append("<td>" + item.underWeight + "</td>");
                       tr.append("<td>" + item.etc + "</td>");
+                      tr.append('<td><button type=\'button\' class=\'btn btn-primary\' id=\'updateBtn\'>수정</button></td>');
 
                       $("#checkBody").append(tr);
                     });
@@ -758,7 +759,7 @@ $(document).on('click', '#updateBtn', function() {
     	$('input').val('');  
         
         $(result).each(function (idx, item) {
-          let tr = $("<tr>").attr("data-id", item.edctsIstNo);
+          let tr = $("<tr>").attr("data-id", item.rscInspCd);
           tr.append(
             $("<td>").append(
               $("<input>").attr("type", "checkbox").attr("name", "chk")

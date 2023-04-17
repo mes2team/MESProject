@@ -12,6 +12,8 @@ public interface MatMapper {
 	public MatVO selectMatInfo(MatVO matVO);
 	//자재정보 등록
 	public int insertMatInfo(MatVO matVO);
+	//자재거래처 전체조회
+	public List<MatVO> matVendList();
 	//자재정보 수정
 	public int updateMatInfo(MatVO matVO);
 	//자재정보 삭제

@@ -8,9 +8,9 @@
 <html>
 <head>
 <link rel="stylesheet"
-	href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+   href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
 <script
-	src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+   src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
 <script>
         jQuery(function($){
             $("#jaje").DataTable({
@@ -22,15 +22,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+   href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 
 
 
 <!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<!-- <script
-   src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
+   src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <meta charset="UTF-8">
@@ -88,19 +87,19 @@ form {
 				
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재코드</label> RSC<input
-                        type="text" class="form-control" id="rscCdInput" name="rscCdInput"
+                        type="text" class="form-control" id="rscCd" name="rscCd"
                         placeholder="숫자만 입력해주세요.">
                   </div>
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재명</label> <input
-                        type="text" class="form-control" id="rscNmInput" name="rscNmInput"
+                        type="text" class="form-control" id="rscNm" name="rscNm"
                         placeholder="">
                   </div>
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재규격</label> <select
-                        class="form-control" id="rscSpecInput" name="rscSpecInput" >
+                        class="form-control" id="rscSpec" name="rscSpec" >
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="KG">kg(킬로그램)</option>
                         <option value="L">L(리터)</option>
@@ -109,7 +108,7 @@ form {
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">사용여부</label> <select
-                        class="form-control" id="useYnInput" name="useYnInput">
+                        class="form-control" id="useYn" name="useYn">
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -118,7 +117,7 @@ form {
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재유형</label> <select
-                        class="form-control" id="rscTypInput" name="rscTypInput">
+                        class="form-control" id="rscTyp" name="rscTyp">
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="주원료">주원료</option>
                         <option value="첨가제">첨가제</option>
@@ -128,68 +127,35 @@ form {
 
                   <div class="col-md-3">
                      <label for="country" class="form-label">안전재고</label> <input
-                        type="text" class="form-control" id="safStcInput" name="safStcInput"
+                        type="text" class="form-control" id="safStc" name="safStc"
                         placeholder="숫자를 입력하세요.">
                   </div>
 
                   <div class="col-md-3">
-                     <label for="country" class="form-label">거래처코드</label>
-                     <div class="input-group">
-						<input type="text" class="form-control" id="vendCdInput"
-							name="vendCdInput" readonly />
-						<button type="button" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#vendCdSearch">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
+                     <label for="country" class="form-label">거래처코드</label> <select
+                        class="form-control" id="vendCd" name="vendCd">
+                        <option value="none" disabled selected>=== 선택 ===</option>
+                        <option value="VEI1000">VEI1000</option>
+                        <option value="VEI1001">VEI1001</option>
+                     </select>
                   </div>
                   
                   <div class="col-md-3">
                      <label for="country" class="form-label">거래처명</label> <input
-                        type="text" class="form-control" id="vendNmInput" name="vendNmInput"
-                        readonly />
+                        type="text" class="form-control" id="vendNm" name="vendNm"
+                        placeholder="">
                   </div>
+
+                  
                </form>
+               <!-- End Multi Columns Form -->
+
             </div>
          </div>
       </sec:authorize>
-      
       <!-- ============================================================== -->
-	<!-- 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 -->
-	<div class="modal fade" id="vendCdSearch" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">거래처 목록</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th scope="col">거래처명</th>
-								<th scope="col">거래처코드</th>
-								<th scope="col">거래처유형</th>
-								<th scope="col" style="width: 80px"></th>
-							</tr>
-						</thead>
-						<tbody id="matVendList"></tbody>
-					</table>
-					<!-- End Multi Columns Form -->
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">닫기</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 -->
+      <!-- basic table  -->
       <!-- ============================================================== -->
-      <!-- 자재정보 테이블 자재정보 테이블 자재정보 테이블 자재정보 테이블 자재정보 테이블 자재정보 테이블 -->
       <div class="row">
          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
@@ -216,7 +182,7 @@ form {
                               </sec:authorize>
                            </tr>
                         </thead>
-                        <tbody id="checkBody">
+                        <tbody>
                            <c:forEach var="mat" items="${matList }" varStatus="loop">
                               <tr data-id="a">
                                  <td>${loop.count }</td>
@@ -318,7 +284,7 @@ form {
                                  
                                  <div class="col-md-3">
                                     <label for="country" class="form-label">거래처명</label> <input
-                                       type="text" class="form-control" id="vendNm"
+                                       type="text" class="form-control" id="vendNmModal"
                                        name="vendNm" placeholder="" value="${matvo.vendNm }">
                                  </div>
                                  
@@ -344,104 +310,57 @@ form {
 
       <script>
       <!-- ============================================================== -->
-      <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 -->
-  	//url은 getMapping에 들어가는 주소
-  	 $.ajax({
-  	      url: "VendModal",
-  	      success: function (result) {
-  	        $(result).each(function (idx, item) {
-  	          let vendNmModal = item.vendNm;
-  	          let vendCdModal = item.vendCd;
-  	          let vendTypModal = item.vendTyp;
-
-  	          let tr = $("<tr>");
-  	          tr.append("<td>" + vendNmModal + "</td>");
-  	          tr.append("<td>" + vendCdModal + "</td>");
-  	          tr.append("<td>" + vendTypModal + "</td>");
-  	          tr.append(
-  	            $("<td>").append(
-  	              $("<button>")
-  	                .attr("class", "btn btn-primary choice2Btn")
-  	                .text("선택")
-  	            )
-  	          );
-  			//tbody OrderList 에 위의 ajax를 붙인다.(OrderList는 여기jsp에서만 쓴다.)
-  	          $("#matVendList").append(tr);
-  	        });
-  	      },
-  	      error: function (reject) {
-  	        console.log(reject);
-  	      },
-  	    });
-
-  	    // 선택 버튼 클릭시 input에 전달
-  	    $(document).on("click", ".choice2Btn", function () {
-  	      let vendNmModal = $(this).closest("tr").children().eq(0).text();
-	      let vendCdModal = $(this).closest("tr").children().eq(1).text();
-
-  	   	  $("#vendCdInput").val(vendCdModal);
-  	      $("#vendNmInput").val(vendNmModal);
-
-  	      $("#vendCdSearch").modal("hide");
-  	      
-  	    });
-  	    
-      
-      <!-- ============================================================== -->
     <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
       
-	$("#insertBtn").on("click", function () {
-          let rscCdData = $("input[name='rscCdInput']").val();
-          let rscNmData = $("input[name='rscNmInput']").val();
-          let rscSpecData = $("#rscSpecInput option:selected").val();
-          let rscTypData = $("#rscTypInput option:selected").val();
-          let safStcData = $("input[name='safStcInput']").val();
-          let useYnData = $("#useYnInput option:selected").val();
-          let vendCdData = $("input[name='vendCdInput']").val();
-          let vendNmData = $("input[name='vendNmInput']").val();
+      function formOptionChk() {
+          let rscCd = document.getElementsByName('rscCd')[0];
+          let rscNm = document.getElementsByName('rscNm')[0];
+          let rscSpec = $("#rscSpec option:selected").val();
+          let rscTyp = $("#rscTyp option:selected").val();
+          let safStc = document.getElementsByName('safStc')[0];
+          let useYn = $("#useYn option:selected").val();
+          let vendCd = $("#vendCd option:selected").val();
+          let vendNm = document.getElementsByName('vendNm')[0];
 
-          if (rscCdData.value == "") {
-        	  Swal.fire({
-			      icon: "warning",
-			      title:"자재코드가 입력되지 않았습니다.",
-			    });
-              rscCdData.focus();
-              return; // 페이지 이동을 막기 위해 false를 반환합니다.
+          if (rscCd.value == "") {
+              alert("자재코드가 입력되지 않았습니다.");
+              rscCd.focus();
+              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
           }
-          if (rscNmData.value == "") {
+          if (rscNm.value == "") {
               alert("자재명이 입력되지 않았습니다.");
-              rscNmData.focus();
+              rscNm.focus();
               return false;
           }
-          if (rscSpecData == "none") {
+          if (rscSpec == "none") {
               alert("자재규격이 선택되지 않았습니다.");
-              $("#rscSpecData").focus();
+              $("#rscSpec").focus();
               return false;
           }
-          if (rscTypData == "none") {
+          if (rscTyp == "none") {
               alert("자재유형이 선택되지 않았습니다.");
-              $("#rscTypData").focus();
+              $("#rscTyp").focus();
               return false;
           }
-          if (safStcData.value == "") {
+          if (safStc.value == "") {
               alert("안전재고가 입력되지 않았습니다.");
-              safStcData.focus();
+              safStc.focus();
               return false;
           }
-          if (useYnData == "none") {
+          if (useYn == "none") {
               alert("사용여부가 선택되지 않았습니다.");
-              $("#useYnData").focus();
+              $("#useYn").focus();
               return false;
           }
-          if (vendCdData == "") {
+          if (vendCd == "none") {
               alert("거래처코드가 선택되지 않았습니다.");
-              $("#vendCdData").focus();
+              $("#vendCd").focus();
               return false;
           }
-          if (vendNmData.value == "") {
+          if (vendNm.value == "") {
               alert("거래처명이 입력되지 않았습니다.");
-              vendNmData.focus();
+              vendNm.focus();
               return false;
           }
           
@@ -455,54 +374,15 @@ form {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
-        	  $.ajax({
-        		  //MatController 의 @PostMapping("/matCheckInsert")
-                  url: "matCheckInsert",
-                  method: "post",
-                  data: {rscCd: rscCdData,
-                	  rscNm: rscNmData,
-                	  rscSpec: rscSpecData,
-                	  rscTyp: rscTypData,
-                	  safStc: safStcData,
-                	  useYn: useYnData,
-                	  vendCd: vendCdData,
-                	  vendNm: vendNmData},
-                  
-                  success: function (result) {
-                	  //테이블 데이터 지우기
-                    $("#checkBody").empty();
-                	  //input 내 데이터 지우기  
-                    $("#rscCdData").val("");
-                    $("#rscNmData").val("");
-                    $("#rscSpecData").val("");
-                    $("#rscTypData").val("");
-                    $("#safStcData").val("");
-                    $("#useYnData").val("");
-                    $("#vendCdData").val("");
-                    $("#vendNmData").val("");
-                    //테이블 데이터 채우기
-                    $(result).each(function (idx, item) {
-                      let tr = $("<tr>").attr("data-id", item.rscCd);
-                      tr.append("<td>" + (idx + 1) + "</td>");
-                      tr.append("<td>" + item.rscCd + "</td>");
-                      tr.append("<td>" + item.rscNm + "</td>");
-                      tr.append("<td>" + item.rscSpec + "</td>");
-                      tr.append("<td>" + item.rscTyp + "</td>");
-                      tr.append("<td>" + item.safStc + "</td>");
-                      tr.append("<td>" + item.useYn + "</td>");
-                      tr.append("<td>" + item.vendCd + "</td>");
-                      tr.append("<td>" + item.vendNm + "</td>");
-                      tr.append('<td><button type=\'button\' class=\'btn btn-primary updateBtn\' id=\'updateBtn\' data-bs-toggle=\'modal\'>수정</button></td>');
-                      
-                      $("#checkBody").append(tr);
-                    });
-                  },
-                  error: function (reject) {
-                    console.log(reject);
-                  },
-                });
-              });
-            });
+              if (result.value) {
+                  insertForm.submit();
+              }
+          });
+
+          return false; // 이벤트의 기본 동작인 페이지 이동을 막기 위해 false를 반환합니다.
+      }
+
+      $("#insertBtn").on("click", formOptionChk)
 
 <!-- ============================================================== -->
 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
