@@ -28,8 +28,9 @@ public class ProPrcsVO {
 	private String prcsPsch;
 	private int indicaCnt;
 	private int prodCnt;
-	private String inferCd;
 	private int inferCnt;
+	private String prcsStatus;
+	private String indicaCd;
 	
 	//공정흐름
 	private int prcsNo;

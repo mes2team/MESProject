@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.yedam.spring.common.Criteria;
+import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.production.service.ProOrderVO;
@@ -63,6 +64,18 @@ public interface ProMapper {
 	public String checkOrderNo(String planCd);
 
 	public int cancelOrderStatus(String orderNo);
+
+	public List<BomVO> selectLotStock(String edctsCd);
+
+	public List<BomVO> selectLotStk(String rscCd);
+
+	public int InsertNewProOrder(ProOrderVO proOrderVO);
+
+	public List<ProOrderVO> selectIndica();
+
+	public List<ProPrcsVO> selectPrcsProg(ProPrcsVO vo);
+
+
 
 
 

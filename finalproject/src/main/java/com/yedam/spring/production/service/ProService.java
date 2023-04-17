@@ -3,6 +3,7 @@ package com.yedam.spring.production.service;
 import java.util.List;
 
 import com.yedam.spring.common.Criteria;
+import com.yedam.spring.mat.service.MatVO;
 
 public interface ProService {
 	
@@ -54,6 +55,20 @@ public interface ProService {
 	public List<ProPlanVO> getPlanDetail(ProPlanVO vo);
 
 	public String checkOrderNo(String planCd);
+
+	public List<ProPrcsVO> getPrcsFlow(String edctsCd);
+
+	public List<BomVO> getLotStock(String edctsCd);
+
+	public List<BomVO> getLotStk(String rscCd);
+
+	public String newProOrderInsert(ProOrderVO proOrderVO);
+
+	public List<ProOrderVO> getIndica();
+
+	public List<ProPrcsVO> getPrcsProg(ProPrcsVO vo);
+
+
 
 
 
