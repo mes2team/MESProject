@@ -21,7 +21,7 @@
 				<div class="col-auto">
 					<input type="text" id="modalEqmNm" class="form-control">
 				</div>
-				<div class="col-auto">
+				<div class="col-auto" style="margin-left: 550px;">
 					<button type="button" class="btn btn-primary" onclick="modalOpen()"
 						data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
 						등록</button>
@@ -56,7 +56,7 @@
 								<td scope="row">${opr.eqmCd}</td>
 								<td scope="row">${opr.eqmNm}</td>
 								<td scope="row"><fmt:formatDate value="${opr.frDt}"
-										pattern="yyyy-MM-dd" /></td>
+										pattern="yyyy-MM-dd hh-mm" /></td>
 								<td scope="row"><fmt:formatDate value="${opr.toDt}"
 										pattern="yyyy-MM-dd" /></td>
 								<td hidden>${opr.opertCtnt}</td>
@@ -116,8 +116,16 @@
 										<label style="font-weight: bold;">담당자*</label>
 									</div>
 									<div class="col-auto">
-										<input type="text" name="eqmPsch" class="form-control">
+										<select name="eqmPsch" class="form-select" id="managerSelect"
+											style="width: 216px;">
+											<option value="" selected disabled hidden>담당자 선택
+											<option>
+												<c:forEach items="${managers }" var="manager">
+													<option value="${manager.name }">${manager.name }</option>
+												</c:forEach>
+										</select>
 									</div>
+
 								</div>
 								<hr>
 								<div class="row g-3 align-items-center">
@@ -174,13 +182,14 @@
 		modalTitle.innerText = '비가동상세보기';		
 		let option = document.querySelector('option'); //설비명
 		let textarea = document.querySelector('textarea');
-		let inputs = modalForm.querySelectorAll('input')//inputs 0설비코드 1비가동코드 2담당자 3시작일 4종료일
+		let inputs = modalForm.querySelectorAll('input')//inputs 0설비코드 1비가동코드 2시작일 3종료일 
+		let select = modalForm.querySelector('#managerSelect')
 		let tds = t.querySelectorAll('td') //tds 1비가동코드 2설비코드 3설비명 4시작일 5종료일 6조치내용 7담당자 
 		inputs[0].value = tds[2].innerText;
 		inputs[1].value = tds[1].innerText;
-		inputs[2].value = tds[7].innerText;
-		inputs[3].value = tds[4].innerText;
-		inputs[4].value = tds[5].innerText;
+		select.value = tds[7].innerText;
+		inputs[2].value = tds[4].innerText;
+		inputs[3].value = tds[5].innerText;
 		option.innerText = tds[3].innerText;
 		textarea.value = tds[6].innerText;
 		document.querySelector('select').setAttribute('disabled',true); //설비명막기
@@ -216,7 +225,20 @@
 				return;
 			}
 		}
-		insertOpr(); //등록
+		Swal.fire({
+			  title: '등록하시겠습니까?',
+			  icon: 'question',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: '등록',
+			  cancelButtonText: '취소'
+			}).then((result) => {
+			  if (result.value) {
+					insertOpr(); //등록
+			  }
+			})
+	
 	}
 	//수정
 	function updateOpr(oprVO){

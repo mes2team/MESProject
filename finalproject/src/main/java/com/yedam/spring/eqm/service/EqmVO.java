@@ -3,6 +3,7 @@ package com.yedam.spring.eqm.service;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -18,7 +19,10 @@ public class EqmVO {
 	private String chckPerd; //점검주기
 	private String useYn; //사용여부
 	private String eqmMng; // 설비 담당자
-	private String eqmImg; //설비이미지
+	//private MultipartFile eqmImg;
+	
+	private String eqmImg; //설비이미지명
+	private String eqmImgPath; //이미지경로
 	
 	//설비코드 최대값 받기
 	private String firstMax; 

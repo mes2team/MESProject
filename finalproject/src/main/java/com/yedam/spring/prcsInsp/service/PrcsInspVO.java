@@ -2,6 +2,8 @@ package com.yedam.spring.prcsInsp.service;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -13,8 +15,11 @@ public class PrcsInspVO {
 	private String edctsCd; //제품코드 생산지시테이블 만들면 씀
 	private String prdtNm; //제품명 생산지시테이블 만들면 씀
 	private int prodCnt; //생산량==검사량
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date prcsInspDt; //검사일자
 	private String prcsInspMng; //검사담당자
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date edctsExpire; //유통기한
 	//공정검사기준 
 	private String prcsInspCd; //검사코드
 	private String prcsInspNm; //검사명

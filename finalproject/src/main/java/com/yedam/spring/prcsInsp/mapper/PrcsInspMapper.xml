@@ -74,7 +74,8 @@
 								   prcs_insp_nm,
 								   prcs_insp_std,
 								   prcs_insp_rst,
-								   prcs_insp_jdg
+								   prcs_insp_jdg,
+								   edcts_expire
 								   )
 							VALUES(
 								   #{prcsChkCd},	
@@ -89,9 +90,33 @@
 								   #{prcsInspNm},	
 								   #{prcsInspStd},	
 								   #{prcsInspRst},	
-								   #{prcsInspJdg}	
+								   #{prcsInspJdg},
+								   #{edctsExpire}	
 							)	   
 	</insert>
+	
+	<select id="selectCompletedPrcs" resultType="prcsInspVO">
+		SELECT distinct prcs_insp_dt,  --검사일   
+                d.prcs_chk_cd, --검사코드
+                d.prcs_nm, --공정명
+                d.prdt_nm, --제품명
+                d.prod_cnt, --검사량
+                p.infer_cnt --불량량
+		FROM prcs_insp_dtl d join prcs_prog p
+		ON d.prcs_chk_cd = p.prcs_chk_cd
+		ORDER BY prcs_insp_dt DESC
+	</select>
+	
+	<!-- 검사완료단건조회 -->
+	<select id="inspDtl" parameterType="prcsInspVO" resultType="prcsInspVO">
+		SELECT  prcs_insp_cd, 
+      			prcs_insp_nm, 
+     			prcs_insp_std, 
+      			prcs_insp_rst, 
+       			prcs_insp_jdg
+		FROM prcs_insp_dtl
+		WHERE prcs_chk_cd = #{prcsChkCd}
+	</select>
 
 
 

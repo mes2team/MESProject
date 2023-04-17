@@ -14,7 +14,13 @@ public interface PrcsInspService {
 
 	// 공정검사완료 불량등록 / 불량,검사완료 업데이트
 	public int inferUpdateInsert(PrcsInspVO prcsInspVO);
-	
+
 	// 맥스검사완료코드
 	public PrcsInspVO selectMaxChkCd();
+
+	// 검사완료리스트
+	public List<PrcsInspVO> selectCompletedPrcs();
+
+	// 검사완료 단건조회
+	public List<PrcsInspVO> inspDtl(PrcsInspVO prcsInspVO);
 }
