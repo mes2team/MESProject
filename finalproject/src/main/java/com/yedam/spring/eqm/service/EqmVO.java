@@ -9,52 +9,53 @@ import lombok.Data;
 
 @Data
 public class EqmVO {
-	private String eqmCd; //¼³ºñÄÚµå
-	private String eqmFg; //¼³ºñ±¸ºÐ
-	private String eqmNm; //¼³ºñ¸í
-	@DateTimeFormat(pattern = "yyyy-MM-dd") //¹ÞÀ»¶§ ÀÌ·¸°Ô
-	private Date eqmIstDt; //¼³ºñÀÔ°í³¯Â¥
-	private String eqmMinTemp; //ÃÖ¼Ò¿Âµµ
-	private String eqmMaxTemp; //ÃÖ°í¿Âµµ
-	private String chckPerd; //Á¡°ËÁÖ±â
-	private String useYn; //»ç¿ë¿©ºÎ
-	private String eqmMng; // ¼³ºñ ´ã´çÀÚ
+	private String eqmCd; //ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½
+	private String eqmFg; //ï¿½ï¿½ï¿½ñ±¸ºï¿½
+	private String eqmNm; //ï¿½ï¿½ï¿½ï¿½ï¿½
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½
+	private Date eqmIstDt; //ï¿½ï¿½ï¿½ï¿½ï¿½Ô°ï¿½Â¥
+	private String eqmMinTemp; //ï¿½Ö¼Ò¿Âµï¿½
+	private String eqmMaxTemp; //ï¿½Ö°ï¿½Âµï¿½
+	private String chckPerd; //ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
+	private String useYn; //ï¿½ï¿½ë¿©ï¿½ï¿½
+	private String eqmMng; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	//private MultipartFile eqmImg;
 	
-	private String eqmImg; //¼³ºñÀÌ¹ÌÁö¸í
-	private String eqmImgPath; //ÀÌ¹ÌÁö°æ·Î
+	private String eqmImg; //ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String eqmImgPath; //ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	
-	//¼³ºñÄÚµå ÃÖ´ë°ª ¹Þ±â
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ ï¿½Ö´ë°ª ï¿½Þ±ï¿½
 	private String firstMax; 
 	private String secondMax; 
 	private String thirdMax; 
 	private String fourthMax; 
 	private String fifthMax; 
 	
-	//¼³ºñÁ¡°Ë³»¿ª
-	private String checkCd; //Á¡°ËÄÚµå
-	private String chckFg; //Á¡°Ë±¸ºÐ [Á¤±âÁ¡°Ë | ¼ö¸®]
-	@DateTimeFormat(pattern = "yyyy-MM-dd") //¹ØÀÇ Date´Â ¿ø·¡ 2023/04 ½½·¡½¬·Î ¹ÞÀ½ ±×°É ÁöÁ¤ÇÑ ÆÐÅÏ´ë·Î ¹Þ°Ô ÇÔ
-	private Date chckDt; //Á¡°ËÀÏÀÚ
-	private String jdgmnt; //ÆÇÁ¤
-	private String dispoCtnt; //Á¶Ä¡³»¿ª
-	private String chckPsch; //Á¡°Ë´ã´çÀÚ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½
+	private String checkCd; //ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½
+	private String chckFg; //ï¿½ï¿½ï¿½Ë±ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ | ï¿½ï¿½ï¿½ï¿½]
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //ï¿½ï¿½ï¿½ï¿½ Dateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 2023/04 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ ï¿½Þ°ï¿½ ï¿½ï¿½
+	private Date chckDt; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String jdgmnt; //ï¿½ï¿½ï¿½ï¿½
+	private String dispoCtnt; //ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½
+	private String chckPsch; //ï¿½ï¿½ï¿½Ë´ï¿½ï¿½ï¿½ï¿½
 	
-	//¼³ºñÁ¡°Ë³»¿ª Á¶È¸¿ë
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ï¿½ï¿½
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date start;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date end;
 	
-	//¼³ºñºñ°¡µ¿
-	private String noprCd; //Á¡°ËÄÚµå? ºñ°¡µ¿ÄÚµå
+	//ï¿½ï¿½ï¿½ï¿½ñ°¡µï¿½
+	private String noprCd; //ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½? ï¿½ñ°¡µï¿½ï¿½Úµï¿½
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date frDt; //½ÃÀÛÀÏ½Ã
+	private Date frDt; //ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date toDt; //Á¾·áÀÏ½Ã
-	private String eqmPsch; //ºñ°¡µ¿´ã´çÀÚ
-	private String opertCtnt; //ÀÛ¾÷³»¿ë
+	private Date toDt; //ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ï¿½
+	private String eqmPsch; //ï¿½ñ°¡µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String opertCtnt; //ï¿½Û¾ï¿½ï¿½ï¿½ï¿½ï¿½
 	
-	//´ã´çÀÚ eqm table¿¡ µî·ÏµÈ¾Öµé·Î
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ eqm tableï¿½ï¿½ ï¿½ï¿½ÏµÈ¾Öµï¿½ï¿½
 	private String name;
+	private String prcsCd;
 }

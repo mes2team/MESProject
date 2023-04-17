@@ -107,7 +107,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 type="button"
                 class="btn btn-primary"
                 data-bs-toggle="modal"
-                data-bs-target="#insertModal"
+                data-bs-target="#prcsModal"
               >
                 추가
               </button>
@@ -117,15 +117,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               style="width: 100%; height: 300px; overflow: auto"
             >
             <h5 id="indicaCdText"></h5>
-              <table
-                class="table table-hover"
-              >
+              <table class="table table-hover">
                 <thead>
                   <tr>
                     <th>공정 코드</th>
+                    <th>공정명</th>
+                    <th>지시량</th>
+                    <th>불량량</th>
                     <th>작업량</th>
-                    <th>물량량</th>
-                    <th>미작업량</th>
                     <th>작업자</th>
                     <th>작업시작시간</th>
                     <th>작업종료시간</th>
@@ -144,7 +143,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   <!-- 작업 등록 -->
   <div
     class="modal fade"
-    id="insertModal"
+    id="prcsModal"
     tabindex="-1"
     data-bs-backdrop="static"
   >
@@ -162,25 +161,24 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <div class="modal-body">
           <form class="row g-3">
             <div class="col-md-6">
-              <label for="inputCode" class="form-label">작업일자</label>
-              <input type="text" class="form-control" readonly />
+              <label class="form-label">작업일자</label>
+              <input id="workDate" type="date" class="form-control" readonly />
             </div>
             <div class="col-md-6">
-              <label for="inputEmail5" class="form-label">작업자</label>
-              <input type="text" class="form-control mr-2" readonly />
+              <label for="" class="form-label">작업자</label>
+              <input id="prcsWorker" type="text" class="form-control mr-2" />
             </div>
             <div class="col-md-6">
-              <label for="inputCode" class="form-label">설비</label>
-              <input type="text" class="form-control" readonly />
+              <label for="" class="form-label">공정명</label>
+              <select class="form-select" id="prcsSelect">
+              </select>
             </div>
             <div class="col-md-6">
-              <label for="inputEmail5" class="form-label">작업량 설정</label>
-              <input type="text" class="form-control mr-2" />
+              <label for="" class="form-label">작업량 설정</label>
+              <input id="workAmount" type="number" class="form-control mr-2"  min="1"/>
             </div>
-          </form>
-          <p style="margin-bottom: 30px"></p>
-          <div class="row">
             <div class="col-md-4">
+              <label for="" class="form-label">사용가능한 설비</label>
               <select
                 id="multiPro"
                 class="form-select"
@@ -189,31 +187,32 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               ></select>
             </div>
             <div class="col-md-8">
+              <label for="" class="form-label">투입자재</label>
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">공정 코드</th>
-                    <th scope="col">공정 명</th>
-                    <th scope="col">자재 명</th>
-                    <th scope="col">자재 소요량</th>
+                  	<th scope="col">자재분류</th>
+                    <th scope="col">자재명</th>
+                    <th scope="col">예상소모량</th>
+                    <th scope="col">실자재소모량</th>
                   </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody id="modalInTbody"></tbody>
               </table>
             </div>
-          </div>
 
           <hr />
-          <div id="btnGrp">
-            <input type="text" style="width: 80px" readonly />
-            <button type="button" class="btn btn-success">작업시작</button>
-            <input type="text" style="width: 80px" readonly />
-            <button type="button" class="btn btn-danger">작업종료</button>
-            <!-- <p></p>
-            <input type="text" style="width: 80px" readonly />
-            <button type="button" class="btn btn-danger">불량 (+)</button>
-            <button type="button" class="btn btn-info">불량(-)</button> -->
+          <div>
+          	<div class="form-inline">
+			  <input id="startTime" class="form-control mr-2" type="text" style="width: 80px" readonly />
+			  <button id="workStart" type="button" class="btn btn-success">작업시작</button>
+			</div>
+          	<div class="form-inline">
+	            <input class="form-control mr-2" type="text" style="width: 80px" readonly />
+	            <button type="button" class="btn btn-danger">작업종료</button>
+          	</div>
           </div>
+          </form>
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
@@ -232,10 +231,92 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
   
   <script>
+  function getCurrentDate() {
+	  var now = new Date();
+	  var year = now.getFullYear();
+	  var month = now.getMonth() + 1;
+	  var day = now.getDate();
+
+	  if (month < 10) {
+	    month = '0' + month;
+	  }
+
+	  if (day < 10) {
+	    day = '0' + day;
+	  }
+
+	  var formattedDate = year + '-' + month + '-' + day;
+	  return formattedDate;
+	}
   $(document).ready(function(){
+	  $('#workStart').on('click', function() {	  
+		  var now = new Date();
+		  var hours = now.getHours();
+		  var minutes = now.getMinutes();
+		  var seconds = now.getSeconds();
+		  hours = ('0' + hours).slice(-2);
+		  minutes = ('0' + minutes).slice(-2);
+		  seconds = ('0' + seconds).slice(-2);
+		  var wkToTm = hours + ':' + minutes + ':' + seconds;
+		  $('#startTime').val(wkToTm);
+		  $(this).attr('disabled','disabled');
+		  
+		  var prcsPsch = $('#prcsWorker').val();
+		  var prcsCd = $('#prcsSelect').val();
+		  var prodCnt = $('#workAmount').val();
+		  console.log(prcsPsch+"/"+prcsCd+"/"+prodCnt+"/"+wkToTm);
+		  
+		  var selectedValues = $('#multiPro').val();
+		  var useEqm = ""; 
+
+		  for (var i = 0; i < selectedValues.length; i++) {
+			  useEqm += selectedValues[i]; 
+
+		    if (i != selectedValues.length - 1) {
+		    	useEqm += "/";
+		    }
+		  }
+		  console.log(selectedValues);
+		  
+		  $.ajax({
+			  url:'modifyPrcsStart',
+			  type:'post',
+			  data:{prcsPsch:prcsPsch,
+				    prcsCd:prcsCd,
+				    prodCnt:prodCnt,
+				    useEqm:useEqm},
+			  success:function(data){
+				  console.log(data);
+			  },
+			  error:function(error){
+				  console.log(error);
+			  }
+		  })
+	  })
+	 
+	  
+	  $('#workAmount').on('input', function() {
+		  var workAmount = parseInt($(this).val(), 10);
+		  
+		  var $tableBody = $('#modalInTbody');
+		  
+		  $tableBody.find('tr').each(function() {
+		    var $lastCell = $(this).find('td:nth-child(3)');
+		    var useCnt = parseInt($lastCell.data('cnt'));
+		    
+		    var calculatedValue = useCnt * workAmount;
+		    $lastCell.text(calculatedValue.toString());
+		  });
+		});
+	  
+	  
+	  $('#workDate').val(getCurrentDate);
+	  
 	  $('#indicaList tr').click(function(){
-		$(this).addClass('active').siblings().removeClass('active');
+		$('#prcsSelect').empty();  
 		
+		  
+		$(this).addClass('active').siblings().removeClass('active');
 		 
 	    var indicaCd = $(this).find('td:eq(0)').text(); 
 	    var indicaName = $(this).find('td:eq(1)').text(); 
@@ -254,20 +335,43 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 					 console.log(data.PrcsProg);
 					 var data = data.PrcsProg;
 					 var tbody = $('#prcsProgList');
+					 var select = $('#prcsSelect');
 					 tbody.empty(); // 기존에 있던 tr과 td를 모두 제거
 
  				 // 데이터를 반복문으로 처리하여 tr과 td 생성
 					 for (var i = 0; i < data.length; i++) {
-					   var tr = $('<tr>');
+					   var tr = $('<tr>').data('id',prdtNm);
 					   tr.append('<td>' + data[i].prcsCd + '</td>');
-					   tr.append('<td>' + data[i].prodCnt + '</td>');
+					   
+					   tr.append('<td>' + data[i].prcsNm + '</td>');
+					   if(i==0){  
+					   	   tr.append('<td>' + indicaCnt + '</td>');
+					   } else {
+						   tr.append('<td>' + "0" + '</td>');
+					   }
 					   tr.append('<td>' + data[i].inferCnt + '</td>');
-					   tr.append('<td>' + '0' + '</td>');
-					   tr.append('<td>' + data[i].prcsPsch + '</td>');
-					   tr.append('<td>' + data[i].wkToTm + '</td>');
-					   tr.append('<td>' + data[i].wkFrTm + '</td>');
+					   tr.append('<td>' + data[i].prodCnt + '</td>');
+					   if(data[i].prcsPsch == null){
+						  tr.append('<td>' + '-' + '</td>');
+					   } else {
+					   	tr.append('<td>' + data[i].prcsPsch + '</td>');
+					   }
+					   if(data[i].wkToTm == null){
+						   tr.append('<td>' + '-' + '</td>');
+					   } else{
+					   	tr.append('<td>' + data[i].wkToTm + '</td>');
+					   }
+					   if(data[i].wkFrTm == null){
+						   tr.append('<td>' + '-' + '</td>');
+					   }else{
+					   	tr.append('<td>' + data[i].wkFrTm + '</td>');
+					   }
+					   tr.append('<td hidden="true">' + indicaCnt + '</td>');
 					   tbody.append(tr);
+					   var option = $('<option>').attr('value', data[i].prcsCd).text(data[i].prcsNm +' / '+ data[i].prcsCd);
+					   select.append(option);
 					 } 
+					 
 
 				 },
 				 error: function(error) {
@@ -276,6 +380,78 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				 
 			 })
 	    
+	  });
+	  $(document).on('click', '#prcsProgList tr', function() {
+		  $('#modalInTbody').empty();
+		  $('#multiPro').empty(); 
+		  var prdtNm = $(this).data('id');
+		  var prcsCd = $(this).find('td:first-child').text();
+		  var prcsNm = $(this).find('td:nth-child(2)').text();
+		  var indicaCnt = $(this).find('td:nth-child(3)').text();
+		  console.log(indicaCnt);
+		  $('#workAmount').val(indicaCnt);
+		  $('#prcsSelect option').each(function() {
+			  if ($(this).val() == prcsCd) {
+			    $('#prcsSelect').val(prcsCd); 
+			    $(this).siblings().prop('disabled', false); 
+			  } else {
+			    $(this).prop('disabled', true);
+			  }
+			});
+		  
+		  
+		  $.ajax({
+				 url:'getPrcsAndRsc',
+				 type:'post',
+				 data: {prcsCd : prcsCd,
+					    prdtNm : prdtNm},
+				 success: function(data) {
+					 console.log(data.result);
+					 console.log(prcsCd);
+					 $.ajax({
+						 url:'getEqmPrcs',
+						 type:'post',
+						 data:{prcsCd : prcsCd},
+						 success:function(data){
+							 console.log(data.result)
+							 var multiPro = $('#multiPro');
+
+							 $.each(data.result, function(index, obj) {
+							   var eqmCd = obj.eqmCd;
+							   var eqmFg = obj.eqmFg;
+							   
+							   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd);
+							   
+							   multiPro.append(option);
+							 });
+						 },
+						 error:function(error) {
+							 console.log(error)
+						 }
+					 })
+					 var tbody = $('#modalInTbody');
+					 for (var i = 0; i < data.result.length; i++) {
+					    var obj = data.result[i];
+					    var tr = $('<tr>').appendTo(tbody);
+					    tr.append($('<td>').text(obj.rscTyp));
+					    tr.append($('<td>').text(obj.rscNm));
+					    tr.append($('<td>').text(obj.useCnt).attr('data-cnt',obj.useCnt));
+					    var input = $('<input>').attr({
+											    	  type: 'number',
+											    	  class: 'form-control mr-2'
+											    	});
+					    tr.append($('<td>').append(input));
+					    
+					 }
+					 $('#prcsModal').modal('show');
+				 },
+				 error : function(error) {
+					 console.log(error);
+				 }
+				 
+		  })
+		  
+		    
 	  });
 	});
   </script>

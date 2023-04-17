@@ -3,7 +3,7 @@ package com.yedam.spring.production.service;
 import java.util.List;
 
 import com.yedam.spring.common.Criteria;
-import com.yedam.spring.mat.service.MatVO;
+import com.yedam.spring.eqm.service.EqmVO;
 
 public interface ProService {
 	
@@ -67,6 +67,12 @@ public interface ProService {
 	public List<ProOrderVO> getIndica();
 
 	public List<ProPrcsVO> getPrcsProg(ProPrcsVO vo);
+
+	public List<ProPrcsVO> getPrcsAndRsc(ProPrcsVO vo);
+
+	public List<EqmVO> getEqmPrcs(ProPrcsVO vo);
+
+	public String modifyPrcsStart(ProPrcsVO vo);
 
 
 

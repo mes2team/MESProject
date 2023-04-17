@@ -475,8 +475,8 @@
 				                      SELECT *
 				                      FROM plan_dtl
 				                      WHERE plan_cd = v_plan_cd
-				                        AND plan_dtl.indica_cnt >= plan_dtl.order_cnt
-				                  ) THEN '지시진행중' ELSE '지시완료'
+				                        AND order_cnt > indica_cnt
+				                  ) THEN '지시완료' ELSE '지시진행중'
 				              END
 				WHERE plan_cd = v_plan_cd;
 		  		
@@ -516,10 +516,37 @@
  		<!-- 진행공정 단건 조회 -->
  		<select id="selectPrcsProg" resultType="ProPrcsVO">
 			SELECT * 	
-			FROM prcs_prog
-		 	WHERE indica_cd = #{indicaCd}
-			ORDER BY indica_cd, prcs_cd
+			FROM prcs_prog pp, prcs p
+		 	WHERE pp.prcs_cd = p.prcs_cd
+		 	  AND pp.indica_cd = #{indicaCd}
+			ORDER BY pp.indica_cd, pp.prcs_cd
  		</select>
+ 		
+ 		<!-- 진행공정 단건 조회 -->
+ 		<select id="selectPrcsAndRsc" resultType="ProPrcsVO">
+			SELECT e.edcts_cd, e.prdt_nm, b.bom_cd, bd.rsc_cd,r.rsc_typ ,r.rsc_nm, bd.use_cnt, bd.prcs_cd, p.prcs_nm
+			FROM  edcts e ,bom b, bom_detail bd, rsc r, prcs p
+			WHERE bd.prcs_cd = p.prcs_cd
+			  and bd.rsc_cd = r.rsc_cd
+			  and e.edcts_cd =b.edcts_cd
+			  and b.bom_cd = bd.bom_cd
+			  and e.prdt_nm = #{prdtNm}
+			  and bd.prcs_cd = #{prcsCd}
+			  order by prcs_cd
+ 		</select>
+ 		
+ 		<select id="selectEqmPrcs" resultType="EqmVO">
+ 			SELECT	eqm_cd, eqm_fg, prcs_cd  ,use_yn
+ 			FROM	eqm
+ 			WHERE 	prcs_cd = #{prcsCd}
+ 			  AND 	use_yn ='Y'
+ 			ORDER BY eqm_fg
+ 		</select>
+ 		
+ 		<update id="updatePrcsStart" parameterType="ProPrcsVO">
+ 			UPDATE
+ 		
+ 		</update>
  	
  	
   </mapper>

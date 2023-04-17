@@ -301,4 +301,36 @@ public class ProController {
 		return resultMap;
 	}
 	
+	//진행공정/자재 조회
+	@PostMapping("/getPrcsAndRsc")
+	@ResponseBody
+	public Map<String, Object> getPrcsAndRsc(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.getPrcsAndRsc(vo));
+
+		return resultMap;
+	}
+	
+	//진행공정/설비 조회
+	@PostMapping("/getEqmPrcs")
+	@ResponseBody
+	public Map<String, Object> getEqmPrcs(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.getEqmPrcs(vo));
+
+		return resultMap;
+	}
+	//공정시작
+	@PostMapping("/modifyPrcsStart")
+	@ResponseBody
+	public Map<String, Object> modifyPrcsStart(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.modifyPrcsStart(vo));
+
+		return resultMap;
+	}
+		
 }
