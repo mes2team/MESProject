@@ -79,23 +79,23 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </div>
           <p></p>
           <hr />
-          <div class="col-md-4">
+          <div class="col-md-12">
             <label for="inputEmail5" class="form-label">제품 입고 날짜</label>
             <div class="d-flex align-items-center">
               <input type="date" class="form-control mr-2" id="startDate" />
               <span class="mx-2">~</span>
               <input type="date" class="form-control ml-2" id="endDate" />
             </div>
-            <div id="btnGrp">
-              <button type="button" class="btn btn-secondary" id="searchBtn">
-                검색
-              </button>
-              <button type="button" class="btn btn-primary" id="reset">
-                초기화
-              </button>
-            </div>
+            <div id="btnGrp"></div>
           </div>
-          <div class="text-center"></div>
+          <div class="text-center">
+            <button type="button" class="btn btn-secondary" id="searchBtn">
+              검색
+            </button>
+            <button type="button" class="btn btn-primary" id="reset">
+              초기화
+            </button>
+          </div>
         </form>
         <!-- End Multi Columns Form -->
       </div>
@@ -502,6 +502,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             });
           }
         });
+      }
+    });
+
+    // 엔터키를 눌렀을 때 검색 버튼 클릭 이벤트 실행
+    $("#startDate, #endDate").on("keypress", function (event) {
+      if (event.which === 13) {
+        event.preventDefault();
+        $("#searchBtn").click();
       }
     });
   </script>

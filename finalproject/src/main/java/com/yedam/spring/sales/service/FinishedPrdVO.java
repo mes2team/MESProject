@@ -5,9 +5,10 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
-
 @Data
-public class EdctsIstVO {
+public class FinishedPrdVO {
+
+	// 입고 VO
 	private String edctsIstNo;
 	private String edctsCd;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -15,11 +16,10 @@ public class EdctsIstVO {
 	private int edctsIstCnt;
 	private String edctsLotNo;
 	private String edctsLotCnt;
-	
-	private String prdtNm; // 제품이름
-	private String prodCnt; // 생산량
-	private String inferCnt; // 불량량
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date edctsIstDtEnd; // 날짜 검색할때
-	
+
+	// 제품 VO
+	private String prdtNm;
+	private String spec;
+	private String unit;
+	private int safStc;
 }

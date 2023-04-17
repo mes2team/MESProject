@@ -34,6 +34,19 @@
 	
 	<!-- 등록 -->
 	<insert id="insertVendInfo" parameterType="VendVO">
+		<selectKey keyProperty="vendCd" resultType="String" order="BEFORE">
+			<if test="vendTyp.equals('매입처')">
+				SELECT 	'VEI' || TO_CHAR(NVL(MAX(SUBSTR(vend_cd, 4)),999) + 1)
+				FROM 	vend
+				WHERE	vend_cd LIKE 'VEI%'
+			</if>
+			<if test="vendTyp.equals('매출처')">
+				SELECT 	'VEO' || TO_CHAR(NVL(MAX(SUBSTR(vend_cd, 4)),999) + 1)
+				FROM 	vend
+				WHERE	vend_cd LIKE 'VEO%'
+			</if>
+		</selectKey>	
+
 		INSERT INTO vend (vend_cd,
 						  vend_nm, 
 						  br_num, 
@@ -109,7 +122,9 @@
 			<if test="vendAddr != null and !vendAddr.equals('')">
 				vend_addr = #{vendAddr},
 			</if>
-			remk = #{remk}
+			<if test="remk != null and !remk.equals('')">
+				remk = #{remk}
+			</if>
 		</set>
 		WHERE vend_cd = #{vendCd}
 	</update>

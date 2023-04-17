@@ -64,21 +64,9 @@ public class VendController {
 	// 수정
 	@PostMapping("/updateVend")
 	@ResponseBody
-	public Map<String, Object> updateVend(@RequestBody VendVO[] arr) {
-		Map<String, Object> map = new HashMap<>();
-	    if (arr == null) {
-	    	map.put("result", "false");
-	    	map.put("data", null);
-	        return map;
-	    }
-	    for (int i = 0; i < arr.length; i++) {
-	        vendService.updateVend(arr[i]);
-	    }
-	    
-	    List<VendVO> list = vendService.getVendAll();
-	    map.put("result", "success");
-    	map.put("data", list);
-        return map;
+	public String updateVend(VendVO vo) {
+		vendService.updateVend(vo);
+        return "success";
 	}
 	
 	// 거래처 디테일
