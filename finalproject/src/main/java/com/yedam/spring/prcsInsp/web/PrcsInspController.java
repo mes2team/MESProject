@@ -48,6 +48,9 @@ public class PrcsInspController {
 	@ResponseBody
 	public String chkDone(@RequestBody PrcsInspVO[] list) {
 		for (int i = 0; i < list.length; i++) {
+			/*
+			 * if(list[0].prcsCd.equals("PRCS5000")) { service.updateIndiPlan(list[0]); }
+			 */
 			if (i != list.length - 1) {
 				service.insertDtl(list[i]);
 			} else if (i == list.length - 1) {

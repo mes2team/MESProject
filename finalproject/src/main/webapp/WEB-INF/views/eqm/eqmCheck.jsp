@@ -292,7 +292,8 @@
 		for(let i=0;i<res.length;i++){
 			let tr = $('<tr onclick="selectCheck(\'' + res[i].checkCd + '\', this)">');
 			tr.append('<td scope="row"><input type="checkbox"></td>');
-			let date = changeDateFormat(res[i].chckDt)
+			let date = changeDateFormat(res[i].chckDt);
+			let nextDate = changeDateFormat(res[i].nextChckDt);
     		tr.append('<td>' + date + '</td>'); 
    			tr.append('<td>' + res[i].checkCd + '</td>'); 
     		tr.append('<td>' + res[i].eqmCd + '</td>'); 
@@ -300,7 +301,7 @@
     		tr.append('<td>' + res[i].chckFg + '</td>'); 
     		tr.append('<td>' + res[i].chckPsch + '</td>'); 
     		tr.append('<td>' + res[i].jdgmnt + '</td>'); 
-    		tr.append('<td></td>');
+    		tr.append('<td>' + nextDate + '</td>');
 			listTable.append(tr);
 		}
 	}
@@ -323,8 +324,7 @@
 					      data:	$('#checkForm').serialize(),
 					      //dataType: 'json', 화면 받을 땐 없어도 됨
 					      success: function(result) { 
-					    	console.log("업데이트성공");
-							updateTr();	//수정된tr 그리고 기존tr 지우기
+							afterUpdate();
 							inputClean();
 							Toast.fire({
 				                  icon: "success",
@@ -337,6 +337,33 @@
 					    });	
 			  }
 			})
+	}
+	function afterUpdate(){
+		 $.ajax({
+			  url: "afterUpdate",
+			  type: "GET",
+			  dataType: "json",
+			  success: function(res) {
+				  makeSearchList(res);	  
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 	
+	}
+	
+	function afterInsert(){
+		 $.ajax({
+			  url: "afterInsert",
+			  type: "GET",
+			  dataType: "json",
+			  success: function(res) {
+				  makeSearchList(res);	
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 	
 	}
 	//수정시 tr새로 그리기
 	function updateTr(){
@@ -435,37 +462,11 @@
 					    	  for(k=0;k<disableds.length;k++){
 									disableds[k].disabled = false;
 								}
-					    	  let tr = document.createElement("tr")
-					    	  tr.onclick = function(){
-					    		  let megeChkCd = this.children[2].innerText
-					    		  selectCheck(megeChkCd,this)
-					    	  }
-					    	  let checkbox = document.createElement("input");
-					    	  checkbox.type = "checkbox";
-					    	  
-					    	  let tds = [];
-					    	  for(let l=0; l<9; l++){
-					    		  let td = document.createElement("td");
-					    		  tds.push(td)
-					    	  }
-					    	  tds[0].appendChild(checkbox)
-				    		  tds[1].innerText = chckDt.value;
-					    	  tds[2].innerText = maxCheckCd();
-					    	  tds[3].innerText = eqmCd.value;
-					    	  tds[4].innerText = eqmNm.value;
-					    	  tds[5].innerText = chckFgVal();
-					    	  tds[6].innerText = chckPsch.value;
-					    	  tds[7].innerText = jdgmntVal();
-					    	  tds[8].innerText = nextDt(chckDt.value);
-					    	  
-				    		  for(let m=0;m<tds.length;m++){
-				    		  tr.appendChild(tds[m])
-				    		  }
-					    	  listTable.append(tr);
 					    	  inputClean();
 					    	  for(let j=0;j<disableds.length;j++){
 					  		    disableds[j].disabled = true;
 					  			}
+					    	  afterInsert();
 					    	  Toast.fire({
 				                  icon: "success",
 				                  title: "추가가 정상적으로 되었습니다.",

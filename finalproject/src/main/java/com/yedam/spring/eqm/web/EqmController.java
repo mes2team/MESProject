@@ -108,6 +108,18 @@ public class EqmController {
 		service.updateCheck(eqmVO);
 		return "update success";
 	}
+	
+	@GetMapping("/afterUpdate")
+	@ResponseBody
+	public List<EqmVO> afterUpdate(){
+		return service.selectCheckList();
+	}
+	
+	@GetMapping("/afterInsert")
+	@ResponseBody
+	public List<EqmVO> afterInsert(){
+		return service.selectCheckList();
+	}
 
 	// 설비비가동
 
