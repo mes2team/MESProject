@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.common.PageDTO;
+import com.yedam.spring.masterData.service.EdctsService;
+import com.yedam.spring.masterData.service.EdctsVO;
 import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -31,6 +33,9 @@ public class ProController {
 
 	@Autowired
 	ProService proService;
+	
+	@Autowired
+	EdctsService edctsService;
 	
 	// 생산계획 수정
 	@PostMapping("/modifyProPlan")
@@ -163,6 +168,7 @@ public class ProController {
 		int total = proService.getProPlanCnt();
 		model.addAttribute("prcsList", proService.getprcsList(cri));
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
+		model.addAttribute("prdList", edctsService.getEdctsList()); // 공정흐름관리 제품 조회
 		return "production/processManage";
 	}
 
@@ -367,6 +373,13 @@ public class ProController {
 		resultMap.put("result", proService.modifyPrcsStop(vo));
 
 		return resultMap;
+	}
+	
+	// 공정흐름관리 제품 조회
+	@PostMapping("/prcsFlowList")
+	@ResponseBody
+	public List<ProPrcsVO> processManagePrd(ProPrcsVO vo){
+		return proService.getPrcsFlowList(vo);
 	}
 		
 }

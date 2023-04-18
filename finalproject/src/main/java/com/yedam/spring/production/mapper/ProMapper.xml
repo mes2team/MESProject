@@ -603,6 +603,16 @@
  			WHERE eqm_cd = #{eqmCd}
  		</update>
 		
-		
+		<select id="selectPrcsFlowList" resultType="ProPrcsVO">
+			SELECT  	pf.prcs_no,
+        				pf.edcts_cd,
+        				pf.prcs_cd,
+			        	p.prcs_nm,
+			        	p.prcs_fg,
+			        	p.prcs_ctnt
+			FROM		prcs_flow pf JOIN prcs p
+			ON 			pf.prcs_cd = p.prcs_cd
+			WHERE 		edcts_cd = #{edctsCd}
+		</select>
  	
   </mapper>

@@ -8,11 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.masterData.service.BomService;
 import com.yedam.spring.masterData.service.EdctsService;
+import com.yedam.spring.masterData.service.EdctsVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
@@ -73,4 +73,20 @@ public class BomController {
 	public String selectBomCd(BomVO vo) {
 		return bomService.getBomCd(vo).getBomCd();
 	}
+	
+	//bom 헤더에 없는 제품 조회
+	@GetMapping("bomHeaderPrd")
+	@ResponseBody
+	public List<EdctsVO> bomHeaderPrd(){
+		return edctsService.getBomHeaderPrd();
+	}
+	
+	//bom헤더 등록
+	@PostMapping("bomHeaderInsert")
+	@ResponseBody
+	public String bomHeaderInsert(BomVO vo) {
+		bomService.insertBomHeader(vo);
+		return "success";
+	}
+	
 }

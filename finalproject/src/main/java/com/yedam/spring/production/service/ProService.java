@@ -81,5 +81,6 @@ public interface ProService {
 
 	public String modifyPrcsStop(ProPrcsVO vo);
 
-
+	// 공정흐름관리 공정흐름출력
+	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo);
 }

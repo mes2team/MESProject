@@ -284,6 +284,11 @@ public class ProServiceImpl implements ProService {
 		}	
 	}
 
+	@Override
+	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo) {
+		return proMapper.selectPrcsFlowList(vo);
+	}
+
 
 
 

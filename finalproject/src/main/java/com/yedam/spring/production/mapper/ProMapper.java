@@ -2,7 +2,6 @@ package com.yedam.spring.production.mapper;
 
 import java.util.List;
 
-
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.eqm.service.EqmVO;
 import com.yedam.spring.mat.service.MatVO;
@@ -19,7 +18,7 @@ public interface ProMapper {
 	public List<OrderSheetVO> selectOrderSheet();
 
 	public List<BomVO> selectBomInfo();
-	
+
 	public List<BomVO> selectBomInfo(BomVO vo);
 
 	public List<BomVO> selectBomRscInfo(BomVO vo);
@@ -91,5 +90,8 @@ public interface ProMapper {
 	public String getEqm(ProPrcsVO vo);
 
 	public int offEqm(String eqmCd);
+
+	// 공정흐름관리 공정흐름출력
+	public List<ProPrcsVO> selectPrcsFlowList(ProPrcsVO vo);
 
 }
