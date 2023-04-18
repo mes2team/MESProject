@@ -29,7 +29,8 @@
 	  							  <if test="orderNo != null and !orderNo.equals('')">
 	  							  order_no,
 	  							  </if>
-	  							  plan_dt
+	  							  plan_dt,
+	  							  plan_due
 	  							  )
 	  					VALUES	 (v_pran_cd,
 	  							  #{planName},
@@ -38,7 +39,8 @@
 	  							  <if test="orderNo != null and !orderNo.equals('')">
 	  							  #{orderNo},
 	  							  </if>
-	  							  sysdate
+	  							  sysdate,
+	  							  #{planDue}
 	  							  );
 	  			<!-- 생산계획디테일 테이블 -->
 	  			INSERT INTO plan_dtl (plan_cd,
@@ -164,7 +166,7 @@
   		  AND p.plan_cd = #{planCd}
   	</select>
   	
-  	<!-- 생산계획 조회 + 페이징-->
+  	<!-- 생산계획 조회 -->
 	<select id="selectProPlans" resultType="ProPlanVO">
 	<![CDATA[
 		SELECT	p.plan_cd,
@@ -173,6 +175,7 @@
 						p.now_st,
 						p.plan_dt,
 						p.order_no,
+						p.plan_due,
 						d.pref_rank,
 						d.edcts_cd,
 						d.order_cnt,
@@ -422,7 +425,7 @@
 				CURSOR c_prcs_flow IS
 				  SELECT prcs_cd 
 				  FROM prcs_flow
-				  WHERE edcts_cd = 'EDC1001'
+				  WHERE edcts_cd = #{edctsCd}
 				  ORDER BY prcs_no;
 	  		BEGIN
 	  			v_plan_cd := #{planCd};
@@ -451,12 +454,14 @@
 	  			INSERT INTO indica (indica_dt,
 	  							  now_st,
 	  							  indica_cd,
-	  							  indica_name
+	  							  indica_name,
+	  							  indica_due
 	  							  )
 	  					VALUES	 (#{indicaDt},
 	  							  '지시완료',
 	  							  v_indica_cd,
-	  							  #{indicaName}
+	  							  #{indicaName},
+	  							  #{indicaDue}
 	  							  );
 	  			<!-- 생산지시디테일 테이블 -->
 	  			INSERT INTO indica_dtl (indica_dt,
@@ -517,7 +522,7 @@
 	  	
  		<!-- 공정실적을 위한 생산지시 조회 -->
  		<select id="selectIndica" resultType="ProOrderVO">
- 			SELECT i.indica_cd, i.indica_name, e.prdt_nm, ad.indica_dt,ad.indica_cnt, i.now_st
+ 			SELECT i.indica_cd, i.indica_name, e.prdt_nm, ad.indica_dt,ad.indica_cnt, i.now_st, i.indica_due
 			FROM indica i, indica_dtl ad, edcts e
 			WHERE i.indica_cd = ad.indica_cd
 			  AND ad.edcts_cd = e.edcts_cd
@@ -577,8 +582,7 @@
 			  
 			UPDATE indica
 			SET now_st = v_prcs_fg || '중'
-			WHERE prcs_cd = #{prcsCd}
-			  AND indica_cd = #{indicaCd};
+			WHERE indica_cd = #{indicaCd};
 		END;
  		</update>
  		

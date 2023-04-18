@@ -7,9 +7,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <style>
-  h5 {
-    float: left;
-  }
   #btnGrp {
     float: right;
     padding: 20px 0 15px 0;
@@ -54,6 +51,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>작업일자</th>
                     <th>지시량</th>
                     <th>현재상태</th>
+                    <th>지시종료일자</th>
                   </tr>
                 </thead>
                 <tbody id="indicaList">
@@ -65,6 +63,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 		<td><fmt:formatDate value="${item.indicaDt }" pattern="yyyy-MM-dd" /></td>
                 		<td>${item.indicaCnt }</td>
                 		<td>${item.nowSt }</td>
+                		<td><fmt:formatDate value="${item.indicaDue }" pattern="yyyy-MM-dd" /></td>
                 	</tr>
                 </c:forEach>
                 </tbody>
@@ -82,7 +81,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
-            <h5 id="indicaCdText"></h5>
+            <h3 class="card-title" id="indicaCdText"></h3>
               <table class="table table-hover">
                 <thead>
                   <tr>

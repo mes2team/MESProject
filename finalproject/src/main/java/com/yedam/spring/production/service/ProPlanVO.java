@@ -33,4 +33,6 @@ public class ProPlanVO {
 	private Date firstDate;	//조건시작
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date lastDate;	//조건마지막
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date planDue;
 }
