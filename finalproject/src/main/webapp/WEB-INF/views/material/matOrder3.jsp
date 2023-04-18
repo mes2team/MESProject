@@ -292,24 +292,16 @@ table, tr, th, td {
 <!-- ============================================================== -->
 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
-//날짜 변환
-function productDate(timestamp) {
-  let date = new Date(timestamp);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let formattedDate = year + "-" + month + "-" + day;
-  return formattedDate;
-}     
-$("#insertBtn").on("click", function () {
-          
-          let ordrReqDtData = $("input[name='ordrReqDtInput']").val();
-          let vendCdData = $("input[name='vendCdInput']").val();
-          let vendNmData = $("input[name='vendNmInput']").val();
-          let rscCdData = $("input[name='rscCdInput']").val();
-          let rscNmData = $("input[name='rscNmInput']").val();
-          let ordrCntData = $("input[name='ordrCntInput']").val();
-          let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
+      
+      function formOptionChk() {
+          let ordrCd = document.getElementsByName('ordrCd')[0];
+          let ordrReqDt = document.getElementsByName('ordrReqDt')[0];
+          let vendCd = $("#vendCd option:selected").val();
+          let vendNm = document.getElementsByName('vendNm')[0];
+          let rscCd = document.getElementsByName('rscCd')[0];
+          let rscNm = document.getElementsByName('rscNm')[0];
+          let ordrCnt = document.getElementsByName('ordrCnt')[0];
+          let paprdCmndDt = document.getElementsByName('paprdCmndDt')[0];
 
           if (ordrCd.value == "") {
               alert("발주번호가 입력되지 않았습니다.");
@@ -362,58 +354,15 @@ $("#insertBtn").on("click", function () {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
-        	  $.ajax({
-        		  //MatController 의 @PostMapping("/matCheckInsert")
-                  url: "matOrderInsert",
-                  method: "post",
-                  data: {ordrReqDt: ordrReqDtData,
-                	  vendCd: vendCdData,
-                	  vendNm: vendNmData,
-                	  rscCd: rscCdData,
-                	  rscNm: rscNmData,
-                	  ordrCnt: ordrCntData,
-                	  paprdCmndDt: paprdCmndDtData},
-                  
-                  success: function (result) {
-                	  //테이블 데이터 지우기
-                    $("#matOrderTable").empty();
-                	  //input 내 데이터 지우기  
-                    $("#ordrReqDtData").val("");
-                    $("#vendCdData").val("");
-                    $("#vendNmData").val("");
-                    $("#rscCdData").val("");
-                    $("#rscNmData").val("");
-                    $("#ordrCntData").val("");
-                    $("#paprdCmndDtData").val("");
-                    //테이블 데이터 채우기
-                    $(result).each(function (idx, item) {
-                      let tr = $("<tr>").attr("data-id", item.ordrCd);
-                      tr.append(
-                        $("<td>").append(
-                          $("<input>").attr("type", "checkbox").attr("name", "chk")
-                        )
-                      );
-                      tr.append("<td>" + (idx + 1) + "</td>");
-                      tr.append("<td>" + item.ordrCd + "</td>");
-                   	  tr.append("<td>" + productDate(item.ordrReqDt) + "</td>");
-                      tr.append("<td>" + item.vendCd + "</td>");
-                      tr.append("<td>" + item.vendNm + "</td>");
-                      tr.append("<td>" + item.rscCd + "</td>");
-                      tr.append("<td>" + item.rscNm + "</td>");
-                      tr.append("<td>" + item.ordrCnt + "</td>");
-                      tr.append("<td>" + productDate(item.paprdCmndDt) + "</td>");
-                      
+              if (result.value) {
+                  insertForm.submit();
+              }
+          });
 
-                      $("#matOrderTable").append(tr);
-                    });
-                  },
-                  error: function (reject) {
-                    console.log(reject);
-                  },
-                });
-              });
-            });
+          return false; // 이벤트의 기본 동작인 페이지 이동을 막기 위해 false를 반환합니다.
+      }
 
+      $("#insertBtn").on("click", formOptionChk)
       
        // 닫기버튼 시 초기화
       $(".btn-close").on("click", function () {

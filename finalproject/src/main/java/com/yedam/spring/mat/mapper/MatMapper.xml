@@ -24,6 +24,15 @@
 	  FROM rsc
      WHERE rsc_cd = #{rscCd}
 	</select>
+<!-- 자재정보 단건 조회 -->
+	<select id="matVendList" resultType="MatVO">
+	SELECT vend_cd,
+		   vend_nm,
+		   vend_typ		   
+	  FROM vend
+     WHERE vend_typ = '매입처'
+     ORDER BY vend_cd
+	</select>	
 <!-- 자재정보 등록 -->
 	<insert id="insertMatInfo" parameterType="MatVO">
 		INSERT INTO rsc (
@@ -104,6 +113,10 @@
 	</select>
 <!-- 자재발주 등록 -->
 	<insert id="insertMatOrderInfo" parameterType="MatVO">
+		<selectKey keyProperty="ordrCd" resultType="String" order="BEFORE">
+		    SELECT CONCAT('RSO', LPAD(NVL(MAX(SUBSTR(rsc_insp_cd, 4)), '0000') + 1, 4, '0'))
+		    FROM rsc_insp
+	   </selectKey>
 		INSERT INTO rsc_ordr (
 		ordr_cd,
 		ordr_req_dt,
@@ -282,10 +295,58 @@
   INSERT INTO rsc_insp (rsc_insp_cd, ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
   VALUES (#{rscInspCd}, #{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
 </insert>
-
-<!-- <insert id="insertMatCheck" parameterType="MatVO">
-  
-  INSERT INTO rsc_insp (ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
-  VALUES (#{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
-</insert>   -->  
+<!-- 자재검사 단건조회 -->
+	<select id="selectMatCheckInfo" parameterType="MatVO" resultType="MatVO">
+		SELECT *
+		FROM rsc_insp 	
+		WHERE rsc_insp_cd = #{rscInspCd}    
+	</select>
+<!-- 자재검사 수정 -->
+	<update id="updateMatCheckInfo" parameterType="MatVO">
+		UPDATE rsc_insp
+		<set>
+			<if test="ordrCd != null and !ordrCd.equals('')">
+				ordr_cd = #{ordrCd},
+			</if>
+			<if test="rscNm != null and !rscNm.equals('')">
+				rsc_nm = #{rscNm},
+			</if>
+			<if test="inspCnt != null and !inspCnt.equals('')">
+				insp_cnt = #{inspCnt},
+			</if>
+			<if test="inspDt != null and !inspDt.equals('')">
+				insp_dt = #{inspDt},
+			</if>
+			<if test="inspTstr != null and !inspTstr.equals('')">			
+				insp_tstr = #{inspTstr},
+			</if>
+			<if test="inspPassCnt != null and !inspPassCnt.equals('')">
+				insp_pass_cnt = #{inspPassCnt},
+			</if>
+			<if test="cont != null and !cont.equals('')">
+				cont = #{cont},
+			</if>
+			<if test="decay != null and !decay.equals('')">
+				decay = #{decay},
+			</if>
+			<if test="pack != null and !pack.equals('')">
+				pack = #{pack},
+			</if>
+			<if test="underWeight != null and !underWeight.equals('')">
+				under_weight = #{underWeight},
+			</if>
+			<if test="etc != null and !etc.equals('')">			
+				etc = #{etc},
+			</if>
+			<if test="etcExplain != null and !etcExplain.equals('')">
+				etc_explain = #{etcExplain}
+			</if>
+		</set>
+		WHERE rsc_insp_cd = #{rscInspCd}
+	</update>
+<!-- 자재검사 삭제 -->
+	<delete id="deleteMatatCheckInfo" parameterType="String">
+		DELETE FROM rsc_insp
+		WHERE rsc_insp_cd = #{rscInspCd}
+	</delete>
 </mapper>

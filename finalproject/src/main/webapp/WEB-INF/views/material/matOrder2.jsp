@@ -41,7 +41,6 @@ table, tr, th, td {
 	border: 1px solid black;
 }
 
-
 .low-stock {
 	background-color: #FF0000;
 }
@@ -53,10 +52,15 @@ table, tr, th, td {
 #matOrderList th:first-child::before {
 	display: none;
 }
+
 #btnGrp {
-	display: inline-blcok;
-	float: right;
 	text-align: right;
+}
+
+.card-body {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 </style>
 </head>
@@ -78,8 +82,8 @@ table, tr, th, td {
 	<div class="row">
 		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			<div class="card">
-				<div class="card-body">
 				<h3 class="">자재재고현황</h3>
+				<div class="card-body">
 					<div class="table-responsive"
 						style="width: 100%; height: 300px; overflow: auto">
 						<table id="stock-table"
@@ -121,79 +125,6 @@ table, tr, th, td {
 		</div>
 	</div>
 	<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
-	<!-- ============================================================== -->
-	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
-	<div class="card">
-		<div class="card-body">
-			<h3 class="insert">자재발주 등록</h3>
-			<div id="btnGrp">
-				<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-				<button type="reset" class="btn btn-secondary">초기화</button>
-			</div>
-			<br>
-			<form class="row g-3" name="insertForm" action="matOrderInsert"
-				method="post" onsubmit="return false"
-				style="margin: 0px 5px 5px 5px;">
-
-				<div class="col-md-2">
-					<label class="form-label">발주신청일</label> <input type="date"
-						class="form-control" id="ordrReqDtInput" name="ordrReqDtInput">
-				</div>
-				
-				<div class="col-md-2">
-                     <label for="country" class="form-label">거래처명</label>
-                     <div class="input-group">
-						<input type="text" class="form-control" id="vendNmInput"
-							name="vendNmInput" readonly />
-						<button type="button" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#vendCdSearch">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
-                  </div>
-                  
-                  <div class="col-md-2">
-                     <label for="country" class="form-label">거래처코드</label> <input
-                        type="text" class="form-control" id="vendCdInput" name="vendCdInput"
-                        readonly />
-                  </div>
-
-				<div class="col-md-2">
-                     <label for="country" class="form-label">자재명</label>
-                     <div class="input-group">
-						<input type="text" class="form-control" id="rscNmInput"
-							name="rscNmInput" readonly />
-						<button type="button" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#rscNmSearch">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
-                  </div>
-                  
-                  <div class="col-md-1">
-                     <label for="country" class="form-label">자재코드</label> <input
-                        type="text" class="form-control" id="rscCdInput" name="rscCdInput"
-                        readonly />
-                  </div>
-
-				<div class="col-md-1">
-					<label class="form-label">발주량</label> <input type="number"
-						class="form-control" id="ordrCntInput" name="ordrCntInput"
-						min="0" />
-				</div>
-				<div class="col-md-2">
-					<label class="form-label">납기요청일</label> <input type="date"
-						class="form-control" id="paprdCmndDtInput" name="paprdCmndDtInput">
-				</div>
-
-				
-			</form>
-			<input type="text"
-						class="form-control" id="ordrCdInput" name="ordrCdInput"
-						 style="display: none"/>
-		</div>
-	</div>
-	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
 	<!-- ============================================================== -->
 	<!-- 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블  -->
 	<div class="row">
@@ -257,7 +188,75 @@ table, tr, th, td {
 	</div>
 	<!-- 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블  -->
 	<!-- ============================================================== -->
+	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
+	<div class="modal fade" id="orderModal" tabindex="-1">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">자재발주</h3>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<form class="row g-3" name="insertForm" action="matOrderInsert"
+					method="post" onsubmit="return false"
+					style="margin: 0px 5px 5px 5px;">
 
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">발주번호</label><input
+							type="text" class="form-control" id="ordrCd" name="ordrCd"
+							placeholder="발주번호를 입력해주세요..">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">발주신청일</label> <input
+							type="date" class="form-control" id="ordrReqDt" name="ordrReqDt"
+							placeholder="">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">거래처코드</label><select
+							class="form-control" id="vendCd" name="vendCd">
+							<option value="none" disabled selected>=== 선택 ===</option>
+							<option value="VEI1000">VEI1000</option>
+							<option value="VEI1001">VEI1001</option>
+						</select>
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">거래처명</label> <input
+							type="text" class="form-control" id="vendNm" name="vendNm">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">자재코드</label> <input
+							type="text" class="form-control" id="rscCd" name="rscCd">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">자재명</label> <input
+							type="text" class="form-control" id="rscNm" name="rscNm">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">발주량</label> <input
+							type="text" class="form-control" id="ordrCnt" name="ordrCnt">
+					</div>
+
+					<div class="col-md-3">
+						<label for="country" class="form-label">납기요청일</label> <input
+							type="date" class="form-control" id="paprdCmndDt"
+							name="paprdCmndDt">
+					</div>
+				</form>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" id="insertBtn">
+						등록</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
 
 
 	<script>
@@ -292,24 +291,16 @@ table, tr, th, td {
 <!-- ============================================================== -->
 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
-//날짜 변환
-function productDate(timestamp) {
-  let date = new Date(timestamp);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let formattedDate = year + "-" + month + "-" + day;
-  return formattedDate;
-}     
-$("#insertBtn").on("click", function () {
-          
-          let ordrReqDtData = $("input[name='ordrReqDtInput']").val();
-          let vendCdData = $("input[name='vendCdInput']").val();
-          let vendNmData = $("input[name='vendNmInput']").val();
-          let rscCdData = $("input[name='rscCdInput']").val();
-          let rscNmData = $("input[name='rscNmInput']").val();
-          let ordrCntData = $("input[name='ordrCntInput']").val();
-          let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
+      
+      function formOptionChk() {
+          let ordrCd = document.getElementsByName('ordrCd')[0];
+          let ordrReqDt = document.getElementsByName('ordrReqDt')[0];
+          let vendCd = $("#vendCd option:selected").val();
+          let vendNm = document.getElementsByName('vendNm')[0];
+          let rscCd = document.getElementsByName('rscCd')[0];
+          let rscNm = document.getElementsByName('rscNm')[0];
+          let ordrCnt = document.getElementsByName('ordrCnt')[0];
+          let paprdCmndDt = document.getElementsByName('paprdCmndDt')[0];
 
           if (ordrCd.value == "") {
               alert("발주번호가 입력되지 않았습니다.");
@@ -362,58 +353,15 @@ $("#insertBtn").on("click", function () {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
-        	  $.ajax({
-        		  //MatController 의 @PostMapping("/matCheckInsert")
-                  url: "matOrderInsert",
-                  method: "post",
-                  data: {ordrReqDt: ordrReqDtData,
-                	  vendCd: vendCdData,
-                	  vendNm: vendNmData,
-                	  rscCd: rscCdData,
-                	  rscNm: rscNmData,
-                	  ordrCnt: ordrCntData,
-                	  paprdCmndDt: paprdCmndDtData},
-                  
-                  success: function (result) {
-                	  //테이블 데이터 지우기
-                    $("#matOrderTable").empty();
-                	  //input 내 데이터 지우기  
-                    $("#ordrReqDtData").val("");
-                    $("#vendCdData").val("");
-                    $("#vendNmData").val("");
-                    $("#rscCdData").val("");
-                    $("#rscNmData").val("");
-                    $("#ordrCntData").val("");
-                    $("#paprdCmndDtData").val("");
-                    //테이블 데이터 채우기
-                    $(result).each(function (idx, item) {
-                      let tr = $("<tr>").attr("data-id", item.ordrCd);
-                      tr.append(
-                        $("<td>").append(
-                          $("<input>").attr("type", "checkbox").attr("name", "chk")
-                        )
-                      );
-                      tr.append("<td>" + (idx + 1) + "</td>");
-                      tr.append("<td>" + item.ordrCd + "</td>");
-                   	  tr.append("<td>" + productDate(item.ordrReqDt) + "</td>");
-                      tr.append("<td>" + item.vendCd + "</td>");
-                      tr.append("<td>" + item.vendNm + "</td>");
-                      tr.append("<td>" + item.rscCd + "</td>");
-                      tr.append("<td>" + item.rscNm + "</td>");
-                      tr.append("<td>" + item.ordrCnt + "</td>");
-                      tr.append("<td>" + productDate(item.paprdCmndDt) + "</td>");
-                      
+              if (result.value) {
+                  insertForm.submit();
+              }
+          });
 
-                      $("#matOrderTable").append(tr);
-                    });
-                  },
-                  error: function (reject) {
-                    console.log(reject);
-                  },
-                });
-              });
-            });
+          return false; // 이벤트의 기본 동작인 페이지 이동을 막기 위해 false를 반환합니다.
+      }
 
+      $("#insertBtn").on("click", formOptionChk)
       
        // 닫기버튼 시 초기화
       $(".btn-close").on("click", function () {

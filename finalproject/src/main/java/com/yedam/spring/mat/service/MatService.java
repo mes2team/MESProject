@@ -9,6 +9,8 @@ public interface MatService {
 	public List<MatVO> matList();
 	//자재목록단건조회
 	public MatVO getMat(MatVO matVO);
+	//자재거래처 전체조회
+	public List<MatVO> matVendList();
 	//자재목록등록
 	public int insertMat(MatVO matVO);	
 	//자재목록 수정

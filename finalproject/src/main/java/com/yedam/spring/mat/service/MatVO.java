@@ -17,6 +17,7 @@ public class MatVO {
 	private String useYn; //사용여부
 	private String vendCd; //거래처코드
 	private String vendNm; //거래처이름
+	private String vendTyp; //거래처유형
 	
 	private int rscstc; //재고량
 	private int istStc; //입고재고량
