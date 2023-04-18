@@ -181,7 +181,7 @@ form {
 			</form>
 			<input type="text"
 						class="form-control" id="rscInspCdInput" name="rscInspCdInput"
-						min="0" style="display: none"/>
+						 style="display: none"/>
 		</div>
 	</div>
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->

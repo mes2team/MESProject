@@ -113,6 +113,10 @@
 	</select>
 <!-- 자재발주 등록 -->
 	<insert id="insertMatOrderInfo" parameterType="MatVO">
+		<selectKey keyProperty="ordrCd" resultType="String" order="BEFORE">
+		    SELECT CONCAT('RSO', LPAD(NVL(MAX(SUBSTR(rsc_insp_cd, 4)), '0000') + 1, 4, '0'))
+		    FROM rsc_insp
+	   </selectKey>
 		INSERT INTO rsc_ordr (
 		ordr_cd,
 		ordr_req_dt,

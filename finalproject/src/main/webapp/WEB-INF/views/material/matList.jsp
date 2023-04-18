@@ -133,10 +133,10 @@ form {
                   </div>
 
                   <div class="col-md-3">
-                     <label for="country" class="form-label">거래처코드</label>
+                     <label for="country" class="form-label">거래처명</label>
                      <div class="input-group">
-						<input type="text" class="form-control" id="vendCdInput"
-							name="vendCdInput" readonly />
+						<input type="text" class="form-control" id="vendNmInput"
+							name="vendNmInput" readonly />
 						<button type="button" class="btn btn-primary"
 							data-bs-toggle="modal" data-bs-target="#vendCdSearch">
 							<i class="bi bi-search"></i>
@@ -145,8 +145,8 @@ form {
                   </div>
                   
                   <div class="col-md-3">
-                     <label for="country" class="form-label">거래처명</label> <input
-                        type="text" class="form-control" id="vendNmInput" name="vendNmInput"
+                     <label for="country" class="form-label">거래처코드</label> <input
+                        type="text" class="form-control" id="vendCdInput" name="vendCdInput"
                         readonly />
                   </div>
                </form>
@@ -202,7 +202,6 @@ form {
                      <table id="jaje" class="table table-striped table-bordered first">
                         <thead>
                            <tr>
-                              <th>No.</th>
                               <th>자재코드</th>
                               <th>자재명</th>
                               <th>자재규격</th>
@@ -217,9 +216,8 @@ form {
                            </tr>
                         </thead>
                         <tbody id="checkBody">
-                           <c:forEach var="mat" items="${matList }" varStatus="loop">
-                              <tr data-id="a">
-                                 <td>${loop.count }</td>
+                           <c:forEach var="mat" items="${matList }" >
+                              <tr data-id="${mat.rscCd }">
                                  <td>${mat.rscCd }</td>
                                  <td>${mat.rscNm }</td>
                                  <td>${mat.rscSpec }</td>
@@ -237,99 +235,6 @@ form {
                            </c:forEach>
                         </tbody>
                      </table>
-
-                     <!-- ################Extra Large Modal################################## -->
-                     <div class="modal fade" id="modifyModal" tabindex="-1">
-                        <div class="modal-dialog modal-xl">
-                           <div class="modal-content">
-                              <div class="modal-header">
-                                 <h5 class="modal-title">자재수정</h5>
-                                 <button type="button" class="btn-close"
-                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                               <!-- action은 서비스 인터페이스 이름 갖고 오기 -->
-                              <form class="row g-3" name="updateForm" action="updateMat"
-                                 method="post" onsubmit="return false"
-                                 style="margin: 0px 5px 5px 5px;">
-
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재코드</label> RSC<input
-                                       type="text" class="form-control" id="rscCdModal"
-                                       name="rscCd" placeholder="숫자만 입력해주세요." value="">
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재명</label> <input
-                                       type="text" class="form-control" id="rscNmModal"
-                                       name="rscNm" placeholder="" value="${matvo.rscNm }">
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재규격</label>
-                                    <%
-                                    String RscSpec = (String) request.getAttribute("rscSpec");
-                                    %>
-                                    <%
-                                    System.out.println(RscSpec);
-                                    %>
-                                    <select class="form-control" id="rscSpecModal"
-                                       name="rscSpec">
-                                       <option value="KG"
-                                          <%="KG".equals(RscSpec) ? "selected" : ""%>>kg(킬로그램)</option>
-                                       <option value="L"
-                                          <%="L".equals(RscSpec) ? "selected" : ""%>>L(리터)</option>
-                                    </select>
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">자재유형</label> <select
-                                       class="form-control" id="rscTypModal" name="rscTyp">
-                                       <option value="none" disabled>=== 선택 ===</option>
-                                       <option value="주원료">주원료</option>
-                                       <option value="첨가제">첨가제</option>
-                                       <option value="액상원료">액상원료</option>
-                                    </select>
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">안전재고</label> <input
-                                       type="text" class="form-control" id="safStcModal"
-                                       name="safStc" placeholder="숫자를 입력하세요.">
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">사용여부</label> <select
-                                       class="form-control" id="useYnModal" name="useYn">
-                                       <option value="none" disabled>=== 선택 ===</option>
-                                       <option value="Yes">Yes</option>
-                                       <option value="No">No</option>
-                                    </select>
-                                 </div>
-
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">거래처코드</label> <select
-                                       class="form-control" id="vendCdModal" name="vendCd">
-                                       <option value="none" disabled>=== 선택 ===</option>
-                                       <option value="VEI1000">VEI1000</option>
-                                       <option value="VEI1001">VEI1001</option>
-                                    </select>
-                                 </div>
-                                 
-                                 <div class="col-md-3">
-                                    <label for="country" class="form-label">거래처명</label> <input
-                                       type="text" class="form-control" id="vendNm"
-                                       name="vendNm" placeholder="" value="${matvo.vendNm }">
-                                 </div>
-                                 
-                              </form>
-                              <div class="modal-footer">
-                                 <button type="button" class="btn btn-primary" id="modifyBtn">수정</button>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                     <!-- End Extra Large Modal-->
 
                   </div>
                </div>
@@ -457,7 +362,7 @@ form {
           }).then((result) => {
         	  $.ajax({
         		  //MatController 의 @PostMapping("/matCheckInsert")
-                  url: "matCheckInsert",
+                  url: "matInsert",
                   method: "post",
                   data: {rscCd: rscCdData,
                 	  rscNm: rscNmData,
@@ -466,7 +371,7 @@ form {
                 	  safStc: safStcData,
                 	  useYn: useYnData,
                 	  vendCd: vendCdData,
-                	  vendNm: vendNmData},
+                	  vendNm: vendNmData},                	  
                   
                   success: function (result) {
                 	  //테이블 데이터 지우기
@@ -483,7 +388,6 @@ form {
                     //테이블 데이터 채우기
                     $(result).each(function (idx, item) {
                       let tr = $("<tr>").attr("data-id", item.rscCd);
-                      tr.append("<td>" + (idx + 1) + "</td>");
                       tr.append("<td>" + item.rscCd + "</td>");
                       tr.append("<td>" + item.rscNm + "</td>");
                       tr.append("<td>" + item.rscSpec + "</td>");
@@ -512,11 +416,17 @@ form {
 <!-- 단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회 -->
 <!-- ============================================================== -->   
       
-$(document).on('click', '.updateBtn', function() {
   // 버튼 클릭 이벤트 리스너 함수
+$(document).on('click', '.updateBtn', function() {
+	// 수정완료 버튼 클릭 이벤트 핸들러 설정
+	$("#insertBtn").text("수정완료");
+    
+    $("#insertBtn").removeAttr("onclick");
+    $("#insertBtn").attr("onclick", "submitBtn();");
+    $("#rscCdInput").prop("readonly", true);
 
   // 단건조회를 위한 rsc_cd 값을 추출합니다.
-  var rscCd = $(this).closest('tr').find('td:eq(1)').text();
+  var rscCd = $(this).closest('tr').find('td:eq(0)').text();
   
 //서버로 보낼 데이터를 구성합니다.
   var data = {
@@ -533,17 +443,16 @@ $(document).on('click', '.updateBtn', function() {
          // 성공적으로 응답을 받았을 때 처리할 코드를 작성합니다.
         console.log(response);
         console.log(response.useYn);
+                
         
-        $('#modifyModal').modal('show');
-        
-        $("#rscCdModal").val(response.rscCd);
-        $("#rscNmModal").val(response.rscNm);
-        $("#rscSpecModal").val(response.rscSpec);       
-        $("#rscTypModal").val(response.rscTyp);
-        $("#safStcModal").val(response.safStc);
-        $("#useYnModal").val(response.useYn);
-        $("#vendCdModal").val(response.vendCd);
-        $("#vendNmModal").val(response.vendNm);
+        $("#rscCdInput").val(response.rscCd);
+        $("#rscNmInput").val(response.rscNm);
+        $("#rscSpecInput").val(response.rscSpec);       
+        $("#rscTypInput").val(response.rscTyp);
+        $("#safStcInput").val(response.safStc);
+        $("#useYnInput").val(response.useYn);
+        $("#vendCdInput").val(response.vendCd);
+        $("#vendNmInput").val(response.vendNm);
         
        },
        error: function(jqXHR, textStatus, errorThrown) {
@@ -551,45 +460,94 @@ $(document).on('click', '.updateBtn', function() {
        }
      });
    });
-
-/* 수정*/
-$(document).ready(function() {
-  $('#modifyBtn').click(function() {
-    var rscCd = $('#rscCdModal').val(); // 자재코드
-    var rscNm = $('#rscNmModal').val(); // 자재명
-    var rscSpec = $('#rscSpecModal').val(); // 자재규격
-    var rscTyp = $("#rscTypModal").val();
-    var safStc = $('#safStcModal').val(); // 안전재고
-    var useYn = $('#useYnModal').val(); // 사용여부
-    var vendCd = $('#vendCdModal').val(); // 거래처코드
-    var vendNm = $("#vendNmModal").val(); //거래처명
-
-    // fetch API 요청 보내기
-    fetch('matUpdate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
+<!-- 단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회 -->
+<!-- ============================================================== -->
+<!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
+function submitBtn() {
+	
+    var rscCdData = $('#rscCdInput').val(); // 자재코드
+    var rscNmData = $('#rscNmInput').val(); // 자재명
+    var rscSpecData = $('#rscSpecInput').val(); // 자재규격
+    var rscTypData = $("#rscTypInput").val();
+    var safStcData = $('#safStcInput').val(); // 안전재고
+    var useYnData = $('#useYnInput').val(); // 사용여부
+    var vendCdData = $('#vendCdInput').val(); // 거래처코드
+    var vendNmData = $("#vendNmInput").val(); //거래처명
+	
+    Swal.fire({
+		  title: '수정하시겠습니까?',
+		  icon: 'question',
+		  showCancelButton: true,
+		  confirmButtonColor: '#3085d6',
+		  cancelButtonColor: '#d33',
+		  confirmButtonText: '수정',
+		  cancelButtonText: '취소'
+		}).then((result) => {
+		  if (result.value) {
+  $.ajax({
+    url: "matUpdate",
+    method: "POST",
+    data: {
+        rscCd: rscCdData,
+        rscNm: rscNmData,
+        rscSpec: rscSpecData,        
+        rscTyp: rscTypData,
+        safStc: safStcData,
+        useYn: useYnData,
+        vendCd: vendCdData,
+        vendNm: vendNmData
       },
-      body: JSON.stringify({
-        rscCd: rscCd,
-        rscNm: rscNm,
-        rscSpec: rscSpec,        
-        rscTyp: rscTyp,
-        safStc: safStc,
-        useYn: useYn,
-        vendCd: vendCd,
-        vendNm: vendNm
-      })
-    }).then(function(response) {
-      // 요청이 성공적으로 처리될 경우 수행할 코드 작성
-      console.log("성공"+response);
-      window.location.href = "matList";
-    }).catch(function(error) {
-      // 요청이 실패할 경우 수행할 코드 작성
-      console.log("실패"+error);
-    });
-  });
+      success: function (result) {
+    	  console.log("결과" + result);
+    	  //테이블 데이터 지우기
+        $("#checkBody").empty();
+    	  //input 내 데이터 지우기  
+    	$('input').val('');  
+        
+        $(result).each(function (idx, item) {
+        	let tr = $("<tr>").attr("data-id", item.rscCd);
+            tr.append("<td>" + item.rscCd + "</td>");
+            tr.append("<td>" + item.rscNm + "</td>");
+            tr.append("<td>" + item.rscSpec + "</td>");
+            tr.append("<td>" + item.rscTyp + "</td>");
+            tr.append("<td>" + item.safStc + "</td>");
+            tr.append("<td>" + item.useYn + "</td>");
+            tr.append("<td>" + item.vendCd + "</td>");
+            tr.append("<td>" + item.vendNm + "</td>");
+            tr.append('<td><button type=\'button\' class=\'btn btn-primary updateBtn\' id=\'updateBtn\' data-bs-toggle=\'modal\'>수정</button></td>');
+
+          $("#checkBody").append(tr);
+        });
+   
+          $("#insertBtn").text("등록");
+          $("#insertBtn").removeAttr("onclick");
+          $("#insertBtn").attr("onclick", "insertBtn();");
+          $("#rscCdInput").prop("readonly", false);
+
+        let Toast = Swal.mixin({
+          toast: true,
+          position: "top",
+          showConfirmButton: false,
+          timer: 1500,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
+
+        Toast.fire({
+            icon: "success",
+            title: "수정이 정상적으로 되었습니다.",
+        });
+    },
+    error: function (reject) {
+        console.log(reject);
+    },
 });
+}
+});
+}
 
    
 

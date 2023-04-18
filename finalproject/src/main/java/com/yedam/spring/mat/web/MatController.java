@@ -12,10 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.spring.eqm.service.EqmVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
 
@@ -28,31 +26,24 @@ public class MatController {
 	//등록, 수정, 삭제 -> POST
 	
 	//자재정보전체조회
-	//1) 페이징 필요한 페이지
 	@GetMapping("/matList")
 	public String getMatAllList(Model model) {
 		model.addAttribute("matList",matService.matList());
 		return "material/matList";
 	}
-	//자재정보조건조회
+	//자재정보단건조회
 	@GetMapping("/matInfo")
 	@ResponseBody
-	public MatVO getMat(MatVO matVO, Model model) {
-		model.addAttribute("matInfo",matService.getMat(matVO));
-		matVO = matService.getMat(matVO);
-		return matVO; 
+	public MatVO getMat(MatVO matVO) {		
+		return matService.getMat(matVO); 
 	}
-	//자재거래처 전체조회
+	//자재거래처 조회
 	@GetMapping("/VendModal")
 	@ResponseBody
 	public List<MatVO> matVendList(){
 		return matService.matVendList();
 		}
-	//등록 - form이동
-//	@GetMapping("/matInsert")
-//	public String matInsertForm() {
-//		return "material/matInsert";
-//	}
+	
 	//자재정보등록	
 	@PostMapping("/matInsert")
 	@ResponseBody
@@ -60,6 +51,26 @@ public class MatController {
 		matService.insertMat(matVO);
 		return matService.matList();
 	}
+	//자재정보 수정
+	@PostMapping("/matUpdate")
+	@ResponseBody
+	public List<MatVO> matUpdateProcess(MatVO arr) {
+		matService.updateMat(arr);
+		return matService.matList();
+	}
+	//자재정보단건조회
+//	@GetMapping("/matInfo")
+//	@ResponseBody
+//	public MatVO getMat(MatVO matVO, Model model) {
+//		model.addAttribute("matInfo",matService.getMat(matVO));
+//		matVO = matService.getMat(matVO);
+//		return matVO; 
+//	}
+	//등록 - form이동
+//	@GetMapping("/matInsert")
+//	public String matInsertForm() {
+//		return "material/matInsert";
+//	}
 	//자재정보 등록 - Process
 //	@PostMapping("/matInsert")
 //	@ResponseBody
@@ -71,18 +82,18 @@ public class MatController {
 	//비동기식 - JSON반환 방식 (굳이 써보는것)
 	//1) client - JSON -> Server
 	//2) Server - text -> Client
-	@PostMapping("/matUpdate")
-	@ResponseBody
-	public Map<String, String> matUpdateProcess(@RequestBody MatVO matVO) {
-		return matService.updateMat(matVO);
-	}
-	//자재정보 삭제
-	@PostMapping("/matDelete")
-	@ResponseBody
-	public String matDeleteProcess(@RequestParam String rscCd) {
-		Map<String, String> map = matService.deleteMat(rscCd);
-		return map.get("결과");
-	}
+//	@PostMapping("/matUpdate")
+//	@ResponseBody
+//	public Map<String, String> matUpdateProcess(@RequestBody MatVO matVO) {
+//		return matService.updateMat(matVO);
+//	}
+//	//자재정보 삭제
+//	@PostMapping("/matDelete")
+//	@ResponseBody
+//	public String matDeleteProcess(@RequestParam String rscCd) {
+//		Map<String, String> map = matService.deleteMat(rscCd);
+//		return map.get("결과");
+//	}
 	
 	//자재발주 전체목록 + 자재재고현황
 	@GetMapping("/matOrder")
@@ -92,11 +103,17 @@ public class MatController {
 		return "material/matOrder";
 	}
 	// 자재발주등록
-		@PostMapping("/matOrderInsert")
-		public String vendInsertProcess(MatVO matVO) {
-			matService.addMatOrderInfo(matVO);
-			return "redirect:matOrder";
-		}
+	@PostMapping("/matOrderInsert")
+	@ResponseBody
+	public List<MatVO> vendInsertProcess(MatVO matVO) {
+		matService.addMatOrderInfo(matVO);
+		return matService.matOrderList();
+	}
+//		@PostMapping("/matOrderInsert")
+//		public String vendInsertProcess(MatVO matVO) {
+//			matService.addMatOrderInfo(matVO);
+//			return "redirect:matOrder";
+//		}
 	// 자재발주수정
 	@PostMapping("/updatematOrder")
 	@ResponseBody
