@@ -24,4 +24,8 @@ public interface PrcsInspMapper {
 	
 	//검사완료 단건조회
 	public List<PrcsInspVO> inspDtl(PrcsInspVO prcsInspVO);
+	
+	//검사완료 삭제
+	public int deleteCompleted(String deleteList);
+	
 }

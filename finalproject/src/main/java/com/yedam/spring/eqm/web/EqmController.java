@@ -1,7 +1,7 @@
 package com.yedam.spring.eqm.web;
 
-import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,37 +33,9 @@ public class EqmController {
 
 	// 설비등록
 	@PostMapping("/eqm")
-	@ResponseBody
 	public String insertEqm(EqmVO eqmVO,MultipartFile file) throws Exception{
-		
-		  /*우리의 프로젝트경로를 담아주게 된다 - 저장할 경로를 지정*/
-        String projectPath = System.getProperty("user.dir") + "\\src\\main\\resources\\assets\\img";
-
-        /*식별자 . 랜덤으로 이름 만들어줌*/
-        UUID uuid = UUID.randomUUID();
-
-        /*랜덤식별자_원래파일이름 = 저장될 파일이름 지정*/
-        String fileName = uuid + "_" + file.getOriginalFilename();
-
-        /*빈 껍데기 생성*/
-        /*File을 생성할건데, 이름은 "name" 으로할거고, projectPath 라는 경로에 담긴다는 뜻*/
-        File saveFile = new File(projectPath, fileName);
-
-        file.transferTo(saveFile);
-        
-        /*디비에 파일 넣기*/
-        eqmVO.setEqmImg(fileName);
-
-        /*저장되는 경로*/
-        eqmVO.setEqmImgPath("/files/" + fileName); /*저장된파일의이름,저장된파일의경로*/
-        
-        /*파일 저장*/
-        service.insertEqm(eqmVO);
-		
-		return "success";
-		/////////////////////////
-		//service.insertEqm(eqmVO);
-		//return "redirect:eqm";
+		service.insertEqm(eqmVO);
+		return "redirect:eqm";
 	}
 
 	// 설비단건조회
@@ -96,16 +68,13 @@ public class EqmController {
 		return "eqm/eqmCheck";
 	}
 
-	/*
-	 * 점검검색조회
-	 * 
-	 * @PostMapping("/searchEqmCheck")
-	 * 
-	 * @ResponseBody public List<EqmVO> searchEqmCheck(@RequestBody EqmVO
-	 * searchKeywords){ return "";
-	 * 
-	 * }
-	 */
+	
+	  //점검검색조회
+	  @GetMapping("/searchEqmCheck")
+	  @ResponseBody public List<EqmVO> searchEqmCheck(EqmVO eqmVO){ 
+	  	return service.searchEqmCheck(eqmVO);
+	  }
+	 
 
 	// 점검단건조회
 	@GetMapping("/selectCheck")

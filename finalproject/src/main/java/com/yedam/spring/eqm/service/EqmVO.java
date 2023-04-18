@@ -19,6 +19,7 @@ public class EqmVO {
 	private String chckPerd; //점검주기
 	private String useYn; //사용여부
 	private String eqmMng; // 설비 담당자
+	private String prcsCd; //공정코드
 	//private MultipartFile eqmImg;
 	
 	private String eqmImg; //설비이미지명
@@ -34,24 +35,27 @@ public class EqmVO {
 	//설비점검내역
 	private String checkCd; //점검코드
 	private String chckFg; //점검구분 [정기점검 | 수리]
-	@DateTimeFormat(pattern = "yyyy-MM-dd") //밑의 Date는 원래 2023/04 슬래쉬로 받음 그걸 지정한 패턴대로 받게 함
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //
 	private Date chckDt; //점검일자
+	private Date nextChckDt; //다음점검일
 	private String jdgmnt; //판정
 	private String dispoCtnt; //조치내역
 	private String chckPsch; //점검담당자
 	
 	//설비점검내역 조회용
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date start;
+	private Date startDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date end;
+	private Date endDt;
 	
 	//설비비가동
 	private String noprCd; //점검코드? 비가동코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date frDt; //시작일시
+	private String frHm; //시작시간
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date toDt; //종료일시
+	private String toHm; //종료시간
 	private String eqmPsch; //비가동담당자
 	private String opertCtnt; //작업내용
 	
