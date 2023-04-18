@@ -62,6 +62,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               <button
                 type="button"
                 class="btn btn-primary"
+                id="selectEdctsBtn"
                 data-bs-toggle="modal"
                 data-bs-target="#completeModal"
               >
@@ -76,6 +77,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           <div class="col-md-4">
             <label class="form-label">제품 입고 수량</label>
             <input type="text" class="form-control" id="inputCnt" disabled />
+          </div>
+          <div class="col-md-4" style="display: none">
+            <label class="form-label">제품 유통기한</label>
+            <input type="text" class="form-control" id="inputExpire" />
+          </div>
+          <div class="col-md-4" style="display: none">
+            <label class="form-label">지시코드</label>
+            <input type="text" class="form-control" id="inputIndicaCd" />
           </div>
           <p></p>
           <hr />
@@ -123,10 +132,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     </th>
                     <th>No.</th>
                     <th>제품 입고번호</th>
-                    <th>제품 입고일자</th>
+                    <th>완제품LOT번호</th>
                     <th>제품 코드</th>
                     <th>제품명</th>
-                    <th>완제품LOT번호</th>
+                    <th>제품 입고일자</th>
+                    <th>제품 유통기한</th>
                     <th>제품 입고수량</th>
                   </tr>
                 </thead>
@@ -140,16 +150,23 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                       <td><input type="checkbox" name="chk" /></td>
                       <td>${loop.count }</td>
                       <td>${eist.edctsIstNo}</td>
+                      <td>${eist.edctsLotNo}</td>
+                      <td>${eist.edctsCd}</td>
+                      <td>${eist.prdtNm}</td>
                       <td>
                         <fmt:formatDate
                           value="${eist.edctsIstDt}"
                           pattern="yyyy-MM-dd"
                         />
                       </td>
-                      <td>${eist.edctsCd}</td>
-                      <td>${eist.prdtNm}</td>
-                      <td>${eist.edctsLotNo}</td>
+                      <td>
+                        <fmt:formatDate
+                          value="${eist.edctsExpire}"
+                          pattern="yyyy-MM-dd"
+                        />
+                      </td>
                       <td>${eist.edctsIstCnt}</td>
+                      <td style="display: none">${eist.indicaCd}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -190,6 +207,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 <th scope="col">제품 코드</th>
                 <th scope="col">제품 이름</th>
                 <th scope="col">제품 입고수량</th>
+                <th scope="col">제품 유통기한</th>
                 <th scope="col" style="width: 100px"></th>
               </tr>
             </thead>
@@ -211,34 +229,41 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
 
   <script>
-    $.ajax({
-      url: "completePro",
-      success: function (result) {
-        $(result).each(function (idx, item) {
-          let edctsCd = item.edctsCd;
-          let prodCnt = item.prodCnt;
-          let inferCnt = item.inferCnt;
-          let prdtNm = item.prdtNm;
-          let resultCnt = parseInt(prodCnt) - parseInt(inferCnt);
+    $(document).on("click", "#selectEdctsBtn", function () {
+      $.ajax({
+        url: "completePro",
+        success: function (result) {
+          $("#productList").empty();
+          $(result).each(function (idx, item) {
+            let edctsCd = item.edctsCd;
+            let prodCnt = item.prodCnt;
+            let inferCnt = item.inferCnt;
+            let prdtNm = item.prdtNm;
+            let edctsExpire = item.edctsExpire;
+            let resultCnt = parseInt(prodCnt) - parseInt(inferCnt);
+            let indicaCd = item.indicaCd;
 
-          let tr = $("<tr>");
-          tr.append("<td>" + edctsCd + "</td>");
-          tr.append("<td>" + prdtNm + "</td>");
-          tr.append("<td>" + resultCnt + "</td>");
-          tr.append(
-            $("<td>").append(
-              $("<button>")
-                .attr("class", "btn btn-primary choiceBtn")
-                .text("선택")
-            )
-          );
+            let tr = $("<tr>");
+            tr.append("<td>" + edctsCd + "</td>");
+            tr.append("<td>" + prdtNm + "</td>");
+            tr.append("<td>" + resultCnt + "</td>");
+            tr.append("<td>" + productDate(edctsExpire) + "</td>");
+            tr.append("<td style='display: none'>" + indicaCd + "</td>");
+            tr.append(
+              $("<td>").append(
+                $("<button>")
+                  .attr("class", "btn btn-primary choiceBtn")
+                  .text("선택")
+              )
+            );
 
-          $("#productList").append(tr);
-        });
-      },
-      error: function (reject) {
-        console.log(reject);
-      },
+            $("#productList").append(tr);
+          });
+        },
+        error: function (reject) {
+          console.log(reject);
+        },
+      });
     });
 
     // 선택 버튼 클릭시 input에 전달
@@ -246,10 +271,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       let edctsCd = $(this).closest("tr").children().eq(0).text();
       let edctsNm = $(this).closest("tr").children().eq(1).text();
       let cnt = $(this).closest("tr").children().eq(2).text();
+      let expire = $(this).closest("tr").children().eq(3).text();
+      let indicaCd = $(this).closest("tr").children().eq(4).text();
 
       $("#inputCode").val(edctsCd);
       $("#inputName").val(edctsNm);
       $("#inputCnt").val(cnt);
+      $("#inputExpire").val(expire);
+      $("#inputIndicaCd").val(indicaCd);
 
       $("#completeModal").modal("hide");
     });
@@ -268,6 +297,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       let inputCode = $("#inputCode").val();
       let inputName = $("#inputName").val();
       let inputCnt = $("#inputCnt").val();
+      let inputExpire = $("#inputExpire").val();
+      let inputIndicaCd = $("#inputIndicaCd").val();
 
       if (inputCode == "" || inputName == "" || inputCnt == "") {
         Swal.fire({
@@ -285,39 +316,50 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         confirmButtonText: "등록",
         cancelButtonText: "취소",
       }).then((result) => {
-        $.ajax({
-          url: "insertEdctsIst",
-          method: "post",
-          data: { edctsCd: inputCode, edctsIstCnt: inputCnt },
-          success: function (result) {
-            $("#edctsIstBody").empty();
-            $("#inputCode").val("");
-            $("#inputName").val("");
-            $("#inputCnt").val("");
-            $("#startDate").val("");
-            $("#endDate").val("");
-            $(result).each(function (idx, item) {
-              let tr = $("<tr>").attr("data-id", item.edctsIstNo);
-              tr.append(
-                $("<td>").append(
-                  $("<input>").attr("type", "checkbox").attr("name", "chk")
-                )
-              );
-              tr.append("<td>" + (idx + 1) + "</td>");
-              tr.append("<td>" + item.edctsIstNo + "</td>");
-              tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
-              tr.append("<td>" + item.edctsCd + "</td>");
-              tr.append("<td>" + item.prdtNm + "</td>");
-              tr.append("<td>" + item.edctsLotNo + "</td>");
-              tr.append("<td>" + item.edctsIstCnt + "</td>");
+        if (result.value) {
+          $.ajax({
+            url: "insertEdctsIst",
+            method: "post",
+            data: {
+              edctsCd: inputCode,
+              edctsIstCnt: inputCnt,
+              edctsExpire: inputExpire,
+              indicaCd: inputIndicaCd,
+            },
+            success: function (result) {
+              $("#edctsIstBody").empty();
+              $("#inputCode").val("");
+              $("#inputName").val("");
+              $("#inputCnt").val("");
+              $("#startDate").val("");
+              $("#endDate").val("");
+              $(result).each(function (idx, item) {
+                let tr = $("<tr>").attr("data-id", item.edctsIstNo);
+                tr.append(
+                  $("<td>").append(
+                    $("<input>").attr("type", "checkbox").attr("name", "chk")
+                  )
+                );
+                tr.append("<td>" + (idx + 1) + "</td>");
+                tr.append("<td>" + item.edctsIstNo + "</td>");
+                tr.append("<td>" + item.edctsLotNo + "</td>");
+                tr.append("<td>" + item.edctsCd + "</td>");
+                tr.append("<td>" + item.prdtNm + "</td>");
+                tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
+                tr.append("<td>" + productDate(item.edctsExpire) + "</td>");
+                tr.append("<td>" + item.edctsIstCnt + "</td>");
+                tr.append(
+                  "<td style='display:none'>" + item.indicaCd + "</td>"
+                );
 
-              $("#edctsIstBody").append(tr);
-            });
-          },
-          error: function (reject) {
-            console.log(reject);
-          },
-        });
+                $("#edctsIstBody").append(tr);
+              });
+            },
+            error: function (reject) {
+              console.log(reject);
+            },
+          });
+        }
       });
     });
 
@@ -370,11 +412,13 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             );
             tr.append("<td>" + (idx + 1) + "</td>");
             tr.append("<td>" + item.edctsIstNo + "</td>");
-            tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
+            tr.append("<td>" + item.edctsLotNo + "</td>");
             tr.append("<td>" + item.edctsCd + "</td>");
             tr.append("<td>" + item.prdtNm + "</td>");
-            tr.append("<td>" + item.edctsLotNo + "</td>");
+            tr.append("<td>" + productDate(item.edctsIstDt) + "</td>");
+            tr.append("<td>" + productDate(item.edctsExpire) + "</td>");
             tr.append("<td>" + item.edctsIstCnt + "</td>");
+            tr.append("<td style='display:none'>" + item.indicaCd + "</td>");
 
             $("#edctsIstBody").append(tr);
           });
@@ -440,8 +484,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 
       $('input[name="chk"]:checked').each(function (idx, items) {
         let eistNo = $(items).closest("tr").children().eq(2).text();
+        let inputIndicaCd = $(items).closest("tr").children().eq(9).text();
+        console.log(inputIndicaCd);
         let dataObj = {
           edctsIstNo: eistNo,
+          indicaCd: inputIndicaCd,
         };
 
         // 데이터 배열에 객체 추가

@@ -29,9 +29,15 @@ public class OrderController {
 	public String getOrderAllList(Model model) {
 		model.addAttribute("orderList", orderService.selectOrderList());
 		model.addAttribute("vendList", vendService.getVendAll());
-		model.addAttribute("orderNo", orderService.selectOrderNo().getOrderNo());
 		model.addAttribute("orderPrdList", orderService.selectOrderPrd());
 		return "sales/orderMag";
+	}
+	
+	// 주문서 번호 조회
+	@GetMapping("/orderNo")
+	@ResponseBody
+	public String getOrderNo() {
+		return orderService.selectOrderNo().getOrderNo();
 	}
 	
 	// 거래처조회

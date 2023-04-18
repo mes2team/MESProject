@@ -38,8 +38,8 @@ public class BomController {
 	
 	@GetMapping("bomList")
 	@ResponseBody
-	public List<BomVO> bomList(@RequestParam String edctsCd){
-		return bomService.getBomList(edctsCd);
+	public List<BomVO> bomList(BomVO vo){
+		return bomService.getBomList(vo);
 	}
 	
 	@PostMapping("deleteBom")
@@ -66,5 +66,11 @@ public class BomController {
 	@ResponseBody
 	public List<MatVO> searchBomProcess(MatVO vo) {
 		return bomService.getMatList(vo);
+	}
+	
+	@GetMapping("selectBomCd")
+	@ResponseBody
+	public String selectBomCd(BomVO vo) {
+		return bomService.getBomCd(vo).getBomCd();
 	}
 }

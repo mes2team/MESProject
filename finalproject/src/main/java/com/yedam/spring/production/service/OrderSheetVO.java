@@ -25,4 +25,7 @@ public class OrderSheetVO {
 	private String prdtNm;
 	
 	private String bomCd;
+	
+	private String vendMag;
+	private String vendAddr;
 }

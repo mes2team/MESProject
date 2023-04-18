@@ -8,7 +8,7 @@ import com.yedam.spring.production.service.ProPrcsVO;
 
 public interface BomService {
 	// bom 조회
-	public List<BomVO> getBomList(String edctsCd);
+	public List<BomVO> getBomList(BomVO vo);
 	
 	// 공정 조회
 	public List<ProPrcsVO> getPrcsList();
@@ -21,5 +21,8 @@ public interface BomService {
 	
 	// bom 자재 검색
 	public List<MatVO> getMatList(MatVO vo);
+	
+	// bom 코드 조회
+	public BomVO getBomCd(BomVO vo);
 
 }

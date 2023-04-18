@@ -8,7 +8,7 @@ import com.yedam.spring.production.service.ProPrcsVO;
 
 public interface BomMapper {
 	// bom 조회
-	public List<BomVO> selectBomList(String edctsCd);
+	public List<BomVO> selectBomList(BomVO vo);
 
 	// 공정 조회
 	public List<ProPrcsVO> selectPrcsList();
@@ -21,4 +21,7 @@ public interface BomMapper {
 
 	// bom 자재 검색
 	public List<MatVO> selectMatList(MatVO vo);
+
+	// bom 코드 조회
+	public BomVO getBomCd(BomVO vo);
 }
