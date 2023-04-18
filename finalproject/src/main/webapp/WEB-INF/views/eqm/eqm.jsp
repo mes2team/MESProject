@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -10,6 +10,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <style>
+label {
+	font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -17,10 +20,11 @@
 	<div id="container">
 		<div class="card">
 			<div class="card-body">
-				<div style="width: 100%; height: 200px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
+				<div
+					style="width: 100%; height: 200px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
 					<table class="table table-striped table-hover">
 						<thead>
-							<tr style="position: sticky; top: 0px; background-color:#E2E2E2">
+							<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 								<th scope="col">번호</th>
 								<th scope="col">설비구분</th>
 								<th scope="col">설비코드</th>
@@ -50,21 +54,15 @@
 		<hr>
 		<div class="card">
 			<div class="card-body">
-				<form id="insertForm" name="insertForm" action="eqm" method="POST" enctype="multipart/form-data" style="margin-top: 20px; margin-bottom: 5px;">
-					<input type="file" name="file" id="profile_pt"
-						onchange="previewImage(this,'View_area')">
-					<div id='View_area'
-						style='position: relative; width: 200px; height: 200px; color: black; border: 0px solid black; dispaly: inline;'>
-						<img id="preview_img"
-							src="">
-					</div>
+				<form id="insertForm" name="insertForm" action="eqm" method="POST"
+					style="margin-top: 20px; margin-bottom: 5px;">
 					<div>
 						<div class="row g-3 align-items-center">
 							<div class="col-auto">
 								<label for="inputPassword6" class="col-form-label">설비구분</label>
 							</div>
 							<div class="col-auto">
-								<select name="eqmFg" class="form-select">
+								<select name="eqmFg" class="form-select" style="width: 216px;">
 									<option>분쇄기</option>
 									<option>계량기</option>
 									<option>배합기</option>
@@ -91,7 +89,8 @@
 								<label for="inputPassword6" class="col-form-label">입고일자</label>
 							</div>
 							<div class="col-auto">
-								<input type="date" name="eqmIstDt" class="form-control">
+								<input type="date" style="width: 216px;" name="eqmIstDt"
+									class="form-control">
 							</div>
 						</div>
 						<hr>
@@ -116,19 +115,20 @@
 								<label for="inputPassword6" class="col-form-label">설비담당자*</label>
 							</div>
 							<div class="col-auto">
-								<select name="eqmMng" class="form-select">
-									<option value="" selected disabled hidden>담당자 선택<option>
-								<c:forEach items="${empList }" var="emp">
-									<option value="${emp.name }">${emp.name }</option>
-								</c:forEach>
+								<select name="eqmMng" class="form-select" style="width: 216px;">
+									<option value="" selected disabled hidden>담당자 선택
+									<option>
+										<c:forEach items="${empList }" var="emp">
+											<option value="${emp.name }">${emp.name }</option>
+										</c:forEach>
 								</select>
 							</div>
 							<div class="col-auto">
 								<label for="inputPassword6" class="col-form-label"></label>
 							</div>
 							<div class="col-auto">
-								<input  type="radio" name="useYn" checked value="Y" hidden> <input
-									type="radio" name="useYn" value="N" hidden> 
+								<input type="radio" name="useYn" checked value="Y" hidden>
+								<input type="radio" name="useYn" value="N" hidden>
 								<button type="button" onclick="formOptionChk()"
 									class="btn btn-outline-info">저장</button>
 								<button type="button" onclick="deleteEqm()"

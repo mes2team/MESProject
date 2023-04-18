@@ -35,17 +35,18 @@ public class EqmVO {
 	//설비점검내역
 	private String checkCd; //점검코드
 	private String chckFg; //점검구분 [정기점검 | 수리]
-	@DateTimeFormat(pattern = "yyyy-MM-dd") //밑의 Date는 원래 2023/04 슬래쉬로 받음 그걸 지정한 패턴대로 받게 함
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //
 	private Date chckDt; //점검일자
+	private Date nextChckDt; //다음점검일
 	private String jdgmnt; //판정
 	private String dispoCtnt; //조치내역
 	private String chckPsch; //점검담당자
 	
 	//설비점검내역 조회용
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date start;
+	private Date startDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date end;
+	private Date endDt;
 	
 	//설비비가동
 	private String noprCd; //점검코드? 비가동코드

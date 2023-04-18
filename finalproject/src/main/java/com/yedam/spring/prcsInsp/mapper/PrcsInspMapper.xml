@@ -9,7 +9,7 @@
 		SELECT p.indica_cd,
 		p.prcs_cd,
 		r.prcs_nm,
-		p.prod_cnt,
+		p.indica_cnt,
 		i.edcts_cd,
 		prdt_nm
 		FROM prcs_prog p JOIN prcs r ON p.prcs_cd = r.prcs_cd
@@ -34,7 +34,8 @@
 			UPDATE prcs_prog
 			SET infer_cnt = #{inferCnt},
 				prcs_chk_cd = #{prcsChkCd},
-				prcs_status = #{prcsNm}||'검사완료'
+				prcs_status = #{prcsNm}||'검사완료',
+				prod_cnt = #{prodCnt}
 			WHERE indica_cd = #{indicaCd} AND prcs_cd = #{prcsCd};
 			
 			INSERT INTO prcs_prog_infer (

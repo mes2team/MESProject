@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.spring.eqm.mapper.EqmMapper">
+	
 	<select id="selectEmpList" resultType="EqmVO">
 		SELECT name
 		FROM emp
@@ -120,6 +121,22 @@
 	<!-- 설비점검내역 -->
 	<!-- 전체조회 -->
 	<select id="selectCheckList" resultType="EqmVO">
+		SELECT c.CHECK_CD,
+			   c.EQM_CD, 
+			   c.CHCK_FG,
+			   c.CHCK_DT,
+			   c.JDGMNT,
+			   c.DISPO_CTNT,
+			   c.CHCK_PSCH,
+			   c.EQM_NM,
+               e.chck_perd+c.chck_dt next_chck_dt
+		FROM eqm_check c join eqm e
+        ON c.eqm_nm = e.eqm_nm
+		ORDER BY chck_dt DESC
+	</select>
+	
+	<!-- 검색조회 -->
+	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
 		SELECT CHECK_CD,
 			   EQM_CD, 
 			   CHCK_FG,
@@ -128,13 +145,15 @@
 			   DISPO_CTNT,
 			   CHCK_PSCH,
 			   EQM_NM
-		FROM eqm_check 
-		ORDER BY chck_dt DESC
-	</select>
-	
-	<!-- 검색조회 -->
-	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
-		
+		FROM eqm_check
+		<where>
+			<if test="startDt != null and endDt != null">
+				AND chck_dt BETWEEN #{startDt} AND #{endDt}
+			</if>
+			<if test="eqmNm != null">
+				AND eqm_nm LIKE '%'||#{eqmNm}||'%'
+			</if>
+		</where>
 	</select>
 	
 	<!-- 설비점검내역단건조회 -->

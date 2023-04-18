@@ -49,8 +49,8 @@ public class EqmServiceImpl implements EqmService{
 	}
 	//점검검색조회
 	@Override
-	public List<EqmVO> searchEqmCheck() {
-		return mapper.searchEqmCheck();
+	public List<EqmVO> searchEqmCheck(EqmVO eqmVO) {
+		return mapper.searchEqmCheck(eqmVO);
 	}
 	//점검단건조회
 	@Override
