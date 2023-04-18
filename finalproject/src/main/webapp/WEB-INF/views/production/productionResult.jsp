@@ -23,17 +23,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 </style>
 <body>
   <div>
-    <!-- ============================================================== -->
-    <!-- pageheader -->
-    <!-- ============================================================== -->
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"></div>
-    </div>
-    <!-- ============================================================== -->
-    <!-- end pageheader -->
-    <!-- ============================================================== -->
-    
-    <div class="row">
+    <div class="card">
+            <div class="card-body">
+              <!-- Bordered Tabs Justified -->
+              <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true">공정실적관리</button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">공정실적조회</button>
+                </li>
+              </ul>
+              <div class="tab-content pt-2" id="borderedTabJustifiedContent">
+                <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
           <p></p>
@@ -74,7 +77,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     <div class="row">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
-          <p></p>
           <div class="card-body">
             <div 
               class="table-responsive"
@@ -92,6 +94,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>작업자</th>
                     <th>작업시작시간</th>
                     <th>작업종료시간</th>
+                    <th>현재상태</th>
                   </tr>
                 </thead>
                 <tbody id="prcsProgList"></tbody>
@@ -102,6 +105,15 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       </div>
     </div>
   </div>
+                </div>
+                <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
+                  Nesciunt totam et. Consequuntur magnam aliquid eos nulla dolor iure eos quia. Accusantium distinctio omnis et atque fugiat. Itaque doloremque aliquid sint quasi quia distinctio similique. Voluptate nihil recusandae mollitia dolores. Ut laboriosam voluptatum dicta.
+                </div>
+              </div><!-- End Bordered Tabs Justified -->
+
+            </div>
+          </div>
+    
 
   <!-- 모달창 -->
   <!-- 작업 등록 -->
@@ -171,8 +183,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 			  <button id="workStart" type="button" class="btn btn-success">작업시작</button>
 			</div>
           	<div class="form-inline">
-	            <input class="form-control mr-2" type="text"  readonly />
-	            <button type="button" class="btn btn-danger">작업종료</button>
+	            <input id="stopTime" class="form-control mr-2" type="text"  readonly />
+	            <button id="workStop" type="button" class="btn btn-danger">작업종료</button>
           	</div>
           </div>
           </form>
@@ -182,9 +194,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             작업 등록
           </button> -->
           <button
+          	id="closeModal"
             type="button"
             class="btn btn-secondary"
-            data-bs-dismiss="modal"
           >
             닫기
           </button>
@@ -225,7 +237,39 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  return formattedDate;
 	}
   $(document).ready(function(){
+	  $('#closeModal').click(function() {
+		  $('#prcsModal').find('button').prop('disabled',false);
+		  $('#prcsModal').find('input').val('');
+		  $('#prcsModal').modal('hide');
+	  })
+
 	  var time = getCurrentTime();
+	  $('#workStop').click(function() {
+		  //종료버튼
+		  var wkFrTm = time.substr(time.length - 8);
+		  $('#stopTime').val(wkFrTm);
+		  $(this).attr('disabled','disabled'); 
+		  
+		  var indicaCd = $('.active').find('td:first-child').text()
+		  var prcsCd = $('#prcsSelect').val();
+		  console.log(wkFrTm+'/'+indicaCd+'/'+prcsCd);
+		  $.ajax({
+			  url:'modifyPrcsStop',
+			  type:'post',
+			  data:{prcsCd:prcsCd,
+				    indicaCd:indicaCd,
+				    wkFrTm:wkFrTm},
+			  success:function(data){
+				  console.log(data.result);		  		  
+			  },
+			  error:function(error){
+				  console.log(error);
+			  }
+		  })
+		  
+		  
+		});
+	  
 	  $('#workStart').on('click', function() {	  
 		  
 		  var trList = $('#modalInTbody tr');
@@ -242,6 +286,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  });
 
 		  console.log(rscArr);
+		  //시작버튼
 		  var wkToTm = time.substr(time.length - 8);
 		  $('#startTime').val(wkToTm);
 		  $(this).attr('disabled','disabled');
@@ -250,8 +295,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  
 		  var prcsPsch = $('#prcsWorker').val();
 		  var prcsCd = $('#prcsSelect').val();
-		  var prodCnt = $('#workAmount').val();
-		  console.log(prcsPsch+"/"+prcsCd+"/"+prodCnt+"/"+wkToTm);
+		  var indicaCnt = $('#workAmount').val();
+		  console.log(prcsPsch+"/"+prcsCd+"/"+indicaCnt+"/"+wkToTm);
 		  
 		  //사용할 설비 배열
 		  var selectedEqm = $('#multiPro').val();
@@ -273,7 +318,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				    prcsCd:prcsCd,
 				    useEqm:useEqm,
 				    indicaCd:indicaCd,
-				    wkToTm:wkToTm},
+				    wkToTm:wkToTm,
+				    indicaCnt:indicaCnt},
 			  success:function(data){
 				  console.log(data);
 				  //설비
@@ -364,7 +410,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 					   if(i==0){  
 					   	   tr.append('<td>' + indicaCnt + '</td>');
 					   } else {
-						   tr.append('<td>' + "0" + '</td>');
+						   if(data[i-1].prodCnt != 0){
+							  tr.append('<td>' + data[i-1].prodCnt + '</td>');
+						   }else{
+						   	  tr.append('<td>' + "0" + '</td>');
+						   }
 					   }
 					   tr.append('<td>' + data[i].inferCnt + '</td>');
 					   tr.append('<td>' + data[i].prodCnt + '</td>');
@@ -383,6 +433,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 					   }else{
 					   	tr.append('<td>' + data[i].wkFrTm + '</td>');
 					   }
+					   tr.append('<td>' + data[i].prcsStatus + '</td>');
 					   tr.append('<td hidden="true">' + indicaCnt + '</td>');
 					   tbody.append(tr);
 					   var option = $('<option>').attr('value', data[i].prcsCd).text(data[i].prcsNm +' / '+ data[i].prcsCd);
@@ -405,7 +456,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  var prcsCd = $(this).find('td:first-child').text();
 		  var prcsNm = $(this).find('td:nth-child(2)').text();
 		  var indicaCnt = $(this).find('td:nth-child(3)').text();
-		  console.log(indicaCnt);
+		  var prcsPsch = $(this).find('td:nth-child(6)').text();
+		  var wkToTm = $(this).find('td:nth-child(7)').text();
+		  var wkFrTm = $(this).find('td:nth-child(8)').text();
+		  console.log(wkToTm);
+		  if(wkToTm != '-') {
+			  $('#workStart').prop('disabled', true);
+			  $('#startTime').val(wkToTm);
+			  $('#prcsWorker').val(prcsPsch)
+		  }
+		  if(wkFrTm != '-') {
+			  $('#workStop').prop('disabled', true);
+			  $('#stopTime').val(wkFrTm);
+		  }
 		  $('#workAmount').val(indicaCnt);
 		  $('#prcsSelect option').each(function() {
 			  if ($(this).val() == prcsCd) {

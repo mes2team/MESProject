@@ -86,4 +86,10 @@ public interface ProMapper {
 
 	public int updateUseRsc(MatVO matVO);
 
+	public int updatePrcsStop(ProPrcsVO vo);
+
+	public String getEqm(ProPrcsVO vo);
+
+	public int offEqm(String eqmCd);
+
 }

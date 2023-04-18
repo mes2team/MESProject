@@ -268,6 +268,22 @@ public class ProServiceImpl implements ProService {
 		}
 	}
 
+	@Override
+	public String modifyPrcsStop(ProPrcsVO vo) {
+		int result =  proMapper.updatePrcsStop(vo);
+		if(result < 0) {
+			String useEqms = proMapper.getEqm(vo);
+			String[] arr = useEqms.split("/");
+			
+			for (String eqmCd : arr) {
+				proMapper.offEqm(eqmCd);
+			}
+			return "Success";
+		} else {
+			return "Fail";
+		}	
+	}
+
 
 
 

@@ -558,13 +558,10 @@
 			SET prcs_psch = #{prcsPsch},
 			    wk_to_tm = #{wkToTm},
 			    prcs_status = v_prcs_fg || '중',
-			    use_eqm = #{useEqm}
+			    use_eqm = #{useEqm},
+			    indica_cnt = #{indicaCnt}
 			WHERE prcs_cd = #{prcsCd}
 			  AND indica_cd = #{indicaCd};
-			  
-			UPDATE indica
-			SET	now_st = v_prcs_fg || '중'
-			WHERE indica_cd = #{indicaCd};
 		END;
  		</update>
  		
@@ -583,5 +580,29 @@
 
 
 		</update>
+		
+		<update id="updatePrcsStop" parameterType="ProPrcsVO">
+		{CALL update_prcs_prog_and_indica(
+ 		    #{prcsCd, mode=IN, jdbcType=VARCHAR},
+      		#{wkFrTm, mode=IN, jdbcType=VARCHAR},
+      		#{indicaCd, mode=IN, jdbcType=VARCHAR}
+      		
+    	)}
+ 		</update>
+ 		
+ 		<select id="getEqm" resultType="String">
+ 			SELECT use_eqm
+ 			FROM prcs_prog 
+ 			WHERE indica_cd = #{indicaCd}
+ 			AND prcs_cd=#{prcsCd} 
+ 		</select>
+ 		
+ 		<update id="offEqm" parameterType="String">
+ 			UPDATE eqm
+ 			SET	use_yn = 'Y'
+ 			WHERE eqm_cd = #{eqmCd}
+ 		</update>
+		
+		
  	
   </mapper>

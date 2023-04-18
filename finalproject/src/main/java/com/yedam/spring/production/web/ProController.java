@@ -357,5 +357,16 @@ public class ProController {
 		resultMap.put("result", result);
 		return resultMap;
 	}
+	
+	//공정스탑
+	@PostMapping("/modifyPrcsStop")
+	@ResponseBody
+	public Map<String, Object> modifyPrcsStop(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.modifyPrcsStop(vo));
+
+		return resultMap;
+	}
 		
 }

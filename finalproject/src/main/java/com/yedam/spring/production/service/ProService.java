@@ -79,11 +79,7 @@ public interface ProService {
 
 	public String modifyUseRsc(MatVO matVO);
 
+	public String modifyPrcsStop(ProPrcsVO vo);
 
-
-
-
-
-	
 
 }
