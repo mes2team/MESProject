@@ -138,7 +138,12 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                         pattern="yyyy-MM-dd"
                       />
                     </td>
-                    <td>2026-04-14 테스트</td>
+                    <td>
+                      <fmt:formatDate
+                        value="${eoust.edctsExpire }"
+                        pattern="yyyy-MM-dd"
+                      />
+                    </td>
                     <td>${eoust.edctsOustCnt }</td>
                   </tr>
                 </c:forEach>
@@ -235,6 +240,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         let orderNo = $("#orderNo").val();
         let inCnt = $(item).closest("tr").children().eq(3).text();
         let resultCnt = parseInt(inCnt) - parseInt(outCnt);
+        let edctsExpire = $(item).closest("tr").children().eq(6).text();
 
         if (outCnt == "") {
           Swal.fire({
@@ -260,6 +266,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           edctsLotNo: edctsLotNo,
           edctsOustCnt: parseInt(outCnt),
           resultCnt: resultCnt,
+          edctsExpire: edctsExpire,
         };
 
         arrData.push(dataObj);
@@ -327,6 +334,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           headers: { "Content-Type": "application/json" },
           data: JSON.stringify(prdtArr),
           success: function (result) {
+            console.log(result);
             if (result && result.length > 0) {
               $("#productDetailList").empty();
               $(result).each(function (idx, item) {
@@ -349,7 +357,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                   )
                 );
                 tr.append("<td>" + dateChange(item.edctsIstDt) + "</td>");
-                tr.append($("<td>").text("2026-04-01"));
+                tr.append("<td>" + dateChange(item.edctsExpire) + "</td>");
                 tr.append($("<td>").text(item.edctsCd).css("display", "none"));
 
                 $("#productDetailList").append(tr);

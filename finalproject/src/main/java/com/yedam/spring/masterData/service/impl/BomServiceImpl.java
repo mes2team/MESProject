@@ -18,8 +18,8 @@ public class BomServiceImpl implements BomService {
 	BomMapper bomMapper;
 
 	@Override
-	public List<BomVO> getBomList(String edctsCd) {
-		return bomMapper.selectBomList(edctsCd);
+	public List<BomVO> getBomList(BomVO vo) {
+		return bomMapper.selectBomList(vo);
 	}
 
 	@Override
@@ -40,6 +40,11 @@ public class BomServiceImpl implements BomService {
 	@Override
 	public List<MatVO> getMatList(MatVO vo) {
 		return bomMapper.selectMatList(vo);
+	}
+
+	@Override
+	public BomVO getBomCd(BomVO vo) {
+		return bomMapper.getBomCd(vo);
 	}
 
 }

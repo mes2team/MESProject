@@ -45,4 +45,9 @@ public class EdctsIstServiceImpl implements EdctsIstService {
 		return edctsistMapper.selectSingleList(vo);
 	}
 
+	@Override
+	public int updateIndicaSt(EdctsIstVO vo) {
+		return edctsistMapper.updateIndicaSt(vo);
+	}
+
 }

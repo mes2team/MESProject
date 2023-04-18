@@ -363,10 +363,26 @@ uri="http://www.springframework.org/security/tags"%>
 
       $.ajax({
         url: "bomList",
-        data: { edctsCd: edctsCd },
+        data: { edctsCd: edctsCd, standard: edctsSpec },
         success: function (result) {
-          $("#inputBomCd").val(result[0].bomCd);
           $("#bomList").empty();
+          if (result.length == 0) {
+            $("#inputBomCd").val("");
+            if ($("#inputBomCd").val() == "") {
+              $.ajax({
+                url: "selectBomCd",
+                data: { edctsCd: edctsCd, standard: edctsSpec },
+                success: function (result) {
+                  bomCd = $("#inputBomCd").val(result);
+                },
+                error: function (reject) {
+                  console.log(reject);
+                },
+              });
+            }
+            return;
+          }
+          $("#inputBomCd").val(result[0].bomCd);
           $.each(result, function (idx, item) {
             makeTr(idx, item);
           });
@@ -453,7 +469,7 @@ uri="http://www.springframework.org/security/tags"%>
 
     // 추가 버튼
     $(document).on("click", "#addBtn", function () {
-      if ($("#bomList").children().length == 0) {
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() == "") {
         Swal.fire({
           icon: "warning",
           title: "상품 조회 해주세요.",
@@ -464,6 +480,63 @@ uri="http://www.springframework.org/security/tags"%>
       let lastTr = $("#bomList tr:last").children();
       let idx = lastTr.eq(1).text();
       let bomCd = $("#inputBomCd").val();
+      let edctsCd = $("#inputCode").val();
+      let standard = $("#inputSpec").val();
+
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() != "") {
+        let tr = $("<tr data-id>").attr("class", "table-danger");
+
+        tr.append(
+          $("<td>").append(
+            $("<input>")
+              .attr("type", "checkbox")
+              .attr("name", "chk")
+              .attr("value", bomCd)
+              .prop("checked", true)
+          )
+        );
+        tr.append("<td>" + 1 + "</td>");
+        tr.append(
+          $("<td>").append(
+            $("<button>")
+              .addClass("btn btn-primary my-td-class rscBtn")
+              .attr({
+                type: "button",
+                "data-bs-toggle": "modal",
+                "data-bs-target": "#rscModal",
+              })
+              .append($("<i>").addClass("bi bi-search my-td-class rscBtn"))
+          )
+        );
+
+        tr.append("<td>");
+        tr.append(
+          $("<td class='my-td-class'>").append(
+            $("<input class='my-td-class'>")
+              .attr("type", "number")
+              .css("width", "70px")
+          )
+        );
+        tr.append("<td>");
+        tr.append(
+          $("<td data-prcscd>").append(
+            $("<button>")
+              .addClass("btn btn-primary my-td-class prcsBtn")
+              .attr({
+                type: "button",
+                "data-bs-toggle": "modal",
+                "data-bs-target": "#prcsModal",
+              })
+              .append($("<i>").addClass("bi bi-search my-td-class prcsBtn"))
+          )
+        );
+
+        $("#bomList").append(tr);
+
+        return;
+      }
+      console.log(bomCd);
+
       if (lastTr.length == 0) {
         Swal.fire({
           icon: "warning",
@@ -675,10 +748,18 @@ uri="http://www.springframework.org/security/tags"%>
 
     // 저장
     $(document).on("click", "#saveBtn", function () {
-      if ($("#bomList").children().length == 0) {
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() == "") {
         Swal.fire({
           icon: "warning",
           title: "상품 조회 해주세요.",
+        });
+        return;
+      }
+
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() != "") {
+        Swal.fire({
+          icon: "warning",
+          title: "디테일 빈 값.",
         });
         return;
       }

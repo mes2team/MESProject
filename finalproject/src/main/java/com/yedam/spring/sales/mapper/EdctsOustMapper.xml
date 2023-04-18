@@ -12,6 +12,7 @@
        		eo.edcts_oust_dt,
        		eo.edcts_oust_cnt,
        		eo.order_no,
+       		eo.edcts_expire,
        		e.prdt_nm
 	FROM 	edcts_oust eo JOIN edcts e 
 	ON 		eo.edcts_cd = e.edcts_cd
@@ -34,12 +35,14 @@
     							   edcts_lot_no,
     							   edcts_oust_dt,
     							   edcts_oust_cnt,
+    							   edcts_expire,
     							   order_no)
     						VALUES('EOST' || #{edctsOustNo},
     							   #{edctsCd},
     							   #{edctsLotNo},
     							   sysdate,
     							   #{edctsOustCnt},
+    							   #{edctsExpire},
     							   #{orderNo});
     							   
     		UPDATE 	order_sheet_test
@@ -76,7 +79,7 @@
                 
                 IF v_check = 0 THEN
                     UPDATE 	order_sheet_test
-                    SET		prog_appe = '접수완료'
+                    SET		prog_appe = '계획완료'
                     WHERE	order_no = #{orderNo};
                 END IF;
 	

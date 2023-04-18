@@ -48,4 +48,9 @@ public List<PrcsInspVO> selectCompletedPrcs() {
 public List<PrcsInspVO> inspDtl(PrcsInspVO prcsInspVO) {
 	return mapper.inspDtl(prcsInspVO);
 }
+
+@Override
+public int deleteCompleted(String deleteList) {
+	return mapper.deleteCompleted(deleteList);
+}
 }

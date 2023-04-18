@@ -54,7 +54,7 @@
 						<label style="font-weight: bold;">담당자*</label>
 					</div>
 					<div class="col-auto">
-						<select name="chckPsch" class="form-select" style="width:216px;">
+						<select name="chckPsch" class="form-select" style="width: 216px;">
 							<option value="" selected disabled hidden>담당자 선택
 							<option>
 								<c:forEach items="${managers }" var="manager">
@@ -93,7 +93,7 @@
 						<button type="button" onclick="formOptionChk()"
 							class="btn btn-primary">저장</button>
 						<button type="button" onclick="inputClean()"
-							class="btn btn-secondary">클린</button>
+							class="btn btn-secondary">초기화</button>
 					</div>
 
 				</div>
@@ -109,7 +109,7 @@
 					<label style="font-weight: bold;">설비명</label>
 				</div>
 				<div class="col-auto">
-					<input type="text" id="searchInput" name="eqmNm"
+					<input type="text" id="searchInput" name="searchEqmNm"
 						class="form-control">
 				</div>
 				<div class="col-auto">
@@ -117,11 +117,12 @@
 				</div>
 				<div class="col-auto">
 					<input type="date" style="width: 150px; display: inline-block;"
-						id="start" name="start" class="form-control"> ~ <input
-						name="end" type="date"
+						id="start" name="startDt" class="form-control"> ~ <input
+						name="endDt" type="date"
 						style="width: 150px; display: inline-block;" id="end"
 						class="form-control">
-					<button type="submit" id="searchButton" class="btn btn-success">조회</button>
+					<button type="button" onclick="searchCheck()" id="searchButton"
+						class="btn btn-success">조회</button>
 					<button type="button" onclick="deleteCheck()"
 						class="btn btn-danger">삭제</button>
 				</div>
@@ -153,7 +154,8 @@
 									<td scope="row">${item.chckFg}</td>
 									<td scope="row">${item.chckPsch}</td>
 									<td scope="row">${item.jdgmnt}</td>
-									<td scope="row"></td>
+									<td scope="row"><fmt:formatDate value="${item.nextChckDt}"
+											pattern="yyyy-MM-dd" /></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -242,9 +244,64 @@
 	var eqmCd = document.querySelector('[name="eqmCd"]');
 	var eqmNm = document.querySelector('[name="eqmNm"]');
 	var jdgmnt = document.querySelectorAll('[name="jdgmnt"]');
+	var searchEqmNm = document.querySelector('[name="searchEqmNm"]');
+	var startDt = document.querySelector('[name="startDt"]');
+	var endDt = document.querySelector('[name="endDt"]');
 	
-	
-	
+	function searchCheck(){
+		if(startDt.value == '' && endDt.value != '' || startDt.value != '' && endDt.value == ''){
+			Swal.fire({
+		          icon: "warning",
+		          title: "검색일자를 확인해주세요.",
+		        });
+			return;	
+		}else sendSearch();
+	}
+	function sendSearch(){
+		let sEqmNm = searchEqmNm.value;
+		let start = startDt.value;
+		let end = endDt.value;
+		let dataList = {
+			eqmNm : sEqmNm,
+			startDt : start,
+			endDt : end
+		}
+		console.log(dataList);
+		
+		 $.ajax({
+			  type: "GET",
+			  url: "searchEqmCheck",
+			  contentType: "application/json; charset=utf-8",
+			  data: dataList, //json.stringify(dataList)
+			  dataType: "json",
+			  success: function(res) {
+			  	makeSearchList(res);	  
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 
+		
+	}
+	function makeSearchList(res){
+		let listTable = $('#listTable') 
+		listTable.empty();
+		
+		for(let i=0;i<res.length;i++){
+			let tr = $('<tr onclick="selectCheck(\'' + res[i].checkCd + '\', this)">');
+			tr.append('<td scope="row"><input type="checkbox"></td>');
+			let date = changeDateFormat(res[i].chckDt)
+    		tr.append('<td>' + date + '</td>'); 
+   			tr.append('<td>' + res[i].checkCd + '</td>'); 
+    		tr.append('<td>' + res[i].eqmCd + '</td>'); 
+   			tr.append('<td>' + res[i].eqmNm + '</td>'); 
+    		tr.append('<td>' + res[i].chckFg + '</td>'); 
+    		tr.append('<td>' + res[i].chckPsch + '</td>'); 
+    		tr.append('<td>' + res[i].jdgmnt + '</td>'); 
+    		tr.append('<td></td>');
+			listTable.append(tr);
+		}
+	}
 	
 	//수정
 	function updateCheck(){
@@ -267,7 +324,10 @@
 					    	console.log("업데이트성공");
 							updateTr();	//수정된tr 그리고 기존tr 지우기
 							inputClean();
-							
+							Toast.fire({
+				                  icon: "success",
+				                  title: "수정이 정상적으로 되었습니다.",
+				                });  
 					      },
 					      error: function(reject) { 
 					        console.log("업데이트실패");
@@ -402,7 +462,10 @@
 					    	  for(let j=0;j<disableds.length;j++){
 					  		    disableds[j].disabled = true;
 					  			}
-					    	 
+					    	  Toast.fire({
+				                  icon: "success",
+				                  title: "추가가 정상적으로 되었습니다.",
+				                });  
 					    	  
 					      },
 					      error: function(reject) { 
@@ -478,6 +541,12 @@
 							  }
 						  }	
 						  inputClean();
+						  
+			                Toast.fire({
+			                  icon: "success",
+			                  title: "삭제가 정상적으로 되었습니다.",
+			                });  
+						  
 					  },
 					  error: function(error) {
 						  console.log(error)
@@ -673,7 +742,7 @@
 			let formattedDate = year + '-' + month + '-' + day;
 			return formattedDate;
 		}
-		//allCheck
+		//전체체크
 		function allCheck(allCheck) {
 			let checkes = listTable.querySelectorAll('[type="checkbox"]')
 			for (let i = 0; i < checkes.length; i++) {
@@ -713,6 +782,18 @@
 
 		}
 		
+		
+		var Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
 		
 	</script>
 </body>
