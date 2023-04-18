@@ -169,6 +169,7 @@ public class ProController {
 		model.addAttribute("prcsList", proService.getprcsList(cri));
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
 		model.addAttribute("prdList", edctsService.getEdctsList()); // 공정흐름관리 제품 조회
+		model.addAttribute("getPrcsList", proService.getPrcsList());
 		return "production/processManage";
 	}
 
@@ -380,6 +381,17 @@ public class ProController {
 	@ResponseBody
 	public List<ProPrcsVO> processManagePrd(ProPrcsVO vo){
 		return proService.getPrcsFlowList(vo);
+	}
+	
+	// 공정 저장
+	@PostMapping("/savePrcs")
+	@ResponseBody
+	public List<ProPrcsVO> selectPrcsList(@RequestBody ProPrcsVO[] arr){
+		for(int i = 0; i < arr.length; i++) {
+			System.out.println("여기 출력  " + arr[i]);
+			proService.savePrcs(arr[i]);
+		}
+		return proService.getPrcsFlowList(arr[0]);
 	}
 		
 }

@@ -83,4 +83,10 @@ public interface ProService {
 
 	// 공정흐름관리 공정흐름출력
 	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo);
+	
+	// 공정조회
+	public List<ProPrcsVO> getPrcsList();
+	
+	// 공정저장
+	public int savePrcs(ProPrcsVO vo);
 }
