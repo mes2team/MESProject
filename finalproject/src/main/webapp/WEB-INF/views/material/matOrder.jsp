@@ -30,8 +30,8 @@
 
 <!-- jQuery and Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
 
 
 <meta charset="UTF-8">
@@ -122,7 +122,7 @@ table, tr, th, td {
 	</div>
 	<!-- 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 자재재고현황 -->
 	<!-- ============================================================== -->
-	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
+	<!-- 자재발주 등록 자재발주 등록 자재발주 등록 자재발주 등록 자재발주 등록 자재발주 등록 -->
 	<div class="card">
 		<div class="card-body">
 			<h3 class="insert">자재발주 등록</h3>
@@ -141,24 +141,6 @@ table, tr, th, td {
 				</div>
 				
 				<div class="col-md-2">
-                     <label for="country" class="form-label">거래처명</label>
-                     <div class="input-group">
-						<input type="text" class="form-control" id="vendNmInput"
-							name="vendNmInput" readonly />
-						<button type="button" class="btn btn-primary"
-							data-bs-toggle="modal" data-bs-target="#vendCdSearch">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
-                  </div>
-                  
-                  <div class="col-md-2">
-                     <label for="country" class="form-label">거래처코드</label> <input
-                        type="text" class="form-control" id="vendCdInput" name="vendCdInput"
-                        readonly />
-                  </div>
-
-				<div class="col-md-2">
                      <label for="country" class="form-label">자재명</label>
                      <div class="input-group">
 						<input type="text" class="form-control" id="rscNmInput"
@@ -175,6 +157,18 @@ table, tr, th, td {
                         type="text" class="form-control" id="rscCdInput" name="rscCdInput"
                         readonly />
                   </div>
+				
+				<div class="col-md-2">
+                     <label for="country" class="form-label">거래처명</label>
+						<input type="text" class="form-control" id="vendNmInput"
+							name="vendNmInput" readonly />
+                  </div>
+                  
+                  <div class="col-md-1">
+                     <label for="country" class="form-label">거래처코드</label> <input
+                        type="text" class="form-control" id="vendCdInput" name="vendCdInput"
+                        readonly />
+                  </div>
 
 				<div class="col-md-1">
 					<label class="form-label">발주량</label> <input type="number"
@@ -185,6 +179,13 @@ table, tr, th, td {
 					<label class="form-label">납기요청일</label> <input type="date"
 						class="form-control" id="paprdCmndDtInput" name="paprdCmndDtInput">
 				</div>
+				<div class="col-md-1">
+					<label class="form-label">진행상태</label> <select
+						class="form-control" id="ordrChkInput" name="ordrChkInput">						
+                        <option value="진행중">진행중</option>
+                        <option value="진행완료">진행완료</option>
+                     </select>
+				</div>
 
 				
 			</form>
@@ -193,8 +194,44 @@ table, tr, th, td {
 						 style="display: none"/>
 		</div>
 	</div>
-	<!-- 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 자재발주 모달 -->
+	<!-- 자재발주 등록 자재발주 등록 자재발주 등록 자재발주 등록 자재발주 등록 자재발주 등록 -->
 	<!-- ============================================================== -->
+	<!-- 모달 자재+거래처목록 모달 자재+거래처목록 모달 자재+거래처목록 모달 자재+거래처목록  -->
+	<div class="modal fade" id="rscNmSearch" tabindex="-1">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">자재 목록</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th scope="col">자재명</th>
+								<th scope="col">자재코드</th>
+								<th scope="col">거래처명</th>
+								<th scope="col">거래처코드</th>
+								<th scope="col">자재유형</th>
+								<th scope="col" style="width: 80px"></th>
+							</tr>
+						</thead>
+						<tbody id="matUseList"></tbody>
+					</table>
+					<!-- End Multi Columns Form -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 --> 
+      <!-- ============================================================== -->  
 	<!-- 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블  -->
 	<div class="row">
 		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -203,9 +240,6 @@ table, tr, th, td {
 					<h3 class="">자재발주</h3>
 					<div id="btnGrp">
 						<sec:authorize access="hasRole('ROLE_ADMIN')">
-							<button type="button" class="btn btn-success"
-								data-bs-toggle="modal" data-bs-target="#orderModal">추가</button>
-							<button type="button" class="btn btn-primary" id="updateBtn" onclick="updateBtn()">수정</button>
 							<button type="button" class="btn btn-danger"
 								onclick="deleteBtn()">삭제</button>
 						</sec:authorize>
@@ -217,7 +251,6 @@ table, tr, th, td {
 						<thead>
 							<tr>
 								<th><input type="checkbox" id="cbx_chkAll" /></th>
-								<th>No.</th>
 								<th>발주번호</th>
 								<th>발주신청일</th>
 								<th>거래처코드</th>
@@ -227,15 +260,16 @@ table, tr, th, td {
 								<th>발주량</th>
 								<th>납기요청일</th>
 								<th>진행상태</th>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+                                 <th>수정</th>
+                              </sec:authorize>
 							</tr>
 						</thead>
 						<tbody id="matOrderTable">
-							<c:forEach var="matOrder" items="${matOrderList }"
-								varStatus="loop">
+							<c:forEach var="matOrder" items="${matOrderList }">
 								<tr data-id="${matOrder.ordrCd }">
 									<td><input type="checkbox" name="chk"
 										value="${matOrder.ordrCd }" /></td>
-									<td>${loop.count }</td>
 									<td>${matOrder.ordrCd }</td>
 									<td><fmt:formatDate value="${matOrder.ordrReqDt }"
 											pattern="yyyy-MM-dd" /></td>
@@ -247,6 +281,11 @@ table, tr, th, td {
 									<td><fmt:formatDate value="${matOrder.paprdCmndDt }"
 											pattern="yyyy-MM-dd" /></td>
 									<td>${matOrder.ordrChk }</td>
+									<sec:authorize access="hasRole('ROLE_ADMIN')">
+                                    <td><button type="button"
+                                          class="btn btn-primary updateBtn">
+                                          수정</button></td>
+                                 </sec:authorize>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -261,34 +300,89 @@ table, tr, th, td {
 
 
 	<script>
+	
+	<!-- ============================================================== -->
+    <!-- 모달 자재+거래처목록 모달 자재+거래처목록 모달 자재+거래처목록 모달 자재+거래처목록 -->
+	//url은 getMapping에 들어가는 주소
+	 $.ajax({
+	      url: "matUseModal",
+	      success: function (result) {
+	        $(result).each(function (idx, item) {
+	          let vendNmModal = item.vendNm;
+	          let vendCdModal = item.vendCd;
+	          let rscNmModal = item.rscNm;
+	          let rscCdModal = item.rscCd;
+	          let rscTypModal = item.rscTyp;
+
+	          let tr = $("<tr>");
+	          tr.append("<td>" + rscNmModal + "</td>");
+	          tr.append("<td>" + rscCdModal + "</td>");
+	          tr.append("<td>" + vendNmModal + "</td>");
+	          tr.append("<td>" + vendCdModal + "</td>");
+	          tr.append("<td>" + rscTypModal + "</td>");
+	          tr.append(
+	            $("<td>").append(
+	              $("<button>")
+	                .attr("class", "btn btn-primary choice2Btn")
+	                .text("선택")
+	            )
+	          );
+			//tbody OrderList 에 위의 ajax를 붙인다.(OrderList는 여기jsp에서만 쓴다.)
+	          $("#matUseList").append(tr);
+	        });
+	      },
+	      error: function (reject) {
+	        console.log(reject);
+	      },
+	    });
+
+	    // 선택 버튼 클릭시 input에 전달
+	    $(document).on("click", ".choice2Btn", function () {
+	    	let rscNmModal = $(this).closest("tr").children().eq(0).text();
+	        let rscCdModal = $(this).closest("tr").children().eq(1).text();
+	    	let vendNmModal = $(this).closest("tr").children().eq(2).text();
+	        let vendCdModal = $(this).closest("tr").children().eq(3).text();
+	      
+	      $("#rscNmInput").val(rscNmModal);
+          $("#rscCdInput").val(rscCdModal);
+	   	  $("#vendCdInput").val(vendCdModal);
+	      $("#vendNmInput").val(vendNmModal);
+
+	      $("#rscNmSearch").modal("hide");
+	      
+	    });
+	    
+	    <!-- 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 -->
+    <!-- ============================================================== -->
+	
 	<!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
 	const today = new Date();
     const todayString = today.toISOString().slice(0,10);
-    document.getElementById("ordrReqDt").value = todayString;
-    document.getElementById("paprdCmndDt").value = todayString;
+    document.getElementById("ordrReqDtInput").value = todayString;
+    document.getElementById("paprdCmndDtInput").value = todayString;
     <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
 	
-		  document.addEventListener('DOMContentLoaded', function() {
-		        var stockTable = document.getElementById('stock-table');
-		        var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+	  document.addEventListener('DOMContentLoaded', function() {
+	        var stockTable = document.getElementById('stock-table');
+	        var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-		        for (var i = 0; i < rows.length; i++) {
-		            var currentStockCell = rows[i].cells[7];
-		            var safetyStockCell = rows[i].cells[9];
+	        for (var i = 0; i < rows.length; i++) {
+	            var currentStockCell = rows[i].cells[7];
+	            var safetyStockCell = rows[i].cells[9];
 
-		            // 셀이 존재하는지 확인
-		            if (currentStockCell && safetyStockCell) {
-		                var currentStock = parseFloat(currentStockCell.innerText);
-		                var safetyStock = parseFloat(safetyStockCell.innerText);
+	            // 셀이 존재하는지 확인
+	            if (currentStockCell && safetyStockCell) {
+	                var currentStock = parseFloat(currentStockCell.innerText);
+	                var safetyStock = parseFloat(safetyStockCell.innerText);
 
-		                // 현재 재고가 안전 재고보다 작은 경우
-		                if (currentStock < safetyStock) {
-		                    // 배경색을 연한 빨간색으로 변경
-		                    rows[i].classList.add('low-stock');
-		                }
-		            }
-		        }
-		    });
+	                // 현재 재고가 안전 재고보다 작은 경우
+	                if (currentStock < safetyStock) {
+	                    // 배경색을 연한 빨간색으로 변경
+	                    rows[i].classList.add('low-stock');
+	                }
+	            }
+	        }
+	    });
 <!-- ============================================================== -->
 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->   
@@ -310,47 +404,57 @@ $("#insertBtn").on("click", function () {
           let rscNmData = $("input[name='rscNmInput']").val();
           let ordrCntData = $("input[name='ordrCntInput']").val();
           let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
+          let ordrChkData = $("input[name='ordrChkInput']").val();
 
-          if (ordrCd.value == "") {
-              alert("발주번호가 입력되지 않았습니다.");
-              ordrCd.focus();
-              return false; // 페이지 이동을 막기 위해 false를 반환합니다.
-          }
-          if (ordrReqDt.value == "") {
-              alert("발주신청일이 입력되지 않았습니다.");
-              ordrReqDt.focus();
-              return false;
-          }
-          if (vendCd == "none") {
-              alert("거래처코드가 선택되지 않았습니다.");
-              $("#vendCd").focus();
-              return false;
-          }
-          if (vendNm.value == "") {
-              alert("거래처명이 선택되지 않았습니다.");
-              $("#vendNm").focus();
-              return false;
-          }
-          if (rscCd.value == "") {
-              alert("자재코드가 입력되지 않았습니다.");
-              rscCd.focus();
-              return false;
-          }
-          if (rscNm.value == "") {
-              alert("자재명이 입력되지 않았습니다.");
-              $("#rscNm").focus();
-              return false;
-          }
-          if (ordrCnt.value == "") {
-              alert("발주량이 입력되지 않았습니다.");
-              $("#ordrCnt").focus();
-              return false;
-          }
-          if (paprdCmndDt.value == "") {
-              alert("납기요청일이 입력되지 않았습니다.");
-              $("#paprdCmndDt").focus();
-              return false;
-          }
+          if (ordrReqDtData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "발주신청일이 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (rscNmData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "자재명이 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (rscCdData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "자재코드가 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+        	if (vendNmData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "거래처명이 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+	        if (vendCdData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "거래처코드가 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+	      if (ordrCntData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "발주량이 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+	      if (paprdCmndDtData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "납기요청일이 선택되지 않았습니다.",
+			    });
+			    return;
+			  }
           
           // Swal.fire를 추가합니다.
           Swal.fire({
@@ -372,19 +476,14 @@ $("#insertBtn").on("click", function () {
                 	  rscCd: rscCdData,
                 	  rscNm: rscNmData,
                 	  ordrCnt: ordrCntData,
-                	  paprdCmndDt: paprdCmndDtData},
+                	  paprdCmndDt: paprdCmndDtData,
+                	  ordrChk: ordrChkData},
                   
                   success: function (result) {
                 	  //테이블 데이터 지우기
                     $("#matOrderTable").empty();
                 	  //input 내 데이터 지우기  
-                    $("#ordrReqDtData").val("");
-                    $("#vendCdData").val("");
-                    $("#vendNmData").val("");
-                    $("#rscCdData").val("");
-                    $("#rscNmData").val("");
-                    $("#ordrCntData").val("");
-                    $("#paprdCmndDtData").val("");
+                    $('input').val('');
                     //테이블 데이터 채우기
                     $(result).each(function (idx, item) {
                       let tr = $("<tr>").attr("data-id", item.ordrCd);
@@ -393,7 +492,6 @@ $("#insertBtn").on("click", function () {
                           $("<input>").attr("type", "checkbox").attr("name", "chk")
                         )
                       );
-                      tr.append("<td>" + (idx + 1) + "</td>");
                       tr.append("<td>" + item.ordrCd + "</td>");
                    	  tr.append("<td>" + productDate(item.ordrReqDt) + "</td>");
                       tr.append("<td>" + item.vendCd + "</td>");
@@ -402,7 +500,8 @@ $("#insertBtn").on("click", function () {
                       tr.append("<td>" + item.rscNm + "</td>");
                       tr.append("<td>" + item.ordrCnt + "</td>");
                       tr.append("<td>" + productDate(item.paprdCmndDt) + "</td>");
-                      
+                      tr.append("<td>" + item.ordrChk + "</td>");
+                      tr.append('<td><button type=\'button\' class=\'btn btn-primary updateBtn\' id=\'updateBtn\'>수정</button></td>');
 
                       $("#matOrderTable").append(tr);
                     });
@@ -463,197 +562,162 @@ $(document).on("change", "table tr :checkbox", function (event) {
 });
 <!-- 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 체크박스 -->
 <!-- ============================================================== -->
-<!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
-
-function updateBtn() {
-    // 체크된 체크박스가 없으면 함수 종료
-    if ($("input[name=chk]:checked").length === 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "선택된 글이 없습니다.",
-      });
-      return;
-    }
-    /* $("#cbx_chkAll").prop("disabled", true);*/
-    disableCheckBoxes(); 
-
-    // 수정 버튼의 텍스트를 "수정완료"로 변경
-    $("#updateBtn").text("수정완료");
-
-    // 수정완료 버튼 클릭 이벤트 핸들러 설정
-    // $(".btn-info").off("click").on("click", submitBtn);
-    $("#updateBtn").removeAttr("onclick");
-    $("#updateBtn").attr("onclick", "submitBtn();");
+<!-- 단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회 -->
+// 버튼 클릭 이벤트 리스너 함수
+$(document).on('click', '.updateBtn', function() {
+	// 수정완료 버튼 클릭 이벤트 핸들러 설정
+	$("#insertBtn").text("수정완료");
     
+    $("#insertBtn").removeAttr("onclick");
+    $("#insertBtn").attr("onclick", "submitBtn();");
 
-    $('input[name="chk"]:checked').each(function () {
-      var row = $(this).closest("tr");
-      var ordrCd = row.find("td:eq(2)").text().trim();
-      var ordrReqDt = row.find("td:eq(3)").text().trim();
-      var vendCd = row.find("td:eq(4)").text().trim();
-      var vendNm = row.find("td:eq(5)").text().trim();
-      var rscCd = row.find("td:eq(6)").text().trim();
-      var rscNm = row.find("td:eq(7)").text().trim();
-      var ordrCnt = row.find("td:eq(8)").text().trim();
-      var paprdCmndDt = row.find("td:eq(9)").text().trim();
-      var ordrChk = row.find("td:eq(10)").text().trim();
-           
-      row
-        .find("td:eq(2)")
-        .html(
-          '<input type="text" class="form-control" value="' + ordrCd + '">'
-        );
-      row
-        .find("td:eq(3)")
-        .html(
-          '<input type="date" class="form-control" value="' + ordrReqDt + '">'
-        );
-      row
-        .find("td:eq(4)")
-        .html(
-          '<input type="text" class="form-control" value="' + vendCd + '">'
-        );
-      row
-        .find("td:eq(5)")
-        .html(
-          '<input type="text" class="form-control" value="' + vendNm + '">'
-        );
-      row
-        .find("td:eq(6)")
-        .html(
-          '<input type="text" class="form-control" value="' + rscCd + '">'
-        );
-      row
-        .find("td:eq(7)")
-        .html(
-          '<input type="text" class="form-control" value="' + rscNm + '">'
-        );
-      row
-        .find("td:eq(8)")
-        .html(
-          '<input type="text" class="form-control" value="' + ordrCnt + '">'
-        );
-      row
-      .find("td:eq(9)")
-      .html(
-        '<input type="date" class="form-control" value="' + paprdCmndDt + '">'
-      );
-      row
-      .find("td:eq(10)")
-      .html(
-        '<input type="text" class="form-control" value="' + ordrChk + '">'
-      );
-    });
-  }
-
-  function submitBtn() {
-    // 체크된 체크박스가 없으면 함수 종료
-    if ($("input[name=chk]:checked").length === 0) return;
-
-    // 데이터를 저장할 배열 선언
-    var dataArr = [];
-
-    // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
-    $('input[name="chk"]:checked').each(function () {
-      var row = $(this).closest("tr");
-      var ordrCd = row.find("td:eq(2) input").val().trim();
-      var ordrReqDt = row.find("td:eq(3) input").val().trim();
-      var vendCd = row.find("td:eq(4) input").val().trim();
-      var vendNm = row.find("td:eq(5) input").val().trim();
-      var rscCd = row.find("td:eq(6) input").val().trim();
-      var rscNm = row.find("td:eq(7) input").val().trim();
-      var ordrCnt = row.find("td:eq(8) input").val().trim();
-      var paprdCmndDt = row.find("td:eq(9) input").val().trim();
-      var ordrChk = row.find("td:eq(10) input").val().trim();
-
-      // 객체 형식으로 데이터 저장
-      var dataObj = {
-    		  ordrCd: ordrCd,
-    		  ordrReqDt: ordrReqDt,
-    		  vendCd: vendCd,
-    		  vendNm: vendNm,
-    		  rscCd: rscCd,
-    		  rscNm: rscNm,
-    		  ordrCnt: ordrCnt,
-    		  paprdCmndDt: paprdCmndDt,
-    		  ordrChk: ordrChk,
-      };
-
-      // 데이터 배열에 객체 추가
-      dataArr.push(dataObj);
-    });
-
+    // 단건조회를 위한 rsc_cd 값을 추출합니다.
+    var ordrCd = $(this).closest('tr').find('td:eq(1)').text();    
+    
+  //서버로 보낼 데이터를 구성합니다.
+    var data = {
+    		ordrCd: ordrCd
+    };
+  
+ // Ajax 요청을 보냅니다.
     $.ajax({
-      url: "updatematOrder",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify(dataArr),
-      success: function (result) {
-        if (result.result == "success") {
-          $("#matOrderTable").empty();
-          $(result.data).each(function (idx, item) {
-            var $row = $("<tr>").attr("data-id", item.ordrCd);
-            $row.append(
-              $("<td>").html(
-                '<input type="checkbox" name="chk" value="' +
-                  item.ordrCd +
-                  '" />'
-              )
-            );
-            $row.append($("<td>").text(idx + 1));
-            $row.append($("<td>").text(item.ordrCd));
-            $row.append($("<td>").text(new Date(item.ordrReqDt).toISOString().slice(0, 10)));
-            $row.append($("<td>").text(item.vendCd));
-            $row.append($("<td>").text(item.vendNm));
-            $row.append($("<td>").text(item.rscCd));
-            $row.append($("<td>").text(item.rscNm));
-            $row.append($("<td>").text(item.ordrCnt));
-            $row.append($("<td>").text(new Date(item.paprdCmndDt).toISOString().slice(0, 10)));
-            $row.append($("<td>").text(item.ordrChk));
-            $("#matOrderTable").append($row);
-          });
-          enableCheckBoxes();
-          $("#updateBtn").text("수정");
-          $("#updateBtn").removeAttr("onclick");
-          $("#updateBtn").attr("onclick", "updateBtn();");
-        }
+         type: 'GET',
+         url: 'ordrInfo',
+         data: $.param(data), 
+         dataType: 'json',
+         success: function(response) {
+           // 성공적으로 응답을 받았을 때 처리할 코드를 작성합니다.
+          console.log("단건조회" + response);
+          function formatDate(date) {
+    		  var year = date.getFullYear();
+    		  var month = (date.getMonth() + 1).toString().padStart(2, '0');
+    		  var day = date.getDate().toString().padStart(2, '0');
+    		  return year + '-' + month + '-' + day;
+    		}
+          var ordrReqDt = new Date(response.ordrReqDt);
+      	var formatordrReqDt = formatDate(ordrReqDt);
+      	
+      	var paprdCmndDt = new Date(response.paprdCmndDt);
+      	var formatpaprdCmndDt = formatDate(paprdCmndDt);
+          
+          
+          $("#ordrReqDtInput").val(formatordrReqDt);
+          $("#rscNmInput").val(response.rscNm);
+          $("#rscCdInput").val(response.rscCd);       
+          $("#vendNmInput").val(response.vendNm);
+          $("#vendCdInput").val(response.vendCd);
+          $("#ordrCntInput").val(response.ordrCnt);
+          $("#paprdCmndDtInput").val(formatpaprdCmndDt);
+          $("#ordrChkInput").val(response.ordrChk);
+          
+         },
+         error: function(jqXHR, textStatus, errorThrown) {
+             alert('데이터를 불러올 수 없습니다.');
+         }
+       });
+     });
 
-        let Toast = Swal.mixin({
-          toast: true,
-          position: "top",
-          showConfirmButton: false,
-          timer: 1500,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-          },
-        });
 
-        Toast.fire({
-          icon: "success",
-          title: "수정이 정상적으로 되었습니다.",
-        });
-      },
-      error: function (reject) {
-        console.log(reject);
-      },
-    });
-  }
 
-  function disableCheckBoxes() {
-    $('input[name="chk"]').prop("disabled", true);
-  }
+<!-- 단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회  단건조회 -->
+<!-- ============================================================== -->  
+<!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
+function submitBtn() {
+	
+	 let ordrReqDtData = $("input[name='ordrReqDtInput']").val();
+	 let rscNmData = $("input[name='rscNmInput']").val();
+	 let rscCdData = $("input[name='rscCdInput']").val();
+	 let vendNmData = $("input[name='vendNmInput']").val();
+	 let vendCdData = $("input[name='vendCdInput']").val();
+	 let ordrCntData = $("input[name='ordrCntInput']").val();
+	 let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
+	 let ordrChkData = $("input[name='ordrChkInput']").val();
+	 Swal.fire({
+		  title: '수정하시겠습니까?',
+		  icon: 'question',
+		  showCancelButton: true,
+		  confirmButtonColor: '#3085d6',
+		  cancelButtonColor: '#d33',
+		  confirmButtonText: '수정',
+		  cancelButtonText: '취소'
+		}).then((result) => {
+		  if (result.value) {
+   $.ajax({
+     url: "updatematOrder",
+     method: "POST",
+     
+     //serialize를 쓰면 form 안의 데이터를 통째로 갖고 온다.
+     data:	{ordrReqDt: ordrReqDtData,
+    	 rscNm: rscNmData,
+   	rscCd: rscCdData,
+   	vendNm: vendNmData,
+   	vendCd: vendCdData,
+   	ordrCnt: ordrCntData,
+   	paprdCmndDt: paprdCmndDtData,
+   	ordrChk: ordrChkData},
+   	  
+     //dataType: 'json', 화면 받을 땐 없어도 됨
+     success: function (result) {
+   	  console.log("결과" + result);
+   	  //테이블 데이터 지우기
+       $("#matOrderTable").empty();
+   	  //input 내 데이터 지우기  
+   	$('input').val('');  
+       
+       $(result).each(function (idx, item) {
+    	   let tr = $("<tr>").attr("data-id", item.ordrCd);
+           tr.append(
+             $("<td>").append(
+               $("<input>").attr("type", "checkbox").attr("name", "chk")
+             )
+           );
+           tr.append("<td>" + item.ordrCd + "</td>");
+        	  tr.append("<td>" + productDate(item.ordrReqDt) + "</td>");
+           tr.append("<td>" + item.vendCd + "</td>");
+           tr.append("<td>" + item.vendNm + "</td>");
+           tr.append("<td>" + item.rscCd + "</td>");
+           tr.append("<td>" + item.rscNm + "</td>");
+           tr.append("<td>" + item.ordrCnt + "</td>");
+           tr.append("<td>" + productDate(item.paprdCmndDt) + "</td>");
+           tr.append("<td>" + item.ordrChk + "</td>");
+           tr.append('<td><button type=\'button\' class=\'btn btn-primary updateBtn\' id=\'updateBtn\'>수정</button></td>');
 
-  function enableCheckBoxes() {
-    $('input[name="chk"]').prop("disabled", false);
-    
-    
-    
-    
-  }
+           $("#matOrderTable").append(tr);
+         });
+       
+  
+         $("#insertBtn").text("등록");
+         $("#insertBtn").removeAttr("onclick");
+         $("#insertBtn").attr("onclick", "insertBtn();");
       
-  <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
+
+       let Toast = Swal.mixin({
+         toast: true,
+         position: "top",
+         showConfirmButton: false,
+         timer: 1500,
+         timerProgressBar: true,
+         didOpen: (toast) => {
+           toast.addEventListener("mouseenter", Swal.stopTimer);
+           toast.addEventListener("mouseleave", Swal.resumeTimer);
+         },
+       });
+
+       Toast.fire({
+           icon: "success",
+           title: "수정이 정상적으로 되었습니다.",
+       });
+   },
+   error: function (reject) {
+       console.log(reject);
+   },
+   });
+   }
+   });
+   }
+
+      
+  <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정  -->
   <!-- ============================================================== -->
   <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
   function deleteBtn() {

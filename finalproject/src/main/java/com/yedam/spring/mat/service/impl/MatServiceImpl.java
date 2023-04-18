@@ -28,6 +28,11 @@ public class MatServiceImpl implements MatService {
 		return matMapper.selectMatInfo(matVO);
 	}
 	@Override
+	public List<MatVO> matUseList() {
+		//사용하는 자재목록 전체
+		return matMapper.matUseList();
+	}
+	@Override
 	public List<MatVO> matVendList() {
 		// //자재거래처 전체조회
 		return matMapper.matVendList();
@@ -157,11 +162,4 @@ public class MatServiceImpl implements MatService {
 		// 검수자 목록 조회
 		return matMapper.checkerList();
 	}
-	
-	
-	
-
-
-	
-
 }

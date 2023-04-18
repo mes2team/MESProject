@@ -37,12 +37,18 @@ public class MatController {
 	public MatVO getMat(MatVO matVO) {		
 		return matService.getMat(matVO); 
 	}
+	//사용하는 자재목록 조회
+	@GetMapping("/matUseModal")
+	@ResponseBody
+	public List<MatVO> matUseList(){
+		return matService.matUseList();
+	}
 	//자재거래처 조회
 	@GetMapping("/VendModal")
 	@ResponseBody
 	public List<MatVO> matVendList(){
 		return matService.matVendList();
-		}
+	}
 	
 	//자재정보등록	
 	@PostMapping("/matInsert")
@@ -102,6 +108,12 @@ public class MatController {
 		model.addAttribute("matStock",matService.matStock());
 		return "material/matOrder";
 	}
+	//자재발주 단건조회
+		@GetMapping("/ordrInfo")
+		@ResponseBody
+		public MatVO getOrdr(MatVO matVO) {		
+			return matService.getMatOrderInfo(matVO); 
+		}
 	// 자재발주등록
 	@PostMapping("/matOrderInsert")
 	@ResponseBody

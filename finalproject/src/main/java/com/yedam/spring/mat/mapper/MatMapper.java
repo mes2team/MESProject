@@ -8,6 +8,8 @@ public interface MatMapper {
 
 	//자재정보 전체조회
 	public List<MatVO> matList();
+	//사용하는 자재정보 전체조회
+	public List<MatVO> matUseList();
 	//자재정보 단건 조회
 	public MatVO selectMatInfo(MatVO matVO);
 	//자재정보 등록

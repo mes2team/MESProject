@@ -61,5 +61,4 @@ public class EqmVO {
 	
 	//占쏙옙占쏙옙占 eqm table占쏙옙 占쏙옙溝횡令占쏙옙
 	private String name;
-	private String prcsCd;
 }

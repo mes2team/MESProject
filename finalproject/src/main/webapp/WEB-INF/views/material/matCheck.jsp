@@ -650,10 +650,10 @@ $(document).on("change", "table tr :checkbox", function (event) {
 $(document).on('click', '#updateBtn', function() {
 				
 	// 수정완료 버튼 클릭 이벤트 핸들러 설정
-	$("#deleteBtn").text("수정완료");
+	$("#insertBtn").text("수정완료");
     
-    $("#deleteBtn").removeAttr("onclick");
-    $("#deleteBtn").attr("onclick", "submitBtn();");
+    $("#insertBtn").removeAttr("onclick");
+    $("#insertBtn").attr("onclick", "submitBtn();");
 	  // 단건조회를 위한 rscInspCd 값을 추출합니다.
 	  var rscInspCd = $(this).closest('tr').find('td:eq(2)').text();
 	  
@@ -783,9 +783,9 @@ $(document).on('click', '#updateBtn', function() {
           $("#checkBody").append(tr);
         });
    
-          $("#deleteBtn").text("삭제");
-          $("#deleteBtn").removeAttr("onclick");
-          $("#deleteBtn").attr("onclick", "deleteBtn();");
+          $("#insertBtn").text("등록");
+          $("#insertBtn").removeAttr("onclick");
+          $("#insertBtn").attr("onclick", "insertBtn();");
        
 
         let Toast = Swal.mixin({
@@ -812,6 +812,7 @@ $(document).on('click', '#updateBtn', function() {
 }
 });
 }
+ 
       
   <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
   <!-- ============================================================== -->
