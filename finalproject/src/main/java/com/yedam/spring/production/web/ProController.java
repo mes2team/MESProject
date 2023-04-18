@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.common.PageDTO;
+import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
 import com.yedam.spring.production.service.ProOrderVO;
@@ -301,4 +302,71 @@ public class ProController {
 		return resultMap;
 	}
 	
+	//진행공정/자재 조회
+	@PostMapping("/getPrcsAndRsc")
+	@ResponseBody
+	public Map<String, Object> getPrcsAndRsc(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.getPrcsAndRsc(vo));
+
+		return resultMap;
+	}
+	
+	//진행공정/설비 조회
+	@PostMapping("/getEqmPrcs")
+	@ResponseBody
+	public Map<String, Object> getEqmPrcs(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.getEqmPrcs(vo));
+
+		return resultMap;
+	}
+	//공정시작
+	@PostMapping("/modifyPrcsStart")
+	@ResponseBody
+	public Map<String, Object> modifyPrcsStart(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.modifyPrcsStart(vo));
+
+		return resultMap;
+	}
+	//사용할 시설 on
+	@PostMapping("/modifyUseEqm")
+	@ResponseBody
+	public Map<String, Object> modifyUseEqm(@RequestBody List<String> selectedEqm) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String result = null;
+		for (int i = 0; i < selectedEqm.size(); i++) {
+			result = proService.modifyUseEqm(selectedEqm.get(i));
+		}
+		resultMap.put("result", result);
+		return resultMap;
+	}
+	//사용할 자재 출고
+	@PostMapping("/modifyUseRsc")
+	@ResponseBody
+	public Map<String, Object> modifyUseRsc(@RequestBody List<MatVO> rscArr) {
+		Map<String, Object> resultMap = new HashMap<>();
+		String result = null;
+		for (int i = 0; i < rscArr.size(); i++) {
+			result = proService.modifyUseRsc(rscArr.get(i));
+		}
+		resultMap.put("result", result);
+		return resultMap;
+	}
+	
+	//공정스탑
+	@PostMapping("/modifyPrcsStop")
+	@ResponseBody
+	public Map<String, Object> modifyPrcsStop(ProPrcsVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("result", proService.modifyPrcsStop(vo));
+
+		return resultMap;
+	}
+		
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.yedam.spring.common.Criteria;
+import com.yedam.spring.eqm.service.EqmVO;
 import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -75,11 +76,20 @@ public interface ProMapper {
 
 	public List<ProPrcsVO> selectPrcsProg(ProPrcsVO vo);
 
+	public List<ProPrcsVO> selectPrcsAndRsc(ProPrcsVO vo);
 
+	public List<EqmVO> selectEqmPrcs(ProPrcsVO vo);
 
+	public int updatePrcsStart(ProPrcsVO vo);
 
+	public int updateUseEqm(String eqmCd);
 
+	public int updateUseRsc(MatVO matVO);
 
-	
+	public int updatePrcsStop(ProPrcsVO vo);
+
+	public String getEqm(ProPrcsVO vo);
+
+	public int offEqm(String eqmCd);
 
 }

@@ -72,27 +72,21 @@ tbody#processList input:not([readonly]) {
 </style>
 </head>
 <body>
-	<!-- 검색폼 영역 -->
-	<div class="card">
-		<div class="card-body">
-			<h5 class="card-title">공정관리</h5>
-			<!-- Multi Columns Form -->
-			<form class="row g-3">
-				<div class="col-md-6">
-					<label for="inputEmail5" class="form-label">Email</label> <input
-						type="email" class="form-control" id="">
-				</div>
-				<div class="text-center">
-					<button type="submit" class="btn btn-primary">Submit</button>
-					<button type="reset" class="btn btn-secondary">Reset</button>
-				</div>
-			</form>
-			<!-- End Multi Columns Form -->
+<div class="card">
+            <div class="card-body">
 
-		</div>
-	</div>
-
-	<!-- 테이블 영역 -->
+              <!-- Bordered Tabs Justified -->
+              <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true">공정관리</button>
+                </li>
+                <li class="nav-item flex-fill" role="presentation">
+                  <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">공정흐름관리</button>
+                </li>
+              </ul>
+              <div class="tab-content pt-2" id="borderedTabJustifiedContent">
+                <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
+                <!-- 테이블 영역 -->
 	<div class="card">
 		<div class="card-body scrollable">
 			<div class="btnGrp">
@@ -138,6 +132,62 @@ tbody#processList input:not([readonly]) {
 
 		</div>
 	</div>
+                </div>
+                <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
+	                <div class="card">
+			            <div class="card-body">
+			              <h5 class="card-title">Table with hoverable rows</h5>
+			
+			              <!-- Table with hoverable rows -->
+			              <table class="table table-hover">
+			                <thead>
+			                  <tr>
+			                    <th scope="col">#</th>
+			                    <th scope="col">Name</th>
+			                    <th scope="col">Position</th>
+			                    <th scope="col">Age</th>
+			                    <th scope="col">Start Date</th>
+			                  </tr>
+			                </thead>
+			                <tbody>
+			                  <tr>
+			                    <th scope="row">1</th>
+			                    <td>Brandon Jacob</td>
+			                    <td>Designer</td>
+			                    <td>28</td>
+			                    <td>2016-05-25</td>
+			                  </tr>
+			                </tbody>
+			              </table>
+			              <!-- End Table with hoverable rows -->
+			
+			            </div>
+	          		</div>
+			            	<div class="row">
+			            	      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+							        <div class="card">
+							          <div class="card-body">
+							          
+							          </div>
+							        </div>
+							      </div>
+							      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+							        <div class="card">
+							          <div class="card-body">
+							          
+							          </div>
+							        </div>
+							      </div>
+			            	
+			            	</div>
+                </div>
+
+              </div><!-- End Bordered Tabs Justified -->
+
+            </div>
+          </div>
+
+	
 
 </body>
 <script>
