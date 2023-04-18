@@ -67,4 +67,10 @@ public class BomController {
 	public List<MatVO> searchBomProcess(MatVO vo) {
 		return bomService.getMatList(vo);
 	}
+	
+	@GetMapping("selectBomCd")
+	@ResponseBody
+	public String selectBomCd(BomVO vo) {
+		return bomService.getBomCd(vo).getBomCd();
+	}
 }

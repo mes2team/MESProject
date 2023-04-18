@@ -55,4 +55,12 @@
 	  	FROM rsc
      	WHERE rsc_nm LIKE '%' || #{rscNm} || '%'
     </select>
+    
+    <!-- bom코드 조회 -->
+    <select id="getBomCd" resultType="BomVO">
+    	SELECT 	bom_cd
+    	FROM 	bom
+    	WHERE	edcts_cd = #{edctsCd}
+    	AND		standard = #{standard}
+    </select>
 </mapper>

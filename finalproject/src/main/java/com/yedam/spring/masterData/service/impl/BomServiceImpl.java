@@ -42,4 +42,9 @@ public class BomServiceImpl implements BomService {
 		return bomMapper.selectMatList(vo);
 	}
 
+	@Override
+	public BomVO getBomCd(BomVO vo) {
+		return bomMapper.getBomCd(vo);
+	}
+
 }

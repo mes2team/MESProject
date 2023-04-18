@@ -300,7 +300,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                 class="form-control"
                 name="orderNo"
                 id="orderNo"
-                value="ORD${orderNo }"
                 readonly
               />
             </div>
@@ -500,6 +499,33 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                 type="date"
                 class="form-control"
                 id="orderPaprdDtDetail"
+                disabled
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">거래처 명</label>
+              <input
+                type="text"
+                class="form-control"
+                id="vendNmDetail"
+                disabled
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">거래처 담당자</label>
+              <input
+                type="text"
+                class="form-control"
+                id="vendMagDetail"
+                disabled
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">거래처 주소</label>
+              <input
+                type="text"
+                class="form-control"
+                id="vendAddrDetail"
                 disabled
               />
             </div>
@@ -944,6 +970,9 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
       url: "orderDetail",
       data: { orderNo: orderNo },
       success: function (result) {
+        $("#vendNmDetail").val(result[0].vendNm);
+        $("#vendMagDetail").val(result[0].vendMag);
+        $("#vendAddrDetail").val(result[0].vendAddr);
         $("#orderDetailList").empty();
         $("#orderNoDetail").val(orderNo);
         $("#orderNmDetail").val(orderNm);
@@ -1114,7 +1143,6 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     row.find("td").each(function () {
       orderArray.push($(this).text());
     });
-    console.log(orderArray);
     $("#vendCd").val(orderArray[0]);
     $("#vendNm").val(orderArray[1]);
     $("#brNum").val(orderArray[2]);
@@ -1124,6 +1152,16 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     $("#vendNm1").val(orderArray[1]);
     $("#vendMag1").val(orderArray[3]);
     $("#vendAddr1").val(orderArray[5]);
+
+    $.ajax({
+      url: "orderNo",
+      success: function (result) {
+        $("#orderNo").val(result);
+      },
+      error(reject) {
+        console.log(reject);
+      },
+    });
 
     // 현재 모달창 닫기
     $("#orderSheet").modal("hide");

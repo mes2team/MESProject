@@ -21,4 +21,7 @@ public interface BomMapper {
 
 	// bom 자재 검색
 	public List<MatVO> selectMatList(MatVO vo);
+
+	// bom 코드 조회
+	public BomVO getBomCd(BomVO vo);
 }
