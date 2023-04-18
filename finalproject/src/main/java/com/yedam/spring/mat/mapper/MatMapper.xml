@@ -110,7 +110,7 @@
 	<select id="matOrderAllList" resultType="MatVO">
 		SELECT *
 		FROM rsc_ordr
-	   ORDER BY ordr_cd
+	   ORDER BY ordr_chk DESC, ordr_cd
 	</select>
 <!-- 자재발주 단건 조회 -->
 	<select id="selectMatOrderInfo" resultType="MatVO">
@@ -181,9 +181,6 @@
 			<if test="paprdCmndDt != null and !paprdCmndDt.equals('')">
 				PAPRD_CMND_DT = #{paprdCmndDt},
 			</if>
-			<if test="ordrChk != null and !ordrChk.equals('')">
-				ordr_chk = #{ordrChk},
-			</if>
 		</set>
 		WHERE ordr_cd = #{ordrCd}
 	</update>
@@ -202,21 +199,31 @@
 	
 <!-- 자재입고 현황 -->	
 	<select id="matReceiptList" resultType="MatVO">
-		SELECT i.rsc_lot_cd
-		     , i.rsc_cd
-		     , r.rsc_nm
-		     , i.ordr_cd
-		     , o.ordr_cnt
-		     , i.rsc_insp_cd
-		     , i.ist_cnt
-		     , i.ist_dt
-		  FROM rsc_ist i JOIN rsc r ON i.rsc_cd = r.rsc_cd
-		  				 LEFT JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
-		 ORDER BY i.rsc_lot_cd
+		SELECT rsc_lot_cd
+		     , rsc_cd
+		     , rsc_nm
+		     , ordr_cd
+		     , ist_cnt
+		     , ist_dt
+		     , rsc_insp_cd
+		  FROM rsc_ist 
+		 ORDER BY ist_dt DESC
+	</select>
+	<!-- 입고미완료 발주 전체 조회	 -->
+	<select id="matReceiptChkList" resultType="MatVO">
+		SELECT *
+		FROM rsc_insp
+	   WHERE rsc_lot_cd IS NULL
+	   ORDER BY rsc_insp_cd
 	</select>
 	<!-- 자재입고 등록 -->
 	<insert id="insertMatReceipt" parameterType="MatVO">
-		INSERT INTO rsc_ist (
+	<selectKey keyProperty="rscLotCd" resultType="String" order="BEFORE">
+    SELECT CONCAT('RLT', LPAD(NVL(MAX(SUBSTR(rsc_lot_cd, 4)), '0000') + 1, 4, '0'))
+    FROM rsc_ist
+  </selectKey>
+  BEGIN
+    INSERT INTO rsc_ist (
 		rsc_lot_cd,
 		rsc_cd,
 		ordr_cd,
@@ -226,14 +233,16 @@
 		rsc_now_stc
 		)
 		VALUES (
-		'RLT${rscLotCd}',
+		#{rscLotCd},
 		#{rscCd},
 		#{ordrCd},
 		#{rscInspCd},
 		#{istCnt},
 		#{istDt},
 		#{istCnt}
-		)
+		);
+    UPDATE rsc_insp SET rsc_lot_cd = #{rscLotCd} WHERE rsc_insp_cd = #{rscInspCd};
+  END;
 	</insert>
 	<!-- 자재입고 수정 -->
 	<update id="updateMatReceiptInfo" parameterType="MatVO">
@@ -268,19 +277,20 @@
 
 <!-- 자재검사 현황 -->	
 	<select id="matCheckList" resultType="MatVO">
-		SELECT i.rsc_insp_cd
-		     , i.ordr_cd
-		     , i.rsc_nm
-		     , i.insp_dt
-		     , i.insp_tstr
-		     , o.ordr_cnt
-		     , i.insp_pass_cnt
-		     , i.cont
-		     , i.decay
-		     , i.pack
-		     , i.under_weight
-		     , i.etc
-		  FROM rsc_insp i JOIN rsc_ordr o ON i.ordr_cd = o.ordr_cd
+		SELECT rsc_insp_cd
+		     , ordr_cd
+		     , rsc_nm
+		     , insp_dt
+		     , insp_tstr
+		     , insp_cnt
+		     , insp_pass_cnt
+		     , cont
+		     , decay
+		     , pack
+		     , under_weight
+		     , etc
+		     , rsc_lot_cd
+		  FROM rsc_insp 
 		 ORDER BY rsc_insp_cd DESC
 	</select>	
 <!-- 검사미완료 발주 전체 조회	 -->
@@ -303,8 +313,11 @@
     SELECT CONCAT('RIC', LPAD(NVL(MAX(SUBSTR(rsc_insp_cd, 4)), '0000') + 1, 4, '0'))
     FROM rsc_insp
   </selectKey>
-  INSERT INTO rsc_insp (rsc_insp_cd, ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
-  VALUES (#{rscInspCd}, #{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain})
+  BEGIN
+    INSERT INTO rsc_insp (rsc_insp_cd, ordr_cd, rsc_nm, insp_cnt, insp_dt, insp_tstr, insp_pass_cnt, cont, decay, pack, under_weight, etc, etc_explain)
+    VALUES (#{rscInspCd}, #{ordrCd}, #{rscNm}, #{inspCnt}, #{inspDt}, #{inspTstr}, #{inspPassCnt}, #{cont}, #{decay}, #{pack}, #{underWeight}, #{etc}, #{etcExplain});
+    UPDATE rsc_ordr SET ordr_chk = '진행완료' WHERE ordr_cd = #{ordrCd};
+  END;
 </insert>
 <!-- 자재검사 단건조회 -->
 	<select id="selectMatCheckInfo" parameterType="MatVO" resultType="MatVO">

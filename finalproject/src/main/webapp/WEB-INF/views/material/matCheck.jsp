@@ -117,7 +117,7 @@ form {
 				<div class="col-md-2">
 					<label class="form-label">검수량</label> <input type="text"
 						class="form-control" id="inspCntInput" name="inspCntInput"
-						readonly />
+						readonly  />
 				</div>
 
 
@@ -142,7 +142,7 @@ form {
 				<div class="col-md-2">
 					<label class="form-label">합격량</label> <input type="number"
 						class="form-control" id="inspPassCntInput" name="inspPassCntInput"
-						min="0" />
+						 />
 				</div>
 
 				<div class="col-md-1">
@@ -276,7 +276,7 @@ form {
 							<tr>
 								<th data-orderable="false" class="no-sort"><input
 									type="checkbox" id="cbx_chkAll" /></th>
-								<th>No.</th>
+								
 								<th>검사코드</th>
 								<th>발주번호</th>
 								<th>자재명</th>
@@ -293,11 +293,11 @@ form {
 							</tr>
 						</thead>
 						<tbody id="checkBody">
-							<c:forEach var="check" items="${matCheckList }" varStatus="loop">
+							<c:forEach var="check" items="${matCheckList }" >
 								<tr data-id="${check.rscInspCd }">
 									<td><input type="checkbox" name="chk"
 										value="${check.rscInspCd }" /></td>
-									<td>${loop.count }</td>
+									
 									<td>${check.rscInspCd }</td>
 									<td>${check.ordrCd }</td>
 									<td>${check.rscNm }</td>
@@ -325,6 +325,8 @@ form {
 	<!-- ============================================================== -->
 
 	<script>
+	
+	
 	<!-- 발주번호 검색 모달  발주번호 검색 모달  발주번호 검색 모달 -->
 	//url은 getMapping에 들어가는 주소
 	 $.ajax({
@@ -366,7 +368,7 @@ form {
 	      $("#ordrCdInput").val(ordrCdModal);
 	      $("#rscNmInput").val(rscNmModal);
 	      $("#inspCntInput").val(ordrCntModal);
-
+	      $("#inspPassCntInput").val(ordrCntModal);
 	      $("#ordrCdSearch").modal("hide");
 	      
 	    });
@@ -420,6 +422,47 @@ form {
 	    });
 	    
     <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색  -->
+    <!-- ============================================================== -->	
+    <!-- 합격량 자동 계산 합격량 자동 계산 합격량 자동 계산 합격량 자동 계산 합격량 자동 계산  -->
+    
+ // 검수량, 오염, 부패, 푸장불량, 중량미달, 기타 입력값이 변경되었을 때 호출되는 함수
+     function updateInspPassCntInput() {
+      // 검수량, 오염, 합격량, 기타 입력값 가져오기
+      var cont = Number($("#contInput").val());
+      var decay = Number($("#decayInput").val());
+      var pack = Number($("#packInput").val());
+      var underWeight = Number($("#underWeightInput").val());
+      var etc = Number($("#etcInput").val());
+
+      // 기타설명에 대입할 값을 계산
+      var inspPassCntValue = Number($("#inspPassCntInput").val()); 
+     
+      // 검수량, 오염, 부패, 푸장불량, 중량미달, 기타 값을 빼기
+      inspPassCntValue -= cont;
+      inspPassCntValue -= decay;
+      inspPassCntValue -= pack;
+      inspPassCntValue -= underWeight;
+      inspPassCntValue -= etc;
+
+      // 계산 결과가 0보다 작을 경우, 0으로 처리
+      if (inspPassCntValue < 0) {
+        inspPassCntValue = 0;
+      }
+
+      // 합격량 입력란에 값을 대입
+      $("#inspPassCntInput").val(inspPassCntValue);
+    }
+
+    // 검수량, 오염, 합격량, 기타 입력값이 변경될 때마다 updateInspPassCntInput 함수 호출
+    $("#contInput, #decayInput, #packInput, #underWeightInput, #etcInput").on("input", function() {
+      updateInspPassCntInput();
+    });
+
+    // 페이지 로딩 시 updateInspPassCntInput 함수 호출하여 합격량 초기값 설정
+    $(document).ready(function() {
+      updateInspPassCntInput();
+    }); 
+    <!-- 합격량 자동 계산 합격량 자동 계산 합격량 자동 계산 합격량 자동 계산 합격량 자동 계산  -->
     <!-- ============================================================== -->	
 	  //날짜 변환
 	    function productDate(timestamp) {
@@ -570,6 +613,7 @@ form {
                     $("#underWeightData").val("");
                     $("#etcData").val("");
                     $("#etcExplainData").val("");
+                    $('input').val('');
                     //테이블 데이터 채우기
                     $(result).each(function (idx, item) {
                       let tr = $("<tr>").attr("data-id", item.rscInspCd);
@@ -578,7 +622,6 @@ form {
                           $("<input>").attr("type", "checkbox").attr("name", "chk")
                         )
                       );
-                      tr.append("<td>" + (idx + 1) + "</td>");
                       tr.append("<td>" + item.rscInspCd + "</td>");
                       tr.append("<td>" + item.ordrCd + "</td>");
                       tr.append("<td>" + item.rscNm + "</td>");
@@ -693,7 +736,6 @@ $(document).on('click', '#updateBtn', function() {
 	        $("#etcInput").val(response.etc);
 	        $("#etcExplainInput").val(response.etcExplain);
 	        $("#rscInspCdInput").val(response.rscInspCd);
-	        console.log("1" + rscInspCdData);
 	        
 	       },
 	       error: function(jqXHR, textStatus, errorThrown) {
@@ -765,7 +807,6 @@ $(document).on('click', '#updateBtn', function() {
               $("<input>").attr("type", "checkbox").attr("name", "chk")
             )
           );
-          tr.append("<td>" + (idx + 1) + "</td>");
           tr.append("<td>" + item.rscInspCd + "</td>");
           tr.append("<td>" + item.ordrCd + "</td>");
           tr.append("<td>" + item.rscNm + "</td>");

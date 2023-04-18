@@ -179,13 +179,7 @@ table, tr, th, td {
 					<label class="form-label">납기요청일</label> <input type="date"
 						class="form-control" id="paprdCmndDtInput" name="paprdCmndDtInput">
 				</div>
-				<div class="col-md-1">
-					<label class="form-label">진행상태</label> <select
-						class="form-control" id="ordrChkInput" name="ordrChkInput">						
-                        <option value="진행중">진행중</option>
-                        <option value="진행완료">진행완료</option>
-                     </select>
-				</div>
+				
 
 				
 			</form>
@@ -297,9 +291,13 @@ table, tr, th, td {
 	<!-- 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블 자재 발주 테이블  -->
 	<!-- ============================================================== -->
 
-
-
 	<script>
+	$('tbody#matOrderTable tr').each(function() {
+		  if ($(this).find('td:nth-child(10)').text() === '진행완료') {
+		    $(this).css('pointer-events', 'none');
+		   /*  $(this).css('opacity', '0.5'); */		   
+		  }
+		});
 	
 	<!-- ============================================================== -->
     <!-- 모달 자재+거래처목록 모달 자재+거래처목록 모달 자재+거래처목록 모달 자재+거래처목록 -->
@@ -362,6 +360,7 @@ table, tr, th, td {
     document.getElementById("paprdCmndDtInput").value = todayString;
     <!--날짜 입력 input에 자동으로 오늘 날짜 입력 -->
 	
+    <!--안전재고 현재재고 차이에 따른 색깔 -->
 	  document.addEventListener('DOMContentLoaded', function() {
 	        var stockTable = document.getElementById('stock-table');
 	        var rows = stockTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -404,7 +403,7 @@ $("#insertBtn").on("click", function () {
           let rscNmData = $("input[name='rscNmInput']").val();
           let ordrCntData = $("input[name='ordrCntInput']").val();
           let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
-          let ordrChkData = $("input[name='ordrChkInput']").val();
+          
 
           if (ordrReqDtData == "") {
 			    Swal.fire({
@@ -476,8 +475,7 @@ $("#insertBtn").on("click", function () {
                 	  rscCd: rscCdData,
                 	  rscNm: rscNmData,
                 	  ordrCnt: ordrCntData,
-                	  paprdCmndDt: paprdCmndDtData,
-                	  ordrChk: ordrChkData},
+                	  paprdCmndDt: paprdCmndDtData},
                   
                   success: function (result) {
                 	  //테이블 데이터 지우기
@@ -531,6 +529,7 @@ $(document).ready(function () {
   $("#cbx_chkAll").click(function () {
     if ($(this).is(":checked"))
       $("input[name=chk]")
+        .not(':disabled') // 진행완료 상태인 체크박스는 선택되지 않도록
         .prop("checked", true)
         .closest("tr")
         .addClass("selected");
@@ -542,12 +541,19 @@ $(document).ready(function () {
   });
 
   $(document).on("click", "input[name=chk]", function () {
-    var total = $("input[name=chk]").length;
-    var checked = $("input[name=chk]:checked").length;
+    var total = $("input[name=chk]").not(':disabled').length; // 진행완료 상태인 체크박스는 제외
+    var checked = $("input[name=chk]:checked").not(':disabled').length; // 진행완료 상태인 체크박스는 제외
 
     if (total != checked) $("#cbx_chkAll").prop("checked", false);
     else $("#cbx_chkAll").prop("checked", true);
   });
+
+  $('tbody#matOrderTable tr').each(function() {
+    if ($(this).find('td:nth-child(10)').text() === '진행완료') {
+      $(this).find('input[type="checkbox"]').prop('disabled', true); // 체크박스를 disabled로 설정하여 선택되지 않도록
+    }
+  });
+  
 });
 
 //행 선택하면 체크
@@ -608,8 +614,6 @@ $(document).on('click', '.updateBtn', function() {
           $("#vendCdInput").val(response.vendCd);
           $("#ordrCntInput").val(response.ordrCnt);
           $("#paprdCmndDtInput").val(formatpaprdCmndDt);
-          $("#ordrChkInput").val(response.ordrChk);
-          
          },
          error: function(jqXHR, textStatus, errorThrown) {
              alert('데이터를 불러올 수 없습니다.');
@@ -631,7 +635,6 @@ function submitBtn() {
 	 let vendCdData = $("input[name='vendCdInput']").val();
 	 let ordrCntData = $("input[name='ordrCntInput']").val();
 	 let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
-	 let ordrChkData = $("input[name='ordrChkInput']").val();
 	 Swal.fire({
 		  title: '수정하시겠습니까?',
 		  icon: 'question',
@@ -645,16 +648,16 @@ function submitBtn() {
    $.ajax({
      url: "updatematOrder",
      method: "POST",
-     
+    
      //serialize를 쓰면 form 안의 데이터를 통째로 갖고 온다.
      data:	{ordrReqDt: ordrReqDtData,
-    	 rscNm: rscNmData,
-   	rscCd: rscCdData,
-   	vendNm: vendNmData,
-   	vendCd: vendCdData,
-   	ordrCnt: ordrCntData,
-   	paprdCmndDt: paprdCmndDtData,
-   	ordrChk: ordrChkData},
+    		rscNm: rscNmData,
+		   	rscCd: rscCdData,
+		   	vendNm: vendNmData,
+		   	vendCd: vendCdData,
+		   	ordrCnt: ordrCntData,
+		   	paprdCmndDt: paprdCmndDtData},
+		   	
    	  
      //dataType: 'json', 화면 받을 땐 없어도 됨
      success: function (result) {

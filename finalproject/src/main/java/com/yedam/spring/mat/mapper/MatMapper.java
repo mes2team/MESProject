@@ -37,6 +37,8 @@ public interface MatMapper {
 	
 	//자재입고 현황
 	public List<MatVO> matReceiptList();
+	//입고미완료 발주 전체 조회
+	public List<MatVO> matReceiptChkList();
 	//자재입고 단건 조회
 	public MatVO selectMatReceiptInfo(MatVO matVO);
 	//자재입고 추가

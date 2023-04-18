@@ -36,6 +36,8 @@ public interface MatService {
 	
 	//자재입고 현황
 	public List<MatVO> matReceiptList();
+	//입고미완료 발주 전체 조회
+	public List<MatVO> matReceiptChkList();
 	//자재발주 단건 조회
 	public MatVO getMatReceiptInfo(MatVO matVO);
 	//자재입고 추가

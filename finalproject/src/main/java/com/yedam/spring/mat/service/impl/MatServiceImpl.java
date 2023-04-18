@@ -107,6 +107,11 @@ public class MatServiceImpl implements MatService {
 		return matMapper.matReceiptList();
 	}
 	@Override
+	public List<MatVO> matReceiptChkList() {
+		// 입고 미완료 조회
+		return matMapper.matReceiptChkList();
+	}
+	@Override
 	public MatVO getMatReceiptInfo(MatVO matVO) {
 		//자재입고 단건 조회
 		return matMapper.selectMatReceiptInfo(matVO);
@@ -162,4 +167,5 @@ public class MatServiceImpl implements MatService {
 		// 검수자 목록 조회
 		return matMapper.checkerList();
 	}
+
 }
