@@ -138,33 +138,7 @@ div#prcsInfo {
 					</c:forEach>
 				</tbody>
 			</table>
-			<div class='pull-right'>
-				<nav aria-label="Page navigation example">
-					<ul class="pagination">
-						<c:if test="${pageMaker.prev }">
-							<li class="page-item"><a class="page-link"
-								href="${pageMaker.startPage -1}">Prev</a></li>
-						</c:if>
-						<c:forEach var="num" begin="${pageMaker.startPage }"
-							end="${pageMaker.endPage }">
-							<li class="page-item"
-								${pageMaker.cri.pageNum == num ? "active":"" }><a
-								class="page-link" href="${num }">${num }</a></li>
-						</c:forEach>
-						<c:if test="${pageMaker.next }">
-							<li class="page-item"><a class="page-link"
-								href="${pageMaker.endPage +1}">next</a></li>
-						</c:if>
-					</ul>
-				</nav>
-			</div>
-			<!-- 해당 페이지 클릭시 페이지번호와 가져올 데이터 개수(default 10개) -->
-			<form action="${pageContext.request.contextPath }/productionPlan"
-				id='actionForm' method='get'>
-				<input type="hidden" name="pageNum"
-					value="${pageMaker.cri.pageNum }"> <input type="hidden"
-					name="amout" value="${pageMaker.cri.amount }">
-			</form>
+
 			<!-- End Table with hoverable rows -->
 
 		</div>
@@ -601,14 +575,14 @@ div#prcsInfo {
 						      var useCnt = parseInt(rsc.useCnt);
 						      var sum = optionSum * rsc.useCnt;
 							  const tr = $('<tr>'); // tr 생성
-							  const tdName = $('<td>').text(rsc.rscNm); // 자재명(단위) 생성
+							  const tdName = $('<td>').text(rsc.rscNm); 
 							  const tdSepc = $('<td>').text(rsc.rscSpec);
-							  const tdType = $('<td>').text(rsc.rscTyp); // 자재유형 생성
-							  const tdAmount = $('<td>').text(rsc.rscStc); // 현재재고량 생성
-							  const tdUsage = $('<td>').text(sum); // 예정자재소모량 생성
+							  const tdType = $('<td>').text(rsc.rscTyp); 
+							  const tdAmount = $('<td>').text(rsc.rscStc); 
+							  const tdUsage = $('<td>').text(sum); 
 		
-							  tr.append(tdName, tdSepc, tdType, tdAmount, tdUsage); // tr에 td 추가
-							  tbody.append(tr); // tbody에 tr 추가
+							  tr.append(tdName, tdSepc, tdType, tdAmount, tdUsage); 
+							  tbody.append(tr); 
 						    
 						  }
 					  }
@@ -647,8 +621,8 @@ div#prcsInfo {
 					// 다른 모달창 열기
 					$('#createPlan').modal('show'); */ 
 				  },
-				  error: function(xhr, status, error) {
-				    // 요청이 실패한 경우 실행할 코드를 작성합니다.
+				  error: function(error) {
+					  console.log(error);
 				  }
 				});
 			  
@@ -1228,7 +1202,7 @@ div#prcsInfo {
 		    var isDeletable = true;
 		    $("#proPlanChk input[type='checkbox']:checked").each(function() {
 		      var nowSt = $(this).closest("tr").find("td:nth-child(9)").text();
-		      if (nowSt === '지시완료' || nowSt === '생산완료') {
+		      if (nowSt === '지시완료' || nowSt === '생산완료'|| nowSt === '지시진행중') {
 		        isDeletable = false;
 		        return;
 		      }

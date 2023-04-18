@@ -209,6 +209,16 @@ public class ProController {
 		System.out.println(resultMap);
 		return resultMap;
 	}
+	
+	//조건 조회
+	@PostMapping("/getPlanToOrder")
+	@ResponseBody
+	public Map<String, Object> getPlanToOrder(ProOrderVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("result", proService.getPlanToOrder(vo));
+		System.out.println(resultMap);
+		return resultMap;
+	}
 
 	// BOM 단건 조회
 	@GetMapping("/getBomInfo")

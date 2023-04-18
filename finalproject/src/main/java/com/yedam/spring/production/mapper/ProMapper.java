@@ -92,4 +92,6 @@ public interface ProMapper {
 
 	public int offEqm(String eqmCd);
 
+	public List<ProPlanVO> selectPlanToOrderChk(ProOrderVO vo);
+
 }

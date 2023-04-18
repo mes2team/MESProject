@@ -81,5 +81,7 @@ public interface ProService {
 
 	public String modifyPrcsStop(ProPrcsVO vo);
 
+	public List<ProPlanVO> getPlanToOrder(ProOrderVO vo);
+
 
 }

@@ -206,6 +206,42 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
   
   <script>
+  function validateForm() {
+	  let isValid = true;
+	  
+	  // 작업일자 검사
+	  if ($('#workDate').val() === '') {
+	    alert('작업일자를 입력해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 작업자 검사
+	  if ($('#prcsWorker').val() === '') {
+	    alert('작업자를 입력해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 공정명 검사
+	  if ($('#prcsSelect').val() === '') {
+	    alert('공정명을 선택해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 작업량 설정 검사
+	  if ($('#workAmount').val() === '') {
+	    alert('작업량을 입력해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 사용가능한 설비 검사
+	  if ($('#multiPro').val().length === 0) {
+	    alert('사용 가능한 설비를 선택해주세요.');
+	    isValid = false;
+	  }
+	  
+	  return isValid;
+	}
+  
   function getCurrentTime() {
 	  var currentDate = new Date();
 	  var year = currentDate.getFullYear();
@@ -250,7 +286,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  $('#stopTime').val(wkFrTm);
 		  $(this).attr('disabled','disabled'); 
 		  
-		  var indicaCd = $('.active').find('td:first-child').text()
+		  var indicaCd = $('tr.active').find('td:first-child').text()
+		  console.log(indicaCd);
 		  var prcsCd = $('#prcsSelect').val();
 		  console.log(wkFrTm+'/'+indicaCd+'/'+prcsCd);
 		  $.ajax({
@@ -260,7 +297,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				    indicaCd:indicaCd,
 				    wkFrTm:wkFrTm},
 			  success:function(data){
-				  console.log(data.result);		  		  
+				  console.log(data.result);
+				  location.reload();
+
 			  },
 			  error:function(error){
 				  console.log(error);
@@ -271,7 +310,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		});
 	  
 	  $('#workStart').on('click', function() {	  
-		  
+		  if(validateForm()){  
 		  var trList = $('#modalInTbody tr');
 		  //사용할 자재 배열
 		  var rscArr = [];
@@ -291,8 +330,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  $('#startTime').val(wkToTm);
 		  $(this).attr('disabled','disabled');
 		  
-		  var indicaCd = $('.active').find('td:first-child').text()
-		  
+		  var indicaCd = $('tr.active').find('td:first-child').text();
+		  console.log($('tr.active'));
+		  console.log(indicaCd);
 		  var prcsPsch = $('#prcsWorker').val();
 		  var prcsCd = $('#prcsSelect').val();
 		  var indicaCnt = $('#workAmount').val();
@@ -309,7 +349,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		    	useEqm += "/";
 		    }
 		  }
-		  console.log(useEqm);
 		  
 		  $.ajax({
 			  url:'modifyPrcsStart',
@@ -338,6 +377,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 							  contentType: "application/json",
 							  success:function(data) {
 								  console.log("자재"+data);
+								  location.reload();
 							  },
 							  error:function(error) {
 								  console.log(error);
@@ -355,6 +395,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				  console.log(error);
 			  }
 		  })
+		  }
 	  })
 	 
 	  
@@ -494,16 +535,17 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 						 data:{prcsCd : prcsCd},
 						 success:function(data){
 							 console.log(data.result)
-							 var multiPro = $('#multiPro');
-
-							 $.each(data.result, function(index, obj) {
-							   var eqmCd = obj.eqmCd;
-							   var eqmFg = obj.eqmFg;
-							   
-							   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd).data('fg', eqmFg);
-							   
-							   multiPro.append(option);
-							 });
+							 if(wkToTm == '-'){	 
+								 var multiPro = $('#multiPro');
+								 $.each(data.result, function(index, obj) {
+								   var eqmCd = obj.eqmCd;
+								   var eqmFg = obj.eqmFg;
+								   
+								   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd).data('fg', eqmFg);
+								   
+								   multiPro.append(option);
+								 });
+							 }
 						 },
 						 error:function(error) {
 							 console.log(error)

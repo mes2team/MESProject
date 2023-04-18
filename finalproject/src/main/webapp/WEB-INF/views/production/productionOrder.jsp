@@ -9,8 +9,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
 
   #btnGrp {
-    float: right;
-    padding: 20px 0 15px 0;
+    float: left;
+    margin-top: 28px;
   }
   form {
     clear: both;
@@ -43,26 +43,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	appearance: none;
 }
 
-#rightTbody input[type="text"], #rightTbody input[type="date"], #rightTbody input[type="number"], #rightTbody select {
-  border: none;
-  height: 47px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-#rightTbody input:not([readonly]) {
-  border-bottom: 1px solid green;
-}
-
-#rightTbody td {
-  padding: 0;
-  vertical-align: middle;
-}
 
 </style>
 <body>
@@ -82,22 +62,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <!-- Multi Columns Form -->
         <form id="searchForm" class="row g-3">
           <div class="col-md-6">
-            <label for="inputCode" class="form-label">생산계획명</label>
-            <input type="text" class="form-control" id="inputCode" />
-          </div>
-          <div class="col-md-6">
             <label for="inputEmail5" class="form-label">생산계획일자</label>
             <div class="d-flex align-items-center">
               <input type="date" class="form-control mr-2" id="startDate" />
               <span class="mx-2">~</span>
               <input type="date" class="form-control ml-2" id="endDate" />
             </div>
-            <div id="btnGrp">
-              <button id="searchBtn" type="button" class="btn btn-primary">검색</button>
-              <button type="button" class="btn btn-secondary">초기화</button>
             </div>
-          </div>
-          <div class="text-center"></div>
+            <div class="col-md-6">
+	            <div id="btnGrp">
+	              <button id="searchBtn" type="button" class="btn btn-primary">검색</button>
+	              <button type="reset" class="btn btn-secondary">초기화</button>
+	            </div>
+            </div>
         </form>
         <!-- End Multi Columns Form -->
       </div>
@@ -107,7 +84,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <div class="card">
           <p></p>
           <div class="card-body">
-            <div id="btnGrp">
+            <div id="btnGrp" style="float:right;">
               <button id="insertIndica" type="button" class="btn btn-primary">저장</button>
               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">
                 추가
@@ -140,6 +117,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             <div id="btnGrp">
             </div>
             <div class="table-responsive" style="width: 100%; height: 300px; overflow: auto">
+            <h5 class="card-title">공정흐름</h5>
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -160,13 +138,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             <div id="btnGrp">
             </div>
             <div class="table-responsive" style="width: 100%; height: 300px; overflow: auto">
+            <h5 class="card-title">자재품목</h5>
               <table class="table table-hover">
                 <thead>
                   <tr>
                   	<th>자재분류</th>
                   	<th>자재명</th>
                     <th>필요자재량</th>
-                    <th>선택한자재량</th>
+                    <th>투입공정</th>
                   </tr>
                 </thead>
                 <tbody id="centerTbody"></tbody>
@@ -185,7 +164,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		                  <tr>
 		                  	<th>LOT번호</th>
 		                  	<th>재고량</th>
-		                    <th>재고량선택</th>
 		                  </tr>
 		                </thead>
 		                <tbody id="rightTbody">
@@ -290,29 +268,7 @@ function getCurrentDate() {
 	    }); 
 	});
 	
-	$(document).on('input', '#rightTbody input[type="number"]', function() {
-	    var sum = 0;
-	    var arr = []; 
-	    $('#rightTbody tr').each(function(idx) {
-	        let val = $(this).find('input[type="number"]').val();
-	        if ((!isNaN(val) && val !== '') || val !== 0) {
-	            var obj = {}; 
-	            obj[$(this).find('td:nth-child(2)').text()] = val; 
-	            arr.push(obj); 
-	            sum += parseInt(val);
-	        }
-	    });
-	    console.log(arr)
-	    var rscCdVal = $('#rightTbody tr:first-child td:first-child').text();
-	    
-	    $('#centerTbody tr').each(function() {
-	        var $tr = $(this);
-	        if ($tr.find('td:first-child').text() == rscCdVal) {
-	            $tr.find('td:last-child').text(sum);
-	        }
-	    });
-	  
-	});
+
 	$(document).ready(function() {
 		$('#centerTbody').on('click', 'tr', function() {
 			$('#rightTbody').empty();
@@ -325,7 +281,9 @@ function getCurrentDate() {
 		      success: function(response) {
 		        console.log(response.result);
 		        var tbody = $('#rightTbody');
+		        var sum = 0;
 		        $.each(response.result, function(index, obj) {
+		       	  sum += parseInt(obj.rscNowStc);
 		          var tr = $('<tr>');
 		          var td = $("<td>").attr("hidden", true).text(obj.rscCd);
 		          tr.append(td);
@@ -334,23 +292,15 @@ function getCurrentDate() {
 		          var tdRscNowStc = $('<td>').text(obj.rscNowStc);
 		          tr.append(tdRscNowStc);
 		          var tdSelect = $('<td>');
-		          var select = $('<input>').css({width: '90%'}).attr({type: "number", value:0 , max:obj.rscNowStc, min:0  }).val(0)
-		          		.on('keyup', function() {
-		          			  var currentValue = parseInt($(this).val());
-							  var min = parseInt($(this).attr("min"));
-							  var max = parseInt($(this).attr("max"));
-							  if (currentValue < min) {
-								alert("0이하로는 입력할 수 없습니다.");
-							    $(this).val(min);
-							  } else if (currentValue > max) {
-								alert("재고수량을 초과했습니다.");
-							    $(this).val(max);
-							  }
-					});;;
-		          tdSelect.append(select);
 		          tr.append(tdSelect);
 		          tbody.append(tr);
 		        });
+		        var lastTr = $('<tr>');
+		        var td = $("<td>");
+		        lastTr.append(td);
+		        var td = $("<td>").text(sum);
+		        lastTr.append(td);
+		        tbody.append(lastTr);
 		      },
 		      error: function(error) {
 		        console.log(error);
@@ -409,12 +359,12 @@ function getCurrentDate() {
 					    var $td1 = $("<td>").text(result1[i].prcsNo);
 					    var $td2 = $("<td>").text(result1[i].prcsFg);
 					    var $td3 = $("<td>").text(result1[i].prcsNm);
-					
+
 					    $tr.append($td1, $td2, $td3);
 					    $leftTbody.append($tr);
 					  }
-					  var uniqueRscCd = []; // 중복되지 않은 rscCd 저장할 배열
-					  var filteredData = []; // 중복되는 rscCd를 가진 객체들 중 첫 번째 객체만 저장할 배열
+					  var uniqueRscCd = []; 
+					  var filteredData = []; 
 
 					  result0.forEach(item => {
 					    if (!uniqueRscCd.includes(item.rscCd)) {
@@ -435,8 +385,8 @@ function getCurrentDate() {
 					    var $td1 = $("<td>").text(item.rscTyp);
 					    var $td2 = $("<td>").text(item.rscNm);
 					    var $td3 = $("<td>").text(calcUse);
-					    var $td4 = $("<td>").text("0");
-					    $tr.append($td, $td0, $td1, $td2, $td3, $td4);
+					    var $td4 = $("<td>").text(item.prcsNm);
+					    $tr.append($td, $td0, $td1, $td2, $td3,$td4);
 					    $centerTbody.append($tr);
 					  });
 
@@ -502,18 +452,17 @@ function getCurrentDate() {
 			  
 			  
 			  
-			  
+			  $('#proPlanSearch').modal('hide');
 		  });		
   
 			    
 
 	//검색 이벤트
 	  $("#searchBtn").on("click", function() {
-	    var inputCode = $("#inputCode").val().trim();
 	    var startDate = $("#startDate").val();
 	    var endDate = $("#endDate").val();
 
-	    if (inputCode === "" && startDate === "" && endDate === "") {
+	    if (startDate === "" && endDate === "") {
 	      // 모두 비어 있다면 ajax 통신
 	      $.ajax({
 	        url: "getPlanToOrder",
@@ -550,8 +499,42 @@ function getCurrentDate() {
 	        }
 	      });
 	    } else {
-	      // 하나라도 비어있지 않으면 검색 조건에 따라 ajax 통신
-	      //...
+	    	$.ajax({
+		        url: "getPlanToOrder",
+		        type: "POST",
+		        data:{startDate:startDate,
+		        	  endDate:endDate},
+		        success: function(data) {
+		        	console.log(data.result);
+		            var tbody = $("#proPlanSearchTbody");
+		            tbody.empty(); // 기존에 있던 tr 삭제
+
+		            // data.result에 있는 객체들의 배열을 순회하면서 tr 생성
+		            data.result.forEach(function(obj) {
+		              var tr = $("<tr>").attr('data-plancd',obj.planCd).attr('data-edctscd',obj.edctsCd).attr('data-bomcd',obj.bomCd);
+
+		              var checkBoxTd = $("<td>");
+		              var checkBox = $("<input>").attr("type", "checkbox");
+		              checkBoxTd.append(checkBox);
+
+		              var planNameTd = $("<td>").text(obj.planName);
+		              var prdtNmTd = $("<td>").text(obj.prdtNm);
+		              var prefRankTd = $("<td>").text(obj.prefRank);
+		              var orderCntTd = $("<td>").text(obj.orderCnt);
+		              var indicaCntTd = $("<td>").text(obj.indicaCnt);
+		              var paprdDt = formatDate(obj.wkToDt)
+		              var wkToDtTd = $("<td>").text(paprdDt);
+
+		              tr.append(checkBoxTd, planNameTd, prdtNmTd, prefRankTd, orderCntTd, indicaCntTd, wkToDtTd);
+		              tbody.append(tr);
+		            });
+		            
+		        	$('#proPlanSearch').modal('show');
+		        },
+		        error: function(error) {
+		        	console.log(error)
+		        }
+		      });
 	    }
 	    
 	    

@@ -284,6 +284,11 @@ public class ProServiceImpl implements ProService {
 		}	
 	}
 
+	@Override
+	public List<ProPlanVO> getPlanToOrder(ProOrderVO vo) {
+		return proMapper.selectPlanToOrderChk(vo);
+	}
+
 
 
 
