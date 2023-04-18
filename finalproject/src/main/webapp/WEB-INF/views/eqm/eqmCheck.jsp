@@ -79,6 +79,7 @@
 						<label><input type="radio" name="jdgmnt" value="합격">
 							합격</label> <label><input type="radio" name="jdgmnt" value="불합격">
 							불합격</label>
+							<input type="text" hidden name="chckPerd">
 					</div>
 					<hr>
 				</div>
@@ -247,6 +248,7 @@
 	var searchEqmNm = document.querySelector('[name="searchEqmNm"]');
 	var startDt = document.querySelector('[name="startDt"]');
 	var endDt = document.querySelector('[name="endDt"]');
+	var chckPerd = document.querySelector('[name="chckPerd"]');
 	
 	function searchCheck(){
 		if(startDt.value == '' && endDt.value != '' || startDt.value != '' && endDt.value == ''){
@@ -353,7 +355,7 @@
    	  checkbox.type = "checkbox";
    	  
    	  let tds = [];
-   	  for(let l=0; l<8; l++){
+   	  for(let l=0; l<9; l++){
    		  let td = document.createElement("td");
    		  tds.push(td)
    	  }
@@ -365,6 +367,7 @@
    	  tds[5].innerText = chckFgVal();
    	  tds[6].innerText = chckPsch.value;
    	  tds[7].innerText = jdgmntVal();
+   	  tds[8].innerText = nextDt(chckDt.value);
    	  
 		  for(let m=0;m<tds.length;m++){
 		  tr.appendChild(tds[m])
@@ -441,7 +444,7 @@
 					    	  checkbox.type = "checkbox";
 					    	  
 					    	  let tds = [];
-					    	  for(let l=0; l<8; l++){
+					    	  for(let l=0; l<9; l++){
 					    		  let td = document.createElement("td");
 					    		  tds.push(td)
 					    	  }
@@ -453,6 +456,7 @@
 					    	  tds[5].innerText = chckFgVal();
 					    	  tds[6].innerText = chckPsch.value;
 					    	  tds[7].innerText = jdgmntVal();
+					    	  tds[8].innerText = nextDt(chckDt.value);
 					    	  
 				    		  for(let m=0;m<tds.length;m++){
 				    		  tr.appendChild(tds[m])
@@ -576,6 +580,7 @@
 					eqmCd.value = res.eqmCd;
 					eqmNm.value = res.eqmNm;
 					checkCd.value = res.checkCd;
+					chckPerd.value = res.chckPerd;
 					for (let i = 0; i < jdgmnt.length; i++) {
 						if (jdgmnt[i].value == res.jdgmnt) {
 							jdgmnt[i].checked = true;
@@ -781,6 +786,10 @@
 			}
 
 		}
+		function nextDt(dt){
+			
+		}
+		
 		
 		
 		var Toast = Swal.mixin({

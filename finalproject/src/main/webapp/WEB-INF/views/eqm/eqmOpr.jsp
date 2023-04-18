@@ -42,8 +42,8 @@
 							<th scope="col">비가동코드</th>
 							<th scope="col">설비코드</th>
 							<th scope="col">설비명</th>
-							<th scope="col">시작일자</th>
-							<th scope="col">종료일자</th>
+							<th scope="col">시작일자 / 시작시간</th>
+							<th scope="col">종료일자 / 종료시간</th>
 						</tr>
 					</thead>
 					<tbody id="listTable">

@@ -53,6 +53,12 @@
 		END;
 	</update>
 	
+	<!-- 포장검사완료 지시,계획 테이블 수정 -->
+	<select id="updateIndCompleted" parameterType="PrcsInspVO">
+		
+	
+	</select>
+	
 	
 	<!-- 검사완료맥스코드 -->
 	<select id="selectMaxChkCd" resultType="PrcsInspVO">
