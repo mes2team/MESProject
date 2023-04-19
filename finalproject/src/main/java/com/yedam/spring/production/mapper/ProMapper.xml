@@ -633,7 +633,49 @@
  			SET	use_yn = 'Y'
  			WHERE eqm_cd = #{eqmCd}
  		</update>
+ 		
+ 		<!-- 공정 흐름 조회 -->
 		
-		
- 	
+		<select id="selectPrcsFlowList" resultType="ProPrcsVO">
+			SELECT  	pf.prcs_no,
+        				pf.edcts_cd,
+        				pf.prcs_cd,
+			        	p.prcs_nm,
+			        	p.prcs_fg,
+			        	p.prcs_ctnt,
+			        	p.prcs_dt
+			FROM		prcs_flow pf JOIN prcs p
+			ON 			pf.prcs_cd = p.prcs_cd
+			WHERE 		edcts_cd = #{edctsCd}
+			ORDER BY pf.prcs_no
+		</select>
+ 		
+ 		
+ 		<!-- 공정 조회 -->
+ 		<select id="getPrcsList" resultType="ProPrcsVO">
+ 			SELECT	prcs_cd,
+ 					prcs_nm,
+ 					prcs_fg,
+ 					prcs_ctnt,
+ 					prcs_dt
+ 			FROM	prcs
+ 			ORDER BY prcs_cd
+ 		
+ 		</select>
+ 		
+ 		<!-- 공정 저장 -->
+ 		<insert id="savePrcs" parameterType="ProPrcsVO">
+	    	{CALL prcs_save(
+	      		#{prcsNo, mode=IN, jdbcType=INTEGER},
+	      		#{edctsCd, mode=IN, jdbcType=VARCHAR},
+	      		#{prcsCd, mode=IN, jdbcType=VARCHAR}
+	    	)}
+   		</insert>
+   		
+   		<!-- 공정 흐름 삭제 -->
+   		<delete id="deletePrcsFlow" parameterType="ProPrcsVO">
+   			DELETE FROM prcs_flow
+   			WHERE 	edcts_cd = #{edctsCd}
+   			AND		prcs_cd = #{prcsCd}
+   		</delete>
   </mapper>

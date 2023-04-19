@@ -18,4 +18,9 @@ public class EdctsServiceImpl implements EdctsService {
 	public List<EdctsVO> getEdctsList() {
 		return edctsmapper.selectEdctsList();
 	}
+
+	@Override
+	public List<EdctsVO> getBomHeaderPrd() {
+		return edctsmapper.getBomHeaderPrd();
+	}
 }

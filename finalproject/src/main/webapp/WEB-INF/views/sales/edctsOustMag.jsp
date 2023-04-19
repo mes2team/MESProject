@@ -335,8 +335,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           data: JSON.stringify(prdtArr),
           success: function (result) {
             console.log(result);
+            $("#productDetailList").empty();
             if (result && result.length > 0) {
-              $("#productDetailList").empty();
               $(result).each(function (idx, item) {
                 let tr = $("<tr>");
 

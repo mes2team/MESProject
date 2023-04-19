@@ -15,31 +15,28 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     clear: both;
   }
   .active {
-  background-color: #e1efff;
-}
+    background-color: #e1efff;
+  }
 </style>
 <body>
     <div class="card">
-            <div class="card-body">
-              <!-- Bordered Tabs Justified -->
-              <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true">공정실적관리</button>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">공정실적조회</button>
-                </li>
-              </ul>
-              <div class="tab-content pt-2" id="borderedTabJustifiedContent">
-                <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
-                <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div class="card">
-          <p></p>
-          <div class="card-body">
-            <div
-              class="table-responsive"
-              style="width: 100%; height: 300px; overflow: auto"
+      <div class="card-body">
+        <!-- Bordered Tabs Justified -->
+        <ul
+          class="nav nav-tabs nav-tabs-bordered d-flex"
+          id="borderedTabJustified"
+          role="tablist"
+        >
+          <li class="nav-item flex-fill" role="presentation">
+            <button
+              class="nav-link w-100 active"
+              id="home-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#bordered-justified-home"
+              type="button"
+              role="tab"
+              aria-controls="home"
+              aria-selected="true"
             >
               <table class="table table-hover">
                 <thead>
@@ -100,7 +97,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
           </div>
         </div>
+        <div
+          class="tab-pane fade"
+          id="bordered-justified-profile"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          Nesciunt totam et. Consequuntur magnam aliquid eos nulla dolor iure
+          eos quia. Accusantium distinctio omnis et atque fugiat. Itaque
+          doloremque aliquid sint quasi quia distinctio similique. Voluptate
+          nihil recusandae mollitia dolores. Ut laboriosam voluptatum dicta.
+        </div>
       </div>
+      <!-- End Bordered Tabs Justified -->
     </div>
   </div>
                 </div>
@@ -157,7 +166,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               </div><!-- End Bordered Tabs Justified -->
 
             </div>
-    
 
   <!-- 모달창 -->
   <!-- 작업 등록 -->
@@ -190,12 +198,16 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
             <div class="col-md-6">
               <label for="" class="form-label">공정명</label>
-              <select class="form-select" id="prcsSelect">
-              </select>
+              <select class="form-select" id="prcsSelect"></select>
             </div>
             <div class="col-md-6">
               <label for="" class="form-label">작업량 설정</label>
-              <input id="workAmount" type="number" class="form-control mr-2"  min="1"/>
+              <input
+                id="workAmount"
+                type="number"
+                class="form-control mr-2"
+                min="1"
+              />
             </div>
             <div class="col-md-4">
               <label for="" class="form-label">사용가능한 설비</label>
@@ -211,7 +223,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               <table class="table table-hover">
                 <thead>
                   <tr>
-                  	<th scope="col">자재분류</th>
+                    <th scope="col">자재분류</th>
                     <th scope="col">자재명</th>
                     <th scope="col">자재소모량</th>
                   </tr>
@@ -220,35 +232,45 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               </table>
             </div>
 
-          <hr />
-          <div>
-          	<div class="form-inline">
-			  <input id="startTime" class="form-control mr-2" type="text"  readonly />
-			  <button id="workStart" type="button" class="btn btn-success">작업시작</button>
-			</div>
-          	<div class="form-inline">
-	            <input id="stopTime" class="form-control mr-2" type="text"  readonly />
-	            <button id="workStop" type="button" class="btn btn-danger">작업종료</button>
-          	</div>
-          </div>
+            <hr />
+            <div>
+              <div class="form-inline">
+                <input
+                  id="startTime"
+                  class="form-control mr-2"
+                  type="text"
+                  readonly
+                />
+                <button id="workStart" type="button" class="btn btn-success">
+                  작업시작
+                </button>
+              </div>
+              <div class="form-inline">
+                <input
+                  id="stopTime"
+                  class="form-control mr-2"
+                  type="text"
+                  readonly
+                />
+                <button id="workStop" type="button" class="btn btn-danger">
+                  작업종료
+                </button>
+              </div>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
           <!-- <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
             작업 등록
           </button> -->
-          <button
-          	id="closeModal"
-            type="button"
-            class="btn btn-secondary"
-          >
+          <button id="closeModal" type="button" class="btn btn-secondary">
             닫기
           </button>
         </div>
       </div>
     </div>
   </div>
-  
+
   <script>
   function validateForm() {
 	  let isValid = true;
@@ -631,5 +653,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		    
 	  });
 	});
+
   </script>
 </body>
