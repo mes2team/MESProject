@@ -488,6 +488,47 @@
 			return formattedDate;
 		}
 		
+		// 검색어를 입력할 input 요소의 id를 'searchInput'으로 가정합니다.
+		var searchInput = document.getElementById('modalEqmNm');
+
+		// 검색어 입력 시 이벤트 리스너를 등록합니다.
+		searchInput.addEventListener('input', function() {
+			var keyword = searchInput.value.trim(); // 검색어를 얻어옵니다.
+			var table = document.getElementById('listTable'); // 테이블의 tbody 요소를 가져옵니다.
+			var rows = table.getElementsByTagName('tr'); // 테이블의 모든 행(tr) 요소들을 가져옵니다.
+
+			// 각 행(tr) 요소들에 대하여 검색어를 비교하고, 검색어를 포함하지 않는 행은 숨깁니다.
+			for (var i = 0; i < rows.length; i++) {
+				var row = rows[i];
+				var cells = row.getElementsByTagName('td'); // 행(tr) 안의 모든 셀(td) 요소들을 가져옵니다.
+				var rowVisible = false; // 행이 보이는지 여부를 나타내는 변수입니다.
+
+				// 각 셀(td) 요소들의 텍스트를 비교하여 검색어를 포함하는지 확인합니다.
+				for (var j = 0; j < cells.length; j++) {
+					var cellText = cells[j].textContent.trim(); // 셀(td)의 텍스트를 얻어옵니다.
+
+					// 검색어와 셀(td)의 텍스트를 숫자 형식으로 변환하여 비교합니다.
+					// isNaN 함수를 사용하여 숫자가 아닌 경우에는 문자열 비교를 수행합니다.
+					if (!isNaN(keyword) && !isNaN(cellText)) {
+						if (parseFloat(cellText) === parseFloat(keyword)) {
+							rowVisible = true;
+							break;
+						}
+					} else if (cellText.includes(keyword)) {
+						rowVisible = true;
+						break;
+					}
+				}
+
+				// 검색어를 포함하지 않는 행은 숨깁니다.
+				if (rowVisible) {
+					row.style.display = '';
+				} else {
+					row.style.display = 'none';
+				}
+			}
+		});
+		
 		
 		var Toast = Swal.mixin({
             toast: true,
