@@ -218,44 +218,49 @@
     FROM rsc_ist
   </selectKey>
   BEGIN
-    INSERT INTO rsc_ist (
-	rsc_lot_cd,
-	rsc_nm,
-	ordr_cd,
-	rsc_insp_cd,
-	ist_cnt,
-	ist_dt,
-	rsc_now_stc,
-	rsc_cd
-	)
-	VALUES 
-		#{rscLotCd},
-		#{rscNm},
-		#{ordrCd},
-		#{rscInspCd},
-		#{istCnt},
-		#{istDt},
-		#{istCnt},
-		#{rscCd}
-	FROM rsc
-    UPDATE rsc_insp SET rsc_lot_cd = #{rscLotCd} WHERE rsc_insp_cd = #{rscInspCd};
-  END;
+  INSERT INTO rsc_ist (
+    rsc_lot_cd,
+    rsc_insp_cd,
+    rsc_nm,
+    rsc_cd,
+    ordr_cd,
+    ist_cnt,
+    ist_dt,
+    rsc_now_stc
+  ) VALUES (
+    #{rscLotCd},
+    #{rscInspCd},
+    #{rscNm},
+    #{rscCd},
+    #{ordrCd},
+    #{istCnt},
+    #{istDt},
+    #{istCnt}
+  );
+  UPDATE rsc_insp SET rsc_lot_cd = #{rscLotCd} WHERE rsc_insp_cd = #{rscInspCd};
+END;
 	</insert>
+<!-- 자재검사 단건조회 -->
+	<select id="selectMatReceiptInfo" parameterType="MatVO" resultType="MatVO">
+		SELECT *
+		FROM rsc_ist 	
+		WHERE rsc_lot_cd = #{rscLotCd}    
+	</select>	
 	<!-- 자재입고 수정 -->
 	<update id="updateMatReceiptInfo" parameterType="MatVO">
 		UPDATE rsc_ist
 		<set>
-			<if test="rscLotCd != null and !rscLotCd.equals('')">
-				rsc_lot_cd = #{rscLotCd},
+			<if test="rscInspCd != null and !rscInspCd.equals('')">
+				rsc_insp_cd = #{rscInspCd},
+			</if>
+			<if test="rscNm != null and !rscNm.equals('')">
+				rsc_nm = #{rscNm},
 			</if>
 			<if test="rscCd != null and !rscCd.equals('')">
 				rsc_cd = #{rscCd},
 			</if>
 			<if test="ordrCd != null and !ordrCd.equals('')">
 				ordr_cd = #{ordrCd},
-			</if>
-			<if test="rscInspCd != null and !rscInspCd.equals('')">
-				rsc_insp_cd = #{rscInspCd},
 			</if>
 			<if test="istCnt != null and !istCnt.equals('')">			
 				ist_cnt = #{istCnt},
@@ -268,8 +273,11 @@
 	</update>
 	<!-- 자재입고 삭제 -->
 	<delete id="deleteMatReceiptInfo" parameterType="String">
+	BEGIN
 		DELETE FROM rsc_ist
-		WHERE rsc_lot_cd = #{rscLotCd}
+		WHERE rsc_lot_cd = #{rscLotCd};
+		UPDATE rsc_insp SET rsc_lot_cd= '' WHERE rsc_insp_cd = #{rscInspCd};
+	END;
 	</delete>
 
 <!-- 자재검사 현황 -->	

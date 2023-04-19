@@ -361,7 +361,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   <script>
     // 모달창 단건 조회
     function openModal(vendCd) {
-      console.log(vendCd);
       $.ajax({
         url: "vendDetail",
         method: "post",
@@ -402,7 +401,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
       let vendMag = document.getElementsByName("vendMag")[0];
       let brNum = document.getElementsByName("brNum")[0];
       let vendTel = document.getElementsByName("vendTel")[0];
-      let vendAddr = $("#vendAddr").val();
+      let vendAddr = document.getElementsByName("vendAddr")[0];
 
       if (vendTyp == "none") {
         Swal.fire({
@@ -522,13 +521,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         let vendCd = $("#inputVendCd").val();
         let vendNm = $("#inputVendNm").val();
         let vendMag = $("#inputVendMag").val();
-        console.log(vendCd);
 
         $.ajax({
           url: "searchVend",
           data: { vendTyp: vendCd, vendNm: vendNm, vendMag: vendMag },
           success: function (result) {
-            console.log(result);
             if (result.length == 0) {
               Swal.fire({
                 icon: "warning",

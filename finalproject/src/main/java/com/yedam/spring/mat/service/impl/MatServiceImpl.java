@@ -127,9 +127,9 @@ public class MatServiceImpl implements MatService {
 		return matMapper.updateMatReceiptInfo(matVO);
 	}
 	@Override
-	public int removeMatReceipt(String rscLotCd) {
-		//자재발주 삭제
-		return matMapper.deleteMatReceiptInfo(rscLotCd);
+	public int removeMatReceipt(MatVO matVO) {
+		//자재입고 삭제
+		return matMapper.deleteMatReceiptInfo(matVO);
 	}
 	
 	@Override

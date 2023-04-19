@@ -9,8 +9,7 @@
 		SELECT		e.edcts_cd,
 					e.prdt_nm,
 					e.spec,
-					e.unit,
-					e.saf_stc
+					e.unit
 		FROM		edcts e, bom b
 		WHERE   	e.edcts_cd = b.edcts_cd
 		ORDER BY 	e.edcts_cd
@@ -21,8 +20,7 @@
     	SELECT	e.edcts_cd,
 				e.prdt_nm,
 				e.spec,
-				e.unit,
-				e.saf_stc
+				e.unit
 		FROM	edcts e LEFT OUTER JOIN bom b
 		ON      e.edcts_cd = b.edcts_cd
 		WHERE   b.bom_cd IS NULL

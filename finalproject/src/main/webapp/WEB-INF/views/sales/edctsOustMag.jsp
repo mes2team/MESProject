@@ -55,7 +55,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                   <th scope="col">거래처명</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="edctsOustOrderBody">
                 <c:forEach items="${orderList }" var="order" varStatus="loop">
                   <tr ondblclick="openModal('${order.orderNo }')">
                     <td>${loop.count }</td>
@@ -504,29 +504,43 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             headers: { "Content-Type": "application/json" },
             data: JSON.stringify(dataArr),
             success: function (result) {
-              if (result == "success") {
-                $('input[name="chk"]:checked').each(function (idx, item) {
-                  let tr = $(item).closest("tr");
+              $("#edctsOustOrderBody").empty();
+              $(result).each(function (idx, item) {
+                let tr = $(
+                  "<tr ondblclick=\"openModal('" + item.orderNo + "')\">"
+                );
 
-                  tr.remove();
-                });
+                tr.append("<td>" + (idx + 1) + "</td>");
+                tr.append("<td>" + item.orderNo + "</td>");
+                tr.append("<td>" + item.orderNm + "</td>");
+                tr.append("<td>" + dateChange(item.orderDt) + "</td>");
+                tr.append("<td>" + dateChange(item.paprdDt) + "</td>");
+                tr.append("<td>" + item.vendNm + "</td>");
 
-                let Toast = Swal.mixin({
-                  toast: true,
-                  position: "top",
-                  showConfirmButton: false,
-                  timer: 1500,
-                  timerProgressBar: true,
-                  didOpen: (toast) => {
-                    toast.addEventListener("mouseenter", Swal.stopTimer);
-                    toast.addEventListener("mouseleave", Swal.resumeTimer);
-                  },
-                });
-                Toast.fire({
-                  icon: "success",
-                  title: "삭제가 정상적으로 되었습니다.",
-                });
-              }
+                $("#edctsOustOrderBody").append(tr);
+              });
+
+              $('input[name="chk"]:checked').each(function (idx, item) {
+                let tr = $(item).closest("tr");
+
+                tr.remove();
+              });
+
+              let Toast = Swal.mixin({
+                toast: true,
+                position: "top",
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", Swal.stopTimer);
+                  toast.addEventListener("mouseleave", Swal.resumeTimer);
+                },
+              });
+              Toast.fire({
+                icon: "success",
+                title: "삭제가 정상적으로 되었습니다.",
+              });
             },
             error: function (reject) {
               console.log(reject);
