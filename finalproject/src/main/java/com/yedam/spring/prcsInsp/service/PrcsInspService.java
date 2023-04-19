@@ -26,4 +26,7 @@ public interface PrcsInspService {
 
 	// 검사완료 삭제
 	public int deleteCompleted(String deleteList);
+
+	// 포장완료 지시계획수정
+	public int updateIndiPlan(PrcsInspVO prcsInspVO);
 }

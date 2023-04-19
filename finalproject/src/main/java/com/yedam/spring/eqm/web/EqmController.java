@@ -58,6 +58,18 @@ public class EqmController {
 		service.updateEqm(eqmVO);
 		return "redirect:eqm";
 	}
+	
+	@GetMapping("/afterEqmUpdate")
+	@ResponseBody
+	public List<EqmVO> afterEqmUpdate(){
+		return service.selectEqmList();
+	}
+	
+	@GetMapping("/afterEqmInsert")
+	@ResponseBody
+	public List<EqmVO> afterEqmInsert(){
+		return service.selectEqmList();
+	}
 
 	//////////////// 설비점검내역//////////////////
 	@GetMapping("/eqmCheck")
@@ -108,6 +120,18 @@ public class EqmController {
 		service.updateCheck(eqmVO);
 		return "update success";
 	}
+	
+	@GetMapping("/afterUpdate")
+	@ResponseBody
+	public List<EqmVO> afterUpdate(){
+		return service.selectCheckList();
+	}
+	
+	@GetMapping("/afterInsert")
+	@ResponseBody
+	public List<EqmVO> afterInsert(){
+		return service.selectCheckList();
+	}
 
 	// 설비비가동
 
@@ -152,6 +176,19 @@ public class EqmController {
 		service.updateOpr(eqmVO);
 		return "redirect:eqmOpr"; //jsp에서 ajax result로페이지 못 받아서 리다이렉트 안 됨
 								  // success부분에 그냥 location.reload()해주기	
+	}
+	
+	
+	@GetMapping("/afterUpdateOpr")
+	@ResponseBody
+	public List<EqmVO> afterUpdateOpr(){
+		return service.selectOprList();
+	}
+	
+	@GetMapping("/afterInsertOpr")
+	@ResponseBody
+	public List<EqmVO> afterInsertOpr(){
+		return service.selectOprList();
 	}
 	
 
