@@ -46,7 +46,7 @@ public interface MatMapper {
 	//자재입고 수정
 	public int updateMatReceiptInfo(MatVO matVO);
 	//자재발주 삭제
-	public int deleteMatReceiptInfo(String rscLotCd);
+	public int deleteMatReceiptInfo(MatVO matVO);
 	
 
 	//자재검사목록

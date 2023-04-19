@@ -17,11 +17,8 @@ jQuery(function($){
 	    lengthChange: false,
 	    info: false,
 	    columnDefs: [
-	      {
-	        targets: [1], // 두 번째 컬럼 (0부터 시작하는 인덱스)
-	        orderable: false, // 정렬 옵션을 비활성화합니다.
-	      },
-	    ],
+	        {targets: 13, orderable: false} // 14번째 칸(orderable: false로 정렬 없앰)
+	      ]
 	  });
 	});
         
@@ -256,8 +253,8 @@ form {
 	<!-- ============================================================== -->
 	<!-- 자재검사목록테이블 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
 
-	<div class="row">
-		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+	<div class="row" style="padding: 0px; margin: 0px">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" style="padding: 0px; margin: 0px">
 			<div class="card">
 				<div class="card-body d-flex justify-content-between">
 					<h3>자재검사목록</h3>
@@ -269,7 +266,7 @@ form {
 					</div>
 				</div>
 				<div class="table-responsive">
-					<table id="check" class="table table-striped table-bordered first">
+					<table id="check" class="table table-striped table-bordered first" style="width: 99%; margin: auto;" >
 						<thead>
 							<tr>
 								<th data-orderable="false" class="no-sort"><input
@@ -288,6 +285,7 @@ form {
 								<th>중량미달</th>
 								<th>기타</th>
 								<th>수정</th>
+								<th style="display: none">Lot번호</th>
 							</tr>
 						</thead>
 						<tbody id="checkBody">
@@ -311,6 +309,7 @@ form {
 									<td>${check.etc }</td>
 									<td><button type="button" class="btn btn-primary"
 											id="updateBtn">수정</button></td>
+									<td style="display: none">${check.rscLotCd }</td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -328,6 +327,13 @@ form {
 		console.log('클릭');
 	 $('#insertForm input').val('');
 	});
+	
+	//LOT번호가 부여된 검사코드 선택 불가
+	$('tbody#checkBody tr').each(function() {
+  if ($(this).find('td:nth-child(15)').text() !== '') {
+    $(this).css('pointer-events', 'none');    
+  }
+});
 	
 	<!-- 발주번호 검색 모달  발주번호 검색 모달  발주번호 검색 모달 -->
 	//url은 getMapping에 들어가는 주소
@@ -651,10 +657,11 @@ form {
 
 //체크박스 전체 선택
 $(document).ready(function () {
-
+  // 전체 선택 체크박스 클릭 이벤트 처리
   $("#cbx_chkAll").click(function () {
     if ($(this).is(":checked"))
       $("input[name=chk]")
+        .not(':disabled') // 진행완료 상태인 체크박스는 선택되지 않도록
         .prop("checked", true)
         .closest("tr")
         .addClass("selected");
@@ -665,12 +672,21 @@ $(document).ready(function () {
         .removeClass("selected");
   });
 
+  // 개별 체크박스 클릭 이벤트 처리
   $(document).on("click", "input[name=chk]", function () {
-    var total = $("input[name=chk]").length;
-    var checked = $("input[name=chk]:checked").length;
+    var total = $("input[name=chk]").not(':disabled').length; // 진행완료 상태인 체크박스는 제외
+    var checked = $("input[name=chk]:checked").not(':disabled').length; // 진행완료 상태인 체크박스는 제외
 
     if (total != checked) $("#cbx_chkAll").prop("checked", false);
     else $("#cbx_chkAll").prop("checked", true);
+  });
+
+  // 진행완료 상태인 체크박스 처리
+  $('tbody#checkBody tr').each(function() {
+    if ($(this).find('td:nth-child(15)').text() !== '') {
+      $(this).css('pointer-events', 'none');
+      $(this).find('input[type="checkbox"]').prop('disabled', true); // 체크박스를 disabled로 설정하여 선택되지 않도록
+    }
   });
 });
 

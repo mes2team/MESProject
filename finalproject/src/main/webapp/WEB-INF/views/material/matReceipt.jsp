@@ -300,6 +300,7 @@ form {
 	$("#insertBtn").on("click", function () {
 		  let rscInspCdData = $("input[name='rscInspCdInput']").val();
 		  let rscNmData = $("input[name='rscNmInput']").val();
+		  let rscCdData = $("input[name='rscCdInput']").val();
 		  let ordrCdData = $("input[name='ordrCdInput']").val();
 		  let istCntData = $("input[name='istCntInput']").val();
 		  let istDtData = $("input[name='istDtInput']").val();
@@ -356,6 +357,7 @@ form {
                   method: "post",
                   data: {ordrCd: ordrCdData,
                 	  rscNm: rscNmData,
+                	  rscCd: rscCdData,
                 	  istCnt: istCntData,
                 	  istDt: istDtData,
                 	  rscInspCd: rscInspCdData},
@@ -379,7 +381,7 @@ form {
                       tr.append("<td>" + item.rscInspCd + "</td>");
                       tr.append("<td>" + item.istCnt + "</td>");
                       tr.append("<td>" + item.ordrCd + "</td>");
-                   	  tr.append("<td>" + productDate(item.inspDt) + "</td>");
+                   	  tr.append("<td>" + productDate(item.istDt) + "</td>");
                       tr.append('<td><button type=\'button\' class=\'btn btn-primary\' id=\'updateBtn\'>수정</button></td>');
 
                       $("#checkBody").append(tr);
@@ -450,124 +452,118 @@ $(document).on("click", "#cbx_chkAll", function () {
 <!-- ============================================================== -->
 <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
 
-function updateBtn() {
-    // 체크된 체크박스가 없으면 함수 종료
-    if ($("input[name=chk]:checked").length === 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "선택된 글이 없습니다.",
-      });
-      return;
-    }
-    $("#cbx_chkAll").prop("disabled", true);
-    disableCheckBoxes();
+$(document).on('click', '#updateBtn', function() {
+	
+	// 수정완료 버튼 클릭 이벤트 핸들러 설정
+	$("#insertBtn").text("수정완료");
+    
+    $("#insertBtn").removeAttr("onclick");
+    $("#insertBtn").attr("onclick", "submitBtn();");
+	  // 단건조회를 위한 rscInspCd 값을 추출합니다.
+	  var rscLotCd = $(this).closest('tr').find('td:eq(1)').text();
+	  
+	//서버로 보낼 데이터를 구성합니다.
+	  var data = {
+		  rscLotCd: rscLotCd
+	  };
+	// Ajax 요청을 보냅니다.
+	  $.ajax({
+	       type: 'GET',
+	       url: 'selectMatReceipt',
+	       data: $.param(data), 
+	       dataType: 'json',
+	       success: function(response) {
+	         // 성공적으로 응답을 받았을 때 처리할 코드를 작성합니다.
+	        console.log(response);
+	        function formatDate(date) {
+	        	  var year = date.getFullYear();
+	        	  var month = (date.getMonth() + 1).toString().padStart(2, '0');
+	        	  var day = date.getDate().toString().padStart(2, '0');
+	        	  return year + '-' + month + '-' + day;
+	        	}
+	        	
+        	var istDt = new Date(response.istDt);
+        	var formattedDate = formatDate(istDt);
+	        
+	        $("#rscInspCdInput").val(response.rscInspCd);
+	        $("#rscNmInput").val(response.rscNm);
+	        $("#rscCdInput").val(response.rscCd);       
+	        $("#ordrCdInput").val(response.ordrCd);
+	        $("#istCntInput").val(response.istCnt);
+	        $("#istDtInput").val(formattedDate);
+	        $("#rscLotCdInput").val(response.rscLotCd);
+	        
+	       },
+	       error: function(jqXHR, textStatus, errorThrown) {
+	           alert('데이터를 불러올 수 없습니다.');
+	       }
+	     });
+	   });
 
-    // 수정 버튼의 텍스트를 "수정완료"로 변경
-    $("#updateBtn").text("수정완료");
 
-    // 수정완료 버튼 클릭 이벤트 핸들러 설정
-    // $(".btn-info").off("click").on("click", submitBtn);
-    $("#updateBtn").removeAttr("onclick");
-    $("#updateBtn").attr("onclick", "submitBtn();");
-
-    $('input[name="chk"]:checked').each(function () {
-      var row = $(this).closest("tr");
-      var rscLotCd = row.find("td:eq(2)").text().trim();
-      var rscCd = row.find("td:eq(3)").text().trim();
-      var ordrCd = row.find("td:eq(5)").text().trim();
-      var rscInspCd = row.find("td:eq(7)").text().trim();      
-      var istDt = row.find("td:eq(9)").text().trim();
-           
-      row
-        .find("td:eq(2)")
-        .html(
-          '<input type="text" class="form-control" value="' + rscLotCd + '">'
-        );
-      row
-        .find("td:eq(3)")
-        .html(
-          '<input type="text" class="form-control" value="' + rscCd + '">'
-        );      
-      row
-        .find("td:eq(5)")
-        .html(
-          '<input type="text" class="form-control" value="' + ordrCd + '">'
-        );
-      row
-        .find("td:eq(7)")
-        .html(
-          '<input type="text" class="form-control" value="' + rscInspCd + '">'
-        );
-      row
-      .find("td:eq(9)")
-      .html(
-   		  '<input type="date" class="form-control" value="' + istDt + '">'
-      );
-    });
-  }
-
-  function submitBtn() {
-    // 체크된 체크박스가 없으면 함수 종료
-    if ($("input[name=chk]:checked").length === 0) return;
-
-    // 데이터를 저장할 배열 선언
-    var dataArr = [];
-
-    // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
-    $('input[name="chk"]:checked').each(function () {
-      var row = $(this).closest("tr");
-      var rscLotCd = row.find("td:eq(2) input").val().trim();
-      var rscCd = row.find("td:eq(3) input").val().trim();
-      var ordrCd = row.find("td:eq(5) input").val().trim();
-      var rscInspCd = row.find("td:eq(7) input").val().trim();
-      var istDt = row.find("td:eq(9) input").val().trim();
-
-      // 객체 형식으로 데이터 저장
-      var dataObj = {
-    		  rscLotCd: rscLotCd,
-    		  rscCd: rscCd,
-    		  ordrCd: ordrCd,
-    		  rscInspCd: rscInspCd,
-    		  istDt: istDt
-      };
-
-      // 데이터 배열에 객체 추가
-      dataArr.push(dataObj);
-    });
-
+ function submitBtn() {
+	
+	 let rscInspCdData = $("input[name='rscInspCdInput']").val();
+	 let rscNmData = $("input[name='rscNmInput']").val();
+	 let rscCdData = $("input[name='rscCdInput']").val();
+	 let ordrCdData = $("input[name='ordrCdInput']").val();
+	 let istCntData = $("input[name='istCntInput']").val();
+	 let istDtData = $("input[name='istDtInput']").val();
+	 let rscLotCdData = $("input[name='rscLotCdInput']").val();
+	 Swal.fire({
+		  title: '수정하시겠습니까?',
+		  icon: 'question',
+		  showCancelButton: true,
+		  confirmButtonColor: '#3085d6',
+		  cancelButtonColor: '#d33',
+		  confirmButtonText: '수정',
+		  cancelButtonText: '취소'
+		}).then((result) => {
+		  if (result.value) {
     $.ajax({
       url: "updateMatReceipt",
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      data: JSON.stringify(dataArr),
+      
+      //serialize를 쓰면 form 안의 데이터를 통째로 갖고 온다.
+      data:	{rscInspCd: rscInspCdData,
+    	  rscNm: rscNmData,
+    	  rscCd: rscCdData,
+    	  ordrCd: ordrCdData,
+    	  istCnt: istCntData,
+    	  istDt: istDtData,
+    	  rscLotCd: rscLotCdData},
+    	  
+      //dataType: 'json', 화면 받을 땐 없어도 됨
       success: function (result) {
-        if (result.result == "success") {
-          $("tbody").empty();
-          $(result.data).each(function (idx, item) {
-            var $row = $("<tr>").attr("data-id", item.rscLotCd);
-            $row.append(
-              $("<td>").html(
-                '<input type="checkbox" name="chk" value="' +
-                  item.rscLotCd +
-                  '" />'
-              )
-            );
-            $row.append($("<td>").text(idx + 1));
-            $row.append($("<td>").text(item.rscLotCd));
-            $row.append($("<td>").text(item.rscCd));
-            $row.append($("<td>").text(item.rscNm));
-            $row.append($("<td>").text(item.ordrCd));
-            $row.append($("<td>").text(item.ordrCnt));
-            $row.append($("<td>").text(item.rscInspCd));
-            $row.append($("<td>").text(item.istCnt));
-            $row.append($("<td>").text(new Date(item.istDt).toISOString().slice(0, 10)));
-            $("tbody").append($row);
-          });
-          enableCheckBoxes();
-          $("#updateBtn").text("수정");
-          $("#updateBtn").removeAttr("onclick");
-          $("#updateBtn").attr("onclick", "updateBtn();");
-        }
+    	  console.log("결과" + result);
+    	  //테이블 데이터 지우기
+        $("#checkBody").empty();
+    	  //input 내 데이터 지우기  
+    	$('input').val('');  
+        
+        $(result).each(function (idx, item) {
+          let tr = $("<tr>").attr("data-id", item.rscLotCd);
+          tr.append(
+            $("<td>").append(
+              $("<input>").attr("type", "checkbox").attr("name", "chk").attr("value", item.rscLotCd)
+            )
+          );
+          tr.append("<td>" + item.rscLotCd + "</td>");
+          tr.append("<td>" + item.rscCd + "</td>");
+          tr.append("<td>" + item.rscNm + "</td>");
+          tr.append("<td>" + item.rscInspCd + "</td>");
+          tr.append("<td>" + item.istCnt + "</td>");
+          tr.append("<td>" + item.ordrCd + "</td>");
+       	  tr.append("<td>" + productDate(item.istDt) + "</td>");
+          tr.append('<td><button type=\'button\' class=\'btn btn-primary\' id=\'updateBtn\'>수정</button></td>');
+
+          $("#checkBody").append(tr);
+        });
+   
+          $("#insertBtn").text("등록");
+          $("#insertBtn").removeAttr("onclick");
+          $("#insertBtn").attr("onclick", "insertBtn();");
+       
 
         let Toast = Swal.mixin({
           toast: true,
@@ -582,35 +578,36 @@ function updateBtn() {
         });
 
         Toast.fire({
-          icon: "success",
-          title: "수정이 정상적으로 되었습니다.",
+            icon: "success",
+            title: "수정이 정상적으로 되었습니다.",
         });
-      },
-      error: function (reject) {
+    },
+    error: function (reject) {
         console.log(reject);
-      },
-    });
-  }
-
-  function disableCheckBoxes() {
-    $('input[name="chk"]').prop("disabled", true);
-  }
-
-  function enableCheckBoxes() {
-    $('input[name="chk"]').prop("disabled", false);
-  }
+    },
+});
+}
+});
+}
       
   <!-- 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 수정 -->
   <!-- ============================================================== -->
   <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
   function deleteBtn() {
-      let valueArr = new Array();
-      let list = $("input[name=chk]");
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].checked) {
-          valueArr.push(list[i].value);
-        }
-      }
+	  let valueArr = [];
+
+      $('input[name="chk"]:checked').each(function (idx, items) {
+        let rscLotCd = $(items).closest("tr").children().eq(1).text();
+        let rscInspCd =  $(items).closest("tr").children().eq(4).text();
+        let dataObj = {
+          rscLotCd: rscLotCd,
+       	  rscInspCd: rscInspCd,
+        };
+
+        // 데이터 배열에 객체 추가
+        valueArr.push(dataObj);
+     });
+      console.log(valueArr);
       if (valueArr.length == 0) {
         Swal.fire({
           icon: "warning",
@@ -631,12 +628,12 @@ function updateBtn() {
             $.ajax({
               url: "matReceiptDelete",
               method: "post",
-              traditional: true,
-              data: { valueArr: valueArr },
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify(valueArr),
               success: function (result) {
                 if (result == "success") {
                   for (let i = 0; i < valueArr.length; i++) {
-                    $('tr[data-id="' + valueArr[i] + '"]').remove();
+                    $('tr[data-id="' + valueArr[i].rscLotCd + '"]').remove();
                   }
                 } else if (result == "error") {
                   Swal.fire({
