@@ -38,14 +38,14 @@ public interface MatService {
 	public List<MatVO> matReceiptList();
 	//입고미완료 발주 전체 조회
 	public List<MatVO> matReceiptChkList();
-	//자재발주 단건 조회
+	//자재입고 단건 조회
 	public MatVO getMatReceiptInfo(MatVO matVO);
 	//자재입고 추가
 	public int addMatReceipt(MatVO matVO);
 	//자재입고 수정
 	public int updateMatReceipt(MatVO matVO);
 	//자재발주 삭제
-	public int removeMatReceipt(String rscLotCd);
+	public int removeMatReceipt(MatVO matVO);
 	
 	//자재검사목록
 	public List<MatVO> matCheckList();

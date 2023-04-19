@@ -31,6 +31,12 @@ public class MatController {
 		model.addAttribute("matList",matService.matList());
 		return "material/matList";
 	}
+	//ajax용 자재정보전체조회
+	@GetMapping("/ajaxMatList")
+	@ResponseBody
+	public List<MatVO> ajaxMatList() {
+		return matService.matList();
+	}
 	//자재정보단건조회
 	@GetMapping("/matInfo")
 	@ResponseBody
@@ -168,34 +174,42 @@ public class MatController {
 		matService.addMatReceipt(matVO);
 		return matService.matReceiptList();
 	}
+	//자재입고 단건조회
+		@GetMapping("/selectMatReceipt")
+		@ResponseBody
+		public MatVO selectMatReceipt(MatVO matVO) {
+			return matService.getMatReceiptInfo(matVO);
+		}
 	// 자재입고수정(여러개 동시에 수정할 때 @RequestBody MatVO[] arr)
 	@PostMapping("/updateMatReceipt")
 	@ResponseBody
-	public Map<String, Object> updateMatReceipt(@RequestBody MatVO[] arr) {
-		Map<String, Object> map = new HashMap<>();
-	    if (arr == null) {
-	    	map.put("result", "false");
-	    	map.put("data", null);
-	        return map;
-	    }
-	    for (int i = 0; i < arr.length; i++) {
-	    	matService.updateMatReceipt(arr[i]);
-	    }
-	    
-	    List<MatVO> list = matService.matReceiptList();
-	    map.put("result", "success");
-    	map.put("data", list);
-        return map;
+	public List<MatVO> updateMatReceipt(MatVO arr) {
+		System.out.println("출력" +arr);
+	    	matService.updateMatReceipt(arr);
+        return matService.matReceiptList();
 	}
+//여러개 수정할 때	
+//	public Map<String, Object> updateMatReceipt(@RequestBody MatVO[] arr) {
+//		Map<String, Object> map = new HashMap<>();
+//	    if (arr == null) {
+//	    	map.put("result", "false");
+//	    	map.put("data", null);
+//	        return map;
+//	    }
+//	    for (int i = 0; i < arr.length; i++) {
+//	    	matService.updateMatReceipt(arr[i]);
+//	    }
+//	    
+//	    List<MatVO> list = matService.matReceiptList();
+//	    map.put("result", "success");
+//    	map.put("data", list);
+//        return map;
+//	}
 	
 	//자재입고삭제
 	@PostMapping("/matReceiptDelete")
 	@ResponseBody
-	public String matReceiptDeleteProcess(HttpServletRequest request) {
-		String[] arr = request.getParameterValues("valueArr");
-		if (arr == null) {
-			return "error";
-		}
+	public String matReceiptDeleteProcess(@RequestBody MatVO[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			matService.removeMatReceipt(arr[i]);
 		}
