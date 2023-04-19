@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
 prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec"
+uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -120,17 +122,19 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
             <!-- 테이블 영역 -->
             <div class="card">
               <div class="card-body scrollable">
-                <div class="btnGrp">
-                  <button id="addrow" type="button" class="btn btn-primary">
-                    추가
-                  </button>
-                  <button id="deleteList" type="button" class="btn btn-primary">
-                    삭제
-                  </button>
-                  <button id="saveList" type="button" class="btn btn-primary">
-                    저장
-                  </button>
-                </div>
+	                <div class="btnGrp">
+		              
+		                  <button id="addrow" type="button" class="btn btn-primary">
+		                    추가
+		                  </button>
+		                  <button id="deleteList" type="button" class="btn btn-primary">
+		                    삭제
+		                  </button>
+		                  <button id="saveList" type="button" class="btn btn-primary">
+		                    저장
+		                  </button>
+		                
+	                </div>
                 <!-- Table with hoverable rows -->
                 <table id="processTable" class="table table-hover">
                   <thead>
@@ -224,6 +228,7 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                   <div class="card-body">
+                  <sec:authorize access="hasRole('ROLE_ADMIN')">
                     <div class="btnGrp">
                       <button
                         id="pFlowAdd"
@@ -247,7 +252,7 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
                         저장
                       </button>
                     </div>
-
+</sec:authorize>
                     <!-- Table with hoverable rows -->
                     <table class="table table-hover">
                       <thead>
