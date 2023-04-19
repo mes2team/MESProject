@@ -48,14 +48,16 @@ public class PrcsInspController {
 	@ResponseBody
 	public String chkDone(@RequestBody PrcsInspVO[] list) {
 		for (int i = 0; i < list.length; i++) {
-			/*
-			 * if(list[0].prcsCd.equals("PRCS5000")) { service.updateIndiPlan(list[0]); }
-			 */
-			if (i != list.length - 1) {
+
+			if ("PRCS5000".equals(list[0].getPrcsCd())) { //indica 생산완료 바꾸고
+				service.updateIndiPlan(list[0]);		  //plan모두 완료라면 생산완료 바꾸기	
+			}
+
+			if (i != list.length - 1) { //리스트의 맨 끝 빼고는 prcs_insp_dtl에 담아야 돼서
 				service.insertDtl(list[i]);
 			} else if (i == list.length - 1) {
 
-				service.inferUpdateInsert(list[i]);
+				service.inferUpdateInsert(list[i]); //불량 저장
 			}
 		}
 		return "success";
@@ -78,7 +80,7 @@ public class PrcsInspController {
 	@PostMapping("/deleteCompleted")
 	@ResponseBody
 	public String deleteCompleted(@RequestBody String[] deleteList) {
-		for(int i=0;i<deleteList.length;i++) {
+		for (int i = 0; i < deleteList.length; i++) {
 			service.deleteCompleted(deleteList[i]);
 		}
 		return "deleteSuccess";

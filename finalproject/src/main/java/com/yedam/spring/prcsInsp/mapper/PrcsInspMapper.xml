@@ -73,7 +73,7 @@
 				v_a := rec.order_cnt;
 				v_b := rec.indica_cnt;
 				
-				IF v_a &lt;&gt; v_b THEN 
+				IF v_a != v_b THEN 
 					v_all_same := FALSE;
 					EXIT; 
 				END IF;

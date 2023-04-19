@@ -22,7 +22,7 @@ label {
 			<div class="card-body">
 				<div
 					style="width: 100%; height: 300px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
-					<table class="table table-striped table-hover">
+					<table class="table table-striped table-hover" id="listTable">
 						<thead>
 							<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 								<th scope="col">번호</th>
@@ -166,7 +166,8 @@ label {
 					      success: function(result) { 
 					    	console.log("업데이트성공");
 					    	inputEqmCd.disabled = true;
-					    	location.reload();
+					    	//location.reload();
+					    	afterEqmUpdate();
 					    	Toast.fire({
 				                  icon: "success",
 				                  title: "수정이 정상적으로 되었습니다.",
@@ -178,6 +179,39 @@ label {
 					    });	
 			  }
 			})
+	}
+	function afterEqmUpdate(){
+		 $.ajax({
+			  url: "afterEqmUpdate",
+			  type: "GET",
+			  dataType: "json",
+			  success: function(res) {
+				  makeEqmList(res);	  
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 
+	}
+	function makeEqmList(res){
+		let listTable = $('#listTable') 
+		listTable.empty();
+		
+		for(let i=0;i<res.length;i++){
+			let tr = $('<tr id="'+res[i].eqmCd+" onclick="eqmDetail('+res[i].eqmCd }+')">');
+			tr.append('<td scope="row"><input type="checkbox"></td>');
+			let date = changeDateFormat(res[i].chckDt);
+			let nextDate = changeDateFormat(res[i].nextChckDt);
+    		tr.append('<td>' + date + '</td>'); 
+   			tr.append('<td>' + res[i].checkCd + '</td>'); 
+    		tr.append('<td>' + res[i].eqmCd + '</td>'); 
+   			tr.append('<td>' + res[i].eqmNm + '</td>'); 
+    		tr.append('<td>' + res[i].chckFg + '</td>'); 
+    		tr.append('<td>' + res[i].chckPsch + '</td>'); 
+    		tr.append('<td>' + res[i].jdgmnt + '</td>'); 
+    		tr.append('<td>' + nextDate + '</td>');
+			listTable.append(tr);
+		}	
 	}
 	
 	//등록시 필수항목 체크
