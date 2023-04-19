@@ -81,6 +81,11 @@ public interface ProService {
 
 	public String modifyPrcsStop(ProPrcsVO vo);
 
+
+	public List<ProPlanVO> getPlanToOrder(ProOrderVO vo);
+
+	public int preModiPlan(String planCd);
+
 	// 공정흐름관리 공정흐름출력
 	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo);
 	
@@ -92,4 +97,5 @@ public interface ProService {
 	
 	// 공정삭제
 	public int deletePrcsFlow(ProPrcsVO vo);
+
 }

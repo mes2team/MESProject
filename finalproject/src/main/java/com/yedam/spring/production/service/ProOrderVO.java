@@ -25,4 +25,11 @@ public class ProOrderVO {
 	
 	private String planName;
 	private String prdtNm;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date startDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date endDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date indicaDue;
 }

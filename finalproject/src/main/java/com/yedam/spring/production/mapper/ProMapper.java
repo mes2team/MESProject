@@ -91,6 +91,11 @@ public interface ProMapper {
 
 	public int offEqm(String eqmCd);
 
+
+	public List<ProPlanVO> selectPlanToOrderChk(ProOrderVO vo);
+
+	public int preUpdatePlan(String planCd);
+
 	// 공정흐름관리 공정흐름출력
 	public List<ProPrcsVO> selectPrcsFlowList(ProPrcsVO vo);
 
@@ -102,5 +107,6 @@ public interface ProMapper {
 
 	// 공정삭제
 	public int deletePrcsFlow(ProPrcsVO vo);
+
 
 }

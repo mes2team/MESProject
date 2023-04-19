@@ -43,9 +43,10 @@ public class ProController {
 	public Map<String, Object> modifyProPlan(@RequestBody List<ProPlanVO> proPlanArray) {
 		Map<String, Object> resultMap = new HashMap<>();
 		String result = null;
-		for (int i = 0; i < proPlanArray.size(); i++) {
-			result = proService.modifyProPlan(proPlanArray.get(i));;
-			
+		if(proService.preModiPlan(proPlanArray.get(0).getPlanCd())>0) {
+			for (int i = 0; i < proPlanArray.size(); i++) {
+				result = proService.modifyProPlan(proPlanArray.get(i));;
+			}
 		}
 		resultMap.put("result", result);
 		return resultMap;
@@ -213,6 +214,16 @@ public class ProController {
 	public Map<String, Object> getPlanToOrder() {
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("result", proService.getPlanToOrder());
+		System.out.println(resultMap);
+		return resultMap;
+	}
+	
+	//조건 조회
+	@PostMapping("/getPlanToOrder")
+	@ResponseBody
+	public Map<String, Object> getPlanToOrder(ProOrderVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("result", proService.getPlanToOrder(vo));
 		System.out.println(resultMap);
 		return resultMap;
 	}

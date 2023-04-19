@@ -76,12 +76,13 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public String modifyProPlan(ProPlanVO vo) {
 		String result = null;
-		if(proMapper.updateProPlan(vo) > 0) {
-			result ="success";
-		} else {
-			result ="fail";
-		}
-		return result;
+			if(proMapper.updateProPlan(vo) > 0) {
+				result ="success";
+			} else {
+				result ="fail";
+			}
+			return result;
+
 	}
 
 	@Override
@@ -285,6 +286,14 @@ public class ProServiceImpl implements ProService {
 	}
 
 	@Override
+	public List<ProPlanVO> getPlanToOrder(ProOrderVO vo) {
+		return proMapper.selectPlanToOrderChk(vo);
+	}
+
+	@Override
+	public int preModiPlan(String planCd) {
+		return proMapper.preUpdatePlan(planCd) ;
+
 	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo) {
 		return proMapper.selectPrcsFlowList(vo);
 	}
@@ -302,6 +311,7 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public int deletePrcsFlow(ProPrcsVO vo) {
 		return proMapper.deletePrcsFlow(vo);
+
 	}
 
 
