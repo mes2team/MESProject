@@ -279,7 +279,7 @@ table, tr, th, td {
                                     <td><button type="button"
                                           class="btn btn-primary updateBtn">
                                           수정</button></td>
-                                 </sec:authorize>
+                                	</sec:authorize>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -292,7 +292,14 @@ table, tr, th, td {
 	<!-- ============================================================== -->
 
 	<script>
+	//모달 닫기
+	$(document).on('click', '[data-dismiss="modal"]', function() {
+	  $(this).closest('.modal').modal('hide');
+	});
 	
+	$(document).on('hidden.bs.modal', '.modal', function() {
+	  $(this).find('form')[0].reset();
+	});
 	//초기화
 	$(document).on("click","#resetBtn", function () {
 		console.log('클릭');
@@ -303,7 +310,7 @@ table, tr, th, td {
 	$('tbody#matOrderTable tr').each(function() {
 		  if ($(this).find('td:nth-child(10)').text() === '진행완료') {
 		    $(this).css('pointer-events', 'none');
-		   /*  $(this).css('opacity', '0.5'); */		   
+		   $(this).css('opacity', '0.7'); 		   
 		  }
 		});
 	
@@ -535,7 +542,7 @@ $("#insertBtn").on("click", function () {
 
 //체크박스 전체 선택
 $(document).ready(function () {
-
+  // 전체 선택 체크박스 클릭 이벤트 처리
   $("#cbx_chkAll").click(function () {
     if ($(this).is(":checked"))
       $("input[name=chk]")
@@ -550,6 +557,7 @@ $(document).ready(function () {
         .removeClass("selected");
   });
 
+  // 개별 체크박스 클릭 이벤트 처리
   $(document).on("click", "input[name=chk]", function () {
     var total = $("input[name=chk]").not(':disabled').length; // 진행완료 상태인 체크박스는 제외
     var checked = $("input[name=chk]:checked").not(':disabled').length; // 진행완료 상태인 체크박스는 제외
@@ -558,20 +566,21 @@ $(document).ready(function () {
     else $("#cbx_chkAll").prop("checked", true);
   });
 
-  $('tbody#matOrderTable tr').each(function() {
-    if ($(this).find('td:nth-child(10)').text() === '진행완료') {
+  // 진행완료 상태인 체크박스 처리
+  $('tbody#checkBody tr').each(function() {
+    if ($(this).find('td:nth-child(15)').text() !== '') {
+      $(this).css('pointer-events', 'none');
       $(this).find('input[type="checkbox"]').prop('disabled', true); // 체크박스를 disabled로 설정하여 선택되지 않도록
     }
   });
-  
 });
 
 //행 선택하면 체크
-$(document).on("click", "table tr", function (event) {
+/* $(document).on("click", "table tr", function (event) {
   if (event.target.type !== "checkbox") {
     $(":checkbox", this).trigger("click");
   }
-});
+}); */
 
 $(document).on("change", "table tr :checkbox", function (event) {
   $(this).closest("tr").toggleClass("selected", this.checked);
@@ -795,6 +804,7 @@ function submitBtn() {
                   icon: "success",
                   title: "삭제가 정상적으로 되었습니다.",
                 });
+                location.reload()
               },
               error: function (reject) {
                 console.log(reject);

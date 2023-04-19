@@ -104,6 +104,7 @@ form {
                         <option value="none" disabled selected>=== 선택 ===</option>
                         <option value="KG">kg(킬로그램)</option>
                         <option value="L">L(리터)</option>
+                        <option value="EA">EA</option>
                      </select>
                   </div>
 
@@ -248,6 +249,14 @@ form {
 
 
       <script>
+    //모달 닫기
+  	$(document).on('click', '[data-dismiss="modal"]', function() {
+  	  $(this).closest('.modal').modal('hide');
+  	});
+  	
+  	$(document).on('hidden.bs.modal', '.modal', function() {
+  	  $(this).find('form')[0].reset();
+  	});
     //초기화
   	$(document).on("click","#resetBtn", function () {
   		console.log('클릭');
@@ -524,7 +533,7 @@ function submitBtn() {
         $("#checkBody").empty();
     	  //input 내 데이터 지우기  
     	$('input').val('');  
-        
+    	location.reload()
         $(result).each(function (idx, item) {
         	let tr = $("<tr>").attr("data-id", item.rscCd);
             tr.append("<td>" + item.rscCd + "</td>");
