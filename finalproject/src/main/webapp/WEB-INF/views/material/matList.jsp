@@ -80,9 +80,9 @@ form {
                <h3 class="insert">자재등록</h3>
 				<div id="btnGrp">
                      <button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-                     <button type="reset" class="btn btn-secondary">초기화</button>
+                     <button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
                   </div>
-               <form class="row g-3" name="insertForm" action="matInsert"
+               <form class="row g-3" name="insertForm" id="insertForm" action="matInsert"
                   method="post" onsubmit="return false"
                   style="margin: 0px 5px 5px 5px;">
 				
@@ -228,7 +228,7 @@ form {
                                  <td>${mat.vendNm }</td>
                                  <sec:authorize access="hasRole('ROLE_ADMIN')">
                                     <td><button type="button"
-                                          class="btn btn-primary updateBtn" data-bs-toggle="modal">
+                                          class="btn btn-primary updateBtn">
                                           수정</button></td>
                                  </sec:authorize>
                               </tr>
@@ -248,8 +248,13 @@ form {
 
 
       <script>
+    //초기화
+  	$(document).on("click","#resetBtn", function () {
+  		console.log('클릭');
+  	 $('#insertForm input').val('');
+  	});
       <!-- ============================================================== -->
-      <!-- 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 검수자 검색 -->
+      <!-- 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 -->
   	//url은 getMapping에 들어가는 주소
   	 $.ajax({
   	      url: "VendModal",
@@ -306,49 +311,62 @@ form {
           let vendCdData = $("input[name='vendCdInput']").val();
           let vendNmData = $("input[name='vendNmInput']").val();
 
-          if (rscCdData.value == "") {
+          if (rscCdData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "자재코드가 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (rscNmData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "자재명이 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (rscSpecData == "none") {
         	  Swal.fire({
 			      icon: "warning",
-			      title:"자재코드가 입력되지 않았습니다.",
-			    });
-              rscCdData.focus();
-              return; // 페이지 이동을 막기 위해 false를 반환합니다.
-          }
-          if (rscNmData.value == "") {
-              alert("자재명이 입력되지 않았습니다.");
-              rscNmData.focus();
-              return false;
-          }
-          if (rscSpecData == "none") {
-              alert("자재규격이 선택되지 않았습니다.");
-              $("#rscSpecData").focus();
-              return false;
-          }
-          if (rscTypData == "none") {
-              alert("자재유형이 선택되지 않았습니다.");
-              $("#rscTypData").focus();
-              return false;
-          }
-          if (safStcData.value == "") {
-              alert("안전재고가 입력되지 않았습니다.");
-              safStcData.focus();
-              return false;
-          }
+			      title:"자재규격이 선택되지 않았습니다."});
+			    return;
+			  }
           if (useYnData == "none") {
-              alert("사용여부가 선택되지 않았습니다.");
-              $("#useYnData").focus();
-              return false;
-          }
+			    Swal.fire({
+			      icon: "warning",
+			      title: "사용여부이 선택되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (rscTypData == "none") {
+        	  Swal.fire({
+			      icon: "warning",
+			      title:"자재유형이 선택되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (safStcData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "안전재고가 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
+          if (vendNmData == "") {
+			    Swal.fire({
+			      icon: "warning",
+			      title: "거래처명 입력되지 않았습니다.",
+			    });
+			    return;
+			  }
           if (vendCdData == "") {
-              alert("거래처코드가 선택되지 않았습니다.");
-              $("#vendCdData").focus();
-              return false;
-          }
-          if (vendNmData.value == "") {
-              alert("거래처명이 입력되지 않았습니다.");
-              vendNmData.focus();
-              return false;
-          }
+        	  Swal.fire({
+			      icon: "warning",
+			      title:"거래처코드가 선택되지 않았습니다.",
+			    });
+			    return;
+			  }
+          
           
           // Swal.fire를 추가합니다.
           Swal.fire({
@@ -360,6 +378,7 @@ form {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
+        	  if(result.value){
         	  $.ajax({
         		  //MatController 의 @PostMapping("/matCheckInsert")
                   url: "matInsert",
@@ -405,9 +424,10 @@ form {
                     console.log(reject);
                   },
                 });
+        	  }
               });
             });
-
+	
 <!-- ============================================================== -->
 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->      
