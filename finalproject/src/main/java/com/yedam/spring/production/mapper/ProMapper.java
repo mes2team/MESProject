@@ -107,6 +107,12 @@ public interface ProMapper {
 
 	// 공정삭제
 	public int deletePrcsFlow(ProPrcsVO vo);
+	//
+	public List<ProPrcsVO> selectPrcsResultList();
+
+	public List<ProPrcsVO> selectPrcsAmountList();
+
+	public List<ProPrcsVO> selectPrcsIndica(ProPrcsVO vo);
 
 
 }
