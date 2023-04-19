@@ -24,22 +24,71 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 <body>
     <div class="card">
             <div class="card-body">
-              <!-- Bordered Tabs Justified -->
-              <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true">공정실적관리</button>
-                </li>
-                <li class="nav-item flex-fill" role="presentation">
-                  <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">공정실적조회</button>
-                </li>
-              </ul>
-              <div class="tab-content pt-2" id="borderedTabJustifiedContent">
-                <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
-                <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div class="card">
-          <p></p>
-          <div class="card-body">
+	            <div class="card-body">
+	              <!-- Bordered Tabs Justified -->
+	              <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
+	                <li class="nav-item flex-fill" role="presentation">
+	                  <button class="nav-link w-100 active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-home" type="button" role="tab" aria-controls="home" aria-selected="true">공정실적조회</button>
+	                </li>
+	                <sec:authorize access="hasRole('ROLE_ADMIN')">
+	                <li class="nav-item flex-fill" role="presentation">
+	                  <button class="nav-link w-100" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-profile" type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">공정실적관리</button>
+	                </li>
+	                </sec:authorize>
+	              </ul>
+	              <div class="tab-content pt-2" id="borderedTabJustifiedContent">
+	                <div class="tab-pane fade show active" id="bordered-justified-home" role="tabpanel" aria-labelledby="home-tab">
+	                <div class="card">
+	                  <div class="card-body">
+				        <h5 class="card-title">공정실적 조회</h5>
+				        <!-- Multi Columns Form -->
+				        <form id="searchForm" class="row g-3">
+				          <div class="col-md-6">
+				            <label for="inputEmail5" class="form-label">생산지시일자</label>
+				            <div class="d-flex align-items-center">
+				              <input type="date" class="form-control mr-2" id="" />
+				              <span class="mx-2">~</span>
+				              <input type="date" class="form-control ml-2" id="" />
+				            </div>
+				            </div>
+				            <div class="col-md-6">
+					            <div id="btnGrp">
+					              <button id="searchPrcsBtn" type="button" class="btn btn-primary">검색</button>
+					              <button type="reset" class="btn btn-secondary">초기화</button>
+					            </div>
+				            </div>
+				        </form>
+				        <!-- End Multi Columns Form -->
+				      </div>
+				      </div>
+				      <div class="card">
+				      <div class="card-body">
+			            <div id="btnGrp" style="float:right;">
+			            </div>
+			            <div class="table-responsive" style="width: 100%; overflow: auto">
+			              <table id="selectPrcsList" class="table table-hover" >
+			                <thead>
+			                  <tr>
+			                    <th>생산지시명</th>
+			                    <th>생산지시일자</th>
+			                    <th>지시종료일자</th>
+			                    <th>제품명</th>
+			                    <th>지시량</th>
+			                    <th>불량량</th>
+			                    <th>작업량</th>
+			                    <th>현재상태</th>
+			                  </tr>
+			                </thead>
+			                <tbody></tbody>
+			              </table>
+			            </div>
+			          </div>
+	                </div>
+	                </div>
+	                <sec:authorize access="hasRole('ROLE_ADMIN')">
+	                	                <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
+	                	                <div class="card">
+	                <div class="card-body">
             <div
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
@@ -72,12 +121,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div class="card">
+          </div>
+                  <div class="card">
           <div class="card-body">
             <div 
               class="table-responsive"
@@ -92,7 +137,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>지시량</th>
                     <th>불량량</th>
                     <th>작업량</th>
-                    <th>작업자</th>
+                    <th>관리자</th>
                     <th>작업시작시간</th>
                     <th>작업종료시간</th>
                     <th>현재상태</th>
@@ -103,60 +148,13 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-                </div>
-                <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="card">
-			      	<div class="card-body">
-				        <h5 class="card-title">공정실적 조회</h5>
-				        <!-- Multi Columns Form -->
-				        <form id="searchForm" class="row g-3">
-				          <div class="col-md-6">
-				            <label for="inputEmail5" class="form-label">생산지시일자</label>
-				            <div class="d-flex align-items-center">
-				              <input type="date" class="form-control mr-2" id="" />
-				              <span class="mx-2">~</span>
-				              <input type="date" class="form-control ml-2" id="" />
-				            </div>
-				            </div>
-				            <div class="col-md-6">
-					            <div id="btnGrp">
-					              <button id="searchPrcsBtn" type="button" class="btn btn-primary">검색</button>
-					              <button type="reset" class="btn btn-secondary">초기화</button>
-					            </div>
-				            </div>
-				        </form>
-				        <!-- End Multi Columns Form -->
-				      </div>
-				    </div>
-			            <div class="card">
-			          <p></p>
-			          <div class="card-body">
-			            <div id="btnGrp" style="float:right;">
-			            </div>
-			            <div class="table-responsive" style="width: 100%; overflow: auto">
-			              <table id="selectPrcsList" class="table table-hover" >
-			                <thead>
-			                  <tr>
-			                    <th>생산지시명</th>
-			                    <th>생산지시일자</th>
-			                    <th>지시종료일자</th>
-			                    <th>제품명</th>
-			                    <th>지시량</th>
-			                    <th>불량량</th>
-			                    <th>작업량</th>
-			                    <th>현재상태</th>
-			                  </tr>
-			                </thead>
-			                <tbody></tbody>
-			              </table>
-			            </div>
-			          </div>
-			        </div>
-                
-                </div>
+	                </div>
+	                </sec:authorize>
+
+	              </div><!-- End Bordered Tabs Justified -->
+	
+	            </div>
+
               </div><!-- End Bordered Tabs Justified -->
 
             </div>
@@ -188,7 +186,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               <input id="workDate" type="date" class="form-control" readonly />
             </div>
             <div class="col-md-6">
-              <label for="" class="form-label">작업자</label>
+              <label for="" class="form-label">관리자</label>
               <input id="prcsWorker" type="text" class="form-control mr-2" />
             </div>
             <div class="col-md-6">
@@ -258,31 +256,46 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  
 	  // 작업일자 검사
 	  if ($('#workDate').val() === '') {
-	    alert('작업일자를 입력해주세요.');
+        Swal.fire({
+            icon: "warning",
+            title: "작업일자를 입력해주세요.",
+          });
 	    isValid = false;
 	  }
 	  
 	  // 작업자 검사
 	  if ($('#prcsWorker').val() === '') {
-	    alert('작업자를 입력해주세요.');
+        Swal.fire({
+            icon: "warning",
+            title: "작업자를 입력해주세요.",
+          });
 	    isValid = false;
 	  }
 	  
 	  // 공정명 검사
 	  if ($('#prcsSelect').val() === '') {
-	    alert('공정명을 선택해주세요.');
+        Swal.fire({
+            icon: "warning",
+            title: "공정명을 선택해주세요.",
+          });
 	    isValid = false;
 	  }
 	  
 	  // 작업량 설정 검사
 	  if ($('#workAmount').val() === '') {
-	    alert('작업량을 입력해주세요.');
+        Swal.fire({
+            icon: "warning",
+            title: "작업량을 입력해주세요.",
+          });
 	    isValid = false;
 	  }
 	  
 	  // 사용가능한 설비 검사
 	  if ($('#multiPro').val().length === 0) {
-	    alert('사용 가능한 설비를 선택해주세요.');
+        Swal.fire({
+            icon: "warning",
+            title: "사용할 설비를 선택해주세요.",
+          });
 	    isValid = false;
 	  }
 	  
@@ -337,39 +350,55 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		    selectedTr.addClass('highlighted');
 		  } else {
 		    selectedTr.removeClass('highlighted');
+		    
 		  }
-		  console.log(indicaCd);
+		  if ($('.' + indicaCd).length > 0) {
+			  $('.' + indicaCd).remove();
+			  return;
+			} else {
 		  $.ajax({
 			  url:'getPrcsIndica',
 			  type:'post',
 			  data:{indicaCd:indicaCd},
 			  success:function(data) {
 				  console.log(data.PrcsIndica);
-
+				    var trth = $('<tr style="background-color:#CECDCD;">').attr('class',indicaCd)
+					var th1 = $('<th>').text('공정명');
+				    var th2 = $('<th>').text('시작시간');
+				    var th3 = $('<th>').text('종료시간');
+				    var th4 = $('<th>').text('관리자');
+				    var th5 = $('<th>').text('지시량');
+				    var th6 = $('<th>').text('불량량');
+				    var th7 = $('<th>').text('작업량');
+				    var th8 = $('<th>').text('사용설비');
+				    trth.append(th1, th2, th3, th4, th5, th6, th7, th8);
 				  data.PrcsIndica.forEach(function(item) {
-				    var tr = $('<tr>').attr('class',item.indicaCd);
+				    var tr = $('<tr style="background-color:#DDDDDD;">').attr('class',item.indicaCd);
 
 				    var td1 = $('<td>').text(item.prcsNm);
-				    var td2 = $('<td>').text(item.prcsPsch);
-				    var td3 = $('<td>').text(item.indicaCnt);
-				    var td4 = $('<td>').text(item.inferCnt);
-				    var td5 = $('<td>').text(item.prodCnt);
-				    var td6 = $('<td>').text(item.wkToTm);
-				    var td7 = $('<td>').text(item.wkFrTm);
+				    var td2 = $('<td>').text(item.wkToTm);
+				    var td3 = $('<td>').text(item.wkFrTm);
+				    var td4 = $('<td>').text(item.prcsPsch);
+				    var td5 = $('<td>').text(item.indicaCnt);
+				    var td6 = $('<td>').text(item.inferCnt);
+				    var td7 = $('<td>').text(item.prodCnt);
 				    var td8 = $('<td>').text(item.useEqm);
 
 				    tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
 
 				    selectedTr.after(tr);
 				  });
+				    selectedTr.after(trth)
 			  },
 			  error:function() {
 				  
 			  }
 			  
 		  })
+			}
 	  });
  	  $('#searchPrcsBtn').click(function() {
+ 		  $('#selectPrcsList tbody').empty();
 		  $.ajax({
 			  url:'getPrcsAndIndList',
 			  type:'get',
@@ -423,6 +452,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  $('#closeModal').click(function() {
 		  $('#prcsModal').find('button').prop('disabled',false);
 		  $('#prcsModal').find('input').val('');
+		  $('#workDate').val(time.substr(0, time.length - 9));
 		  $('#prcsModal').modal('hide');
 	  })
 
@@ -583,7 +613,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				 type:'post',
 				 data: {indicaCd : indicaCd},
 				 success: function(data) {
-					 console.log(data.PrcsProg);
 					 var data = data.PrcsProg;
 					 var tbody = $('#prcsProgList');
 					 var select = $('#prcsSelect');
@@ -638,6 +667,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	    
 	  });
 	  $(document).on('click', '#prcsProgList tr', function() {
+
+		  
 		  $('#modalInTbody').empty();
 		  $('#multiPro').empty(); 
 		  var prdtNm = $(this).data('id');
@@ -647,7 +678,10 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  var prcsPsch = $(this).find('td:nth-child(6)').text();
 		  var wkToTm = $(this).find('td:nth-child(7)').text();
 		  var wkFrTm = $(this).find('td:nth-child(8)').text();
-		  console.log(wkToTm);
+		  if(indicaCnt == 0){
+			  $('#workStart').prop('disabled', true);
+			  $('#workStop').prop('disabled', true);
+		  }
 		  if(wkToTm != '-') {
 			  $('#workStart').prop('disabled', true);
 			  $('#startTime').val(wkToTm);
