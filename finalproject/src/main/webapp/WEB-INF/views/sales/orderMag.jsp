@@ -104,7 +104,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
                     <th>주문 날짜</th>
                     <th>납기일</th>
                     <th>진행도</th>
-                    <th></th>
+                    <th>조회</th>
                   </tr>
                 </thead>
                 <tbody id="orderListBody">

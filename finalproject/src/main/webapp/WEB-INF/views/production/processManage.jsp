@@ -194,7 +194,7 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
           >
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Table with hoverable rows</h5>
+                <h5 class="card-title">공정 흐름 관리</h5>
 
                 <!-- Table with hoverable rows -->
                 <table class="table table-hover">

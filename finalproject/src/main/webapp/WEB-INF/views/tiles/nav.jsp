@@ -51,11 +51,6 @@
               <i class="bi bi-circle"></i><span>제품 출고 관리</span>
             </a>
           </li>
-          <li>
-            <a href="${pageContext.request.contextPath }/finishedPrd">
-              <i class="bi bi-circle"></i><span>완제품 조회</span>
-            </a>
-          </li>
         </ul>
       </li><!-- End Forms Nav -->
 
