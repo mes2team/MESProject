@@ -97,7 +97,26 @@ form {
                         type="text" class="form-control" id="rscNmInput" name="rscNmInput"
                         placeholder="">
                   </div>
+                  
+                   <div class="col-md-3">
+                     <label for="country" class="form-label">자재유형</label> <select
+                        class="form-control" id="rscTypInput" name="rscTypInput">
+                        <option value="none" disabled selected>=== 선택 ===</option>
+                        <option value="주원료">주원료</option>
+                        <option value="첨가제">첨가제</option>
+                        <option value="액상원료">액상원료</option>
+                     </select>
+                  </div>
 
+				  <div class="col-md-3">
+                     <label for="country" class="form-label">사용여부</label> <select
+                        class="form-control" id="useYnInput" name="useYnInput">
+                        <option value="none" disabled selected>=== 선택 ===</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                     </select>
+                  </div>	
+					
                   <div class="col-md-3">
                      <label for="country" class="form-label">자재규격</label> <select
                         class="form-control" id="rscSpecInput" name="rscSpecInput" >
@@ -108,25 +127,7 @@ form {
                      </select>
                   </div>
 
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">사용여부</label> <select
-                        class="form-control" id="useYnInput" name="useYnInput">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                     </select>
-                  </div>
-
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">자재유형</label> <select
-                        class="form-control" id="rscTypInput" name="rscTypInput">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="주원료">주원료</option>
-                        <option value="첨가제">첨가제</option>
-                        <option value="액상원료">액상원료</option>
-                     </select>
-                  </div>
-
+                 
                   <div class="col-md-3">
                      <label for="country" class="form-label">안전재고</label> <input
                         type="text" class="form-control" id="safStcInput" name="safStcInput"
@@ -205,9 +206,9 @@ form {
                            <tr>
                               <th>자재코드</th>
                               <th>자재명</th>
-                              <th>자재규격</th>
                               <th>자재유형</th>
                               <th>안전재고</th>
+                              <th>자재규격</th>
                               <th>사용여부</th>
                               <th>거래처코드</th>
                               <th>거래처명</th>
@@ -221,9 +222,9 @@ form {
                               <tr data-id="${mat.rscCd }">
                                  <td>${mat.rscCd }</td>
                                  <td>${mat.rscNm }</td>
-                                 <td>${mat.rscSpec }</td>
                                  <td>${mat.rscTyp }</td>
                                  <td>${mat.safStc }</td>
+                                 <td>${mat.rscSpec }</td>
                                  <td>${mat.useYn }</td>
                                  <td>${mat.vendCd }</td>
                                  <td>${mat.vendNm }</td>
