@@ -413,5 +413,24 @@ public class ProController {
 		}
 		return proService.getPrcsFlowList(arr[0]);
 	} 
+	
+	@GetMapping("/getPrcsAndIndList")
+	@ResponseBody
+	public Map<String, Object> getPrcsAndIndList() {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("prcsList", proService.getPrcsResultList());
+		resultMap.put("prcsAmount", proService.getPrcsAmountList());
+
+		return resultMap;
+	}
+	@PostMapping("/getPrcsIndica")
+	@ResponseBody
+	public Map<String, Object> getPrcsIndica(ProPrcsVO vo){
+		Map<String, Object> resultMap = new HashMap<>();
 		
+		resultMap.put("PrcsIndica", proService.getPrcsIndica(vo));
+
+		return resultMap;
+	}
 }

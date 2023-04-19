@@ -98,4 +98,10 @@ public interface ProService {
 	// 공정삭제
 	public int deletePrcsFlow(ProPrcsVO vo);
 
+	public List<ProPrcsVO> getPrcsResultList();
+
+	public List<ProPrcsVO> getPrcsAmountList();
+
+	public List<ProPrcsVO> getPrcsIndica(ProPrcsVO vo);
+
 }

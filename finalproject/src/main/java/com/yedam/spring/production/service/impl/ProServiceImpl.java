@@ -315,6 +315,21 @@ public class ProServiceImpl implements ProService {
 
 	}
 
+	@Override
+	public List<ProPrcsVO> getPrcsResultList() {
+		return proMapper.selectPrcsResultList();
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsAmountList() {
+		return proMapper.selectPrcsAmountList();
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsIndica(ProPrcsVO vo) {
+		return proMapper.selectPrcsIndica(vo);
+	}
+
 
 
 

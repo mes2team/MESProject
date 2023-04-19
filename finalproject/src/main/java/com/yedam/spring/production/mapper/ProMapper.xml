@@ -536,7 +536,7 @@
 			FROM indica i, indica_dtl ad, edcts e
 			WHERE i.indica_cd = ad.indica_cd
 			  AND ad.edcts_cd = e.edcts_cd
-			  AND i.now_st != '생산완료' 
+			  AND i.now_st NOT IN ('생산완료', '입고완료') 
 			ORDER BY indica_cd
  		</select>
  		
@@ -678,4 +678,30 @@
    			WHERE 	edcts_cd = #{edctsCd}
    			AND		prcs_cd = #{prcsCd}
    		</delete>
+   		
+   		<!-- 공정실적조회 -->
+   		<select id="selectPrcsResultList" resultType="ProPrcsVO">
+   			SELECT p.indica_cd, i.indica_name, p.indica_dt, i.indica_fdt, e.prdt_nm,p.prcs_status,p.indica_cnt,p.infer_cnt,p.prod_cnt
+			FROM prcs_prog p, indica i, indica_dtl idt, edcts e
+			WHERE idt.edcts_cd = e.edcts_cd 
+			  AND i.indica_cd = idt.indica_cd
+			  AND p.indica_cd = i.indica_cd
+			  AND substr(p.prcs_status,-2) = '완료'
+			ORDER BY p.indica_dt DESC, p.indica_cd, p.prcs_cd
+   		</select>
+   		
+   		<select id="selectPrcsAmountList" resultType="ProPrcsVO">
+   			SELECT indica_cd
+			FROM   prcs_prog
+			WHERE  substr(prcs_status,-2) = '완료'
+			GROUP BY indica_cd
+   		</select>
+   		
+   		<select id="selectPrcsIndica" resultType="ProPrcsVO">
+			SELECT pp.indica_cd, p.prcs_nm, pp.prcs_psch, pp.indica_cnt, pp.infer_cnt, pp.prod_cnt, pp.use_eqm,pp.wk_to_tm,pp.wk_fr_tm
+			FROM prcs_prog pp , prcs p
+			WHERE pp.prcs_cd = p.prcs_cd
+			  AND indica_cd = #{indicaCd}
+			ORDER BY pp.prcs_cd
+   		</select>
   </mapper>

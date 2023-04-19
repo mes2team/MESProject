@@ -17,6 +17,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   .active {
   background-color: #e1efff;
 }
+.highlighted{
+	background-color: #e1efff;
+}
 </style>
 <body>
     <div class="card">
@@ -107,15 +110,15 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="card">
 			      	<div class="card-body">
-				        <h5 class="card-title">생산 지시 관리</h5>
+				        <h5 class="card-title">공정실적 조회</h5>
 				        <!-- Multi Columns Form -->
 				        <form id="searchForm" class="row g-3">
 				          <div class="col-md-6">
-				            <label for="inputEmail5" class="form-label">생산계획일자</label>
+				            <label for="inputEmail5" class="form-label">생산지시일자</label>
 				            <div class="d-flex align-items-center">
-				              <input type="date" class="form-control mr-2" id="startDate" />
+				              <input type="date" class="form-control mr-2" id="" />
 				              <span class="mx-2">~</span>
-				              <input type="date" class="form-control ml-2" id="endDate" />
+				              <input type="date" class="form-control ml-2" id="" />
 				            </div>
 				            </div>
 				            <div class="col-md-6">
@@ -134,7 +137,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 			            <div id="btnGrp" style="float:right;">
 			            </div>
 			            <div class="table-responsive" style="width: 100%; overflow: auto">
-			              <table id="productOrderTable" class="table table-hover" >
+			              <table id="selectPrcsList" class="table table-hover" >
 			                <thead>
 			                  <tr>
 			                    <th>생산지시명</th>
@@ -285,6 +288,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  
 	  return isValid;
 	}
+	function formatDate(time) {
+	    var date = new Date(time);
+	    var year = date.getFullYear();
+	    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+	    var day = ("0" + date.getDate()).slice(-2);
+	    var formattedDate = year + "-" + month + "-" + day;
+	    return formattedDate;
+	}
   
   function getCurrentTime() {
 	  var currentDate = new Date();
@@ -317,18 +328,97 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  return formattedDate;
 	}
   $(document).ready(function(){
-/* 	  $('#searchPrcsBtn').click(function() {
+	  $(document).on('click', '#selectPrcsList tbody tr', function() {
+		  var indicaCd = $(this).find('td:first-child').text();
+		  var selectedTr = $(this);
+		  var isHighlighted = selectedTr.hasClass('highlighted');
+
+		  if (!isHighlighted) {
+		    selectedTr.addClass('highlighted');
+		  } else {
+		    selectedTr.removeClass('highlighted');
+		  }
+		  console.log(indicaCd);
 		  $.ajax({
-			  url:,
-			  type:,
-			  success:function() {
-				  
+			  url:'getPrcsIndica',
+			  type:'post',
+			  data:{indicaCd:indicaCd},
+			  success:function(data) {
+				  console.log(data.PrcsIndica);
+
+				  data.PrcsIndica.forEach(function(item) {
+				    var tr = $('<tr>').attr('class',item.indicaCd);
+
+				    var td1 = $('<td>').text(item.prcsNm);
+				    var td2 = $('<td>').text(item.prcsPsch);
+				    var td3 = $('<td>').text(item.indicaCnt);
+				    var td4 = $('<td>').text(item.inferCnt);
+				    var td5 = $('<td>').text(item.prodCnt);
+				    var td6 = $('<td>').text(item.wkToTm);
+				    var td7 = $('<td>').text(item.wkFrTm);
+				    var td8 = $('<td>').text(item.useEqm);
+
+				    tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
+
+				    selectedTr.after(tr);
+				  });
 			  },
 			  error:function() {
 				  
 			  }
+			  
 		  })
-	  }) */
+	  });
+ 	  $('#searchPrcsBtn').click(function() {
+		  $.ajax({
+			  url:'getPrcsAndIndList',
+			  type:'get',
+			  success:function(data) {
+				  console.log(data.prcsList);
+				  console.log(data.prcsAmount);
+				  var tbody = $('#selectPrcsList tbody');
+
+				  data.prcsAmount.forEach(function(item) {
+				    var tr = $('<tr>');
+
+				    var td1 = $('<td>').attr('hidden', true).text(item.indicaCd);
+				    var td2 = $('<td>');
+				    var td3 = $('<td>');
+				    var td4 = $('<td>');
+				    var td5 = $('<td>');
+				    var td6 = $('<td>');
+				    var td7 = $('<td>');
+				    var td8 = $('<td>');
+				    var td9 = $('<td>');
+
+				    data.prcsList.forEach(function(prcsItem) {
+				      if (item.indicaCd === prcsItem.indicaCd) {
+				        td2.text(prcsItem.indicaName);
+				        td3.text(formatDate(prcsItem.indicaDt));
+				        if(prcsItem.indicaFdt == null){
+				        	td4.text('-');
+				        }else {	
+				        	td4.text(formatDate(prcsItem.indicaFdt));
+				        }
+				        td5.text(prcsItem.prdtNm);
+				        td6.text(prcsItem.indicaCnt);
+				        td7.text(prcsItem.inferCnt);
+				        td8.text(prcsItem.prodCnt);
+				        td9.text(prcsItem.prcsStatus);
+				      }
+				    });
+
+				    tr.append(td1, td2, td3, td4, td5, td6, td7, td8, td9);
+
+				    tbody.append(tr);
+				  });
+
+			  },
+			  error:function(error) {
+				  console.log(error)
+			  }
+		  })
+	  }) 
 	  
 	  $('#closeModal').click(function() {
 		  $('#prcsModal').find('button').prop('disabled',false);
