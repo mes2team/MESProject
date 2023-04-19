@@ -47,4 +47,11 @@ public class BomServiceImpl implements BomService {
 		return bomMapper.getBomCd(vo);
 	}
 
+	@Override
+	public int insertBomHeader(BomVO vo) {
+		return bomMapper.insertBomHeader(vo);
+	}
+
+	
+
 }

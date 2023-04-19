@@ -8,14 +8,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.masterData.service.BomService;
 import com.yedam.spring.masterData.service.EdctsService;
+import com.yedam.spring.masterData.service.EdctsVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
+import com.yedam.spring.production.service.ProPrcsVO;
+import com.yedam.spring.production.service.ProService;
 
 @Controller
 public class BomController {
@@ -28,11 +30,13 @@ public class BomController {
 	@Autowired
 	MatService matService;
 	
+	@Autowired
+	ProService proService;
+	
 	@GetMapping("bomMag")
 	public String bomMagForm(Model model) {
 		model.addAttribute("edctsList", edctsService.getEdctsList());
 		model.addAttribute("rscList", matService.matList());
-		model.addAttribute("prcsList", bomService.getPrcsList());
 		return "bom/bomMag";
 	}
 	
@@ -73,4 +77,26 @@ public class BomController {
 	public String selectBomCd(BomVO vo) {
 		return bomService.getBomCd(vo).getBomCd();
 	}
+	
+	//bom 헤더에 없는 제품 조회
+	@GetMapping("bomHeaderPrd")
+	@ResponseBody
+	public List<EdctsVO> bomHeaderPrd(){
+		return edctsService.getBomHeaderPrd();
+	}
+	
+	//bom헤더 등록
+	@PostMapping("bomHeaderInsert")
+	@ResponseBody
+	public String bomHeaderInsert(BomVO vo) {
+		bomService.insertBomHeader(vo);
+		return "success";
+	}
+	
+	@GetMapping("bomPrcsFlow")
+	@ResponseBody
+	public List<ProPrcsVO> bomPrcsFlow(ProPrcsVO vo) {
+		return proService.getPrcsFlowList(vo);
+	}
+	
 }

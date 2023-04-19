@@ -284,6 +284,26 @@ public class ProServiceImpl implements ProService {
 		}	
 	}
 
+	@Override
+	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo) {
+		return proMapper.selectPrcsFlowList(vo);
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsList() {
+		return proMapper.getPrcsList();
+	}
+
+	@Override
+	public int savePrcs(ProPrcsVO vo) {
+		return proMapper.savePrcs(vo);
+	}
+
+	@Override
+	public int deletePrcsFlow(ProPrcsVO vo) {
+		return proMapper.deletePrcsFlow(vo);
+	}
+
 
 
 

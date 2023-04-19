@@ -42,4 +42,5 @@ public class ProPrcsVO {
 	private String rscTyp;
 	
 	private String useEqm;
+	
 }
