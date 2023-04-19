@@ -74,6 +74,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>규격</th>
                     <th>단위</th>
                     <th>제품 수량</th>
+                    <th>입고 일자</th>
+                    <th>유통 기한</th>
                   </tr>
                 </thead>
                 <tbody id="PrdList">
@@ -89,6 +91,14 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                       <td>${prdList.spec }</td>
                       <td>${prdList.unit }</td>
                       <td>${prdList.edctsLotCnt }</td>
+                      <td><fmt:formatDate
+                          value="${prdList.edctsIstDt }"
+                          pattern="yyyy-MM-dd"
+                        /></td>
+                      <td><fmt:formatDate
+                          value="${prdList.edctsExpire }"
+                          pattern="yyyy-MM-dd"
+                        /></td>
                     </tr>
                   </c:forEach>
                 </tbody>
