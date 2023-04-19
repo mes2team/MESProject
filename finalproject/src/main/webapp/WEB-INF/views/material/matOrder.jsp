@@ -724,6 +724,7 @@ function submitBtn() {
            icon: "success",
            title: "수정이 정상적으로 되었습니다.",
        });
+       location.reload()
    },
    error: function (reject) {
        console.log(reject);

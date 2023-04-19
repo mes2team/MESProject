@@ -383,7 +383,8 @@ form {
         		  //MatController 의 @PostMapping("/matCheckInsert")
                   url: "matInsert",
                   method: "post",
-                  data: {rscCd: rscCdData,
+                  data: 
+                  {rscCd: rscCdData,
                 	  rscNm: rscNmData,
                 	  rscSpec: rscSpecData,
                 	  rscTyp: rscTypData,
