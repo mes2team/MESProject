@@ -37,7 +37,10 @@ public interface OrderMapper {
 
 	// 주문서 디테일 수정
 	public int updateOrderDetail(OrderSheetVO vo);
-	
+
 	// 주문서 디테일 삭제
 	public int deleteOrderDetail(OrderSheetVO vo);
+
+	// 전체조회 출고쪽
+	public List<OrderSheetVO> selectEdctsoutOrderList();
 }

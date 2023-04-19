@@ -76,4 +76,9 @@ public class OrderServiceImpl implements OrderService {
 		return orderMapper.deleteOrderDetail(vo);
 	}
 
+	@Override
+	public List<OrderSheetVO> selectEdctsoutOrderList() {
+		return orderMapper.selectEdctsoutOrderList();
+	}
+
 }

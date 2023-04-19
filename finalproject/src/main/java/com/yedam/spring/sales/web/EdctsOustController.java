@@ -33,7 +33,7 @@ public class EdctsOustController {
 	// 출고 페이지
 	@GetMapping("edctsOust")
 	public String edctsOustForm(Model model, String orderNo) {
-		model.addAttribute("orderList", orderService.selectOrderList());
+		model.addAttribute("orderList", orderService.selectEdctsoutOrderList());
 		model.addAttribute("edctsOustList", edctsoustService.selectEdctsOustAll());
 		return "sales/edctsOustMag";
 	}
@@ -68,11 +68,11 @@ public class EdctsOustController {
 	// 출고 삭제
 	@PostMapping("edctsOustDel")
 	@ResponseBody
-	public String edctsOustDelProcess(@RequestBody EdctsOustVO[] arr) {
+	public List<OrderSheetVO> edctsOustDelProcess(@RequestBody EdctsOustVO[] arr) {
 		for(int i = 0; i < arr.length; i++) {
 			edctsoustService.deleteEdctsOust(arr[i]);
 		}
-		return "success";
+		return orderService.selectEdctsoutOrderList();
 	}
 
 

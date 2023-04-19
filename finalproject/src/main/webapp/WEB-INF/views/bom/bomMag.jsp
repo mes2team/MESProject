@@ -481,7 +481,9 @@ uri="http://www.springframework.org/security/tags"%>
       tr.append("<td class='changeValue my-td-class'>" + data.useCnt + "</td>");
       tr.append("<td my-td-class'>" + data.unit + "</td>");
       tr.append(
-        $("<td>" + data.prcsNm + "</td>").attr("data-prcsCd", data.prcsCd)
+        $("<td>" + data.prcsNm + "</td>")
+          .attr("data-prcsCd", data.prcsCd)
+          .attr("class", "changeValue1")
       );
 
       $("#bomList").append(tr);
@@ -813,6 +815,23 @@ uri="http://www.springframework.org/security/tags"%>
           .val(currentValue);
         $(this).empty().append(input);
       });
+
+      // currentRow.find(".changeValue1").each(function () {
+      //   let currentValue = $(this).text().trim();
+      //   let td = $("<td>").attr("data-value", currentValue);
+      //   td.append(
+      //     $("<span>").text(currentValue),
+      //     $("<button>")
+      //       .addClass("btn btn-primary my-td-class prcsBtn")
+      //       .attr({
+      //         type: "button",
+      //         "data-bs-toggle": "modal",
+      //         "data-bs-target": "#prcsModal",
+      //       })
+      //       .append($("<i>").addClass("bi bi-search my-td-class prcsBtn"))
+      //   );
+      //   $(this).replaceWith(td);
+      // });
     });
 
     // 저장

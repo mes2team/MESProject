@@ -16,6 +16,8 @@ public class FinishedPrdVO {
 	private int edctsIstCnt;
 	private String edctsLotNo;
 	private String edctsLotCnt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date edctsExpire;
 
 	// 제품 VO
 	private String prdtNm;
