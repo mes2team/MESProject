@@ -49,7 +49,8 @@
 		  							  bom_cd,
 		  							  order_cnt,
 		  							  wk_to_dt,
-		  							  prdt_nm
+		  							  prdt_nm,
+		  							  indica_cnt
 		  							  )
 		  					VALUES	 (v_pran_cd,
 		  							  #{prefRank},
@@ -57,7 +58,8 @@
 		  							  #{bomCd},
 		  							  #{orderCnt},
 		  							  #{wkToDt},
-		  							  v_prdt_nm
+		  							  v_prdt_nm,
+		  							  0
 		  							  );
 
 	  		END;
@@ -93,7 +95,8 @@
 	  							  bom_cd,
 	  							  order_cnt,
 	  							  wk_to_dt,
-	  							  prdt_nm
+	  							  prdt_nm,
+	  							  indica_cnt
 	  							  )
 	  					VALUES	 (v_plan_cd,
 	  							  #{prefRank},
@@ -101,7 +104,8 @@
 	  							  #{bomCd},
 	  							  #{orderCnt},
 	  							  #{wkToDt},
-	  							  v_prdt_nm
+	  							  v_prdt_nm,
+	  							  0
 	  							  );
   		END;
   	</insert>
@@ -197,19 +201,23 @@
 	  	END;	
 	</delete>
 	
+	<delete id="preUpdatePlan" parameterType="String">
+		 DELETE FROM plan_dtl
+   		 WHERE plan_cd = #{planCd}
+	</delete>
+	
 	<!-- 생산 계획 수정 -->
 	<update id="updateProPlan" parameterType="ProPlanVO">
-		BEGIN
-			UPDATE 	plan
-			SET 	plan_dt = sysdate,
-					plan_name = #{planName}
-			WHERE 	plan_cd = #{planCd};
-	
-			UPDATE 	plan_dtl
-			SET 	order_cnt = #{orderCnt},
-					wk_to_dt = #{wkToDt}
-			WHERE 	plan_cd = #{planCd};
-		END;
+		{CALL update_plan(
+ 		    #{planCd, mode=IN, jdbcType=VARCHAR},
+      		#{edctsCd, mode=IN, jdbcType=VARCHAR},
+      		#{prefRank, mode=IN, jdbcType=VARCHAR},
+      		#{orderCnt, mode=IN, jdbcType=VARCHAR},
+      		#{wkToDt, mode=IN, jdbcType=DATE},
+      		#{bomCd, mode=IN, jdbcType=VARCHAR},
+      		#{planName, mode=IN, jdbcType=VARCHAR},
+      		#{planDue, mode=IN, jdbcType=DATE}
+    	)}
 	</update>
 	
 	
@@ -418,6 +426,7 @@
 		    </selectKey>
 	  		DECLARE
 				v_plan_cd	VARCHAR2(100);
+				v_indica_cnt NUMBER;
 				v_edcts_cd	VARCHAR2(100);
 				v_bom_cd	VARCHAR2(100);
 				v_indica_cd	VARCHAR2(100);
@@ -432,22 +441,23 @@
 	  			v_edcts_cd := #{edctsCd};
 	  			v_bom_cd := #{bomCd};
 	  			v_indica_cd := 'IND' || ${indicaCd};
-	  			
 	
 	  			SELECT 	plan_cd
 	  			INTO	v_plan_cd
 	  			FROM 	plan
 	  			WHERE	plan_name = #{planName};
 	  			
-	  			SELECT 	edcts_cd
-	  			INTO	v_edcts_cd
-	  			FROM 	edcts
-	  			WHERE	prdt_nm = #{prdtNm};
-	  			
 	  			SELECT 	bom_cd
 	  			INTO	v_bom_cd
 	  			FROM 	bom
 	  			WHERE	edcts_cd = v_edcts_cd;
+	  			
+	  				  			
+	  			SELECT indica_cnt
+	  			INTO v_indica_cnt
+	  			FROM plan_dtl
+	  			WHERE plan_cd = v_plan_cd
+	  			  AND edcts_cd = v_edcts_cd;
 	
 	  				
 	  			<!-- 생산지시테이블 -->
@@ -480,12 +490,12 @@
 		  							  v_bom_cd,
 		  							  v_indica_cd
 		  							  );
-		  							  
+		  		<![CDATA[					  
 		  		UPDATE 	plan_dtl
-				SET 	indica_cnt = #{indicaCnt}
+				SET 	indica_cnt = v_indica_cnt + #{indicaCnt}
 				WHERE 	plan_cd = v_plan_cd
 				  AND	edcts_cd = v_edcts_cd;
-		  							    
+		  				]]>			    
 		  		UPDATE plan
 				SET now_st = CASE WHEN NOT EXISTS (
 				                      SELECT *

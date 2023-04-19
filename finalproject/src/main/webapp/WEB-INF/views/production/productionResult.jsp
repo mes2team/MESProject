@@ -19,7 +19,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 }
 </style>
 <body>
-  <div>
     <div class="card">
             <div class="card-body">
               <!-- Bordered Tabs Justified -->
@@ -106,12 +105,58 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
                 </div>
                 <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
-                  Nesciunt totam et. Consequuntur magnam aliquid eos nulla dolor iure eos quia. Accusantium distinctio omnis et atque fugiat. Itaque doloremque aliquid sint quasi quia distinctio similique. Voluptate nihil recusandae mollitia dolores. Ut laboriosam voluptatum dicta.
+                    <div class="card">
+			      	<div class="card-body">
+				        <h5 class="card-title">생산 지시 관리</h5>
+				        <!-- Multi Columns Form -->
+				        <form id="searchForm" class="row g-3">
+				          <div class="col-md-6">
+				            <label for="inputEmail5" class="form-label">생산계획일자</label>
+				            <div class="d-flex align-items-center">
+				              <input type="date" class="form-control mr-2" id="startDate" />
+				              <span class="mx-2">~</span>
+				              <input type="date" class="form-control ml-2" id="endDate" />
+				            </div>
+				            </div>
+				            <div class="col-md-6">
+					            <div id="btnGrp">
+					              <button id="searchPrcsBtn" type="button" class="btn btn-primary">검색</button>
+					              <button type="reset" class="btn btn-secondary">초기화</button>
+					            </div>
+				            </div>
+				        </form>
+				        <!-- End Multi Columns Form -->
+				      </div>
+				    </div>
+			            <div class="card">
+			          <p></p>
+			          <div class="card-body">
+			            <div id="btnGrp" style="float:right;">
+			            </div>
+			            <div class="table-responsive" style="width: 100%; overflow: auto">
+			              <table id="productOrderTable" class="table table-hover" >
+			                <thead>
+			                  <tr>
+			                    <th>생산지시명</th>
+			                    <th>생산지시일자</th>
+			                    <th>지시종료일자</th>
+			                    <th>제품명</th>
+			                    <th>지시량</th>
+			                    <th>불량량</th>
+			                    <th>작업량</th>
+			                    <th>현재상태</th>
+			                  </tr>
+			                </thead>
+			                <tbody></tbody>
+			              </table>
+			            </div>
+			          </div>
+			        </div>
+                
                 </div>
               </div><!-- End Bordered Tabs Justified -->
 
             </div>
-          </div>
     
 
   <!-- 모달창 -->
@@ -272,6 +317,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  return formattedDate;
 	}
   $(document).ready(function(){
+/* 	  $('#searchPrcsBtn').click(function() {
+		  $.ajax({
+			  url:,
+			  type:,
+			  success:function() {
+				  
+			  },
+			  error:function() {
+				  
+			  }
+		  })
+	  }) */
+	  
 	  $('#closeModal').click(function() {
 		  $('#prcsModal').find('button').prop('disabled',false);
 		  $('#prcsModal').find('input').val('');

@@ -83,5 +83,7 @@ public interface ProService {
 
 	public List<ProPlanVO> getPlanToOrder(ProOrderVO vo);
 
+	public int preModiPlan(String planCd);
+
 
 }

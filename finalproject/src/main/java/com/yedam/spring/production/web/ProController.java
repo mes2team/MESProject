@@ -38,9 +38,10 @@ public class ProController {
 	public Map<String, Object> modifyProPlan(@RequestBody List<ProPlanVO> proPlanArray) {
 		Map<String, Object> resultMap = new HashMap<>();
 		String result = null;
-		for (int i = 0; i < proPlanArray.size(); i++) {
-			result = proService.modifyProPlan(proPlanArray.get(i));;
-			
+		if(proService.preModiPlan(proPlanArray.get(0).getPlanCd())>0) {
+			for (int i = 0; i < proPlanArray.size(); i++) {
+				result = proService.modifyProPlan(proPlanArray.get(i));;
+			}
 		}
 		resultMap.put("result", result);
 		return resultMap;

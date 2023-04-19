@@ -94,4 +94,6 @@ public interface ProMapper {
 
 	public List<ProPlanVO> selectPlanToOrderChk(ProOrderVO vo);
 
+	public int preUpdatePlan(String planCd);
+
 }

@@ -299,10 +299,6 @@ div#prcsInfo {
 				var options = $('#multiPro option');
 				var selectedOptions = $('#multiPro option:selected');
 
-				if (options.length != selectedOptions.length) {
-					alert("모든 제품항목을 선택해주세요.");
-					return;
-				} 
 				var selectedValues = $('#multiPro').val();
 				var productArray = [];
 				
@@ -331,12 +327,11 @@ div#prcsInfo {
 				    proPlanVO.orderCnt = productArray[i].orderCnt;
 				    proPlanVO.bomCd = productArray[i].BomCd;
 				    proPlanArray.push(proPlanVO);
-				    // 이후에 해당 배열을 서버로 보내는 ajax 코드 작성
 				}
 				console.log(proPlanArray);
 				
 				
-				 $.ajax({
+ 				 $.ajax({
 					    url: "${pageContext.request.contextPath }/modifyProPlan",
 					    type: "POST",
 					    data: JSON.stringify(proPlanArray),
@@ -344,18 +339,13 @@ div#prcsInfo {
 					    success: function(response) {
 					      console.log(response.result);
 					      if(response.result == 'fail'){
-					    	$('#newPlanSubmit').show(); // 등록 버튼 숨김
-						    $('#modifyPlanSubmit').hide();
-					    	$('#textA').show();
-					    	$('#textB').hide();
-					    	$('#rscTable').empty();
-						    $('#createPlan').modal('hide');
+							location.reload();
 					      }
 					    },
 					    error: function(jqXHR, textStatus, error) {
 					      console.error('요청 실패:', error);
 					    }
-					});
+					}); 
 				} 
 		});
 		

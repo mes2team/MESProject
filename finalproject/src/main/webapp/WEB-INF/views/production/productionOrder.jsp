@@ -240,6 +240,8 @@ function getCurrentDate() {
 		var arrProOrderVO = [];
 		$('#productOrderTable tbody tr').each(function() {
 		  var proOrderVO = {};
+		  let edctsCd = $(this).data('edctscd');
+		  proOrderVO['edctsCd'] = edctsCd; 
 		  $(this).find('td').each(function() {
 		    var key = $(this).closest('table').find('thead th').eq($(this).index()).text();
 		    var value = $(this).find('input').val();
@@ -254,7 +256,7 @@ function getCurrentDate() {
 		  }
 		});
 		console.log(arrProOrderVO);
-    	$.ajax({
+     	$.ajax({
 	        url: 'addProOrder', 
 	        type: 'POST',
 	        data: JSON.stringify(arrProOrderVO), 
@@ -267,7 +269,7 @@ function getCurrentDate() {
 	        error: function(error) {
 	            console.log(error);
 	        }
-	    });  
+	    });   
 	});
 	
 
@@ -459,7 +461,7 @@ function getCurrentDate() {
   
 			    
 
-	//검색 이벤트
+	  //검색 이벤트
 	  $("#searchBtn").on("click", function() {
 	    var startDate = $("#startDate").val();
 	    var endDate = $("#endDate").val();
