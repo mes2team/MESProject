@@ -294,6 +294,7 @@ public class ProServiceImpl implements ProService {
 	public int preModiPlan(String planCd) {
 		return proMapper.preUpdatePlan(planCd) ;
 
+	}
 	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo) {
 		return proMapper.selectPrcsFlowList(vo);
 	}
