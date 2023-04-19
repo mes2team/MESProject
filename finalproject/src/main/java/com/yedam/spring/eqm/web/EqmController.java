@@ -22,7 +22,7 @@ public class EqmController {
 	@Autowired
 	EqmService service;
 
-	// ¼³ºñÆäÀÌÁö ,¼³ºñ ÀüÃ¼Á¶È¸, »ç¿øÁ¶È¸(´ã´çÀÚ¿ë)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ,ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½È¸, ï¿½ï¿½ï¿½ï¿½ï¿½È¸(ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½)
 	@GetMapping("/eqm")
 	public String eqm(Model model) {
 		model.addAttribute("eqmList", service.selectEqmList());
@@ -31,35 +31,47 @@ public class EqmController {
 		return "eqm/eqm";
 	}
 
-	// ¼³ºñµî·Ï
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@PostMapping("/eqm")
 	public String insertEqm(EqmVO eqmVO,MultipartFile file) throws Exception{
 		service.insertEqm(eqmVO);
 		return "redirect:eqm";
 	}
 
-	// ¼³ºñ´Ü°ÇÁ¶È¸
+	// ï¿½ï¿½ï¿½ï¿½Ü°ï¿½ï¿½ï¿½È¸
 	@GetMapping("/eqmDetail")
-	@ResponseBody // È­¸éÀÌ ¾Æ´Ñ µ¥ÀÌÅÍ ³Ñ±æ ¶© ¿ä°Å ½á¾ßµÊ jsp¿¡¼­ dataType=json¹Þ±âÀ§ÇØ
+	@ResponseBody // È­ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ±ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ßµï¿½ jspï¿½ï¿½ï¿½ï¿½ dataType=jsonï¿½Þ±ï¿½ï¿½ï¿½ï¿½ï¿½
 	public EqmVO eqmDetail(EqmVO eqmVO) {
 		return service.selectEqm(eqmVO);
 	}
 
-	// ¼³ºñ»èÁ¦
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@PostMapping("/deleteEqm")
 	public String deleteEqm(EqmVO eqmVO) {
 		service.deleteEqm(eqmVO);
 		return "redirect:eqm";
 	}
 
-	// ¼³ºñ¼öÁ¤
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@PostMapping("/updateEqm")
 	public String updateEqm(EqmVO eqmVO) {
 		service.updateEqm(eqmVO);
 		return "redirect:eqm";
 	}
+	
+	@GetMapping("/afterEqmUpdate")
+	@ResponseBody
+	public List<EqmVO> afterEqmUpdate(){
+		return service.selectEqmList();
+	}
+	
+	@GetMapping("/afterEqmInsert")
+	@ResponseBody
+	public List<EqmVO> afterEqmInsert(){
+		return service.selectEqmList();
+	}
 
-	//////////////// ¼³ºñÁ¡°Ë³»¿ª//////////////////
+	//////////////// ìµœì´ˆì „ì²´ì¡°íšŒ//////////////////
 	@GetMapping("/eqmCheck")
 	public String eqmCheckPage(Model model) {
 		model.addAttribute("list", service.selectCheckList());
@@ -69,21 +81,21 @@ public class EqmController {
 	}
 
 	
-	  //Á¡°Ë°Ë»öÁ¶È¸
+	  //ï¿½ï¿½ï¿½Ë°Ë»ï¿½ï¿½ï¿½È¸
 	  @GetMapping("/searchEqmCheck")
 	  @ResponseBody public List<EqmVO> searchEqmCheck(EqmVO eqmVO){ 
 	  	return service.searchEqmCheck(eqmVO);
 	  }
 	 
 
-	// Á¡°Ë´Ü°ÇÁ¶È¸
+	// ë‹¨ê±´ì¡°íšŒ
 	@GetMapping("/selectCheck")
 	@ResponseBody
 	public EqmVO selectCheck(EqmVO eqmVO) {
 		return service.selectCheck(eqmVO);
 	}
 
-	// Á¡°Ëµî·Ï
+	// ï¿½ï¿½ï¿½Ëµï¿½ï¿½
 	@PostMapping("/insertCheck")
 	@ResponseBody
 	public String insertCheck(EqmVO eqmVO) {
@@ -91,7 +103,7 @@ public class EqmController {
 		return "insertSuccess";
 	}
 
-	// Á¡°Ë»èÁ¦
+	// ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½
 	@PostMapping("/deleteCheck")
 	@ResponseBody
 	public String deleteCheck(@RequestBody String[] deleteList) {
@@ -101,17 +113,29 @@ public class EqmController {
 		return "Success";
 	}
 
-	// Á¡°Ë¼öÁ¤
+	// ï¿½ï¿½ï¿½Ë¼ï¿½ï¿½ï¿½
 	@PostMapping("/updateCheck")
 	@ResponseBody
 	public String updateCheck(EqmVO eqmVO) {
 		service.updateCheck(eqmVO);
 		return "update success";
 	}
+	// ì „ì²´ì¡°íšŒ
+	@GetMapping("/afterUpdate")
+	@ResponseBody
+	public List<EqmVO> afterUpdate(){
+		return service.selectCheckList();
+	}
+	
+	@GetMapping("/afterInsert")
+	@ResponseBody
+	public List<EqmVO> afterInsert(){
+		return service.selectCheckList();
+	}
 
-	// ¼³ºñºñ°¡µ¿
+	// ï¿½ï¿½ï¿½ï¿½ñ°¡µï¿½
 
-	// ¼³ºñºñ°¡µ¿ È­¸é ¹× ÀüÃ¼Á¶È¸
+	// ï¿½ï¿½ï¿½ï¿½ñ°¡µï¿½ È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½È¸
 	@GetMapping("/eqmOpr")
 	public String eqmOpr(Model model) {
 		model.addAttribute("OprList", service.selectOprList());
@@ -119,14 +143,14 @@ public class EqmController {
 		return "eqm/eqmOpr";
 	}
 
-	// ºñ°¡µ¿µî·Ï,Y¾÷µ¥ÀÌÆ®
+	// ï¿½ñ°¡µï¿½ï¿½ï¿½ï¿½,Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	@PostMapping("insertOpr")
 	public String insertOprUpdateY(EqmVO eqmVO) {
 		service.insertOprUpdateY(eqmVO);
 		return "redirect:eqmOpr";
 	}
 
-	// ºñ°¡µ¿»èÁ¦
+	// ï¿½ñ°¡µï¿½ï¿½ï¿½ï¿½ï¿½
 	@PostMapping("/deleteOpr")
 	@ResponseBody
 	public String deleteOpr(@RequestBody String[] deleteList) {
@@ -136,7 +160,7 @@ public class EqmController {
 		return "Success";
 	}
 	
-	//¸ð´ÞÃ¢ ¿­¸é ÃÖ´ëÄÚµå¶û ¼³ºñ¸®½ºÆ® ´Ù½Ã 
+	//ï¿½ï¿½ï¿½Ã¢ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½Úµï¿½ï¿½ ï¿½ï¿½ï¿½ñ¸®½ï¿½Æ® ï¿½Ù½ï¿½ 
 	@GetMapping("/oprModal")
 	@ResponseBody
 	public Map<String, Object> openModal(Model model){
@@ -146,12 +170,25 @@ public class EqmController {
 		return map;
 	}
 	
-	//ºñ°¡µ¿¼öÁ¤
+	//ï¿½ñ°¡µï¿½ï¿½ï¿½ï¿½ï¿½
 	@PostMapping("/updateOpr")
 	public String updateOpr(EqmVO eqmVO) {
 		service.updateOpr(eqmVO);
-		return "redirect:eqmOpr"; //jsp¿¡¼­ ajax result·ÎÆäÀÌÁö ¸ø ¹Þ¾Æ¼­ ¸®´ÙÀÌ·ºÆ® ¾È µÊ
-								  // successºÎºÐ¿¡ ±×³É location.reload()ÇØÁÖ±â	
+		return "redirect:eqmOpr"; //jspï¿½ï¿½ï¿½ï¿½ ajax resultï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Þ¾Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½
+								  // successï¿½ÎºÐ¿ï¿½ ï¿½×³ï¿½ location.reload()ï¿½ï¿½ï¿½Ö±ï¿½	
+	}
+	
+	
+	@GetMapping("/afterUpdateOpr")
+	@ResponseBody
+	public List<EqmVO> afterUpdateOpr(){
+		return service.selectOprList();
+	}
+	
+	@GetMapping("/afterInsertOpr")
+	@ResponseBody
+	public List<EqmVO> afterInsertOpr(){
+		return service.selectOprList();
 	}
 	
 

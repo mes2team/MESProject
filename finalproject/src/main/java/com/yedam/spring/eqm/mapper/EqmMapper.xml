@@ -209,7 +209,8 @@
 		SET chck_dt = #{chckDt}, 
 			jdgmnt = #{jdgmnt}, 
 			dispo_ctnt = #{dispoCtnt}, 
-			chck_psch = #{chckPsch}
+			chck_psch = #{chckPsch},
+			chck_fg = #{chckFg}
 		WHERE check_cd = #{checkCd}
 	</update>
 	

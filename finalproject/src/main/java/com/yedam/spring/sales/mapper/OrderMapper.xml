@@ -149,4 +149,18 @@
 		WHERE	edcts_cd = #{edctsCd}
 		AND		order_no = #{orderNo}
 	</delete>
+	
+	<!-- 출고쪽 주문서 출고완료된거 빼고 전체조회 -->
+	<select id="selectEdctsoutOrderList" resultType="OrderSheetVO">
+		SELECT 	order_no,
+				order_dt,
+				vend_cd,
+				vend_nm,
+				prog_appe,
+				paprd_dt,
+				order_nm
+		FROM	order_sheet_test
+        WHERE prog_appe != '출고완료'
+		ORDER BY order_no
+	</select>
 </mapper>

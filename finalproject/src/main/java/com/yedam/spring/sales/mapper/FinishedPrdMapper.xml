@@ -11,10 +11,12 @@
         		e.prdt_nm,
         		e.spec,
         		e.unit,
-        		ei.edcts_lot_cnt
+        		ei.edcts_lot_cnt,
+        		ei.edcts_ist_dt,
+                ei.edcts_expire
 		FROM    edcts_ist ei JOIN edcts e
 		ON      ei.edcts_cd = e.edcts_cd
-		ORDER BY ei.edcts_lot_no
+		ORDER BY ei.edcts_expire
 	</select>
 	
 	<select id="searchFinishedPrd" resultType="FinishedPrdVO">

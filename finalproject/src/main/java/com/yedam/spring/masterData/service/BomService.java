@@ -24,5 +24,8 @@ public interface BomService {
 	
 	// bom 코드 조회
 	public BomVO getBomCd(BomVO vo);
+	
+	// bom 헤더 등록
+	public int insertBomHeader(BomVO vo);
 
 }

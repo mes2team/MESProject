@@ -28,6 +28,11 @@ public class MatServiceImpl implements MatService {
 		return matMapper.selectMatInfo(matVO);
 	}
 	@Override
+	public List<MatVO> matUseList() {
+		//사용하는 자재목록 전체
+		return matMapper.matUseList();
+	}
+	@Override
 	public List<MatVO> matVendList() {
 		// //자재거래처 전체조회
 		return matMapper.matVendList();
@@ -102,6 +107,11 @@ public class MatServiceImpl implements MatService {
 		return matMapper.matReceiptList();
 	}
 	@Override
+	public List<MatVO> matReceiptChkList() {
+		// 입고 미완료 조회
+		return matMapper.matReceiptChkList();
+	}
+	@Override
 	public MatVO getMatReceiptInfo(MatVO matVO) {
 		//자재입고 단건 조회
 		return matMapper.selectMatReceiptInfo(matVO);
@@ -117,9 +127,9 @@ public class MatServiceImpl implements MatService {
 		return matMapper.updateMatReceiptInfo(matVO);
 	}
 	@Override
-	public int removeMatReceipt(String rscLotCd) {
-		//자재발주 삭제
-		return matMapper.deleteMatReceiptInfo(rscLotCd);
+	public int removeMatReceipt(MatVO matVO) {
+		//자재입고 삭제
+		return matMapper.deleteMatReceiptInfo(matVO);
 	}
 	
 	@Override
@@ -143,9 +153,9 @@ public class MatServiceImpl implements MatService {
 		return matMapper.updateMatCheckInfo(matVO);
 	}
 	@Override
-	public int removeMatatCheckInfo(String rscInspCd) {
+	public int removeMatatCheckInfo(MatVO matVO) {
 		//자재검사 삭제
-		return matMapper.deleteMatatCheckInfo(rscInspCd);
+		return matMapper.deleteMatatCheckInfo(matVO);
 	}
 	@Override
 	public List<MatVO> matOrderChkList() {
@@ -157,11 +167,5 @@ public class MatServiceImpl implements MatService {
 		// 검수자 목록 조회
 		return matMapper.checkerList();
 	}
-	
-	
-	
-
-
-	
 
 }

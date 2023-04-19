@@ -21,8 +21,8 @@ label {
 		<div class="card">
 			<div class="card-body">
 				<div
-					style="width: 100%; height: 200px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
-					<table class="table table-striped table-hover">
+					style="width: 100%; height: 300px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
+					<table class="table table-striped table-hover" >
 						<thead>
 							<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 								<th scope="col">번호</th>
@@ -34,7 +34,7 @@ label {
 								<th scope="col">담당자</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="listTable">
 							<c:forEach items="${eqmList }" var="eqm" varStatus="loop">
 								<tr id="${eqm.eqmCd }" onclick="eqmDetail('${eqm.eqmCd }')">
 									<th scope="row">${loop.count}</th>
@@ -96,10 +96,10 @@ label {
 						<hr>
 						<div class="row g-3 align-items-center">
 							<div class="col-auto">
-								<label for="inputPassword6" class="col-form-label">점검주기</label>
+								<label for="inputPassword6" class="col-form-label">점검주기*</label>
 							</div>
 							<div class="col-auto">
-								<input type="number" name="chckPerd" class="form-control">
+								<input type="number" min=0 placeholder="단위는(일)" name="chckPerd" class="form-control">
 							</div>
 							<div class="col-auto">
 								<label for="inputPassword6" class="col-form-label">온도</label>
@@ -166,7 +166,8 @@ label {
 					      success: function(result) { 
 					    	console.log("업데이트성공");
 					    	inputEqmCd.disabled = true;
-					    	location.reload();
+					    	//location.reload();
+					    	afterEqmUpdate();
 					    	Toast.fire({
 				                  icon: "success",
 				                  title: "수정이 정상적으로 되었습니다.",
@@ -179,11 +180,40 @@ label {
 			  }
 			})
 	}
+	function afterEqmUpdate(){
+		 $.ajax({
+			  url: "afterEqmUpdate",
+			  type: "GET",
+			  dataType: "json",
+			  success: function(res) {
+				  makeEqmList(res);	  
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 
+	}
+	function makeEqmList(res){
+		let listTable = $('#listTable') 
+		listTable.empty();
+		
+		for(let i=0;i<res.length;i++){
+			let tr = $('<tr id="' + res[i].eqmCd + '" onclick="eqmDetail(\'' + res[i].eqmCd + '\')">');
+			tr.append('<th>'+(i+1)+'</th>');
+   			tr.append('<td>' + res[i].eqmFg + '</td>'); 
+    		tr.append('<td>' + res[i].eqmCd + '</td>'); 
+   			tr.append('<td>' + res[i].eqmNm + '</td>'); 
+    		tr.append('<td>' + res[i].useYn + '</td>'); 
+    		tr.append('<td>' + res[i].chckPerd + '</td>'); 
+    		tr.append('<td>' + res[i].eqmMng + '</td>'); 
+			listTable.append(tr);
+		}	
+	}
 	
 	//등록시 필수항목 체크
 	function formOptionChk(){
 		let updateCd = document.querySelector('[name="eqmCd"]').value //단건조회했을때 밑에 뿌려진 eqmCd가져옴
-		if(eqmMng.value == '' || eqmNm.value == ''){
+		if(eqmMng.value == '' || eqmNm.value == '' || chckPerd.value == ''){
 			alert("필수항목을 확인해주세요");
 			return;
 		//수정 설비코드eqmCd가 DB에있는 최대코드값보다 작거나 같으면 추가등록이 아닌 수정이므로 수정되게
@@ -420,11 +450,12 @@ label {
 		//clean버튼
 		function cleanInput(){
 			let inputs = document.querySelectorAll("input")
-			document.querySelector('select').value = '분쇄기';
-			inputs[1].value = 'EQM'+${maxCdList.firstMax + 1}; //설비코드
-			for(let i=2 ; i<inputs.length ; i++){
+			for(let i=0 ; i<inputs.length ; i++){
 				inputs[i].value = "";
 			}
+			document.querySelectorAll('select')[0].value = '분쇄기';
+			document.querySelectorAll('select')[1].value = '담당자 선택';
+			inputs[0].value = 'EQM'+${maxCdList.firstMax + 1}; //설비코드
 			document.querySelector('[name="eqmFg"]').removeAttribute("disabled");
 			document.querySelector('[name="eqmCd"]').removeAttribute("disabled");
 		}

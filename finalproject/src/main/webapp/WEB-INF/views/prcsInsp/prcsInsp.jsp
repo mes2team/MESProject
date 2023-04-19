@@ -141,6 +141,7 @@
 						<!-- 첫번째 카드마무리 -->
 						<div class="card">
 							<div class="card-body">
+							<div style="width: 100%; height: 230px; overflow: auto;">
 								<table class="table table-striped table-hover"
 									style="margin-top: 20px; margin-bottom: 5px;">
 									<thead>
@@ -158,6 +159,7 @@
 
 									</tbody>
 								</table>
+								</div>
 								<div id="inferInput" class="row g-3 align-items-center" hidden>
 									<div class="col-auto" width="" style="margin-left: 815px">
 										<label style="font-weight: bold;">총불량량*</label>

@@ -7,9 +7,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <style>
-  h5 {
-    float: left;
-  }
   #btnGrp {
     float: right;
     padding: 20px 0 15px 0;
@@ -20,9 +17,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   .active {
   background-color: #e1efff;
 }
+.highlighted{
+	background-color: #e1efff;
+}
 </style>
 <body>
-  <div>
     <div class="card">
             <div class="card-body">
               <!-- Bordered Tabs Justified -->
@@ -54,6 +53,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                     <th>작업일자</th>
                     <th>지시량</th>
                     <th>현재상태</th>
+                    <th>지시종료일자</th>
                   </tr>
                 </thead>
                 <tbody id="indicaList">
@@ -65,6 +65,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
                 		<td><fmt:formatDate value="${item.indicaDt }" pattern="yyyy-MM-dd" /></td>
                 		<td>${item.indicaCnt }</td>
                 		<td>${item.nowSt }</td>
+                		<td><fmt:formatDate value="${item.indicaDue }" pattern="yyyy-MM-dd" /></td>
                 	</tr>
                 </c:forEach>
                 </tbody>
@@ -82,7 +83,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
-            <h5 id="indicaCdText"></h5>
+            <h3 class="card-title" id="indicaCdText"></h3>
               <table class="table table-hover">
                 <thead>
                   <tr>
@@ -107,12 +108,58 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
                 </div>
                 <div class="tab-pane fade" id="bordered-justified-profile" role="tabpanel" aria-labelledby="profile-tab">
-                  Nesciunt totam et. Consequuntur magnam aliquid eos nulla dolor iure eos quia. Accusantium distinctio omnis et atque fugiat. Itaque doloremque aliquid sint quasi quia distinctio similique. Voluptate nihil recusandae mollitia dolores. Ut laboriosam voluptatum dicta.
+                    <div class="card">
+			      	<div class="card-body">
+				        <h5 class="card-title">공정실적 조회</h5>
+				        <!-- Multi Columns Form -->
+				        <form id="searchForm" class="row g-3">
+				          <div class="col-md-6">
+				            <label for="inputEmail5" class="form-label">생산지시일자</label>
+				            <div class="d-flex align-items-center">
+				              <input type="date" class="form-control mr-2" id="" />
+				              <span class="mx-2">~</span>
+				              <input type="date" class="form-control ml-2" id="" />
+				            </div>
+				            </div>
+				            <div class="col-md-6">
+					            <div id="btnGrp">
+					              <button id="searchPrcsBtn" type="button" class="btn btn-primary">검색</button>
+					              <button type="reset" class="btn btn-secondary">초기화</button>
+					            </div>
+				            </div>
+				        </form>
+				        <!-- End Multi Columns Form -->
+				      </div>
+				    </div>
+			            <div class="card">
+			          <p></p>
+			          <div class="card-body">
+			            <div id="btnGrp" style="float:right;">
+			            </div>
+			            <div class="table-responsive" style="width: 100%; overflow: auto">
+			              <table id="selectPrcsList" class="table table-hover" >
+			                <thead>
+			                  <tr>
+			                    <th>생산지시명</th>
+			                    <th>생산지시일자</th>
+			                    <th>지시종료일자</th>
+			                    <th>제품명</th>
+			                    <th>지시량</th>
+			                    <th>불량량</th>
+			                    <th>작업량</th>
+			                    <th>현재상태</th>
+			                  </tr>
+			                </thead>
+			                <tbody></tbody>
+			              </table>
+			            </div>
+			          </div>
+			        </div>
+                
                 </div>
               </div><!-- End Bordered Tabs Justified -->
 
             </div>
-          </div>
     
 
   <!-- 모달창 -->
@@ -206,6 +253,50 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
   </div>
   
   <script>
+  function validateForm() {
+	  let isValid = true;
+	  
+	  // 작업일자 검사
+	  if ($('#workDate').val() === '') {
+	    alert('작업일자를 입력해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 작업자 검사
+	  if ($('#prcsWorker').val() === '') {
+	    alert('작업자를 입력해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 공정명 검사
+	  if ($('#prcsSelect').val() === '') {
+	    alert('공정명을 선택해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 작업량 설정 검사
+	  if ($('#workAmount').val() === '') {
+	    alert('작업량을 입력해주세요.');
+	    isValid = false;
+	  }
+	  
+	  // 사용가능한 설비 검사
+	  if ($('#multiPro').val().length === 0) {
+	    alert('사용 가능한 설비를 선택해주세요.');
+	    isValid = false;
+	  }
+	  
+	  return isValid;
+	}
+	function formatDate(time) {
+	    var date = new Date(time);
+	    var year = date.getFullYear();
+	    var month = ("0" + (date.getMonth() + 1)).slice(-2);
+	    var day = ("0" + date.getDate()).slice(-2);
+	    var formattedDate = year + "-" + month + "-" + day;
+	    return formattedDate;
+	}
+  
   function getCurrentTime() {
 	  var currentDate = new Date();
 	  var year = currentDate.getFullYear();
@@ -237,6 +328,98 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 	  return formattedDate;
 	}
   $(document).ready(function(){
+	  $(document).on('click', '#selectPrcsList tbody tr', function() {
+		  var indicaCd = $(this).find('td:first-child').text();
+		  var selectedTr = $(this);
+		  var isHighlighted = selectedTr.hasClass('highlighted');
+
+		  if (!isHighlighted) {
+		    selectedTr.addClass('highlighted');
+		  } else {
+		    selectedTr.removeClass('highlighted');
+		  }
+		  console.log(indicaCd);
+		  $.ajax({
+			  url:'getPrcsIndica',
+			  type:'post',
+			  data:{indicaCd:indicaCd},
+			  success:function(data) {
+				  console.log(data.PrcsIndica);
+
+				  data.PrcsIndica.forEach(function(item) {
+				    var tr = $('<tr>').attr('class',item.indicaCd);
+
+				    var td1 = $('<td>').text(item.prcsNm);
+				    var td2 = $('<td>').text(item.prcsPsch);
+				    var td3 = $('<td>').text(item.indicaCnt);
+				    var td4 = $('<td>').text(item.inferCnt);
+				    var td5 = $('<td>').text(item.prodCnt);
+				    var td6 = $('<td>').text(item.wkToTm);
+				    var td7 = $('<td>').text(item.wkFrTm);
+				    var td8 = $('<td>').text(item.useEqm);
+
+				    tr.append(td1, td2, td3, td4, td5, td6, td7, td8);
+
+				    selectedTr.after(tr);
+				  });
+			  },
+			  error:function() {
+				  
+			  }
+			  
+		  })
+	  });
+ 	  $('#searchPrcsBtn').click(function() {
+		  $.ajax({
+			  url:'getPrcsAndIndList',
+			  type:'get',
+			  success:function(data) {
+				  console.log(data.prcsList);
+				  console.log(data.prcsAmount);
+				  var tbody = $('#selectPrcsList tbody');
+
+				  data.prcsAmount.forEach(function(item) {
+				    var tr = $('<tr>');
+
+				    var td1 = $('<td>').attr('hidden', true).text(item.indicaCd);
+				    var td2 = $('<td>');
+				    var td3 = $('<td>');
+				    var td4 = $('<td>');
+				    var td5 = $('<td>');
+				    var td6 = $('<td>');
+				    var td7 = $('<td>');
+				    var td8 = $('<td>');
+				    var td9 = $('<td>');
+
+				    data.prcsList.forEach(function(prcsItem) {
+				      if (item.indicaCd === prcsItem.indicaCd) {
+				        td2.text(prcsItem.indicaName);
+				        td3.text(formatDate(prcsItem.indicaDt));
+				        if(prcsItem.indicaFdt == null){
+				        	td4.text('-');
+				        }else {	
+				        	td4.text(formatDate(prcsItem.indicaFdt));
+				        }
+				        td5.text(prcsItem.prdtNm);
+				        td6.text(prcsItem.indicaCnt);
+				        td7.text(prcsItem.inferCnt);
+				        td8.text(prcsItem.prodCnt);
+				        td9.text(prcsItem.prcsStatus);
+				      }
+				    });
+
+				    tr.append(td1, td2, td3, td4, td5, td6, td7, td8, td9);
+
+				    tbody.append(tr);
+				  });
+
+			  },
+			  error:function(error) {
+				  console.log(error)
+			  }
+		  })
+	  }) 
+	  
 	  $('#closeModal').click(function() {
 		  $('#prcsModal').find('button').prop('disabled',false);
 		  $('#prcsModal').find('input').val('');
@@ -250,7 +433,8 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  $('#stopTime').val(wkFrTm);
 		  $(this).attr('disabled','disabled'); 
 		  
-		  var indicaCd = $('.active').find('td:first-child').text()
+		  var indicaCd = $('tr.active').find('td:first-child').text()
+		  console.log(indicaCd);
 		  var prcsCd = $('#prcsSelect').val();
 		  console.log(wkFrTm+'/'+indicaCd+'/'+prcsCd);
 		  $.ajax({
@@ -260,7 +444,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				    indicaCd:indicaCd,
 				    wkFrTm:wkFrTm},
 			  success:function(data){
-				  console.log(data.result);		  		  
+				  console.log(data.result);
+				  location.reload();
+
 			  },
 			  error:function(error){
 				  console.log(error);
@@ -271,7 +457,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		});
 	  
 	  $('#workStart').on('click', function() {	  
-		  
+		  if(validateForm()){  
 		  var trList = $('#modalInTbody tr');
 		  //사용할 자재 배열
 		  var rscArr = [];
@@ -291,8 +477,9 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		  $('#startTime').val(wkToTm);
 		  $(this).attr('disabled','disabled');
 		  
-		  var indicaCd = $('.active').find('td:first-child').text()
-		  
+		  var indicaCd = $('tr.active').find('td:first-child').text();
+		  console.log($('tr.active'));
+		  console.log(indicaCd);
 		  var prcsPsch = $('#prcsWorker').val();
 		  var prcsCd = $('#prcsSelect').val();
 		  var indicaCnt = $('#workAmount').val();
@@ -309,7 +496,6 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		    	useEqm += "/";
 		    }
 		  }
-		  console.log(useEqm);
 		  
 		  $.ajax({
 			  url:'modifyPrcsStart',
@@ -338,6 +524,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 							  contentType: "application/json",
 							  success:function(data) {
 								  console.log("자재"+data);
+								  location.reload();
 							  },
 							  error:function(error) {
 								  console.log(error);
@@ -355,6 +542,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 				  console.log(error);
 			  }
 		  })
+		  }
 	  })
 	 
 	  
@@ -494,16 +682,17 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 						 data:{prcsCd : prcsCd},
 						 success:function(data){
 							 console.log(data.result)
-							 var multiPro = $('#multiPro');
-
-							 $.each(data.result, function(index, obj) {
-							   var eqmCd = obj.eqmCd;
-							   var eqmFg = obj.eqmFg;
-							   
-							   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd).data('fg', eqmFg);
-							   
-							   multiPro.append(option);
-							 });
+							 if(wkToTm == '-'){	 
+								 var multiPro = $('#multiPro');
+								 $.each(data.result, function(index, obj) {
+								   var eqmCd = obj.eqmCd;
+								   var eqmFg = obj.eqmFg;
+								   
+								   var option = $('<option>').attr('value', eqmCd).text(eqmFg+' / '+eqmCd).data('fg', eqmFg);
+								   
+								   multiPro.append(option);
+								 });
+							 }
 						 },
 						 error:function(error) {
 							 console.log(error)

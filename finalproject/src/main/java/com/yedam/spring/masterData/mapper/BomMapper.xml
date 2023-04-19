@@ -48,7 +48,6 @@
 		   		rsc_spec,
 		   		mng_unit,
 		   		rsc_typ,
-		   		saf_stc,
 		   		use_yn,
 		   		vend_cd,
 		   		vend_nm
@@ -63,4 +62,15 @@
     	WHERE	edcts_cd = #{edctsCd}
     	AND		standard = #{standard}
     </select>
+    
+    <!-- bom 헤더 등록 -->
+    <insert id="insertBomHeader" parameterType="BomVO">
+    	<selectKey keyProperty="bomCd" resultType="String" order="BEFORE">
+    		SELECT 	'BOM' || TO_CHAR(NVL(MAX(SUBSTR(bom_cd, 4)),999) + 1)
+			FROM 	bom
+    	</selectKey>
+    
+    	INSERT INTO bom(bom_cd, edcts_cd, standard)
+    	VALUES	(#{bomCd}, #{edctsCd}, #{standard})
+    </insert>
 </mapper>

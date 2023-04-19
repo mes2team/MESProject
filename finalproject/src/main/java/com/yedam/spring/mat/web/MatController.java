@@ -31,18 +31,30 @@ public class MatController {
 		model.addAttribute("matList",matService.matList());
 		return "material/matList";
 	}
+	//ajax용 자재정보전체조회
+	@GetMapping("/ajaxMatList")
+	@ResponseBody
+	public List<MatVO> ajaxMatList() {
+		return matService.matList();
+	}
 	//자재정보단건조회
 	@GetMapping("/matInfo")
 	@ResponseBody
 	public MatVO getMat(MatVO matVO) {		
 		return matService.getMat(matVO); 
 	}
+	//사용하는 자재목록 조회
+	@GetMapping("/matUseModal")
+	@ResponseBody
+	public List<MatVO> matUseList(){
+		return matService.matUseList();
+	}
 	//자재거래처 조회
 	@GetMapping("/VendModal")
 	@ResponseBody
 	public List<MatVO> matVendList(){
 		return matService.matVendList();
-		}
+	}
 	
 	//자재정보등록	
 	@PostMapping("/matInsert")
@@ -102,6 +114,12 @@ public class MatController {
 		model.addAttribute("matStock",matService.matStock());
 		return "material/matOrder";
 	}
+	//자재발주 단건조회
+		@GetMapping("/ordrInfo")
+		@ResponseBody
+		public MatVO getOrdr(MatVO matVO) {		
+			return matService.getMatOrderInfo(matVO); 
+		}
 	// 자재발주등록
 	@PostMapping("/matOrderInsert")
 	@ResponseBody
@@ -117,22 +135,11 @@ public class MatController {
 	// 자재발주수정
 	@PostMapping("/updatematOrder")
 	@ResponseBody
-	public Map<String, Object> updatematOrder(@RequestBody MatVO[] arr) {
-		Map<String, Object> map = new HashMap<>();
-	    if (arr == null) {
-	    	map.put("result", "false");
-	    	map.put("data", null);
-	        return map;
-	    }
-	    for (int i = 0; i < arr.length; i++) {
-	    	matService.updatematOrder(arr[i]);
-	    }
-	    
-	    List<MatVO> list = matService.matOrderList();
-	    map.put("result", "success");
-    	map.put("data", list);
-        return map;
+	public List<MatVO> updatematOrder(MatVO arr) {
+		matService.updatematOrder(arr);
+		return matService.matOrderList();
 	}
+	
 	
 	//자재발주삭제
 	@PostMapping("/matOrderDelete")
@@ -154,40 +161,55 @@ public class MatController {
 		model.addAttribute("matReceiptList",matService.matReceiptList());
 		return "material/matReceipt";
 	}
+	//입고미완료 발주 전체 조회
+	@GetMapping("/checkModal")
+	@ResponseBody
+	public List<MatVO> matReceiptChkList(){
+		return matService.matReceiptChkList();
+		}
 	//자재입고 등록 - Process
 	@PostMapping("/matReceiptInsert")
-	public String matReceiptProcess(MatVO matVO) {
+	@ResponseBody
+	public List<MatVO> matReceiptProcess(MatVO matVO) {
 		matService.addMatReceipt(matVO);
-		return "redirect:matReceipt";
+		return matService.matReceiptList();
 	}
+	//자재입고 단건조회
+		@GetMapping("/selectMatReceipt")
+		@ResponseBody
+		public MatVO selectMatReceipt(MatVO matVO) {
+			return matService.getMatReceiptInfo(matVO);
+		}
 	// 자재입고수정(여러개 동시에 수정할 때 @RequestBody MatVO[] arr)
 	@PostMapping("/updateMatReceipt")
 	@ResponseBody
-	public Map<String, Object> updateMatReceipt(@RequestBody MatVO[] arr) {
-		Map<String, Object> map = new HashMap<>();
-	    if (arr == null) {
-	    	map.put("result", "false");
-	    	map.put("data", null);
-	        return map;
-	    }
-	    for (int i = 0; i < arr.length; i++) {
-	    	matService.updateMatReceipt(arr[i]);
-	    }
-	    
-	    List<MatVO> list = matService.matReceiptList();
-	    map.put("result", "success");
-    	map.put("data", list);
-        return map;
+	public List<MatVO> updateMatReceipt(MatVO arr) {
+		System.out.println("출력" +arr);
+	    	matService.updateMatReceipt(arr);
+        return matService.matReceiptList();
 	}
+//여러개 수정할 때	
+//	public Map<String, Object> updateMatReceipt(@RequestBody MatVO[] arr) {
+//		Map<String, Object> map = new HashMap<>();
+//	    if (arr == null) {
+//	    	map.put("result", "false");
+//	    	map.put("data", null);
+//	        return map;
+//	    }
+//	    for (int i = 0; i < arr.length; i++) {
+//	    	matService.updateMatReceipt(arr[i]);
+//	    }
+//	    
+//	    List<MatVO> list = matService.matReceiptList();
+//	    map.put("result", "success");
+//    	map.put("data", list);
+//        return map;
+//	}
 	
 	//자재입고삭제
 	@PostMapping("/matReceiptDelete")
 	@ResponseBody
-	public String matReceiptDeleteProcess(HttpServletRequest request) {
-		String[] arr = request.getParameterValues("valueArr");
-		if (arr == null) {
-			return "error";
-		}
+	public String matReceiptDeleteProcess(@RequestBody MatVO[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			matService.removeMatReceipt(arr[i]);
 		}
@@ -232,18 +254,12 @@ public class MatController {
 	public List<MatVO> updateMatCheckInfo(MatVO arr) {
 		System.out.println("출력" +arr);
 	    	matService.updateMatCheckInfo(arr);
-	    
-	    
         return matService.matCheckList();
 	}
 	//자재검사삭제
 	@PostMapping("/removeMatatCheck")
 	@ResponseBody
-	public String matCheckDeleteProcess(HttpServletRequest request) {
-		String[] arr = request.getParameterValues("valueArr");
-		if (arr == null) {
-			return "error";
-		}
+	public String matCheckDeleteProcess(@RequestBody MatVO[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			matService.removeMatatCheckInfo(arr[i]);
 		}

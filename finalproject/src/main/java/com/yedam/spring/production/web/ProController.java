@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yedam.spring.common.Criteria;
 import com.yedam.spring.common.PageDTO;
+import com.yedam.spring.masterData.service.EdctsService;
+import com.yedam.spring.masterData.service.EdctsVO;
 import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -32,15 +34,19 @@ public class ProController {
 	@Autowired
 	ProService proService;
 	
+	@Autowired
+	EdctsService edctsService;
+	
 	// 생산계획 수정
 	@PostMapping("/modifyProPlan")
 	@ResponseBody
 	public Map<String, Object> modifyProPlan(@RequestBody List<ProPlanVO> proPlanArray) {
 		Map<String, Object> resultMap = new HashMap<>();
 		String result = null;
-		for (int i = 0; i < proPlanArray.size(); i++) {
-			result = proService.modifyProPlan(proPlanArray.get(i));;
-			
+		if(proService.preModiPlan(proPlanArray.get(0).getPlanCd())>0) {
+			for (int i = 0; i < proPlanArray.size(); i++) {
+				result = proService.modifyProPlan(proPlanArray.get(i));;
+			}
 		}
 		resultMap.put("result", result);
 		return resultMap;
@@ -163,6 +169,8 @@ public class ProController {
 		int total = proService.getProPlanCnt();
 		model.addAttribute("prcsList", proService.getprcsList(cri));
 		model.addAttribute("pageMaker", new PageDTO(cri, total));
+		model.addAttribute("prdList", edctsService.getEdctsList()); // 공정흐름관리 제품 조회
+		model.addAttribute("getPrcsList", proService.getPrcsList());
 		return "production/processManage";
 	}
 
@@ -206,6 +214,16 @@ public class ProController {
 	public Map<String, Object> getPlanToOrder() {
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("result", proService.getPlanToOrder());
+		System.out.println(resultMap);
+		return resultMap;
+	}
+	
+	//조건 조회
+	@PostMapping("/getPlanToOrder")
+	@ResponseBody
+	public Map<String, Object> getPlanToOrder(ProOrderVO vo) {
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("result", proService.getPlanToOrder(vo));
 		System.out.println(resultMap);
 		return resultMap;
 	}
@@ -368,5 +386,51 @@ public class ProController {
 
 		return resultMap;
 	}
+	
+	// 공정흐름관리 제품 조회
+	@PostMapping("/prcsFlowList")
+	@ResponseBody
+	public List<ProPrcsVO> processManagePrd(ProPrcsVO vo){
+		return proService.getPrcsFlowList(vo);
+	}
+	
+	// 공정 저장
+	@PostMapping("/savePrcs")
+	@ResponseBody
+	public List<ProPrcsVO> selectPrcsList(@RequestBody ProPrcsVO[] arr){
+		for(int i = 0; i < arr.length; i++) {
+			proService.savePrcs(arr[i]);
+		}
+		return proService.getPrcsFlowList(arr[0]);
+	}
+	
+	// 공정 삭제
+	@PostMapping("/prcsFlowDel")
+	@ResponseBody
+	public List<ProPrcsVO> prcsFlowDel(@RequestBody ProPrcsVO[] arr){
+		for(int i = 0; i < arr.length; i++) {
+			proService.deletePrcsFlow(arr[i]);
+		}
+		return proService.getPrcsFlowList(arr[0]);
+	} 
+	
+	@GetMapping("/getPrcsAndIndList")
+	@ResponseBody
+	public Map<String, Object> getPrcsAndIndList() {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("prcsList", proService.getPrcsResultList());
+		resultMap.put("prcsAmount", proService.getPrcsAmountList());
+
+		return resultMap;
+	}
+	@PostMapping("/getPrcsIndica")
+	@ResponseBody
+	public Map<String, Object> getPrcsIndica(ProPrcsVO vo){
+		Map<String, Object> resultMap = new HashMap<>();
 		
+		resultMap.put("PrcsIndica", proService.getPrcsIndica(vo));
+
+		return resultMap;
+	}
 }

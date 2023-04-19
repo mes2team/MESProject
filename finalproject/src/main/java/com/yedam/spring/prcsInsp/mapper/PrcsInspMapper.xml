@@ -12,11 +12,14 @@
 		p.indica_cnt,
 		i.edcts_cd,
 		prdt_nm
-		FROM prcs_prog p JOIN prcs r ON p.prcs_cd = r.prcs_cd
+		FROM prcs_prog p
+		JOIN prcs r ON p.prcs_cd = r.prcs_cd
 		JOIN indica_dtl i
-		ON p.indica_cd = i.indica_cd
+		ON p.indica_cd =
+		i.indica_cd
 		JOIN edcts e ON e.edcts_cd = i.edcts_cd
-		WHERE LENGTH(p.prcs_status) = 4
+		WHERE
+		LENGTH(p.prcs_status) = 4
 		ORDER BY prcs_cd
 	</select>
 	<!-- 공정별 검사기준 -->
@@ -25,102 +28,143 @@
 		SELECT prcs_insp_cd,
 		prcs_insp_nm,
 		prcs_insp_std
-		FROM prcs_insp_std
+		FROM
+		prcs_insp_std
 		WHERE prcs_cd = #{prcsCd}
 	</select>
-	
+
 	<update id="inferUpdateInsert" parameterType="PrcsInspVO">
 		BEGIN
-			UPDATE prcs_prog
-			SET infer_cnt = #{inferCnt},
-				prcs_chk_cd = #{prcsChkCd},
-				prcs_status = #{prcsNm}||'검사완료',
-				prod_cnt = #{prodCnt}
-			WHERE indica_cd = #{indicaCd} AND prcs_cd = #{prcsCd};
-			
-			INSERT INTO prcs_prog_infer (
-								    	  prcs_chk_cd,
-										  prcs_cd,
-										  indica_cd,
-										  infer_cnt
-										)
-								VALUES (
-										  #{prcsChkCd},
-										  #{prcsCd},
-										  #{indicaCd},
-										  #{inferCnt}
-										);		
+		UPDATE prcs_prog
+		SET infer_cnt = #{inferCnt},
+		prcs_chk_cd = #{prcsChkCd},
+		prcs_status = #{prcsNm}||'검사완료',
+		prod_cnt = #{prodCnt}
+		WHERE indica_cd = #{indicaCd} AND prcs_cd = #{prcsCd};
+
+		INSERT INTO prcs_prog_infer (
+		prcs_chk_cd,
+		prcs_cd,
+		indica_cd,
+		infer_cnt
+		)
+		VALUES (
+		#{prcsChkCd},
+		#{prcsCd},
+		#{indicaCd},
+		#{inferCnt}
+		);
 		END;
 	</update>
-	
-	
+
+	<!-- 포장일때만 일로 옴 검사완료 지시,계획 테이블 수정 -->
+	<update id="updateIndiPlan" parameterType="PrcsInspVO">
+		DECLARE
+			CURSOR c_plan_dtl IS
+				SELECT order_cnt, indica_cnt
+				FROM plan_dtl
+				WHERE plan_cd = (select distinct plan_cd from prcs_prog where indica_cd = #{indicaCd}) ;
+		
+			v_a plan_dtl.order_cnt%TYPE;
+			v_b plan_dtl.indica_cnt%TYPE;
+			v_all_same BOOLEAN := TRUE; 
+		BEGIN
+			FOR rec IN c_plan_dtl LOOP
+				v_a := rec.order_cnt;
+				v_b := rec.indica_cnt;
+				
+				IF v_a != v_b THEN 
+					v_all_same := FALSE;
+					EXIT; 
+				END IF;
+			END LOOP;
+
+			IF v_all_same THEN
+				UPDATE plan
+				SET now_st = '생산완료', plan_fdt = SYSDATE 
+				WHERE plan_cd = (select distinct plan_cd from prcs_prog where indica_cd = #{indicaCd}); 
+				COMMIT; 
+			END IF;
+			
+			UPDATE indica
+			SET now_st = '생산완료', indica_fdt = SYSDATE
+			WHERE indica_cd = #{indicaCd};
+			COMMIT;
+		END;
+	</update>
+
+
 	<!-- 검사완료맥스코드 -->
 	<select id="selectMaxChkCd" resultType="PrcsInspVO">
-			SELECT 'PCK'||(TO_NUMBER(SUBSTR(NVL(MAX(prcs_chk_cd),'PCK999'),4)) + 1) prcs_chk_cd
-			FROM prcs_insp_dtl
+		SELECT 'PCK'||(TO_NUMBER(SUBSTR(NVL(MAX(prcs_chk_cd),'PCK999'),4)) + 1)
+		prcs_chk_cd
+		FROM prcs_insp_dtl
 	</select>
 
 	<insert id="insertDtl" parameterType="PrcsInspVO">
-		
+
 		INSERT INTO prcs_insp_dtl (
-								   prcs_chk_cd,
-								   prcs_cd,
-								   prcs_nm,
-								   edcts_cd,
-								   prdt_nm,
-								   prod_cnt,
-								   prcs_insp_dt,
-								   prcs_insp_mng,
-								   prcs_insp_cd,
-								   prcs_insp_nm,
-								   prcs_insp_std,
-								   prcs_insp_rst,
-								   prcs_insp_jdg,
-								   edcts_expire
-								   )
-							VALUES(
-								   #{prcsChkCd},	
-								   #{prcsCd},	
-								   #{prcsNm},	
-								   #{edctsCd},	
-								   #{prdtNm},	
-								   #{prodCnt},	
-								   #{prcsInspDt},	
-								   #{prcsInspMng},	
-								   #{prcsInspCd},	
-								   #{prcsInspNm},	
-								   #{prcsInspStd},	
-								   #{prcsInspRst},	
-								   #{prcsInspJdg},
-								   #{edctsExpire}	
-							)	   
+		prcs_chk_cd,
+		prcs_cd,
+		prcs_nm,
+		edcts_cd,
+		prdt_nm,
+		prod_cnt,
+		prcs_insp_dt,
+		prcs_insp_mng,
+		prcs_insp_cd,
+		prcs_insp_nm,
+		prcs_insp_std,
+		prcs_insp_rst,
+		prcs_insp_jdg,
+		edcts_expire
+		)
+		VALUES(
+		#{prcsChkCd},
+		#{prcsCd},
+		#{prcsNm},
+		#{edctsCd},
+		#{prdtNm},
+		#{prodCnt},
+		#{prcsInspDt},
+		#{prcsInspMng},
+		#{prcsInspCd},
+		#{prcsInspNm},
+		#{prcsInspStd},
+		#{prcsInspRst},
+		#{prcsInspJdg},
+		#{edctsExpire}
+		)
 	</insert>
-	
+
 	<select id="selectCompletedPrcs" resultType="prcsInspVO">
-		SELECT distinct prcs_insp_dt,  --검사일   
-                d.prcs_chk_cd, --검사코드
-                d.prcs_nm, --공정명
-                d.prdt_nm, --제품명
-                d.prod_cnt, --검사량
-                p.infer_cnt --불량량
+		SELECT distinct
+		prcs_insp_dt, --검사일
+		d.prcs_chk_cd, --검사코드
+		d.prcs_nm, --공정명
+		d.prdt_nm, --제품명
+		d.prod_cnt, --검사량
+		p.infer_cnt --불량량
 		FROM prcs_insp_dtl d join prcs_prog p
-		ON d.prcs_chk_cd = p.prcs_chk_cd
+		ON d.prcs_chk_cd =
+		p.prcs_chk_cd
 		ORDER BY prcs_insp_dt DESC
 	</select>
-	
+
 	<!-- 검사완료단건조회 -->
-	<select id="inspDtl" parameterType="prcsInspVO" resultType="prcsInspVO">
-		SELECT  prcs_insp_cd, 
-      			prcs_insp_nm, 
-     			prcs_insp_std, 
-      			prcs_insp_rst, 
-       			prcs_insp_jdg
+	<select id="inspDtl" parameterType="prcsInspVO"
+		resultType="prcsInspVO">
+		SELECT prcs_insp_cd,
+		prcs_insp_nm,
+		prcs_insp_std,
+		prcs_insp_rst,
+		prcs_insp_jdg
 		FROM prcs_insp_dtl
 		WHERE prcs_chk_cd = #{prcsChkCd}
 	</select>
-	
+
 	<delete id="deleteCompleted" parameterType="String">
-		DELETE 
+		DELETE
 		FROM prcs_insp_dtl
 		WHERE prcs_chk_cd = #{prcsChkCd}
 	</delete>

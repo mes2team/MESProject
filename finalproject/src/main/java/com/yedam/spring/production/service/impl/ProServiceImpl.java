@@ -76,12 +76,13 @@ public class ProServiceImpl implements ProService {
 	@Override
 	public String modifyProPlan(ProPlanVO vo) {
 		String result = null;
-		if(proMapper.updateProPlan(vo) > 0) {
-			result ="success";
-		} else {
-			result ="fail";
-		}
-		return result;
+			if(proMapper.updateProPlan(vo) > 0) {
+				result ="success";
+			} else {
+				result ="fail";
+			}
+			return result;
+
 	}
 
 	@Override
@@ -282,6 +283,51 @@ public class ProServiceImpl implements ProService {
 		} else {
 			return "Fail";
 		}	
+	}
+
+	@Override
+	public List<ProPlanVO> getPlanToOrder(ProOrderVO vo) {
+		return proMapper.selectPlanToOrderChk(vo);
+	}
+
+	@Override
+	public int preModiPlan(String planCd) {
+		return proMapper.preUpdatePlan(planCd) ;
+
+	}
+	public List<ProPrcsVO> getPrcsFlowList(ProPrcsVO vo) {
+		return proMapper.selectPrcsFlowList(vo);
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsList() {
+		return proMapper.getPrcsList();
+	}
+
+	@Override
+	public int savePrcs(ProPrcsVO vo) {
+		return proMapper.savePrcs(vo);
+	}
+
+	@Override
+	public int deletePrcsFlow(ProPrcsVO vo) {
+		return proMapper.deletePrcsFlow(vo);
+
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsResultList() {
+		return proMapper.selectPrcsResultList();
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsAmountList() {
+		return proMapper.selectPrcsAmountList();
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsIndica(ProPrcsVO vo) {
+		return proMapper.selectPrcsIndica(vo);
 	}
 
 

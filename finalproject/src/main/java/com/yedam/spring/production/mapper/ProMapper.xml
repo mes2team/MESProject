@@ -29,7 +29,8 @@
 	  							  <if test="orderNo != null and !orderNo.equals('')">
 	  							  order_no,
 	  							  </if>
-	  							  plan_dt
+	  							  plan_dt,
+	  							  plan_due
 	  							  )
 	  					VALUES	 (v_pran_cd,
 	  							  #{planName},
@@ -38,7 +39,8 @@
 	  							  <if test="orderNo != null and !orderNo.equals('')">
 	  							  #{orderNo},
 	  							  </if>
-	  							  sysdate
+	  							  sysdate,
+	  							  #{planDue}
 	  							  );
 	  			<!-- 생산계획디테일 테이블 -->
 	  			INSERT INTO plan_dtl (plan_cd,
@@ -47,7 +49,8 @@
 		  							  bom_cd,
 		  							  order_cnt,
 		  							  wk_to_dt,
-		  							  prdt_nm
+		  							  prdt_nm,
+		  							  indica_cnt
 		  							  )
 		  					VALUES	 (v_pran_cd,
 		  							  #{prefRank},
@@ -55,7 +58,8 @@
 		  							  #{bomCd},
 		  							  #{orderCnt},
 		  							  #{wkToDt},
-		  							  v_prdt_nm
+		  							  v_prdt_nm,
+		  							  0
 		  							  );
 
 	  		END;
@@ -91,7 +95,8 @@
 	  							  bom_cd,
 	  							  order_cnt,
 	  							  wk_to_dt,
-	  							  prdt_nm
+	  							  prdt_nm,
+	  							  indica_cnt
 	  							  )
 	  					VALUES	 (v_plan_cd,
 	  							  #{prefRank},
@@ -99,7 +104,8 @@
 	  							  #{bomCd},
 	  							  #{orderCnt},
 	  							  #{wkToDt},
-	  							  v_prdt_nm
+	  							  v_prdt_nm,
+	  							  0
 	  							  );
   		END;
   	</insert>
@@ -164,37 +170,23 @@
   		  AND p.plan_cd = #{planCd}
   	</select>
   	
-  	<!-- 생산계획 조회 + 페이징-->
+  	<!-- 생산계획 조회 -->
 	<select id="selectProPlans" resultType="ProPlanVO">
 	<![CDATA[
-		SELECT 	plan_cd,
-				plan_name,
-				paprd_dt,
-				now_st,
-				plan_dt,
-				order_no,
-				pref_rank,
-				edcts_cd,
-				order_cnt,
-				wk_to_dt,
-				prdt_nm
-		FROM 	(SELECT	rownum rn,
-						p.plan_cd,
+		SELECT	p.plan_cd,
 						p.plan_name,
 						p.paprd_dt,
 						p.now_st,
 						p.plan_dt,
 						p.order_no,
+						p.plan_due,
 						d.pref_rank,
 						d.edcts_cd,
 						d.order_cnt,
 						d.wk_to_dt,
 						d.prdt_nm
-				   FROM	plan p, plan_dtl d
-				  WHERE	p.plan_cd = d.plan_cd
-				    AND p.now_st IN ('미지시', '지시완료', '생산완료')
-				    AND rownum <= #{pageNum} * #{amount})
-		WHERE rn > (#{pageNum}-1)* #{amount}
+		FROM	plan p, plan_dtl d
+	    WHERE	p.plan_cd = d.plan_cd
 		ORDER BY plan_cd, plan_dt DESC
 	]]>
 	</select>
@@ -209,19 +201,23 @@
 	  	END;	
 	</delete>
 	
+	<delete id="preUpdatePlan" parameterType="String">
+		 DELETE FROM plan_dtl
+   		 WHERE plan_cd = #{planCd}
+	</delete>
+	
 	<!-- 생산 계획 수정 -->
 	<update id="updateProPlan" parameterType="ProPlanVO">
-		BEGIN
-			UPDATE 	plan
-			SET 	plan_dt = sysdate,
-					plan_name = #{planName}
-			WHERE 	plan_cd = #{planCd};
-	
-			UPDATE 	plan_dtl
-			SET 	order_cnt = #{orderCnt},
-					wk_to_dt = #{wkToDt}
-			WHERE 	plan_cd = #{planCd};
-		END;
+		{CALL update_plan(
+ 		    #{planCd, mode=IN, jdbcType=VARCHAR},
+      		#{edctsCd, mode=IN, jdbcType=VARCHAR},
+      		#{prefRank, mode=IN, jdbcType=VARCHAR},
+      		#{orderCnt, mode=IN, jdbcType=VARCHAR},
+      		#{wkToDt, mode=IN, jdbcType=DATE},
+      		#{bomCd, mode=IN, jdbcType=VARCHAR},
+      		#{planName, mode=IN, jdbcType=VARCHAR},
+      		#{planDue, mode=IN, jdbcType=DATE}
+    	)}
 	</update>
 	
 	
@@ -327,6 +323,31 @@
   	]]>	
   	</select>
   	
+  	<!-- 미지시 계획 조건 조회 -->
+  	<select id="selectPlanToOrderChk" resultType="ProPlanVO">
+  	<![CDATA[
+  	  SELECT p.plan_cd,
+	         p.paprd_dt,
+	         p.now_st,
+	         pref_rank,
+	         p.plan_name,
+	         pd.edcts_cd,
+	         pd.bom_cd,
+	         pd.order_cnt,
+	         pd.indica_cnt,
+	         pd.wk_to_dt,
+	         e.prdt_nm
+	  FROM   plan p, plan_dtl pd, edcts e
+	  WHERE  p.plan_cd = pd.plan_cd
+	    AND  pd.edcts_cd = e.edcts_cd
+	    AND  (p.now_st = '미지시' OR p.now_st = '지시진행중')
+	    AND  pd.order_cnt > pd.indica_cnt
+	    AND  p.plan_dt >= #{startDate} 
+	    AND  p.plan_dt <= #{endDate}
+	  ORDER BY pd.wk_to_dt, pref_rank
+  	]]>	
+  	</select>
+  	
   	<select id="selectBomStock" resultType="BomVO">
   		SELECT b.bom_cd, 
   			   r.rsc_cd, 
@@ -383,9 +404,10 @@
  	</select>
  	
  	<select id="selectLotStock" resultType="BomVO">
-	 	SELECT b.edcts_cd, bd.rsc_cd, bd.use_cnt, bd.unit, ri.rsc_lot_cd, ri.rsc_now_stc, r.rsc_typ, r.rsc_nm
-		FROM bom b, bom_detail bd, rsc_ist ri, rsc r
-		WHERE b.bom_cd = bd.bom_cd
+	 	SELECT p.prcs_nm, b.edcts_cd, bd.rsc_cd, bd.use_cnt, bd.unit, ri.rsc_lot_cd, ri.rsc_now_stc, r.rsc_typ, r.rsc_nm
+		FROM bom b, bom_detail bd, rsc_ist ri, rsc r , prcs p
+		WHERE bd.prcs_cd = p.prcs_cd
+		  AND b.bom_cd = bd.bom_cd
 		  AND bd.rsc_cd = ri.rsc_cd
 		  AND ri.rsc_cd = r.rsc_cd
 		  AND b.edcts_cd = #{edctsCd}
@@ -404,6 +426,7 @@
 		    </selectKey>
 	  		DECLARE
 				v_plan_cd	VARCHAR2(100);
+				v_indica_cnt NUMBER;
 				v_edcts_cd	VARCHAR2(100);
 				v_bom_cd	VARCHAR2(100);
 				v_indica_cd	VARCHAR2(100);
@@ -411,41 +434,44 @@
 				CURSOR c_prcs_flow IS
 				  SELECT prcs_cd 
 				  FROM prcs_flow
-				  WHERE edcts_cd = 'EDC1001'
+				  WHERE edcts_cd = #{edctsCd}
 				  ORDER BY prcs_no;
 	  		BEGIN
 	  			v_plan_cd := #{planCd};
 	  			v_edcts_cd := #{edctsCd};
 	  			v_bom_cd := #{bomCd};
 	  			v_indica_cd := 'IND' || ${indicaCd};
-	  			
 	
 	  			SELECT 	plan_cd
 	  			INTO	v_plan_cd
 	  			FROM 	plan
 	  			WHERE	plan_name = #{planName};
 	  			
-	  			SELECT 	edcts_cd
-	  			INTO	v_edcts_cd
-	  			FROM 	edcts
-	  			WHERE	prdt_nm = #{prdtNm};
-	  			
 	  			SELECT 	bom_cd
 	  			INTO	v_bom_cd
 	  			FROM 	bom
 	  			WHERE	edcts_cd = v_edcts_cd;
+	  			
+	  				  			
+	  			SELECT indica_cnt
+	  			INTO v_indica_cnt
+	  			FROM plan_dtl
+	  			WHERE plan_cd = v_plan_cd
+	  			  AND edcts_cd = v_edcts_cd;
 	
 	  				
 	  			<!-- 생산지시테이블 -->
 	  			INSERT INTO indica (indica_dt,
 	  							  now_st,
 	  							  indica_cd,
-	  							  indica_name
+	  							  indica_name,
+	  							  indica_due
 	  							  )
 	  					VALUES	 (#{indicaDt},
 	  							  '지시완료',
 	  							  v_indica_cd,
-	  							  #{indicaName}
+	  							  #{indicaName},
+	  							  #{indicaDue}
 	  							  );
 	  			<!-- 생산지시디테일 테이블 -->
 	  			INSERT INTO indica_dtl (indica_dt,
@@ -464,12 +490,12 @@
 		  							  v_bom_cd,
 		  							  v_indica_cd
 		  							  );
-		  							  
+		  		<![CDATA[					  
 		  		UPDATE 	plan_dtl
-				SET 	indica_cnt = #{indicaCnt}
+				SET 	indica_cnt = v_indica_cnt + #{indicaCnt}
 				WHERE 	plan_cd = v_plan_cd
 				  AND	edcts_cd = v_edcts_cd;
-		  							    
+		  				]]>			    
 		  		UPDATE plan
 				SET now_st = CASE WHEN NOT EXISTS (
 				                      SELECT *
@@ -506,10 +532,11 @@
 	  	
  		<!-- 공정실적을 위한 생산지시 조회 -->
  		<select id="selectIndica" resultType="ProOrderVO">
- 			SELECT i.indica_cd, i.indica_name, e.prdt_nm, ad.indica_dt,ad.indica_cnt, i.now_st
+ 			SELECT i.indica_cd, i.indica_name, e.prdt_nm, ad.indica_dt,ad.indica_cnt, i.now_st, i.indica_due
 			FROM indica i, indica_dtl ad, edcts e
 			WHERE i.indica_cd = ad.indica_cd
 			  AND ad.edcts_cd = e.edcts_cd
+			  AND i.now_st NOT IN ('생산완료', '입고완료') 
 			ORDER BY indica_cd
  		</select>
  		
@@ -562,6 +589,10 @@
 			    indica_cnt = #{indicaCnt}
 			WHERE prcs_cd = #{prcsCd}
 			  AND indica_cd = #{indicaCd};
+			  
+			UPDATE indica
+			SET now_st = v_prcs_fg || '중'
+			WHERE indica_cd = #{indicaCd};
 		END;
  		</update>
  		
@@ -602,7 +633,75 @@
  			SET	use_yn = 'Y'
  			WHERE eqm_cd = #{eqmCd}
  		</update>
+ 		
+ 		<!-- 공정 흐름 조회 -->
 		
-		
- 	
+		<select id="selectPrcsFlowList" resultType="ProPrcsVO">
+			SELECT  	pf.prcs_no,
+        				pf.edcts_cd,
+        				pf.prcs_cd,
+			        	p.prcs_nm,
+			        	p.prcs_fg,
+			        	p.prcs_ctnt,
+			        	p.prcs_dt
+			FROM		prcs_flow pf JOIN prcs p
+			ON 			pf.prcs_cd = p.prcs_cd
+			WHERE 		edcts_cd = #{edctsCd}
+			ORDER BY pf.prcs_no
+		</select>
+ 		
+ 		
+ 		<!-- 공정 조회 -->
+ 		<select id="getPrcsList" resultType="ProPrcsVO">
+ 			SELECT	prcs_cd,
+ 					prcs_nm,
+ 					prcs_fg,
+ 					prcs_ctnt,
+ 					prcs_dt
+ 			FROM	prcs
+ 			ORDER BY prcs_cd
+ 		
+ 		</select>
+ 		
+ 		<!-- 공정 저장 -->
+ 		<insert id="savePrcs" parameterType="ProPrcsVO">
+	    	{CALL prcs_save(
+	      		#{prcsNo, mode=IN, jdbcType=INTEGER},
+	      		#{edctsCd, mode=IN, jdbcType=VARCHAR},
+	      		#{prcsCd, mode=IN, jdbcType=VARCHAR}
+	    	)}
+   		</insert>
+   		
+   		<!-- 공정 흐름 삭제 -->
+   		<delete id="deletePrcsFlow" parameterType="ProPrcsVO">
+   			DELETE FROM prcs_flow
+   			WHERE 	edcts_cd = #{edctsCd}
+   			AND		prcs_cd = #{prcsCd}
+   		</delete>
+   		
+   		<!-- 공정실적조회 -->
+   		<select id="selectPrcsResultList" resultType="ProPrcsVO">
+   			SELECT p.indica_cd, i.indica_name, p.indica_dt, i.indica_fdt, e.prdt_nm,p.prcs_status,p.indica_cnt,p.infer_cnt,p.prod_cnt
+			FROM prcs_prog p, indica i, indica_dtl idt, edcts e
+			WHERE idt.edcts_cd = e.edcts_cd 
+			  AND i.indica_cd = idt.indica_cd
+			  AND p.indica_cd = i.indica_cd
+			  AND substr(p.prcs_status,-2) = '완료'
+			ORDER BY p.indica_dt DESC, p.indica_cd, p.prcs_cd
+   		</select>
+   		
+   		<select id="selectPrcsAmountList" resultType="ProPrcsVO">
+   			SELECT indica_cd
+			FROM   prcs_prog
+			WHERE  substr(prcs_status,-2) = '완료'
+			GROUP BY indica_cd
+   		</select>
+   		
+   		<select id="selectPrcsIndica" resultType="ProPrcsVO">
+			SELECT pp.indica_cd, p.prcs_nm, pp.prcs_psch, pp.indica_cnt, pp.infer_cnt, pp.prod_cnt, pp.use_eqm,pp.wk_to_tm,pp.wk_fr_tm
+			FROM prcs_prog pp , prcs p
+			WHERE pp.prcs_cd = p.prcs_cd
+			  AND indica_cd = #{indicaCd}
+			ORDER BY pp.prcs_cd
+   		</select>
   </mapper>

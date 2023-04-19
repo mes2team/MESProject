@@ -42,4 +42,10 @@ public class ProPrcsVO {
 	private String rscTyp;
 	
 	private String useEqm;
+	
+	private String indicaName;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date indicaFdt;
+	
+	
 }

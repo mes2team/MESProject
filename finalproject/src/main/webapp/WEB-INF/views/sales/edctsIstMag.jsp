@@ -246,7 +246,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             let tr = $("<tr>");
             tr.append("<td>" + edctsCd + "</td>");
             tr.append("<td>" + prdtNm + "</td>");
-            tr.append("<td>" + resultCnt + "</td>");
+            tr.append("<td>" + prodCnt + "</td>");
             tr.append("<td>" + productDate(edctsExpire) + "</td>");
             tr.append("<td style='display: none'>" + indicaCd + "</td>");
             tr.append(

@@ -6,13 +6,24 @@
 <mapper namespace="com.yedam.spring.masterData.mapper.EdctsMapper">
 	<!-- 전체조회 -->
 	<select id="selectEdctsList" resultType="EdctsVO">
-		SELECT	edcts_cd,
-				prdt_nm,
-				spec,
-				unit,
-				saf_stc
-		FROM	edcts
-		ORDER BY edcts_cd
+		SELECT		e.edcts_cd,
+					e.prdt_nm,
+					e.spec,
+					e.unit
+		FROM		edcts e, bom b
+		WHERE   	e.edcts_cd = b.edcts_cd
+		ORDER BY 	e.edcts_cd
 	</select>
-
+	
+	<!-- bom 헤더에 등록안된 제품 조회 -->
+    <select id="getBomHeaderPrd" resultType="EdctsVO">
+    	SELECT	e.edcts_cd,
+				e.prdt_nm,
+				e.spec,
+				e.unit
+		FROM	edcts e LEFT OUTER JOIN bom b
+		ON      e.edcts_cd = b.edcts_cd
+		WHERE   b.bom_cd IS NULL
+		ORDER BY e.edcts_cd
+    </select>
 </mapper>

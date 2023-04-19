@@ -50,8 +50,9 @@
 		AND   	i.indica_cd = id.indica_cd
 		AND   	id.edcts_cd = e.edcts_cd
 		AND     p.prcs_chk_cd = pid.prcs_chk_cd
-		AND     i.now_st = '지시완료'
+		AND     i.now_st = '생산완료'
 		AND 	p.prcs_status = '포장검사완료'
+		ORDER BY pid.edcts_expire
 	</select>
 	
 	<!-- 제품 입고 등록 -->
@@ -106,7 +107,7 @@
 			WHERE	edcts_ist_no = #{edctsIstNo};
 			
 			UPDATE indica
-			SET now_st = '지시완료'
+			SET now_st = '생산완료'
 			WHERE indica_cd IN (
   					SELECT i.indica_cd
   					FROM prcs_prog p 

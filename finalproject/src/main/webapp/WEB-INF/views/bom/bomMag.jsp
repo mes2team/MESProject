@@ -45,8 +45,14 @@ uri="http://www.springframework.org/security/tags"%>
     <!-- ============================================================== -->
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Bom 관리</h5>
         <form class="row g-3">
+          <div id="btnGrp" class="card-top d-flex justify-content-end">
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <button type="button" class="btn btn-primary" id="insertBtn">
+                등록
+              </button>
+            </sec:authorize>
+          </div>
           <div class="col-md-6">
             <label for="inputCode" class="form-label">상품 코드</label>
             <div class="input-group">
@@ -65,17 +71,13 @@ uri="http://www.springframework.org/security/tags"%>
             <label class="form-label">상품 이름</label>
             <input type="text" class="form-control" id="inputName" disabled />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">규격</label>
             <input type="text" class="form-control" id="inputSpec" disabled />
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">단위</label>
             <input type="text" class="form-control" id="inputUnit" disabled />
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">안전 재고</label>
-            <input type="text" class="form-control" id="inputSafStc" disabled />
           </div>
           <input
             type="text"
@@ -169,7 +171,6 @@ uri="http://www.springframework.org/security/tags"%>
                 <th scope="col">상품 이름</th>
                 <th scope="col">규격</th>
                 <th scope="col">단위</th>
-                <th scope="col">안전 재고</th>
                 <th scope="col"></th>
               </tr>
             </thead>
@@ -180,7 +181,6 @@ uri="http://www.springframework.org/security/tags"%>
                   <td>${edcts.prdtNm }</td>
                   <td>${edcts.spec }</td>
                   <td>${edcts.unit }</td>
-                  <td>${edcts.safStc }</td>
                   <td>
                     <button class="btn btn-primary" id="choiceEdcts">
                       선택
@@ -311,24 +311,16 @@ uri="http://www.springframework.org/security/tags"%>
           <table class="table table-hover">
             <thead>
               <tr>
+                <th scope="col">공정 순서</th>
                 <th scope="col">공정 코드</th>
                 <th scope="col">공정 이름</th>
+                <th scope="col">공정 분류</th>
+                <th scope="col">공정 내용</th>
+                <th scope="col">공정 날짜</th>
                 <th scope="col"></th>
               </tr>
             </thead>
-            <tbody>
-              <c:forEach items="${prcsList }" var="prcs">
-                <tr>
-                  <td>${prcs.prcsCd }</td>
-                  <td>${prcs.prcsNm }</td>
-                  <td>
-                    <button class="btn btn-primary" id="choicePrcs">
-                      선택
-                    </button>
-                  </td>
-                </tr>
-              </c:forEach>
-            </tbody>
+            <tbody id="prcsFlowList"></tbody>
           </table>
           <!-- End Multi Columns Form -->
         </div>
@@ -345,6 +337,52 @@ uri="http://www.springframework.org/security/tags"%>
     </div>
   </div>
 
+  <!-- 모달창 -->
+  <!-- bom 헤더 등록 -->
+  <div
+    class="modal fade"
+    id="bomHeaderModal"
+    tabindex="-1"
+    data-bs-backdrop="static"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Bom 등록</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">상품 코드</th>
+                <th scope="col">상품 이름</th>
+                <th scope="col">규격</th>
+                <th scope="col">단위</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody id="bomHeaderPrdList"></tbody>
+          </table>
+          <!-- End Multi Columns Form -->
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     // 상품 선택하면 input에 넣기
     $(document).on("click", "#choiceEdcts", function () {
@@ -352,13 +390,11 @@ uri="http://www.springframework.org/security/tags"%>
       let edctsName = $(this).closest("tr").children().eq(1).text();
       let edctsSpec = $(this).closest("tr").children().eq(2).text();
       let edctsUnit = $(this).closest("tr").children().eq(3).text();
-      let edctsSaf = $(this).closest("tr").children().eq(4).text();
 
       $("#inputCode").val(edctsCd);
       $("#inputName").val(edctsName);
       $("#inputSpec").val(edctsSpec);
       $("#inputUnit").val(edctsUnit);
-      $("#inputSafStc").val(edctsSaf);
       $("#productSearch").modal("hide");
 
       $.ajax({
@@ -390,6 +426,39 @@ uri="http://www.springframework.org/security/tags"%>
         error: function (reject) {
           console.log(reject);
         },
+      }).then(function (result) {
+        // 공정 흐름 조회 prcsFlowList
+        $.ajax({
+          url: "bomPrcsFlow",
+          data: { edctsCd: $("#inputCode").val() },
+          success: function (result) {
+            $("#prcsFlowList").empty();
+            $(result).each(function (idx, item) {
+              let tr = $("<tr>");
+              tr.append(
+                $("<td>").attr("class", "changeValue").text(item.prcsNo)
+              );
+              tr.append("<td>" + item.prcsCd + "</td>");
+              tr.append("<td>" + item.prcsNm + "</td>");
+              tr.append("<td>" + item.prcsFg + "</td>");
+              tr.append("<td>" + item.prcsCtnt + "</td>");
+              tr.append("<td>" + item.prcsDt + "</td>");
+              tr.append(
+                $("<td>").append(
+                  $("<button>")
+                    .attr("id", "choicePrcs")
+                    .attr("class", "btn btn-primary")
+                    .text("선택")
+                )
+              );
+
+              $("#prcsFlowList").append(tr);
+            });
+          },
+          error: function (reject) {
+            console.log(reject);
+          },
+        });
       });
     });
 
@@ -412,7 +481,9 @@ uri="http://www.springframework.org/security/tags"%>
       tr.append("<td class='changeValue my-td-class'>" + data.useCnt + "</td>");
       tr.append("<td my-td-class'>" + data.unit + "</td>");
       tr.append(
-        $("<td>" + data.prcsNm + "</td>").attr("data-prcsCd", data.prcsCd)
+        $("<td>" + data.prcsNm + "</td>")
+          .attr("data-prcsCd", data.prcsCd)
+          .attr("class", "changeValue1")
       );
 
       $("#bomList").append(tr);
@@ -650,8 +721,8 @@ uri="http://www.springframework.org/security/tags"%>
       });
 
       $(document).on("click", "#choicePrcs", function () {
-        let prcsNm = $(this).closest("tr").children().eq(1).text();
-        let prcsCd = $(this).closest("tr").children().eq(0).text();
+        let prcsNm = $(this).closest("tr").children().eq(2).text();
+        let prcsCd = $(this).closest("tr").children().eq(1).text();
         inputPrcsNm.text(prcsNm); // input 업데이트
         inputPrcsNm.attr("data-prcscd", prcsCd);
         $("#prcsModal").modal("hide"); // 모달 닫기
@@ -744,6 +815,23 @@ uri="http://www.springframework.org/security/tags"%>
           .val(currentValue);
         $(this).empty().append(input);
       });
+
+      // currentRow.find(".changeValue1").each(function () {
+      //   let currentValue = $(this).text().trim();
+      //   let td = $("<td>").attr("data-value", currentValue);
+      //   td.append(
+      //     $("<span>").text(currentValue),
+      //     $("<button>")
+      //       .addClass("btn btn-primary my-td-class prcsBtn")
+      //       .attr({
+      //         type: "button",
+      //         "data-bs-toggle": "modal",
+      //         "data-bs-target": "#prcsModal",
+      //       })
+      //       .append($("<i>").addClass("bi bi-search my-td-class prcsBtn"))
+      //   );
+      //   $(this).replaceWith(td);
+      // });
     });
 
     // 저장
@@ -953,6 +1041,70 @@ uri="http://www.springframework.org/security/tags"%>
         if (event.which === 13) {
           event.preventDefault();
           $("#searchRscBtn").click();
+        }
+      });
+    });
+
+    // bom 헤더 등록
+    $(document).on("click", "#insertBtn", function () {
+      $("#bomHeaderModal").modal("show");
+
+      $.ajax({
+        url: "bomHeaderPrd",
+        success: function (result) {
+          console.log(result);
+          $("bomHeaderPrdList").empty();
+          $(result).each(function (idx, item) {
+            let tr = $("<tr>");
+
+            tr.append("<td>" + item.edctsCd + "</td>");
+            tr.append("<td>" + item.prdtNm + "</td>");
+            tr.append("<td>" + item.spec + "</td>");
+            tr.append("<td>" + item.unit + "</td>");
+            tr.append(
+              $("<td>").append(
+                $("<button>")
+                  .attr("type", "button")
+                  .attr("class", "btn btn-primary bomInsertBtn")
+                  .text("선택")
+              )
+            );
+            $("#bomHeaderPrdList").append(tr);
+          });
+        },
+        error: function (reject) {
+          console.log(reject);
+        },
+      });
+    });
+
+    // bom 헤더 등록
+    $(document).on("click", ".bomInsertBtn", function () {
+      let edctsCd = $(this).closest("tr").children().eq(0).text();
+      let spec = $(this).closest("tr").children().eq(2).text();
+
+      console.log(edctsCd);
+      console.log(spec);
+
+      Swal.fire({
+        title: "등록하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "등록",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            url: "bomHeaderInsert",
+            method: "post",
+            data: { edctsCd: edctsCd, standard: spec },
+            success: function (result) {
+              location.reload();
+            },
+            error: function (reject) {},
+          });
         }
       });
     });

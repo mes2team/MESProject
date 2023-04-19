@@ -9,31 +9,37 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<style>
+</style>
 </head>
 <body>
 	<h1>비가동관리</h1>
 	<div class="card">
 		<div class="card-body">
-			<div class="form-group row" style="margin-top: 20px; margin-bottom:;">
+			<div class="form-group row" style="margin-top: 20px; float: left;">
 				<div class="col-auto">
-					<label style="font-weight: bold;">검색</label>
+					<label style="font-weight: bold;">Search</label>
 				</div>
 				<div class="col-auto">
 					<input type="text" id="modalEqmNm" class="form-control">
 				</div>
-				<div class="col-auto" style="margin-left: 1000px;">
+			</div>
+
+			<div>
+				<div class="col-auto" style="float: right; margin-top: 20px;">
+					<button type="button" onclick="deleteCheck()"
+						class="btn btn-danger">삭제</button>
+				</div>
+				<div style="float: right; margin-top: 20px;" class="col-auto"
+					style="margin-left:;">
 					<button type="button" class="btn btn-primary" onclick="modalOpen()"
 						data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
 						등록</button>
 				</div>
-				<div class="col-auto">
-					<button type="button" onclick="deleteCheck()"
-						class="btn btn-danger">삭제</button>
-				</div>
 			</div>
 
 			<div
-				style="width: 100%; height: 230px; overflow: auto; margin-top: 20px; margin-bottom: 50px;">
+				style="width: 100%; height: 800px; overflow: auto; padding-top: 20px; margin-bottom: 50px;">
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
@@ -42,8 +48,8 @@
 							<th scope="col">비가동코드</th>
 							<th scope="col">설비코드</th>
 							<th scope="col">설비명</th>
-							<th scope="col">시작일자</th>
-							<th scope="col">종료일자</th>
+							<th scope="col">시작일자 / 시작시간</th>
+							<th scope="col">종료일자 / 종료시간</th>
 						</tr>
 					</thead>
 					<tbody id="listTable">
@@ -171,16 +177,16 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary closeBtn"
+						<button type="button" id="modalCloseBtn" class="btn btn-secondary closeBtn"
 							data-bs-dismiss="modal" onclick="modalReset()">닫기</button>
 						<button type="button" id="insertBtn" onclick="insertOptCheck()"
-							class="btn btn-primary" data-bs-dismiss="modal">등록</button>
+							class="btn btn-primary">등록</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
 	//allCheck
 	function allCheck(allCheck) {
@@ -228,12 +234,18 @@
 		let textarea = modalForm.querySelector('textarea')
 		for(let i=0;i<inputs.length;i++){
 			if(inputs[i].value == ''){
-				alert("필수항목체크")
+				Swal.fire({
+			          icon: "warning",
+			          title: "필수항목체크",
+			        });
 				return;
 			}
 		}
 		if(textarea.value == ''){
-			alert("필수항목체크")
+			Swal.fire({
+		          icon: "warning",
+		          title: "필수항목체크",
+		        });
 			return false;
 		}
 		let inputNoprCd = document.querySelector('input[name="noprCd"]')
@@ -281,7 +293,11 @@
 				      data:	oprVO,
 				      //dataType: 'json', 화면 받을 땐 없어도 됨
 				      success: function(result) { 
-				    	location.reload();
+				    	afterUpdateOpr();
+				    	Toast.fire({
+			                  icon: "success",
+			                  title: "수정이 정상적으로 되었습니다.",
+			                });  
 				      },
 				      error: function(reject) { 
 				        console.log("업데이트실패");
@@ -290,6 +306,21 @@
 			  }
 			})
 	}
+	//수정
+	function afterUpdateOpr(){
+		$.ajax({
+			  url: "afterUpdateOpr",
+			  type: "GET",
+			  dataType: "json",
+			  success: function(res) {
+				  makeNewList(res);	
+				  $('#modalCloseBtn').click();
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 
+	}
 	
 	
 	//등록
@@ -297,8 +328,48 @@
 		document.querySelector('[name="noprCd"]').removeAttribute('disabled'); //비가동열기
 			modalForm.submit();
 			resetModal();
+			afterInsertOpr();
+			Toast.fire({
+                icon: "success",
+                title: "등록이 정상적으로 되었습니다.",
+              }); 
 	}
-			  
+	function afterInsertOpr(){
+		$.ajax({
+			  url: "afterInsertOpr",
+			  type: "GET",
+			  dataType: "json",
+			  success: function(res) {
+				  makeNewList(res);	
+				  
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 
+	}
+	
+	function makeNewList(res){
+		let listTable = $('#listTable') 
+		listTable.empty();
+		
+		for(let i=0;i<res.length;i++){
+			let fr = changeDateFormat(res[i].frDt);
+			let to = changeDateFormat(res[i].toDt);
+		  
+			let tr = $('<tr onclick="oprDetail(this,event)" data-bs-toggle="" data-bs-target="#modalDialogScrollable">');
+			tr.append('<td scope="row" onclick="stopPropagation(event)"><input type="checkbox"></td>');
+    		tr.append('<td class="mainNoprCd">' + res[i].noprCd + '</td>'); 
+    		tr.append('<td>' + res[i].eqmCd + '</td>'); 
+   			tr.append('<td>' + res[i].eqmNm + '</td>'); 
+    		tr.append('<td>' + fr +' / '+ res[i].frHm + '</td>'); 
+    		tr.append('<td>' + to +' / '+ res[i].toHm +  '</td>'); 
+    		tr.append('<td hidden>' + res[i].opertCtnt + '</td>'); 
+    		tr.append('<td hidden>' + res[i].eqmPsch + '</td>'); 
+    		
+			listTable.append(tr);
+		}
+	}
 	    
 	//삭제 체크된것만 담기
 	function deleteCheck(){
@@ -327,8 +398,10 @@
 				  contentType: "application/json; charset=utf-8",
 				  //dataType: "json",
 				  success: function(response) {
-					  console.log("삭제완료")
-					 
+					  Toast.fire({
+		                  icon: "success",
+		                  title: "삭제가 정상적으로 되었습니다.",
+		                });  					 
 					   for(let j=0;j<checkList.length;j++){
 						  if(checkList[j].checked){
 						  checkList[j].closest('tr').remove();
@@ -405,6 +478,69 @@
 				  }
 				});
 		}
+		//날짜포맷변경
+		function changeDateFormat(inputDate) {
+			let date = new Date(inputDate);
+			let year = date.getFullYear();
+			let month = String(date.getMonth() + 1).padStart(2, '0');
+			let day = String(date.getDate()).padStart(2, '0');
+			let formattedDate = year + '-' + month + '-' + day;
+			return formattedDate;
+		}
+		
+		// 검색어를 입력할 input 요소의 id를 'searchInput'으로 가정합니다.
+		var searchInput = document.getElementById('modalEqmNm');
+
+		// 검색어 입력 시 이벤트 리스너를 등록합니다.
+		searchInput.addEventListener('input', function() {
+			var keyword = searchInput.value.trim(); // 검색어를 얻어옵니다.
+			var table = document.getElementById('listTable'); // 테이블의 tbody 요소를 가져옵니다.
+			var rows = table.getElementsByTagName('tr'); // 테이블의 모든 행(tr) 요소들을 가져옵니다.
+
+			// 각 행(tr) 요소들에 대하여 검색어를 비교하고, 검색어를 포함하지 않는 행은 숨깁니다.
+			for (var i = 0; i < rows.length; i++) {
+				var row = rows[i];
+				var cells = row.getElementsByTagName('td'); // 행(tr) 안의 모든 셀(td) 요소들을 가져옵니다.
+				var rowVisible = false; // 행이 보이는지 여부를 나타내는 변수입니다.
+
+				// 각 셀(td) 요소들의 텍스트를 비교하여 검색어를 포함하는지 확인합니다.
+				for (var j = 0; j < cells.length; j++) {
+					var cellText = cells[j].textContent.trim(); // 셀(td)의 텍스트를 얻어옵니다.
+
+					// 검색어와 셀(td)의 텍스트를 숫자 형식으로 변환하여 비교합니다.
+					// isNaN 함수를 사용하여 숫자가 아닌 경우에는 문자열 비교를 수행합니다.
+					if (!isNaN(keyword) && !isNaN(cellText)) {
+						if (parseFloat(cellText) === parseFloat(keyword)) {
+							rowVisible = true;
+							break;
+						}
+					} else if (cellText.includes(keyword)) {
+						rowVisible = true;
+						break;
+					}
+				}
+
+				// 검색어를 포함하지 않는 행은 숨깁니다.
+				if (rowVisible) {
+					row.style.display = '';
+				} else {
+					row.style.display = 'none';
+				}
+			}
+		});
+		
+		
+		var Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
 	</script>
 </body>
 </html>

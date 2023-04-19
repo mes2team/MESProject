@@ -53,4 +53,9 @@ public List<PrcsInspVO> inspDtl(PrcsInspVO prcsInspVO) {
 public int deleteCompleted(String deleteList) {
 	return mapper.deleteCompleted(deleteList);
 }
+
+@Override
+public int updateIndiPlan(PrcsInspVO prcsInspVO) {
+	return mapper.updateIndiPlan(prcsInspVO);
+}
 }
