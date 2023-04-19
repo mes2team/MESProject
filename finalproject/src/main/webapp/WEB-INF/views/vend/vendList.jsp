@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
 prefix="c"%> <%@ taglib prefix="sec"
-uri="http://www.springframework.org/security/tags"%>
+uri="http://www.springframework.org/security/tags"%> <%@ taglib prefix="fmt"
+uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <style>
@@ -63,18 +64,7 @@ uri="http://www.springframework.org/security/tags"%>
                     <option value="매출처">매출처</option>
                   </select>
                 </div>
-                <div class="col-md-12">
-                  <label for="inputName5" class="form-label">거래처코드</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="vendCd"
-                    name="vendCd"
-                    style="background-color: #e9e9e9"
-                    readonly
-                  />
-                </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress5" class="form-label">거래처명</label>
                   <input
                     type="text"
@@ -83,7 +73,7 @@ uri="http://www.springframework.org/security/tags"%>
                     name="vendNm"
                   />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress2" class="form-label"
                     >거래처 담당자</label
                   >
@@ -94,7 +84,7 @@ uri="http://www.springframework.org/security/tags"%>
                     name="vendMag"
                   />
                 </div>
-                <div class="col-12">
+                <div class="col-md-12">
                   <label for="inputAddress2" class="form-label"
                     >거래처 주소</label
                   >
@@ -105,7 +95,7 @@ uri="http://www.springframework.org/security/tags"%>
                     name="vendAddr"
                   />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress2" class="form-label"
                     >사업자 등록번호</label
                   >
@@ -116,7 +106,7 @@ uri="http://www.springframework.org/security/tags"%>
                     name="brNum"
                   />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress2" class="form-label">전화번호</label>
                   <input
                     type="tel"
@@ -140,15 +130,15 @@ uri="http://www.springframework.org/security/tags"%>
           </div>
         </div>
         <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="insertBtn">
+            등록
+          </button>
           <button
             type="button"
             class="btn btn-secondary closeBtn"
             data-bs-dismiss="modal"
           >
             닫기
-          </button>
-          <button type="submit" class="btn btn-primary" id="insertBtn">
-            등록
           </button>
         </div>
       </div>
@@ -205,9 +195,6 @@ uri="http://www.springframework.org/security/tags"%>
         <div class="card">
           <div id="btnGrp">
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-              <button type="button" class="btn btn-info" onclick="updateBtn()">
-                수정
-              </button>
               <button
                 type="button"
                 class="btn btn-success"
@@ -241,9 +228,6 @@ uri="http://www.springframework.org/security/tags"%>
                     <th>거래처코드</th>
                     <th>거래처명</th>
                     <th>거래처담당자</th>
-                    <th>사업자등록번호</th>
-                    <th>전화번호</th>
-                    <th>비고</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -264,9 +248,6 @@ uri="http://www.springframework.org/security/tags"%>
                       <td>${vend.vendCd }</td>
                       <td>${vend.vendNm }</td>
                       <td>${vend.vendMag }</td>
-                      <td>${vend.brNum }</td>
-                      <td>${vend.vendTel }</td>
-                      <td>${vend.remk}</td>
                     </tr>
                   </c:forEach>
                 </tbody>
@@ -280,7 +261,7 @@ uri="http://www.springframework.org/security/tags"%>
     <!-- end basic table  -->
     <!-- ============================================================== -->
   </div>
-  <!-- 모달창 상세정보
+  <!-- 모달창 상세정보 -->
   <div
     class="modal fade"
     id="vendDetailModal"
@@ -302,87 +283,59 @@ uri="http://www.springframework.org/security/tags"%>
           <div class="card">
             <div class="card-body">
               <form class="row g-3" name="">
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <label for="inputState" class="form-label">구분</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="vendTyp"
-                    name="vendTyp"
                     style="background-color: #e9e9e9"
+                    id="vendTypDet"
                     readonly
                   />
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
                   <label for="inputName5" class="form-label">거래처코드</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="vendCd"
-                    name="vendCd"
                     style="background-color: #e9e9e9"
+                    id="vendCdDet"
                     readonly
                   />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress5" class="form-label">거래처명</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="vendNm"
-                    name="vendNm"
-                  />
+                  <input type="text" class="form-control" id="vendNmDet" />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress2" class="form-label"
                     >거래처 담당자</label
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="vendMag"
-                    name="vendMag"
-                  />
+                  <input type="text" class="form-control" id="vendMagDet" />
                 </div>
-                <div class="col-12">
+                <div class="col-md-12">
                   <label for="inputAddress2" class="form-label"
                     >거래처 주소</label
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="vendAddr"
-                    name="vendAddr"
-                  />
+                  <input type="text" class="form-control" id="vendAddrDet" />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress2" class="form-label"
                     >사업자 등록번호</label
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="brNum"
-                    name="brNum"
-                  />
+                  <input type="text" class="form-control" id="brNumDet" />
                 </div>
-                <div class="col-12">
+                <div class="col-md-6">
                   <label for="inputAddress2" class="form-label">전화번호</label>
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="vendTel"
-                    name="vendTel"
-                  />
+                  <input type="tel" class="form-control" id="vendTelDet" />
                 </div>
-                <div class="col-12">
+                <div class="col-md-12">
                   <label for="inputAddress2" class="form-label">비고</label>
                   <textarea
                     class="form-control"
-                    id="remk"
                     rows="10"
                     style="resize: none"
-                    name="remk"
+                    id="remkDet"
                   ></textarea>
                 </div>
               </form>
@@ -390,6 +343,9 @@ uri="http://www.springframework.org/security/tags"%>
           </div>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="updateBtn">
+            등록
+          </button>
           <button
             type="button"
             class="btn btn-secondary closeBtn"
@@ -397,13 +353,10 @@ uri="http://www.springframework.org/security/tags"%>
           >
             닫기
           </button>
-          <button type="submit" class="btn btn-primary" id="insertBtn">
-            등록
-          </button>
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <script>
     // 모달창 단건 조회
@@ -414,7 +367,14 @@ uri="http://www.springframework.org/security/tags"%>
         method: "post",
         data: { vendCd: vendCd },
         success: function (result) {
-          $("#vendDetailModal input[name=vendTyp]").val(result.vendTyp);
+          $("#vendTypDet").val(result.vendTyp);
+          $("#vendCdDet").val(result.vendCd);
+          $("#vendNmDet").val(result.vendNm);
+          $("#vendMagDet").val(result.vendMag);
+          $("#vendAddrDet").val(result.vendAddr);
+          $("#brNumDet").val(result.brNum);
+          $("#vendTelDet").val(result.vendTel);
+          $("#remkDet").val(result.remk);
         },
         error: function (reject) {
           console.log(reject);
@@ -438,24 +398,16 @@ uri="http://www.springframework.org/security/tags"%>
     // 등록전에 체크
     function formOptionChk() {
       let vendTyp = $("select option:selected").val();
-      let vendCd = document.getElementsByName("vendCd")[0];
       let vendNm = document.getElementsByName("vendNm")[0];
       let vendMag = document.getElementsByName("vendMag")[0];
       let brNum = document.getElementsByName("brNum")[0];
       let vendTel = document.getElementsByName("vendTel")[0];
+      let vendAddr = $("#vendAddr").val();
 
       if (vendTyp == "none") {
         Swal.fire({
           icon: "warning",
           title: "구분이 입력되지 않았습니다.",
-        });
-        return;
-      }
-      if (vendCd.value == "") {
-        vendCd.focus();
-        Swal.fire({
-          icon: "warning",
-          title: "거래처코드가 입력되지 않았습니다.",
         });
         return;
       }
@@ -472,6 +424,14 @@ uri="http://www.springframework.org/security/tags"%>
         Swal.fire({
           icon: "warning",
           title: "거래처 담당자가 입력되지 않았습니다.",
+        });
+        return;
+      }
+      if (vendAddr.value == "") {
+        vendAddr.focus();
+        Swal.fire({
+          icon: "warning",
+          title: "주소가 입력되지 않았습니다.",
         });
         return;
       }
@@ -557,17 +517,6 @@ uri="http://www.springframework.org/security/tags"%>
         else $("#cbx_chkAll").prop("checked", true);
       });
 
-      // 행 선택하면 체크
-      //       $("table tr").click(function (event) {
-      //         if (event.target.type !== "checkbox") {
-      //           $(":checkbox", this).trigger("click");
-      //         }
-      //       });
-
-      //       $("table tr :checkbox").change(function (event) {
-      //         $(this).closest("tr").toggleClass("selected", this.checked);
-      //       });
-
       // 검색기능
       $("#searchVend").on("click", function (event) {
         let vendCd = $("#inputVendCd").val();
@@ -603,9 +552,6 @@ uri="http://www.springframework.org/security/tags"%>
               $row.append($("<td>").text(item.vendCd));
               $row.append($("<td>").text(item.vendNm));
               $row.append($("<td>").text(item.vendMag));
-              $row.append($("<td>").text(item.brNum));
-              $row.append($("<td>").text(item.vendTel));
-              $row.append($("<td>").text(item.remk));
               $("tbody").append($row);
             });
             $(document).on("click", "input[name=chk]", function () {
@@ -711,164 +657,51 @@ uri="http://www.springframework.org/security/tags"%>
         });
       }
     }
-    function updateBtn() {
-      // 체크된 체크박스가 없으면 함수 종료
-      if ($("input[name=chk]:checked").length === 0) {
-        Swal.fire({
-          icon: "warning",
-          title: "선택된 글이 없습니다.",
-        });
-        return;
-      }
-      $("#cbx_chkAll").prop("disabled", true);
-      disableCheckBoxes();
 
-      // 수정 버튼의 텍스트를 "수정완료"로 변경
-      $(".btn-info").text("수정완료");
+    //수정
+    $(document).on("click", "#updateBtn", function () {
+      let vendNm = $("#vendNmDet").val();
+      let vendMag = $("#vendMagDet").val();
+      let vendAddr = $("#vendAddrDet").val();
+      let brNum = $("#brNumDet").val();
+      let vendTel = $("#vendTelDet").val();
+      let remk = $("#remkDet").val();
+      let vendCd = $("#vendCdDet").val();
 
-      // 수정완료 버튼 클릭 이벤트 핸들러 설정
-      // $(".btn-info").off("click").on("click", submitBtn);
-      $(".btn-info").removeAttr("onclick");
-      $(".btn-info").attr("onclick", "submitBtn();");
-
-      $('input[name="chk"]:checked').each(function () {
-        var row = $(this).closest("tr");
-        var vendTyp = row.find("td:eq(2)").text().trim();
-        var vendCd = row.find("td:eq(3)").text().trim();
-        var vendNm = row.find("td:eq(4)").text().trim();
-        var vendMag = row.find("td:eq(5)").text().trim();
-        var brNum = row.find("td:eq(6)").text().trim();
-        var vendTel = row.find("td:eq(7)").text().trim();
-        var remk = row.find("td:eq(8)").text().trim();
-
-        row
-          .find("td:eq(2)")
-          .html(
-            '<input type="text" class="form-control" value="' + vendTyp + '">'
-          );
-        row
-          .find("td:eq(3)")
-          .html(
-            '<input type="text" class="form-control" value="' + vendCd + '">'
-          );
-        row
-          .find("td:eq(4)")
-          .html(
-            '<input type="text" class="form-control" value="' + vendNm + '">'
-          );
-        row
-          .find("td:eq(5)")
-          .html(
-            '<input type="text" class="form-control" value="' + vendMag + '">'
-          );
-        row
-          .find("td:eq(6)")
-          .html(
-            '<input type="text" class="form-control" value="' + brNum + '">'
-          );
-        row
-          .find("td:eq(7)")
-          .html(
-            '<input type="text" class="form-control" value="' + vendTel + '">'
-          );
-        row
-          .find("td:eq(8)")
-          .html(
-            '<input type="text" class="form-control" value="' + remk + '">'
-          );
-      });
-    }
-
-    function submitBtn() {
-      // 체크된 체크박스가 없으면 함수 종료
-      if ($("input[name=chk]:checked").length === 0) return;
-
-      // 데이터를 저장할 배열 선언
-      var dataArr = [];
-
-      // 체크된 체크박스의 개수만큼 반복하며 데이터 저장
-      $('input[name="chk"]:checked').each(function () {
-        var row = $(this).closest("tr");
-        var vendTyp = row.find("td:eq(2) input").val().trim();
-        var vendCd = row.find("td:eq(3) input").val().trim();
-        var vendNm = row.find("td:eq(4) input").val().trim();
-        var vendMag = row.find("td:eq(5) input").val().trim();
-        var brNum = row.find("td:eq(6) input").val().trim();
-        var vendTel = row.find("td:eq(7) input").val().trim();
-        var remk = row.find("td:eq(8) input").val().trim();
-
-        // 객체 형식으로 데이터 저장
-        var dataObj = {
-          vendTyp: vendTyp,
-          vendCd: vendCd,
-          vendNm: vendNm,
-          vendMag: vendMag,
-          brNum: brNum,
-          vendTel: vendTel,
-          remk: remk,
-        };
-
-        // 데이터 배열에 객체 추가
-        dataArr.push(dataObj);
-      });
-
-      $.ajax({
-        url: "updateVend",
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        data: JSON.stringify(dataArr),
-        success: function (result) {
-          if (result.result == "success") {
-            $("tbody").empty();
-            $(result.data).each(function (idx, item) {
-              var $row = $("<tr>").attr("data-id", item.vendCd);
-              $row.append(
-                $("<td>").html(
-                  '<input type="checkbox" name="chk" value="' +
-                    item.vendCd +
-                    '" />'
-                )
-              );
-              $row.append($("<td>").text(idx + 1));
-              $row.append($("<td>").text(item.vendTyp));
-              $row.append($("<td>").text(item.vendCd));
-              $row.append($("<td>").text(item.vendNm));
-              $row.append($("<td>").text(item.vendMag));
-              $row.append($("<td>").text(item.brNum));
-              $row.append($("<td>").text(item.vendTel));
-              $row.append($("<td>").text(item.remk));
-              $("tbody").append($row);
-            });
-            $("#cbx_chkAll").prop("disabled", false);
-            enableCheckBoxes();
-
-            $(".btn-info").text("수정");
-            $(".btn-info").removeAttr("onclick");
-            $(".btn-info").attr("onclick", "updateBtn();");
-          }
-
-          let Toast = Swal.mixin({
-            toast: true,
-            position: "top",
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
+      Swal.fire({
+        title: "등록하시겠습니까?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "등록",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.value) {
+          $.ajax({
+            url: "updateVend",
+            method: "post",
+            data: {
+              vendCd: vendCd,
+              vendNm: vendNm,
+              vendMag: vendMag,
+              vendAddr: vendAddr,
+              brNum: brNum,
+              vendTel: vendTel,
+              remk: remk,
+            },
+            success: function (result) {
+              if (result == "success") {
+                location.reload();
+              }
+            },
+            error: function (reject) {
+              console.log(reject);
             },
           });
-
-          Toast.fire({
-            icon: "success",
-            title: "수정이 정상적으로 되었습니다.",
-          });
-        },
-        error: function (reject) {
-          console.log(reject);
-        },
+        }
       });
-    }
+    });
 
     function disableCheckBoxes() {
       $('input[name="chk"]').prop("disabled", true);

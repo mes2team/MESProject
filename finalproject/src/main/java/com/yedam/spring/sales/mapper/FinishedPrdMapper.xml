@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.yedam.spring.sales.mapper.FinishedPrdMapper">
+
+	<!-- 전체 조회 -->
+	<select id="finishedPrdAllList" resultType="FinishedPrdVO">
+		SELECT  ei.edcts_lot_no,
+        		e.prdt_nm,
+        		e.spec,
+        		e.unit,
+        		ei.edcts_lot_cnt
+		FROM    edcts_ist ei JOIN edcts e
+		ON      ei.edcts_cd = e.edcts_cd
+		ORDER BY ei.edcts_lot_no
+	</select>
+	
+	<select id="searchFinishedPrd" resultType="FinishedPrdVO">
+		SELECT  ei.edcts_lot_no,
+        		e.prdt_nm,
+        		e.spec,
+        		e.unit,
+        		ei.edcts_lot_cnt
+		FROM	edcts_ist ei JOIN edcts e
+		ON      ei.edcts_cd = e.edcts_cd
+		<where>
+			<if test="prdtNm != null and !prdtNm.equals('')">
+				AND e.prdt_nm LIKE '%' || #{prdtNm} || '%'
+			</if>
+		</where>
+		ORDER BY ei.edcts_lot_no
+	</select>
+
+</mapper>

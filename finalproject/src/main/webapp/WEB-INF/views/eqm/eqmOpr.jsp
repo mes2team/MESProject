@@ -21,7 +21,7 @@
 				<div class="col-auto">
 					<input type="text" id="modalEqmNm" class="form-control">
 				</div>
-				<div class="col-auto">
+				<div class="col-auto" style="margin-left: 1000px;">
 					<button type="button" class="btn btn-primary" onclick="modalOpen()"
 						data-bs-toggle="modal" data-bs-target="#modalDialogScrollable">
 						등록</button>
@@ -56,9 +56,9 @@
 								<td scope="row">${opr.eqmCd}</td>
 								<td scope="row">${opr.eqmNm}</td>
 								<td scope="row"><fmt:formatDate value="${opr.frDt}"
-										pattern="yyyy-MM-dd" /></td>
+										pattern="yyyy-MM-dd" /> / ${opr.frHm }</td>
 								<td scope="row"><fmt:formatDate value="${opr.toDt}"
-										pattern="yyyy-MM-dd" /></td>
+										pattern="yyyy-MM-dd" /> / ${opr.toHm }</td>
 								<td hidden>${opr.opertCtnt}</td>
 								<td hidden>${opr.eqmPsch}</td>
 							</tr>
@@ -116,8 +116,16 @@
 										<label style="font-weight: bold;">담당자*</label>
 									</div>
 									<div class="col-auto">
-										<input type="text" name="eqmPsch" class="form-control">
+										<select name="eqmPsch" class="form-select" id="managerSelect"
+											style="width: 216px;">
+											<option value="" selected disabled hidden>담당자 선택
+											<option>
+												<c:forEach items="${managers }" var="manager">
+													<option value="${manager.name }">${manager.name }</option>
+												</c:forEach>
+										</select>
 									</div>
+
 								</div>
 								<hr>
 								<div class="row g-3 align-items-center">
@@ -125,13 +133,28 @@
 										<label style="font-weight: bold;">시작일자*</label>
 									</div>
 									<div class="col-auto">
-										<input type="date" name="frDt" class="form-control">
+										<input type="date" id="frDt" name="frDt" class="form-control">
 									</div>
 									<div class="col-auto" style="margin-left: 10px;">
 										<label style="font-weight: bold;">종료일자*</label>
 									</div>
 									<div class="col-auto">
 										<input type="date" name="toDt" class="form-control">
+									</div>
+								</div>
+								<p>
+								<div class="row g-3 align-items-center">
+									<div class="col-auto" style="margin-left: 10px;">
+										<label style="font-weight: bold;">시작시간*</label>
+									</div>
+									<div class="col-auto">
+										<input type="time" id="" name="frHm" class="form-control">
+									</div>
+									<div class="col-auto" style="margin-left: 10px;">
+										<label style="font-weight: bold;">종료시간*</label>
+									</div>
+									<div class="col-auto">
+										<input type="time" name="toHm" class="form-control">
 									</div>
 								</div>
 								<hr>
@@ -157,8 +180,16 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<script>
+	//allCheck
+	function allCheck(allCheck) {
+		let checkes = listTable.querySelectorAll('[type="checkbox"]')
+		for (let i = 0; i < checkes.length; i++) {
+			checkes[i].checked = allCheck.checked;
+		}
+	}
+	
 	
 	
 	//체크박스 클릭시 tr클릭막기
@@ -169,18 +200,21 @@
 	//tr클릭시 모달열어서 상세보기
 	function oprDetail(t){
 		t.setAttribute("data-bs-toggle","modal") //클릭시 모달속성이 없던 tr에 모달속성줌 
-		console.log(t);
 		t.click(); //tr한 번 더 클릭하는 효과 이떈 모달효과가 있는 tr을 클릭하는거임
+		insertBtn.innerText = '수정'
 		modalTitle.innerText = '비가동상세보기';		
 		let option = document.querySelector('option'); //설비명
 		let textarea = document.querySelector('textarea');
-		let inputs = modalForm.querySelectorAll('input')//inputs 0설비코드 1비가동코드 2담당자 3시작일 4종료일
+		let inputs = modalForm.querySelectorAll('input')//inputs 0설비코드 1비가동코드 2시작일 3종료일 
+		let select = modalForm.querySelector('#managerSelect')
 		let tds = t.querySelectorAll('td') //tds 1비가동코드 2설비코드 3설비명 4시작일 5종료일 6조치내용 7담당자 
 		inputs[0].value = tds[2].innerText;
 		inputs[1].value = tds[1].innerText;
-		inputs[2].value = tds[7].innerText;
-		inputs[3].value = tds[4].innerText;
-		inputs[4].value = tds[5].innerText;
+		select.value = tds[7].innerText;
+		inputs[2].value = tds[4].innerText.split(' / ')[0];
+		inputs[3].value = tds[4].innerText.split(' / ')[0];
+		inputs[4].value = tds[5].innerText.split(' / ')[1];
+		inputs[5].value = tds[5].innerText.split(' / ')[1];
 		option.innerText = tds[3].innerText;
 		textarea.value = tds[6].innerText;
 		document.querySelector('select').setAttribute('disabled',true); //설비명막기
@@ -194,14 +228,12 @@
 		let textarea = modalForm.querySelector('textarea')
 		for(let i=0;i<inputs.length;i++){
 			if(inputs[i].value == ''){
-				//insertBtn.setAttribute("data-bs-dismiss", "");//모달창 닫김 방지
 				alert("필수항목체크")
 				return;
 			}
 		}
 		if(textarea.value == ''){
 			alert("필수항목체크")
-			//insertBtn.setAttribute("data-bs-dismiss", "");
 			return false;
 		}
 		let inputNoprCd = document.querySelector('input[name="noprCd"]')
@@ -211,12 +243,25 @@
 			if(inputNoprCd.value == mainNoprCd[j].innerText){
 				 document.querySelector('[name="noprCd"]').removeAttribute('disabled'); //비가동열기
 				let oprVO = $('form[name="modalForm"]').serialize();//폼데이터 모으기
-				//console.log(oprVO);
+				console.log(oprVO);
 				updateOpr(oprVO)
 				return;
 			}
 		}
-		insertOpr(); //등록
+		Swal.fire({
+			  title: '등록하시겠습니까?',
+			  icon: 'question',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: '등록',
+			  cancelButtonText: '취소'
+			}).then((result) => {
+			  if (result.value) {
+					insertOpr(); //등록
+			  }
+			})
+	
 	}
 	//수정
 	function updateOpr(oprVO){
@@ -229,7 +274,6 @@
 			  confirmButtonText: '수정',
 			  cancelButtonText: '취소'
 			}).then((result) => {
-				
 			  if (result.value) {
 				  $.ajax({
 				      url: 'updateOpr', 
@@ -314,6 +358,7 @@
 		}
 		//모달리셋
 		function modalReset(){
+			insertBtn.innerText = '등록'
 			let inputs = modalForm.querySelectorAll('input');
 			for(let i=0 ; i<inputs.length; i++){
 				if(i != 1){
@@ -334,6 +379,7 @@
 		}
 		//모달열면 설비리스트 다시 뿌리기(등록버튼으로 모달열었을 때)
 		function modalOpen(){
+			document.getElementById('frDt').value = new Date().toISOString().substring(0, 10);;
 			$.ajax({
 				  url: "oprModal", // 호출하고자 하는 URL
 				  type: "GET", // HTTP 메소드 (GET, POST, PUT, DELETE 등)

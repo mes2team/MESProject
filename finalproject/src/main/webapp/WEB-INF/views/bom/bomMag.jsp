@@ -96,20 +96,20 @@ uri="http://www.springframework.org/security/tags"%>
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
           <div id="btnGrp" class="card-top d-flex justify-content-end">
-          	<sec:authorize access="hasRole('ROLE_ADMIN')">
-	            <button type="button" class="btn btn-primary" id="saveBtn">
-	              저장
-	            </button>
-	            <button type="button" class="btn btn-primary" id="addBtn">
-	              추가
-	            </button>
-	            <button type="button" class="btn btn-danger" id="delBtn">
-	              삭제
-	            </button>
+            <sec:authorize access="hasRole('ROLE_ADMIN')">
+              <button type="button" class="btn btn-primary" id="saveBtn">
+                저장
+              </button>
+              <button type="button" class="btn btn-primary" id="addBtn">
+                추가
+              </button>
+              <button type="button" class="btn btn-danger" id="delBtn">
+                삭제
+              </button>
             </sec:authorize>
           </div>
           <div class="card-body">
-       		 <h6>수정 할려면 더블클릭 하세요</h6>
+            <h6>수정 할려면 더블클릭 하세요</h6>
             <div
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
@@ -363,10 +363,26 @@ uri="http://www.springframework.org/security/tags"%>
 
       $.ajax({
         url: "bomList",
-        data: { edctsCd: edctsCd },
+        data: { edctsCd: edctsCd, standard: edctsSpec },
         success: function (result) {
-          $("#inputBomCd").val(result[0].bomCd);
           $("#bomList").empty();
+          if (result.length == 0) {
+            $("#inputBomCd").val("");
+            if ($("#inputBomCd").val() == "") {
+              $.ajax({
+                url: "selectBomCd",
+                data: { edctsCd: edctsCd, standard: edctsSpec },
+                success: function (result) {
+                  bomCd = $("#inputBomCd").val(result);
+                },
+                error: function (reject) {
+                  console.log(reject);
+                },
+              });
+            }
+            return;
+          }
+          $("#inputBomCd").val(result[0].bomCd);
           $.each(result, function (idx, item) {
             makeTr(idx, item);
           });
@@ -378,7 +394,9 @@ uri="http://www.springframework.org/security/tags"%>
     });
 
     function makeTr(idx, data) {
-      let tr = $("<tr>").attr("data-id", data.rscCd);
+      let tr = $("<tr>")
+        .attr("data-id", data.rscCd)
+        .attr("class", "changeValue");
 
       tr.append(
         $("<td>").append(
@@ -392,7 +410,7 @@ uri="http://www.springframework.org/security/tags"%>
       tr.append("<td>" + data.rscCd + "</td>");
       tr.append("<td>" + data.rscNm + "</td>");
       tr.append("<td class='changeValue my-td-class'>" + data.useCnt + "</td>");
-      tr.append("<td class='changeValue my-td-class'>" + data.unit + "</td>");
+      tr.append("<td my-td-class'>" + data.unit + "</td>");
       tr.append(
         $("<td>" + data.prcsNm + "</td>").attr("data-prcsCd", data.prcsCd)
       );
@@ -451,17 +469,74 @@ uri="http://www.springframework.org/security/tags"%>
 
     // 추가 버튼
     $(document).on("click", "#addBtn", function () {
-      if($('#bomList').children().length == 0) {
-      	  Swal.fire({
-                icon: "warning",
-                title: "상품 조회 해주세요.",
-              });
-              return;
-      }	
-    	
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() == "") {
+        Swal.fire({
+          icon: "warning",
+          title: "상품 조회 해주세요.",
+        });
+        return;
+      }
+
       let lastTr = $("#bomList tr:last").children();
       let idx = lastTr.eq(1).text();
       let bomCd = $("#inputBomCd").val();
+      let edctsCd = $("#inputCode").val();
+      let standard = $("#inputSpec").val();
+
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() != "") {
+        let tr = $("<tr data-id>").attr("class", "table-danger");
+
+        tr.append(
+          $("<td>").append(
+            $("<input>")
+              .attr("type", "checkbox")
+              .attr("name", "chk")
+              .attr("value", bomCd)
+              .prop("checked", true)
+          )
+        );
+        tr.append("<td>" + 1 + "</td>");
+        tr.append(
+          $("<td>").append(
+            $("<button>")
+              .addClass("btn btn-primary my-td-class rscBtn")
+              .attr({
+                type: "button",
+                "data-bs-toggle": "modal",
+                "data-bs-target": "#rscModal",
+              })
+              .append($("<i>").addClass("bi bi-search my-td-class rscBtn"))
+          )
+        );
+
+        tr.append("<td>");
+        tr.append(
+          $("<td class='my-td-class'>").append(
+            $("<input class='my-td-class'>")
+              .attr("type", "number")
+              .css("width", "70px")
+          )
+        );
+        tr.append("<td>");
+        tr.append(
+          $("<td data-prcscd>").append(
+            $("<button>")
+              .addClass("btn btn-primary my-td-class prcsBtn")
+              .attr({
+                type: "button",
+                "data-bs-toggle": "modal",
+                "data-bs-target": "#prcsModal",
+              })
+              .append($("<i>").addClass("bi bi-search my-td-class prcsBtn"))
+          )
+        );
+
+        $("#bomList").append(tr);
+
+        return;
+      }
+      console.log(bomCd);
+
       if (lastTr.length == 0) {
         Swal.fire({
           icon: "warning",
@@ -470,7 +545,7 @@ uri="http://www.springframework.org/security/tags"%>
         return;
       }
 
-      let tr = $("<tr data-id>");
+      let tr = $("<tr data-id>").attr("class", "table-danger");
 
       tr.append(
         $("<td>").append(
@@ -478,6 +553,7 @@ uri="http://www.springframework.org/security/tags"%>
             .attr("type", "checkbox")
             .attr("name", "chk")
             .attr("value", bomCd)
+            .prop("checked", true)
         )
       );
       tr.append("<td>" + (parseInt(idx) + 1) + "</td>");
@@ -502,11 +578,7 @@ uri="http://www.springframework.org/security/tags"%>
             .css("width", "70px")
         )
       );
-      tr.append(
-        $("<td class='my-td-class'>").append(
-          $("<input class='my-td-class'>").css("width", "70px")
-        )
-      );
+      tr.append("<td>");
       tr.append(
         $("<td data-prcscd>").append(
           $("<button>")
@@ -527,15 +599,18 @@ uri="http://www.springframework.org/security/tags"%>
     $(document).ready(function () {
       let inputRscCd;
       let inputRscNm;
+      let inputRscSpec;
       $(document).on("click", ".rscBtn", function () {
         inputRscCd = $(this).closest("tr").children().eq(2);
         inputRscNm = $(this).closest("tr").children().eq(3);
+        inputRscSpec = $(this).closest("tr").children().eq(5);
       });
 
       $(document).on("click", "#choiceRsc", function () {
         let isValid = true;
         let rscCd = $(this).closest("tr").children().eq(1).text();
         let rscNm = $(this).closest("tr").children().eq(2).text();
+        let rscSpec = $(this).closest("tr").children().eq(3).text();
 
         $("#bomList")
           .children()
@@ -557,6 +632,7 @@ uri="http://www.springframework.org/security/tags"%>
         }
         inputRscCd.text(rscCd);
         inputRscNm.text(rscNm);
+        inputRscSpec.text(rscSpec);
         inputRscCd.closest("tr").attr("data-id", rscCd); // tr에 rscCd넣기
 
         $("#rscModal").modal("hide"); // 모달 닫기
@@ -655,37 +731,39 @@ uri="http://www.springframework.org/security/tags"%>
     });
 
     // 더블클릭하면 input나옴
-    $(document).on("dblclick", "#bomList .changeValue", function () {
-      let currentValue = $(this).text().trim();
-      let input = $("<input class='my-td-class'>")
-        .css("width", "70px")
-        .val(currentValue);
-
-      $(this).empty().append(input);
-      input.focus();
-
-      // 현재 클릭한 요소와 같은 tr의 .changeValue 요소들도 자동으로 input으로 바꾸기
-      let currentRow = $(this).closest("tr");
-      currentRow
-        .find(".changeValue")
-        .not(this)
-        .each(function () {
-          let currentValue = $(this).text().trim();
-          let input = $("<input>").css("width", "70px").val(currentValue);
-          $(this).empty().append(input);
-        });
+    $(document).on("dblclick", "tr", function () {
+      let currentRow = $(this);
+      currentRow.attr("class", "table-danger");
+      currentRow.children().eq(0).find("input").prop("checked", true);
+      currentRow.find(".changeValue").each(function () {
+        let currentValue = $(this).text().trim();
+        let input = $("<input>")
+          .attr("type", "number")
+          .attr("class", "my-td-class")
+          .css("width", "70px")
+          .val(currentValue);
+        $(this).empty().append(input);
+      });
     });
 
     // 저장
     $(document).on("click", "#saveBtn", function () {
-      if($('#bomList').children().length == 0) {
-    	  Swal.fire({
-              icon: "warning",
-              title: "상품 조회 해주세요.",
-            });
-            return;
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() == "") {
+        Swal.fire({
+          icon: "warning",
+          title: "상품 조회 해주세요.",
+        });
+        return;
       }
-      
+
+      if ($("#bomList").children().length == 0 && $("#inputCode").val() != "") {
+        Swal.fire({
+          icon: "warning",
+          title: "디테일 빈 값.",
+        });
+        return;
+      }
+
       let isValid = true;
       if ($("#bomList input:not(:checkbox)").length == 0) {
         Swal.fire({
@@ -705,7 +783,7 @@ uri="http://www.springframework.org/security/tags"%>
           .eq(4)
           .find("input")
           .val();
-        let unit = $(items).closest("tr").children().eq(5).find("input").val();
+        let unit = $(items).closest("tr").children().eq(5).text();
         let prcsCd = $(items)
           .closest("tr")
           .children()
@@ -750,7 +828,7 @@ uri="http://www.springframework.org/security/tags"%>
           bomCd: bomCd,
           rscCd: rscCd,
           useCnt: parseInt(useCnt),
-          unit: unit.toUpperCase(),
+          unit: unit,
           prcsCd: prcsCd,
         };
 
@@ -762,6 +840,7 @@ uri="http://www.springframework.org/security/tags"%>
         return isValid;
       }
 
+      console.log(valueArr);
       if (valueArr.length == 0) {
         Swal.fire({
           icon: "warning",
@@ -791,10 +870,10 @@ uri="http://www.springframework.org/security/tags"%>
                     $(items).closest("tr").attr("class", "");
                     console.log(tdList);
                     let useCnt = tdList.eq(4).find("input").val();
-                    let unit = tdList.eq(5).find("input").val();
+                    let unit = tdList.eq(5).text();
 
                     tdList.eq(4).text(useCnt);
-                    tdList.eq(5).text(unit.toUpperCase());
+                    tdList.eq(5).text(unit);
                   });
                   let Toast = Swal.mixin({
                     toast: true,

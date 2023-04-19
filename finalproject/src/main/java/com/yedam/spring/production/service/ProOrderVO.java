@@ -12,8 +12,9 @@ public class ProOrderVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date indicaDt;
 	private String planCd;
-	private int prefRank;
 	private String nowSt;
+	private String indicaCd;
+	private String indicaName;
 	//생산지시디테일
 	private int orderCnt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -21,4 +22,7 @@ public class ProOrderVO {
 	private int indicaCnt;
 	private String edctsCd;
 	private String bomCd;
+	
+	private String planName;
+	private String prdtNm;
 }

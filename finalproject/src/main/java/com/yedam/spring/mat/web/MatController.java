@@ -12,14 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.yedam.spring.masterData.service.VendVO;
 import com.yedam.spring.mat.service.MatService;
 import com.yedam.spring.mat.service.MatVO;
-import com.yedam.spring.production.service.OrderSheetVO;
-import com.yedam.spring.sales.service.EdctsIstVO;
 
 @Controller
 public class MatController {
@@ -30,47 +26,74 @@ public class MatController {
 	//등록, 수정, 삭제 -> POST
 	
 	//자재정보전체조회
-	//1) 페이징 필요한 페이지
 	@GetMapping("/matList")
 	public String getMatAllList(Model model) {
 		model.addAttribute("matList",matService.matList());
 		return "material/matList";
 	}
-	//자재정보조건조회
+	//자재정보단건조회
 	@GetMapping("/matInfo")
 	@ResponseBody
-	public MatVO getMat(MatVO matVO, Model model) {
-		model.addAttribute("matInfo",matService.getMat(matVO));
-		matVO = matService.getMat(matVO);
-		return matVO; 
+	public MatVO getMat(MatVO matVO) {		
+		return matService.getMat(matVO); 
 	}
+	//자재거래처 조회
+	@GetMapping("/VendModal")
+	@ResponseBody
+	public List<MatVO> matVendList(){
+		return matService.matVendList();
+		}
+	
+	//자재정보등록	
+	@PostMapping("/matInsert")
+	@ResponseBody
+	public List<MatVO> matInsertProcess(MatVO matVO) {
+		matService.insertMat(matVO);
+		return matService.matList();
+	}
+	//자재정보 수정
+	@PostMapping("/matUpdate")
+	@ResponseBody
+	public List<MatVO> matUpdateProcess(MatVO arr) {
+		matService.updateMat(arr);
+		return matService.matList();
+	}
+	//자재정보단건조회
+//	@GetMapping("/matInfo")
+//	@ResponseBody
+//	public MatVO getMat(MatVO matVO, Model model) {
+//		model.addAttribute("matInfo",matService.getMat(matVO));
+//		matVO = matService.getMat(matVO);
+//		return matVO; 
+//	}
 	//등록 - form이동
 //	@GetMapping("/matInsert")
 //	public String matInsertForm() {
 //		return "material/matInsert";
 //	}
 	//자재정보 등록 - Process
-	@PostMapping("/matInsert")
-	public String matInsertProcess(MatVO matVO) {
-		matService.insertMat(matVO);
-		return "redirect:matList";
-	}
+//	@PostMapping("/matInsert")
+//	@ResponseBody
+//	public String matInsertProcess(MatVO matVO) {
+//		matService.insertMat(matVO);
+//		return "redirect:matList";
+//	}
 	//자재정보 수정 - process /
 	//비동기식 - JSON반환 방식 (굳이 써보는것)
 	//1) client - JSON -> Server
 	//2) Server - text -> Client
-	@PostMapping("/matUpdate")
-	@ResponseBody
-	public Map<String, String> matUpdateProcess(@RequestBody MatVO matVO) {
-		return matService.updateMat(matVO);
-	}
-	//자재정보 삭제
-	@PostMapping("/matDelete")
-	@ResponseBody
-	public String matDeleteProcess(@RequestParam String rscCd) {
-		Map<String, String> map = matService.deleteMat(rscCd);
-		return map.get("결과");
-	}
+//	@PostMapping("/matUpdate")
+//	@ResponseBody
+//	public Map<String, String> matUpdateProcess(@RequestBody MatVO matVO) {
+//		return matService.updateMat(matVO);
+//	}
+//	//자재정보 삭제
+//	@PostMapping("/matDelete")
+//	@ResponseBody
+//	public String matDeleteProcess(@RequestParam String rscCd) {
+//		Map<String, String> map = matService.deleteMat(rscCd);
+//		return map.get("결과");
+//	}
 	
 	//자재발주 전체목록 + 자재재고현황
 	@GetMapping("/matOrder")
@@ -80,11 +103,17 @@ public class MatController {
 		return "material/matOrder";
 	}
 	// 자재발주등록
-		@PostMapping("/matOrderInsert")
-		public String vendInsertProcess(MatVO matVO) {
-			matService.addMatOrderInfo(matVO);
-			return "redirect:matOrder";
-		}
+	@PostMapping("/matOrderInsert")
+	@ResponseBody
+	public List<MatVO> vendInsertProcess(MatVO matVO) {
+		matService.addMatOrderInfo(matVO);
+		return matService.matOrderList();
+	}
+//		@PostMapping("/matOrderInsert")
+//		public String vendInsertProcess(MatVO matVO) {
+//			matService.addMatOrderInfo(matVO);
+//			return "redirect:matOrder";
+//		}
 	// 자재발주수정
 	@PostMapping("/updatematOrder")
 	@ResponseBody
@@ -131,7 +160,7 @@ public class MatController {
 		matService.addMatReceipt(matVO);
 		return "redirect:matReceipt";
 	}
-	// 자재입고수정
+	// 자재입고수정(여러개 동시에 수정할 때 @RequestBody MatVO[] arr)
 	@PostMapping("/updateMatReceipt")
 	@ResponseBody
 	public Map<String, Object> updateMatReceipt(@RequestBody MatVO[] arr) {
@@ -166,17 +195,59 @@ public class MatController {
 	}
 	
 	//자재검사 전체조회
-		@GetMapping("/matCheck")
-		public String getMatCheck(Model model) {
-			model.addAttribute("matCheckList",matService.matCheckList());
-			return "material/matCheck";
+	@GetMapping("/matCheck")
+	public String getMatCheck(Model model) {
+		model.addAttribute("matCheckList",matService.matCheckList());
+		return "material/matCheck";
 		}
-	//자재검사 전체조회
-			@GetMapping("/orderModal")
-			@ResponseBody
-			public List<MatVO> orderChkList(){
-				return matService.matOrderChkList();
-			}
+	//검사미완료 발주 전체 조회
+	@GetMapping("/orderModal")
+	@ResponseBody
+	public List<MatVO> orderChkList(){
+		return matService.matOrderChkList();
+		}
+	//자재 검수자 조회
+	@GetMapping("/checkerModal")
+	@ResponseBody
+	public List<MatVO> checkerModal(){
+		return matService.checkerList();
+	}
+	//자재검사등록	
+	@PostMapping("/matCheckInsert")
+	@ResponseBody
+	public List<MatVO> insertMatCheckProcess(MatVO matVO) {
+		matService.addMatCheck(matVO);
+		return matService.matCheckList();
+	}
+	//자재검사 단건조회
+	@GetMapping("/selectMatCheck")
+	@ResponseBody
+	public MatVO selectMatCheck(MatVO matVO) {
+		return matService.getMatCheckInfo(matVO);
+	}
 	
+	// 자재검사 수정(단건수정)
+	@PostMapping("/updateMatCheckInfo")
+	@ResponseBody
+	public List<MatVO> updateMatCheckInfo(MatVO arr) {
+		System.out.println("출력" +arr);
+	    	matService.updateMatCheckInfo(arr);
+	    
+	    
+        return matService.matCheckList();
+	}
+	//자재검사삭제
+	@PostMapping("/removeMatatCheck")
+	@ResponseBody
+	public String matCheckDeleteProcess(HttpServletRequest request) {
+		String[] arr = request.getParameterValues("valueArr");
+		if (arr == null) {
+			return "error";
+		}
+		for (int i = 0; i < arr.length; i++) {
+			matService.removeMatatCheckInfo(arr[i]);
+		}
+		return "success";
+	}
 
 }

@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.spring.eqm.mapper.EqmMapper">
+	
 	<select id="selectEmpList" resultType="EqmVO">
 		SELECT name
 		FROM emp
@@ -60,7 +61,9 @@
                    chck_perd,
                    use_yn,
                    eqm_mng,
-                   eqm_img
+                   eqm_img,
+                   eqm_img_path,
+                   prcs_cd
                   )
                   values (
                           #{eqmCd},
@@ -77,7 +80,23 @@
                           #{chckPerd},
                           #{useYn},
                           #{eqmMng},
-                          #{eqmImg}
+                          #{eqmImg},
+                          #{eqmImgPath},
+                          <if test="eqmFg == '분쇄기'">
+                          'PRCS1000'
+                          </if>
+                          <if test="eqmFg == '계량기'">
+                          'PRCS2000'
+                          </if>
+                          <if test="eqmFg == '배합기'">
+                          'PRCS3000'
+                          </if>
+                          <if test="eqmFg == '건조기'">
+                          'PRCS4000'
+                          </if>
+                          <if test="eqmFg == '포장기'">
+                          'PRCS5000'
+                          </if>
                          )
 	</insert>
 	
@@ -102,6 +121,22 @@
 	<!-- 설비점검내역 -->
 	<!-- 전체조회 -->
 	<select id="selectCheckList" resultType="EqmVO">
+		SELECT c.CHECK_CD,
+			   c.EQM_CD, 
+			   c.CHCK_FG,
+			   c.CHCK_DT,
+			   c.JDGMNT,
+			   c.DISPO_CTNT,
+			   c.CHCK_PSCH,
+			   c.EQM_NM,
+               e.chck_perd+c.chck_dt next_chck_dt
+		FROM eqm_check c join eqm e
+        ON c.eqm_nm = e.eqm_nm
+		ORDER BY chck_dt DESC
+	</select>
+	
+	<!-- 검색조회 -->
+	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
 		SELECT CHECK_CD,
 			   EQM_CD, 
 			   CHCK_FG,
@@ -110,13 +145,15 @@
 			   DISPO_CTNT,
 			   CHCK_PSCH,
 			   EQM_NM
-		FROM eqm_check 
-		ORDER BY chck_dt DESC
-	</select>
-	
-	<!-- 검색조회 -->
-	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
-		
+		FROM eqm_check
+		<where>
+			<if test="startDt != null and endDt != null">
+				AND chck_dt BETWEEN #{startDt} AND #{endDt}
+			</if>
+			<if test="eqmNm != null">
+				AND eqm_nm LIKE '%'||#{eqmNm}||'%'
+			</if>
+		</where>
 	</select>
 	
 	<!-- 설비점검내역단건조회 -->
@@ -135,6 +172,10 @@
 	
 	<!-- 점검등록 -->
 	<insert id="insertCheck" parameterType="EqmVO">
+		<selectKey keyProperty="checkCd" resultType="String" order="BEFORE">
+			SELECT 'CHK'||(TO_NUMBER(SUBSTR(NVL(MAX(check_cd),'CHK999'),4)) + 1) check_cd
+			FROM eqm_check
+		</selectKey>
 		INSERT INTO eqm_check (
 								check_cd, 
 							    eqm_cd, 
@@ -145,8 +186,16 @@
 							    chck_psch, 
 							    eqm_nm
 							    )
-		SELECT CONCAT('CHK', CAST(SUBSTR(MAX(check_cd), 4) + 1 AS NUMBER)),#{eqmCd},#{chckFg}, #{chckDt},#{jdgmnt},#{dispoCtnt},#{chckPsch},#{eqmNm}
-		FROM eqm_check
+				VALUES (
+						#{checkCd},
+						#{eqmCd},
+						#{chckFg}, 
+						#{chckDt},
+						#{jdgmnt},
+						#{dispoCtnt},
+						#{chckPsch},
+						#{eqmNm}
+						)
 	</insert>
 	
 	<!-- 점검삭제 -->
@@ -160,8 +209,7 @@
 		SET chck_dt = #{chckDt}, 
 			jdgmnt = #{jdgmnt}, 
 			dispo_ctnt = #{dispoCtnt}, 
-			chck_psch = #{chckPsch}, 
-			eqm_nm = #{eqmNm} 
+			chck_psch = #{chckPsch}
 		WHERE check_cd = #{checkCd}
 	</update>
 	
@@ -171,7 +219,9 @@
                e.eqm_cd, 
                e.eqm_nm, 
                fr_dt, 
+               fr_hm, 
                to_dt, 
+               to_hm, 
                eqm_psch, 
                opert_ctnt
         FROM eqm e JOIN eqm_opr
@@ -195,14 +245,18 @@
 	BEGIN
 		insert into eqm_opr (nopr_cd, 
                      eqm_cd,                     
-                     fr_dt, 
-                     to_dt, 
+                     fr_dt,
+                     fr_hm, 
+                     to_dt,
+                     to_hm, 
                      eqm_psch, 
                      opert_ctnt) 
              values( #{noprCd},
                      #{eqmCd},                   
                      #{frDt},
+                     #{frHm},
                      #{toDt},
+                     #{toHm},
                      #{eqmPsch},
                      #{opertCtnt} );
         UPDATE eqm 
@@ -225,7 +279,9 @@
 	<update id="updateOpr" parameterType="EqmVO">
 		UPDATE eqm_opr
 		SET fr_dt = #{frDt}, 
+			fr_hm = #{frHm}, 
             to_dt = #{toDt}, 
+            to_hm = #{toHm}, 
             eqm_psch = #{eqmPsch}, 
             opert_ctnt = #{opertCtnt}
         WHERE nopr_cd = #{noprCd}    

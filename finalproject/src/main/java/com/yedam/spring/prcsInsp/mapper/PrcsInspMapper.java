@@ -18,4 +18,14 @@ public interface PrcsInspMapper {
 	public int inferUpdateInsert(PrcsInspVO prcsInspVO);
 	//맥스검사완료코드
 	public PrcsInspVO selectMaxChkCd();
+	
+	//검사완료리스트
+	public List<PrcsInspVO> selectCompletedPrcs();
+	
+	//검사완료 단건조회
+	public List<PrcsInspVO> inspDtl(PrcsInspVO prcsInspVO);
+	
+	//검사완료 삭제
+	public int deleteCompleted(String deleteList);
+	
 }

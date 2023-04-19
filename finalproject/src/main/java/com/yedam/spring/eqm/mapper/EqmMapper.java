@@ -28,7 +28,7 @@ public interface EqmMapper {
 	public List<EqmVO> selectCheckList();
 	
 	//점검검색조회
-	public List<EqmVO> searchEqmCheck();
+	public List<EqmVO> searchEqmCheck(EqmVO eqmVO);
 	
 	//점검단건조회
 	public EqmVO selectCheck(EqmVO eqmVO);

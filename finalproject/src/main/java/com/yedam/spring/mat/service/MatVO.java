@@ -17,6 +17,7 @@ public class MatVO {
 	private String useYn; //사용여부
 	private String vendCd; //거래처코드
 	private String vendNm; //거래처이름
+	private String vendTyp; //거래처유형
 	
 	private int rscstc; //재고량
 	private int istStc; //입고재고량
@@ -70,8 +71,11 @@ public class MatVO {
 	private int pack; // 포장불량
 	private int underWeight; // 중량미달
 	private int etc; // 기타
-	private String explain; //사유
+	private String etcExplain; //사유
 	
+	private String name; //검수자이름
+	private String id;	//검수자id
+	private String job; //검수자 구분
 	
 	
 }

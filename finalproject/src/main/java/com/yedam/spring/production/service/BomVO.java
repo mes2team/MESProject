@@ -26,6 +26,9 @@ public class BomVO {
 	
 	//  재고 정보
 	private String rscSpec;
-	private int rscStc;
-
+	private int rscStc;	//자재별 총 재고량
+	private String rscLotCd;
+	private String rscNowStc; //LOT별 재고량
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date istDt;
 }

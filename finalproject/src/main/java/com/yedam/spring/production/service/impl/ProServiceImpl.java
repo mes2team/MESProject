@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.spring.common.Criteria;
+import com.yedam.spring.eqm.service.EqmVO;
+import com.yedam.spring.mat.service.MatVO;
 import com.yedam.spring.production.mapper.ProMapper;
 import com.yedam.spring.production.service.BomVO;
 import com.yedam.spring.production.service.OrderSheetVO;
@@ -188,6 +190,101 @@ public class ProServiceImpl implements ProService {
 		
 		return result;
 	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsFlow(String edctsCd) {
+		ProPrcsVO vo = new ProPrcsVO();
+		vo.setEdctsCd(edctsCd);
+		return proMapper.selectPrcsFlow(vo);
+	}
+
+	@Override
+	public List<BomVO> getLotStock(String edctsCd) {
+		return proMapper.selectLotStock(edctsCd);
+	}
+
+	@Override
+	public List<BomVO> getLotStk(String rscCd) {
+		return proMapper.selectLotStk(rscCd);
+	}
+
+	@Override
+	public String newProOrderInsert(ProOrderVO proOrderVO) {
+		int result = proMapper.InsertNewProOrder(proOrderVO);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
+	@Override
+	public List<ProOrderVO> getIndica() {
+		return proMapper.selectIndica();
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsProg(ProPrcsVO vo) {
+		return proMapper.selectPrcsProg(vo);
+	}
+
+	@Override
+	public List<ProPrcsVO> getPrcsAndRsc(ProPrcsVO vo) {
+		return proMapper.selectPrcsAndRsc(vo);
+	}
+
+	@Override
+	public List<EqmVO> getEqmPrcs(ProPrcsVO vo) {
+		return proMapper.selectEqmPrcs(vo);
+	}
+
+	@Override
+	public String modifyPrcsStart(ProPrcsVO vo) {
+		int result = proMapper.updatePrcsStart(vo);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
+	@Override
+	public String modifyUseEqm(String eqmCd) {
+		int result = proMapper.updateUseEqm(eqmCd);
+		if(result > 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
+	@Override
+	public String modifyUseRsc(MatVO matVO) {
+		int result = proMapper.updateUseRsc(matVO);
+		if(result < 0) {
+			return "Success";
+		} else {
+			return "Fail";
+		}
+	}
+
+	@Override
+	public String modifyPrcsStop(ProPrcsVO vo) {
+		int result =  proMapper.updatePrcsStop(vo);
+		if(result < 0) {
+			String useEqms = proMapper.getEqm(vo);
+			String[] arr = useEqms.split("/");
+			
+			for (String eqmCd : arr) {
+				proMapper.offEqm(eqmCd);
+			}
+			return "Success";
+		} else {
+			return "Fail";
+		}	
+	}
+
+
 
 
 

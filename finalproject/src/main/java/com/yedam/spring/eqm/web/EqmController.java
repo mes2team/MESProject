@@ -1,7 +1,9 @@
 package com.yedam.spring.eqm.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.yedam.spring.eqm.service.EqmService;
 import com.yedam.spring.eqm.service.EqmVO;
@@ -30,7 +33,7 @@ public class EqmController {
 
 	// 설비등록
 	@PostMapping("/eqm")
-	public String insertEqm(EqmVO eqmVO) {
+	public String insertEqm(EqmVO eqmVO,MultipartFile file) throws Exception{
 		service.insertEqm(eqmVO);
 		return "redirect:eqm";
 	}
@@ -61,19 +64,17 @@ public class EqmController {
 	public String eqmCheckPage(Model model) {
 		model.addAttribute("list", service.selectCheckList());
 		model.addAttribute("eqmList", service.selectEqmList());
+		model.addAttribute("managers", service.selectEmpList());
 		return "eqm/eqmCheck";
 	}
 
-	/*
-	 * 점검검색조회
-	 * 
-	 * @PostMapping("/searchEqmCheck")
-	 * 
-	 * @ResponseBody public List<EqmVO> searchEqmCheck(@RequestBody EqmVO
-	 * searchKeywords){ return "";
-	 * 
-	 * }
-	 */
+	
+	  //점검검색조회
+	  @GetMapping("/searchEqmCheck")
+	  @ResponseBody public List<EqmVO> searchEqmCheck(EqmVO eqmVO){ 
+	  	return service.searchEqmCheck(eqmVO);
+	  }
+	 
 
 	// 점검단건조회
 	@GetMapping("/selectCheck")
@@ -114,6 +115,7 @@ public class EqmController {
 	@GetMapping("/eqmOpr")
 	public String eqmOpr(Model model) {
 		model.addAttribute("OprList", service.selectOprList());
+		model.addAttribute("managers",service.selectEmpList());
 		return "eqm/eqmOpr";
 	}
 

@@ -38,4 +38,19 @@ public PrcsInspVO selectMaxChkCd() {
 public int inferUpdateInsert(PrcsInspVO prcsInspVO) {
 	return mapper.inferUpdateInsert(prcsInspVO);
 }
+
+@Override
+public List<PrcsInspVO> selectCompletedPrcs() {
+	return mapper.selectCompletedPrcs();
+}
+
+@Override
+public List<PrcsInspVO> inspDtl(PrcsInspVO prcsInspVO) {
+	return mapper.inspDtl(prcsInspVO);
+}
+
+@Override
+public int deleteCompleted(String deleteList) {
+	return mapper.deleteCompleted(deleteList);
+}
 }

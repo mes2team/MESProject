@@ -22,8 +22,8 @@
 							<label style="font-weight: bold;">설비명*</label>
 						</div>
 						<div class="col-auto">
-							<input type="hidden" name="checkCd"> <input type="text"
-								disabled readonly name="eqmNm" class="form-control">
+							<input type="text" hidden name="checkCd"> <input
+								type="text" disabled readonly name="eqmNm" class="form-control">
 						</div>
 						<div class="col-auto">
 							<button type="button" class="btn btn-success"
@@ -54,7 +54,13 @@
 						<label style="font-weight: bold;">담당자*</label>
 					</div>
 					<div class="col-auto">
-						<input type="text" name="chckPsch" class="form-control">
+						<select name="chckPsch" class="form-select" style="width: 216px;">
+							<option value="" selected disabled hidden>담당자 선택
+							<option>
+								<c:forEach items="${managers }" var="manager">
+									<option value="${manager.name }">${manager.name }</option>
+								</c:forEach>
+						</select>
 					</div>
 
 					<div class="col-auto" style="margin-left: 90px;">
@@ -87,7 +93,7 @@
 						<button type="button" onclick="formOptionChk()"
 							class="btn btn-primary">저장</button>
 						<button type="button" onclick="inputClean()"
-							class="btn btn-secondary">클린</button>
+							class="btn btn-secondary">초기화</button>
 					</div>
 
 				</div>
@@ -103,7 +109,7 @@
 					<label style="font-weight: bold;">설비명</label>
 				</div>
 				<div class="col-auto">
-					<input type="text" id="searchInput" name="eqmNm"
+					<input type="text" id="searchInput" name="searchEqmNm"
 						class="form-control">
 				</div>
 				<div class="col-auto">
@@ -111,11 +117,12 @@
 				</div>
 				<div class="col-auto">
 					<input type="date" style="width: 150px; display: inline-block;"
-						id="start" name="start" class="form-control"> ~ <input
-						name="end" type="date"
+						id="start" name="startDt" class="form-control"> ~ <input
+						name="endDt" type="date"
 						style="width: 150px; display: inline-block;" id="end"
 						class="form-control">
-					<button type="submit" id="searchButton" class="btn btn-success">조회</button>
+					<button type="button" onclick="searchCheck()" id="searchButton"
+						class="btn btn-success">조회</button>
 					<button type="button" onclick="deleteCheck()"
 						class="btn btn-danger">삭제</button>
 				</div>
@@ -147,7 +154,8 @@
 									<td scope="row">${item.chckFg}</td>
 									<td scope="row">${item.chckPsch}</td>
 									<td scope="row">${item.jdgmnt}</td>
-									<td scope="row"></td>
+									<td scope="row"><fmt:formatDate value="${item.nextChckDt}"
+											pattern="yyyy-MM-dd" /></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -227,6 +235,7 @@
 	<script>
 	
 	//메인화면 입력칸 모두
+	var checkCd = document.querySelector('[name="checkCd"]');
 	var chckDt = document.querySelector('[name="chckDt"]');
 	var chckFg = document.querySelectorAll('[name="chckFg"]');
 	var chckPsch = document.querySelector('[name="chckPsch"]');
@@ -235,9 +244,64 @@
 	var eqmCd = document.querySelector('[name="eqmCd"]');
 	var eqmNm = document.querySelector('[name="eqmNm"]');
 	var jdgmnt = document.querySelectorAll('[name="jdgmnt"]');
+	var searchEqmNm = document.querySelector('[name="searchEqmNm"]');
+	var startDt = document.querySelector('[name="startDt"]');
+	var endDt = document.querySelector('[name="endDt"]');
 	
-	
-	
+	function searchCheck(){
+		if(startDt.value == '' && endDt.value != '' || startDt.value != '' && endDt.value == ''){
+			Swal.fire({
+		          icon: "warning",
+		          title: "검색일자를 확인해주세요.",
+		        });
+			return;	
+		}else sendSearch();
+	}
+	function sendSearch(){
+		let sEqmNm = searchEqmNm.value;
+		let start = startDt.value;
+		let end = endDt.value;
+		let dataList = {
+			eqmNm : sEqmNm,
+			startDt : start,
+			endDt : end
+		}
+		console.log(dataList);
+		
+		 $.ajax({
+			  type: "GET",
+			  url: "searchEqmCheck",
+			  contentType: "application/json; charset=utf-8",
+			  data: dataList, //json.stringify(dataList)
+			  dataType: "json",
+			  success: function(res) {
+			  	makeSearchList(res);	  
+			  },
+			  error: function(error) {
+				  console.log(error)
+			  }
+			}); 
+		
+	}
+	function makeSearchList(res){
+		let listTable = $('#listTable') 
+		listTable.empty();
+		
+		for(let i=0;i<res.length;i++){
+			let tr = $('<tr onclick="selectCheck(\'' + res[i].checkCd + '\', this)">');
+			tr.append('<td scope="row"><input type="checkbox"></td>');
+			let date = changeDateFormat(res[i].chckDt)
+    		tr.append('<td>' + date + '</td>'); 
+   			tr.append('<td>' + res[i].checkCd + '</td>'); 
+    		tr.append('<td>' + res[i].eqmCd + '</td>'); 
+   			tr.append('<td>' + res[i].eqmNm + '</td>'); 
+    		tr.append('<td>' + res[i].chckFg + '</td>'); 
+    		tr.append('<td>' + res[i].chckPsch + '</td>'); 
+    		tr.append('<td>' + res[i].jdgmnt + '</td>'); 
+    		tr.append('<td></td>');
+			listTable.append(tr);
+		}
+	}
 	
 	//수정
 	function updateCheck(){
@@ -259,6 +323,11 @@
 					      success: function(result) { 
 					    	console.log("업데이트성공");
 							updateTr();	//수정된tr 그리고 기존tr 지우기
+							inputClean();
+							Toast.fire({
+				                  icon: "success",
+				                  title: "수정이 정상적으로 되었습니다.",
+				                });  
 					      },
 					      error: function(reject) { 
 					        console.log("업데이트실패");
@@ -305,7 +374,8 @@
 		//등록시 빈칸체크 (저장버튼 눌렀을시 실행 됨)
 		function formOptionChk(){
 			let inputs = checkForm.querySelectorAll("input")
-			for(let i=1;i<5;i++){
+			let select = checkForm.querySelector('select')
+			for(let i=1;i<4;i++){
 				if(inputs[i].value == ''){
 					Swal.fire({
 				          icon: "warning",
@@ -314,13 +384,18 @@
 					return;
 				}
 			}
-			if(inputs[5].checked == false && inputs[6].checked == false){
+			if(select.value == ''){
 				Swal.fire({
 			          icon: "warning",
-			          title: "점검구분 확인해주세요.",
+			          title: "담당자를 확인해주세요.",
+			        });	
+			}else if(inputs[4].checked == false && inputs[5].checked == false){
+				Swal.fire({
+			          icon: "warning",
+			          title: "점검구분을 확인해주세요.",
 			        });
 				return;
-			}else if(inputs[7].checked == false && inputs[8].checked == false){
+			}else if(inputs[6].checked == false && inputs[7].checked == false){
 				Swal.fire({
 			          icon: "warning",
 			          title: "판정을 확인해주세요.",
@@ -387,7 +462,10 @@
 					    	  for(let j=0;j<disableds.length;j++){
 					  		    disableds[j].disabled = true;
 					  			}
-					    	 
+					    	  Toast.fire({
+				                  icon: "success",
+				                  title: "추가가 정상적으로 되었습니다.",
+				                });  
 					    	  
 					      },
 					      error: function(reject) { 
@@ -400,7 +478,7 @@
 		}
 		//최대점검코드 구하는함수(tr그리기용)
 		function maxCheckCd(){
-			let max = 0;
+			let max = 999;
 			let trs = listTable.querySelectorAll("tr")
 			let cds = [];
 			
@@ -462,6 +540,13 @@
 							  checkList[j].closest('tr').remove();
 							  }
 						  }	
+						  inputClean();
+						  
+			                Toast.fire({
+			                  icon: "success",
+			                  title: "삭제가 정상적으로 되었습니다.",
+			                });  
+						  
 					  },
 					  error: function(error) {
 						  console.log(error)
@@ -657,7 +742,7 @@
 			let formattedDate = year + '-' + month + '-' + day;
 			return formattedDate;
 		}
-		//allCheck
+		//전체체크
 		function allCheck(allCheck) {
 			let checkes = listTable.querySelectorAll('[type="checkbox"]')
 			for (let i = 0; i < checkes.length; i++) {
@@ -667,6 +752,7 @@
 
 		//클린버튼
 		function inputClean() {
+			checkCd.value = '';
 			chckDt.value = '';
 			chckPsch.value = '';
 			dispoCtnt.value = '';
@@ -696,6 +782,18 @@
 
 		}
 		
+		
+		var Toast = Swal.mixin({
+            toast: true,
+            position: "top",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
+            },
+          });
 		
 	</script>
 </body>

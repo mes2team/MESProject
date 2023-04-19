@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.yedam.spring.sales.mapper.EdctsOustMapper">
+  <!-- 출고 조회 -->
   <select id="selectEdctsOustAll" resultType="EdctsOustVO">
   	SELECT 	eo.edcts_oust_no,
        		eo.edcts_cd,
@@ -11,9 +12,79 @@
        		eo.edcts_oust_dt,
        		eo.edcts_oust_cnt,
        		eo.order_no,
+       		eo.edcts_expire,
        		e.prdt_nm
 	FROM 	edcts_oust eo JOIN edcts e 
 	ON 		eo.edcts_cd = e.edcts_cd
 	ORDER BY edcts_oust_no
   </select>
+  
+  <!-- 출고 등록 and 완제품 수량 업데이트 -->
+  <insert id="insertUpdateEdcts" parameterType="EdctsOustVO">
+  		<selectKey keyProperty="edctsOustNo" order="BEFORE" resultType="String">
+  			SELECT 	TO_CHAR(NVL(MAX(SUBSTR(edcts_oust_no, 5)), 999) + 1)
+			FROM 	edcts_oust
+  		</selectKey>
+  		BEGIN
+    		UPDATE 	edcts_ist
+    		SET		edcts_lot_cnt = #{resultCnt}
+    		WHERE	edcts_lot_no = #{edctsLotNo};
+    		
+    		INSERT INTO edcts_oust(edcts_oust_no,
+    							   edcts_cd,
+    							   edcts_lot_no,
+    							   edcts_oust_dt,
+    							   edcts_oust_cnt,
+    							   edcts_expire,
+    							   order_no)
+    						VALUES('EOST' || #{edctsOustNo},
+    							   #{edctsCd},
+    							   #{edctsLotNo},
+    							   sysdate,
+    							   #{edctsOustCnt},
+    							   #{edctsExpire},
+    							   #{orderNo});
+    							   
+    		UPDATE 	order_sheet_test
+    		SET		prog_appe = '출고완료'
+    		WHERE	order_no = #{orderNo};
+		END;
+  </insert>
+  
+  <!-- 출고 삭제 and 완제품 수량 업데이트 -->
+  <delete id="deleteEdctsOust" parameterType="EdctsOustVO">
+	    DECLARE
+	    		v_edcts_lot_cnt     edcts_ist.edcts_lot_cnt%TYPE;
+	    		v_edcts_oust_cnt    edcts_oust.edcts_oust_cnt%TYPE;
+	    		v_check				NUMBER;
+		BEGIN
+	    		SELECT  ei.edcts_lot_cnt, eo.edcts_oust_cnt
+	    		INTO    v_edcts_lot_cnt, v_edcts_oust_cnt
+	    		FROM    edcts_ist ei JOIN edcts_oust eo
+	    		ON      ei.edcts_lot_no = eo.edcts_lot_no
+	    		WHERE   eo.edcts_lot_no = #{edctsLotNo}
+	    		AND		eo.edcts_oust_no = #{edctsOustNo};
+	    
+			    UPDATE  edcts_ist
+			    SET     edcts_lot_cnt = v_edcts_lot_cnt + v_edcts_oust_cnt
+			    WHERE   edcts_lot_no = #{edctsLotNo};
+			    
+			    DELETE FROM edcts_oust
+			    WHERE edcts_oust_no = #{edctsOustNo};
+			    
+			    SELECT COUNT(*)
+                INTO v_check
+                FROM edcts_oust
+                WHERE order_no = #{orderNo};
+                
+                IF v_check = 0 THEN
+                    UPDATE 	order_sheet_test
+                    SET		prog_appe = '계획완료'
+                    WHERE	order_no = #{orderNo};
+                END IF;
+	
+		END;
+  </delete>
+
+
 </mapper>

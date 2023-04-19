@@ -3,54 +3,63 @@ package com.yedam.spring.eqm.service;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
 @Data
 public class EqmVO {
-	private String eqmCd; //¼³ºñÄÚµå
-	private String eqmFg; //¼³ºñ±¸ºĞ
-	private String eqmNm; //¼³ºñ¸í
-	@DateTimeFormat(pattern = "yyyy-MM-dd") //¹ŞÀ»¶§ ÀÌ·¸°Ô
-	private Date eqmIstDt; //¼³ºñÀÔ°í³¯Â¥
-	private String eqmMinTemp; //ÃÖ¼Ò¿Âµµ
-	private String eqmMaxTemp; //ÃÖ°í¿Âµµ
-	private String chckPerd; //Á¡°ËÁÖ±â
-	private String useYn; //»ç¿ë¿©ºÎ
-	private String eqmMng; // ¼³ºñ ´ã´çÀÚ
-	private String eqmImg; //¼³ºñÀÌ¹ÌÁö
+	private String eqmCd; //ì„¤ë¹„ì½”ë“œ
+	private String eqmFg; //ì„¤ë¹„êµ¬ë¶„
+	private String eqmNm; //ì„¤ë¹„ëª…
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //ë°›ì„ë•Œ ì´ë ‡ê²Œ
+	private Date eqmIstDt; //ì„¤ë¹„ì…ê³ ë‚ ì§œ
+	private String eqmMinTemp; //ìµœì†Œì˜¨ë„
+	private String eqmMaxTemp; //ìµœê³ ì˜¨ë„
+	private String chckPerd; //ì ê²€ì£¼ê¸°
+	private String useYn; //ì‚¬ìš©ì—¬ë¶€
+	private String eqmMng; // ì„¤ë¹„ ë‹´ë‹¹ì
+	private String prcsCd; //ê³µì •ì½”ë“œ
+	//private MultipartFile eqmImg;
 	
-	//¼³ºñÄÚµå ÃÖ´ë°ª ¹Ş±â
+	private String eqmImg; //å ì™ì˜™å ì™ì˜™å ì‹±ë±„ì˜™å ì™ì˜™å ì™ì˜™
+	private String eqmImgPath; //å ì‹±ë±„ì˜™å ì™ì˜™å ì™ì˜™å 
+	
+	//å ì™ì˜™å ì™ì˜™å ìŒ˜ë“¸ì˜™ å ìŒëŒ€ê°’ å ìŒ¨ê¹ì˜™
 	private String firstMax; 
 	private String secondMax; 
 	private String thirdMax; 
 	private String fourthMax; 
 	private String fifthMax; 
 	
-	//¼³ºñÁ¡°Ë³»¿ª
-	private String checkCd; //Á¡°ËÄÚµå
-	private String chckFg; //Á¡°Ë±¸ºĞ [Á¤±âÁ¡°Ë | ¼ö¸®]
-	@DateTimeFormat(pattern = "yyyy-MM-dd") //¹ØÀÇ Date´Â ¿ø·¡ 2023/04 ½½·¡½¬·Î ¹ŞÀ½ ±×°É ÁöÁ¤ÇÑ ÆĞÅÏ´ë·Î ¹Ş°Ô ÇÔ
-	private Date chckDt; //Á¡°ËÀÏÀÚ
-	private String jdgmnt; //ÆÇÁ¤
-	private String dispoCtnt; //Á¶Ä¡³»¿ª
-	private String chckPsch; //Á¡°Ë´ã´çÀÚ
+	//ì„¤ë¹„ì ê²€ë‚´ì—­
+	private String checkCd; //ì ê²€ì½”ë“œ
+	private String chckFg; //ì ê²€êµ¬ë¶„ [ì •ê¸°ì ê²€ | ìˆ˜ë¦¬]
+	@DateTimeFormat(pattern = "yyyy-MM-dd") //
+	private Date chckDt; //ì ê²€ì¼ì
+	private Date nextChckDt; //ë‹¤ìŒì ê²€ì¼
+	private String jdgmnt; //íŒì •
+	private String dispoCtnt; //ì¡°ì¹˜ë‚´ì—­
+	private String chckPsch; //ì ê²€ë‹´ë‹¹ì
 	
-	//¼³ºñÁ¡°Ë³»¿ª Á¶È¸¿ë
+	//å ì™ì˜™å ì™ì˜™å ì™ì˜™å ì‹¯ë†‚ì˜™å ì™ì˜™ å ì™ì˜™íšŒå ì™ì˜™
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date start;
+	private Date startDt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date end;
+	private Date endDt;
 	
-	//¼³ºñºñ°¡µ¿
-	private String noprCd; //Á¡°ËÄÚµå? ºñ°¡µ¿ÄÚµå
+	//å ì™ì˜™å ì™ì˜™èƒ„ã€‰å 
+	private String noprCd; //å ì™ì˜™å ì™ì˜™å ìŒ˜ë“¸ì˜™? å ìŸê°€ë“¸ì˜™å ìŒ˜ë“¸ì˜™
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date frDt; //½ÃÀÛÀÏ½Ã
+	private Date frDt; //ì‹œì‘ì¼ì‹œ
+	private String frHm; //ì‹œì‘ì‹œê°„
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date toDt; //Á¾·áÀÏ½Ã
-	private String eqmPsch; //ºñ°¡µ¿´ã´çÀÚ
-	private String opertCtnt; //ÀÛ¾÷³»¿ë
+	private Date toDt; //ì¢…ë£Œì¼ì‹œ
+	private String toHm; //ì¢…ë£Œì‹œê°„
+	private String eqmPsch; //ë¹„ê°€ë™ë‹´ë‹¹ì
+	private String opertCtnt; //ì‘ì—…ë‚´ìš©
 	
-	//´ã´çÀÚ eqm table¿¡ µî·ÏµÈ¾Öµé·Î
+	//å ì™ì˜™å ì™ì˜™å  eqm tableå ì™ì˜™ å ì™ì˜™æºíš¡ä»¤å ì™ì˜™
 	private String name;
+	private String prcsCd;
 }

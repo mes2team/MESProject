@@ -21,17 +21,25 @@ public class ProPrcsVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date indicaDt;
 	private String planCd;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date wkToTm;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date wkFrTm;
+	private String wkToTm;
+	private String wkFrTm;
 	private String prcsPsch;
 	private int indicaCnt;
 	private int prodCnt;
-	private String inferCd;
 	private int inferCnt;
+	private String prcsStatus;
+	private String indicaCd;
 	
 	//공정흐름
 	private int prcsNo;
 	private String edctsCd;
+	
+	private String prdtNm;
+	private String bomCd;
+	private String rscCd;
+	private String rscNm;
+	private String useCnt;
+	private String rscTyp;
+	
+	private String useEqm;
 }

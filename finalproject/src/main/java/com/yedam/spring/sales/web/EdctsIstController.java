@@ -35,6 +35,7 @@ public class EdctsIstController {
 	@ResponseBody
 	public List<EdctsIstVO> insertEdctsIstProcess(EdctsIstVO vo){
 		edctsistService.insertEdctsIst(vo);
+		edctsistService.updateIndicaSt(vo);
 		return edctsistService.selectEdctsIstAll();
 	}
 	

@@ -12,6 +12,8 @@ public interface MatMapper {
 	public MatVO selectMatInfo(MatVO matVO);
 	//자재정보 등록
 	public int insertMatInfo(MatVO matVO);
+	//자재거래처 전체조회
+	public List<MatVO> matVendList();
 	//자재정보 수정
 	public int updateMatInfo(MatVO matVO);
 	//자재정보 삭제
@@ -43,10 +45,12 @@ public interface MatMapper {
 	public int deleteMatReceiptInfo(String rscLotCd);
 	
 
-	//검사미완료 발주 전체 조회	
-	public List<MatVO> matOrderChkList();
 	//자재검사목록
 	public List<MatVO> matCheckList();
+	//검사미완료 발주 전체 조회	
+	public List<MatVO> matOrderChkList();
+	//검수자목록
+	public List<MatVO> checkerList();
 	//자재검사 단건 조회
 	public MatVO selectMatCheckInfo(MatVO matVO);
 	//자재검사 추가
@@ -55,6 +59,7 @@ public interface MatMapper {
 	public int updateMatCheckInfo(MatVO matVO);
 	//자재검사 삭제
 	public int deleteMatatCheckInfo(String rscInspCd);
+	
 	
 	
 }
