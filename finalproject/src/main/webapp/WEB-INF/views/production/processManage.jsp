@@ -492,7 +492,7 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
               )
             );
 
-            tr.append("<td>" + item.prcsNo + "</td>");
+            tr.append($("<td>").attr("class", "changeValue").text(item.prcsNo));
             tr.append("<td>" + item.prcsCd + "</td>");
             tr.append("<td>" + item.prcsNm + "</td>");
             tr.append("<td>" + item.prcsFg + "</td>");
@@ -619,11 +619,31 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
       });
 
       $(document).on("click", ".choicePrcs", function () {
+        let isValid = true;
         let prcsCd = $(this).closest("tr").children().eq(0).text();
         let prcsNm = $(this).closest("tr").children().eq(1).text();
         let prcsFg = $(this).closest("tr").children().eq(2).text();
         let prcsCtnt = $(this).closest("tr").children().eq(3).text();
         let prcsDt = $(this).closest("tr").children().eq(4).text();
+
+        $("#prcsFlowList")
+          .children()
+          .each(function (idx, item) {
+            let check = $(item).children().eq(2).text();
+            if (check == prcsCd) {
+              Swal.fire({
+                icon: "warning",
+                title: "같은 공정이 있습니다.",
+              });
+              isValid = false;
+              return;
+            }
+          });
+
+        if (isValid == false) {
+          $("#pFlowModal").modal("hide");
+          return isValid;
+        }
 
         inputprcsCd.text(prcsCd);
         inputprcsNm.text(prcsNm);
@@ -676,7 +696,158 @@ prefix="c"%> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
               headers: { "Content-Type": "application/json" },
               data: JSON.stringify(valueArr),
               success: function (result) {
-                console.log(result);
+                $("#prcsFlowList").empty();
+                $("#prcsFlowList").append(
+                  $("<input>")
+                    .attr("value", result[0].edctsCd)
+                    .attr("id", "inputEdctsCd")
+                    .css("display", "none")
+                );
+                $(result).each(function (idx, item) {
+                  let tr = $("<tr>");
+
+                  tr.append(
+                    $("<td>").append(
+                      $("<input>").attr("type", "checkbox").attr("name", "chk")
+                    )
+                  );
+
+                  tr.append(
+                    $("<td>").attr("class", "changeValue").text(item.prcsNo)
+                  );
+                  tr.append("<td>" + item.prcsCd + "</td>");
+                  tr.append("<td>" + item.prcsNm + "</td>");
+                  tr.append("<td>" + item.prcsFg + "</td>");
+                  tr.append("<td>" + item.prcsCtnt + "</td>");
+                  tr.append("<td>" + item.prcsDt + "</td>");
+
+                  $("#prcsFlowList").append(tr);
+                });
+
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "저장이 정상적으로 되었습니다.",
+                });
+              },
+              error: function (reject) {
+                console.log(reject);
+              },
+            });
+          }
+        });
+      }
+    });
+
+    // 더블클릭하면 input나옴
+    $(document).on("dblclick", "#prcsFlowList tr", function () {
+      let currentRow = $(this);
+      currentRow.attr("class", "table-danger");
+      currentRow.children().eq(0).find("input").prop("checked", true);
+      currentRow.find(".changeValue").each(function () {
+        let currentValue = $(this).text().trim();
+        let input = $("<input>")
+          .attr("type", "number")
+          .attr("class", "my-td-class")
+          .css("width", "50px")
+          .val(currentValue);
+        $(this).empty().append(input);
+      });
+    });
+
+    // 공정 삭제
+    $(document).on("click", "#pFlowDel", function () {
+      let valueArr = [];
+      $('input[name="chk"]:checked').each(function (idx, item) {
+        console.log(item);
+        let edctsCd = $("#inputEdctsCd").val();
+        let prcsCd = $(item).closest("tr").children().eq(2).text();
+
+        let dataObj = {
+          edctsCd: edctsCd,
+          prcsCd: prcsCd,
+        };
+
+        valueArr.push(dataObj);
+      });
+
+      console.log(valueArr);
+      if (valueArr.length == 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "선택된 글이 없습니다.",
+        });
+      } else {
+        Swal.fire({
+          title: "삭제 하시겠습니까?",
+          text: "복구 할 수 없습니다.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "삭제",
+          cancelButtonText: "취소",
+        }).then((result) => {
+          if (result.value) {
+            $.ajax({
+              url: "prcsFlowDel",
+              method: "post",
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify(valueArr),
+              success: function (result) {
+                $("#prcsFlowList").empty();
+                $("#prcsFlowList").append(
+                  $("<input>")
+                    .attr("value", result[0].edctsCd)
+                    .attr("id", "inputEdctsCd")
+                    .css("display", "none")
+                );
+                $(result).each(function (idx, item) {
+                  let tr = $("<tr>");
+
+                  tr.append(
+                    $("<td>").append(
+                      $("<input>").attr("type", "checkbox").attr("name", "chk")
+                    )
+                  );
+
+                  tr.append(
+                    $("<td>").attr("class", "changeValue").text(item.prcsNo)
+                  );
+                  tr.append("<td>" + item.prcsCd + "</td>");
+                  tr.append("<td>" + item.prcsNm + "</td>");
+                  tr.append("<td>" + item.prcsFg + "</td>");
+                  tr.append("<td>" + item.prcsCtnt + "</td>");
+                  tr.append("<td>" + item.prcsDt + "</td>");
+
+                  $("#prcsFlowList").append(tr);
+                });
+
+                let Toast = Swal.mixin({
+                  toast: true,
+                  position: "top",
+                  showConfirmButton: false,
+                  timer: 1500,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener("mouseenter", Swal.stopTimer);
+                    toast.addEventListener("mouseleave", Swal.resumeTimer);
+                  },
+                });
+                Toast.fire({
+                  icon: "success",
+                  title: "삭제가 정상적으로 되었습니다.",
+                });
               },
               error: function (reject) {
                 console.log(reject);

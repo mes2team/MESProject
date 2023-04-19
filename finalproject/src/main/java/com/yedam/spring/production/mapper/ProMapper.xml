@@ -602,6 +602,8 @@
  			SET	use_yn = 'Y'
  			WHERE eqm_cd = #{eqmCd}
  		</update>
+ 		
+ 		<!-- 공정 흐름 조회 -->
 		
 		<select id="selectPrcsFlowList" resultType="ProPrcsVO">
 			SELECT  	pf.prcs_no,
@@ -638,4 +640,11 @@
 	      		#{prcsCd, mode=IN, jdbcType=VARCHAR}
 	    	)}
    		</insert>
+   		
+   		<!-- 공정 흐름 삭제 -->
+   		<delete id="deletePrcsFlow" parameterType="ProPrcsVO">
+   			DELETE FROM prcs_flow
+   			WHERE 	edcts_cd = #{edctsCd}
+   			AND		prcs_cd = #{prcsCd}
+   		</delete>
   </mapper>

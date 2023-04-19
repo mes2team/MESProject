@@ -388,10 +388,19 @@ public class ProController {
 	@ResponseBody
 	public List<ProPrcsVO> selectPrcsList(@RequestBody ProPrcsVO[] arr){
 		for(int i = 0; i < arr.length; i++) {
-			System.out.println("여기 출력  " + arr[i]);
 			proService.savePrcs(arr[i]);
 		}
 		return proService.getPrcsFlowList(arr[0]);
 	}
+	
+	// 공정 삭제
+	@PostMapping("/prcsFlowDel")
+	@ResponseBody
+	public List<ProPrcsVO> prcsFlowDel(@RequestBody ProPrcsVO[] arr){
+		for(int i = 0; i < arr.length; i++) {
+			proService.deletePrcsFlow(arr[i]);
+		}
+		return proService.getPrcsFlowList(arr[0]);
+	} 
 		
 }

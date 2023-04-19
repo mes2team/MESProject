@@ -311,24 +311,16 @@ uri="http://www.springframework.org/security/tags"%>
           <table class="table table-hover">
             <thead>
               <tr>
+                <th scope="col">공정 순서</th>
                 <th scope="col">공정 코드</th>
                 <th scope="col">공정 이름</th>
+                <th scope="col">공정 분류</th>
+                <th scope="col">공정 내용</th>
+                <th scope="col">공정 날짜</th>
                 <th scope="col"></th>
               </tr>
             </thead>
-            <tbody>
-              <c:forEach items="${prcsList }" var="prcs">
-                <tr>
-                  <td>${prcs.prcsCd }</td>
-                  <td>${prcs.prcsNm }</td>
-                  <td>
-                    <button class="btn btn-primary" id="choicePrcs">
-                      선택
-                    </button>
-                  </td>
-                </tr>
-              </c:forEach>
-            </tbody>
+            <tbody id="prcsFlowList"></tbody>
           </table>
           <!-- End Multi Columns Form -->
         </div>
@@ -434,6 +426,39 @@ uri="http://www.springframework.org/security/tags"%>
         error: function (reject) {
           console.log(reject);
         },
+      }).then(function (result) {
+        // 공정 흐름 조회 prcsFlowList
+        $.ajax({
+          url: "bomPrcsFlow",
+          data: { edctsCd: $("#inputCode").val() },
+          success: function (result) {
+            $("#prcsFlowList").empty();
+            $(result).each(function (idx, item) {
+              let tr = $("<tr>");
+              tr.append(
+                $("<td>").attr("class", "changeValue").text(item.prcsNo)
+              );
+              tr.append("<td>" + item.prcsCd + "</td>");
+              tr.append("<td>" + item.prcsNm + "</td>");
+              tr.append("<td>" + item.prcsFg + "</td>");
+              tr.append("<td>" + item.prcsCtnt + "</td>");
+              tr.append("<td>" + item.prcsDt + "</td>");
+              tr.append(
+                $("<td>").append(
+                  $("<button>")
+                    .attr("id", "choicePrcs")
+                    .attr("class", "btn btn-primary")
+                    .text("선택")
+                )
+              );
+
+              $("#prcsFlowList").append(tr);
+            });
+          },
+          error: function (reject) {
+            console.log(reject);
+          },
+        });
       });
     });
 
@@ -694,8 +719,8 @@ uri="http://www.springframework.org/security/tags"%>
       });
 
       $(document).on("click", "#choicePrcs", function () {
-        let prcsNm = $(this).closest("tr").children().eq(1).text();
-        let prcsCd = $(this).closest("tr").children().eq(0).text();
+        let prcsNm = $(this).closest("tr").children().eq(2).text();
+        let prcsCd = $(this).closest("tr").children().eq(1).text();
         inputPrcsNm.text(prcsNm); // input 업데이트
         inputPrcsNm.attr("data-prcscd", prcsCd);
         $("#prcsModal").modal("hide"); // 모달 닫기

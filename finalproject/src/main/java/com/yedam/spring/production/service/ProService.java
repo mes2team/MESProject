@@ -89,4 +89,7 @@ public interface ProService {
 	
 	// 공정저장
 	public int savePrcs(ProPrcsVO vo);
+	
+	// 공정삭제
+	public int deletePrcsFlow(ProPrcsVO vo);
 }

@@ -299,6 +299,11 @@ public class ProServiceImpl implements ProService {
 		return proMapper.savePrcs(vo);
 	}
 
+	@Override
+	public int deletePrcsFlow(ProPrcsVO vo) {
+		return proMapper.deletePrcsFlow(vo);
+	}
+
 
 
 
