@@ -80,9 +80,9 @@ form {
                <h3 class="insert">자재등록</h3>
 				<div id="btnGrp">
                      <button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-                     <button type="reset" class="btn btn-secondary">초기화</button>
+                     <button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
                   </div>
-               <form class="row g-3" name="insertForm" action="matInsert"
+               <form class="row g-3" name="insertForm" id="insertForm" action="matInsert"
                   method="post" onsubmit="return false"
                   style="margin: 0px 5px 5px 5px;">
 				
@@ -248,6 +248,11 @@ form {
 
 
       <script>
+    //초기화
+  	$(document).on("click","#resetBtn", function () {
+  		console.log('클릭');
+  	 $('#insertForm input').val('');
+  	});
       <!-- ============================================================== -->
       <!-- 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 모달 거래처목록 -->
   	//url은 getMapping에 들어가는 주소
@@ -373,6 +378,7 @@ form {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
+        	  if(result.value){
         	  $.ajax({
         		  //MatController 의 @PostMapping("/matCheckInsert")
                   url: "matInsert",
@@ -418,9 +424,10 @@ form {
                     console.log(reject);
                   },
                 });
+        	  }
               });
             });
-
+	
 <!-- ============================================================== -->
 <!-- 등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록  등록 -->
 <!-- ============================================================== -->      

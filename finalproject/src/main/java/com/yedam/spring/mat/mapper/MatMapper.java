@@ -62,7 +62,7 @@ public interface MatMapper {
 	//자재검사 수정
 	public int updateMatCheckInfo(MatVO matVO);
 	//자재검사 삭제
-	public int deleteMatatCheckInfo(String rscInspCd);
+	public int deleteMatatCheckInfo(MatVO matVO);
 	
 	
 	

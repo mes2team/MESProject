@@ -128,10 +128,10 @@ table, tr, th, td {
 			<h3 class="insert">자재발주 등록</h3>
 			<div id="btnGrp">
 				<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-				<button type="reset" class="btn btn-secondary">초기화</button>
+				<button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
 			</div>
 			<br>
-			<form class="row g-3" name="insertForm" action="matOrderInsert"
+			<form class="row g-3" name="insertForm" id="insertForm" action="matOrderInsert"
 				method="post" onsubmit="return false"
 				style="margin: 0px 5px 5px 5px;">
 
@@ -292,6 +292,14 @@ table, tr, th, td {
 	<!-- ============================================================== -->
 
 	<script>
+	
+	//초기화
+	$(document).on("click","#resetBtn", function () {
+		console.log('클릭');
+	 $('#insertForm input').val('');
+	});
+	
+	//진행완료가 있는 tr은 클릭 안 되게
 	$('tbody#matOrderTable tr').each(function() {
 		  if ($(this).find('td:nth-child(10)').text() === '진행완료') {
 		    $(this).css('pointer-events', 'none');
@@ -465,6 +473,7 @@ $("#insertBtn").on("click", function () {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
+        	  if(result.value){
         	  $.ajax({
         		  //MatController 의 @PostMapping("/matCheckInsert")
                   url: "matOrderInsert",
@@ -508,6 +517,7 @@ $("#insertBtn").on("click", function () {
                     console.log(reject);
                   },
                 });
+        	  }
               });
             });
 
@@ -593,7 +603,7 @@ $(document).on('click', '.updateBtn', function() {
          dataType: 'json',
          success: function(response) {
            // 성공적으로 응답을 받았을 때 처리할 코드를 작성합니다.
-          console.log("단건조회" + response);
+          console.log("단건조회: " + response.ordrCd);
           function formatDate(date) {
     		  var year = date.getFullYear();
     		  var month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -614,6 +624,7 @@ $(document).on('click', '.updateBtn', function() {
           $("#vendCdInput").val(response.vendCd);
           $("#ordrCntInput").val(response.ordrCnt);
           $("#paprdCmndDtInput").val(formatpaprdCmndDt);
+          $("#ordrCdInput").val(response.ordrCd);
          },
          error: function(jqXHR, textStatus, errorThrown) {
              alert('데이터를 불러올 수 없습니다.');
@@ -635,6 +646,8 @@ function submitBtn() {
 	 let vendCdData = $("input[name='vendCdInput']").val();
 	 let ordrCntData = $("input[name='ordrCntInput']").val();
 	 let paprdCmndDtData = $("input[name='paprdCmndDtInput']").val();
+	 let ordrCdData = $("input[name='ordrCdInput']").val();
+	 console.log("3"+ordrCdData);
 	 Swal.fire({
 		  title: '수정하시겠습니까?',
 		  icon: 'question',
@@ -656,7 +669,8 @@ function submitBtn() {
 		   	vendNm: vendNmData,
 		   	vendCd: vendCdData,
 		   	ordrCnt: ordrCntData,
-		   	paprdCmndDt: paprdCmndDtData},
+		   	paprdCmndDt: paprdCmndDtData,
+		   	ordrCd: ordrCdData},
 		   	
    	  
      //dataType: 'json', 화면 받을 땐 없어도 됨
@@ -671,7 +685,7 @@ function submitBtn() {
     	   let tr = $("<tr>").attr("data-id", item.ordrCd);
            tr.append(
              $("<td>").append(
-               $("<input>").attr("type", "checkbox").attr("name", "chk")
+               $("<input>").attr("type", "checkbox").attr("name", "chk").attr("value", item.ordrCd)
              )
            );
            tr.append("<td>" + item.ordrCd + "</td>");

@@ -83,9 +83,9 @@ form {
 			<h3 class="insert">자재입고등록</h3>
 			<div id="btnGrp">
 				<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-				<button type="reset" class="btn btn-secondary">초기화</button>
+				<button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
 			</div>
-			<form class="row g-3" name="insertForm" action="matReceiptInsert"
+			<form class="row g-3" name="insertForm" id="insertForm" action="matReceiptInsert"
 				method="post" onsubmit="return false"
 				style="margin: 0px 5px 5px 5px;">
 
@@ -104,6 +104,11 @@ form {
 				<div class="col-md-2">
 					<label for="country" class="form-label">자재명</label> <input
 						type="text" class="form-control" id="rscNmInput" name="rscNmInput" readonly>
+				</div>
+				
+				<div class="col-md-2">
+					<label for="country" class="form-label">자재코드</label> <input
+						type="text" class="form-control" id="rscCdInput" name="rscCdInput" readonly>
 				</div>
 
 				<div class="col-md-2">
@@ -148,6 +153,7 @@ form {
 							<tr>
 								<th scope="col">검사코드</th>
 								<th scope="col">자재명</th>
+								<th scope="col">자재코드</th>
 								<th scope="col">발주번호</th>
 								<th scope="col">입고수량</th>
 								<th scope="col" style="width: 80px"></th>
@@ -223,6 +229,12 @@ form {
 
 
 	<script>
+	//초기화
+	$(document).on("click","#resetBtn", function () {
+		console.log('클릭');
+	 $('#insertForm input').val('');
+	});
+	
 	<!-- 검사코드 검색 모달  검사코드 검색 모달  검사코드 검색 모달 -->
 	//url은 getMapping에 들어가는 주소
 	 $.ajax({
@@ -231,12 +243,14 @@ form {
 	        $(result).each(function (idx, item) {
 	          let rscInspCdModal = item.rscInspCd;
 	          let rscNmModal = item.rscNm;
+	          let rscCdModal = item.rscCd;
 	          let ordrCdModal = item.ordrCd;
 	          let inspPassCntModal = item.inspPassCnt;
 
 	          let tr = $("<tr>");
 	          tr.append("<td>" + rscInspCdModal + "</td>");
 	          tr.append("<td>" + rscNmModal + "</td>");
+	          tr.append("<td>" + rscCdModal + "</td>");
 	          tr.append("<td>" + ordrCdModal + "</td>");
 	          tr.append("<td>" + inspPassCntModal + "</td>");
 	          tr.append(
@@ -259,11 +273,13 @@ form {
 	    $(document).on("click", ".choiceBtn", function () {
 	      let rscInspCdModal = $(this).closest("tr").children().eq(0).text();
 	      let rscNmModal = $(this).closest("tr").children().eq(1).text();
-	      let ordrCdModal = $(this).closest("tr").children().eq(2).text();
-	      let inspPassCntModal = $(this).closest("tr").children().eq(3).text();
+	      let rscCdModal = $(this).closest("tr").children().eq(2).text();
+	      let ordrCdModal = $(this).closest("tr").children().eq(3).text();
+	      let inspPassCntModal = $(this).closest("tr").children().eq(4).text();
 
 	      $("#rscInspCdInput").val(rscInspCdModal);
 	      $("#rscNmInput").val(rscNmModal);
+	      $("#rscCdInput").val(rscCdModal);
 	      $("#ordrCdInput").val(ordrCdModal);
 	      $("#istCntInput").val(inspPassCntModal);
 	      $("#rscInspCdSearch").modal("hide");
@@ -333,6 +349,7 @@ form {
               confirmButtonText: '등록',
               cancelButtonText: '취소'
           }).then((result) => {
+        	  if(result.value){
         	  $.ajax({
         		  //MatController 의 @PostMapping("/matCheckInsert")
                   url: "matReceiptInsert",
@@ -372,6 +389,7 @@ form {
                     console.log(reject);
                   },
               });
+        	  }
             });
           });
 

@@ -130,6 +130,7 @@ public class MatController {
 	@PostMapping("/updatematOrder")
 	@ResponseBody
 	public List<MatVO> updatematOrder(MatVO arr) {
+		matService.updatematOrder(arr);
 		return matService.matOrderList();
 	}
 	
@@ -244,11 +245,7 @@ public class MatController {
 	//자재검사삭제
 	@PostMapping("/removeMatatCheck")
 	@ResponseBody
-	public String matCheckDeleteProcess(HttpServletRequest request) {
-		String[] arr = request.getParameterValues("valueArr");
-		if (arr == null) {
-			return "error";
-		}
+	public String matCheckDeleteProcess(@RequestBody MatVO[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			matService.removeMatatCheckInfo(arr[i]);
 		}

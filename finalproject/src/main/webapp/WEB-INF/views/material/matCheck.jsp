@@ -90,10 +90,10 @@ form {
 			<h3 class="insert">자재검사</h3>
 			<div id="btnGrp">
 				<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
-				<button type="reset" class="btn btn-secondary">초기화</button>
+				<button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
 				<button type="submit" class="btn btn-primary" id="checkBtn">검사조건</button>
 			</div>
-			<form class="row g-3" name="insertForm" action="matCheckInsert"
+			<form class="row g-3" name="insertForm" id="insertForm" action="matCheckInsert"
 				method="post" onsubmit="return false"
 				style="margin: 0px 5px 5px 5px;">
 
@@ -117,7 +117,7 @@ form {
 				<div class="col-md-2">
 					<label class="form-label">검수량</label> <input type="text"
 						class="form-control" id="inspCntInput" name="inspCntInput"
-						readonly  />
+						readonly />
 				</div>
 
 
@@ -141,8 +141,7 @@ form {
 
 				<div class="col-md-2">
 					<label class="form-label">합격량</label> <input type="number"
-						class="form-control" id="inspPassCntInput" name="inspPassCntInput"
-						 />
+						class="form-control" id="inspPassCntInput" name="inspPassCntInput" />
 				</div>
 
 				<div class="col-md-1">
@@ -179,9 +178,8 @@ form {
 						class="form-control" id="etcExplainInput" name="etcExplainInput">
 				</div>
 			</form>
-			<input type="text"
-						class="form-control" id="rscInspCdInput" name="rscInspCdInput"
-						 style="display: none"/>
+			<input type="text" class="form-control" id="rscInspCdInput"
+				name="rscInspCdInput" style="display: none" />
 		</div>
 	</div>
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
@@ -276,7 +274,7 @@ form {
 							<tr>
 								<th data-orderable="false" class="no-sort"><input
 									type="checkbox" id="cbx_chkAll" /></th>
-								
+
 								<th>검사코드</th>
 								<th>발주번호</th>
 								<th>자재명</th>
@@ -293,18 +291,18 @@ form {
 							</tr>
 						</thead>
 						<tbody id="checkBody">
-							<c:forEach var="check" items="${matCheckList }" >
+							<c:forEach var="check" items="${matCheckList }">
 								<tr data-id="${check.rscInspCd }">
 									<td><input type="checkbox" name="chk"
 										value="${check.rscInspCd }" /></td>
-									
+
 									<td>${check.rscInspCd }</td>
 									<td>${check.ordrCd }</td>
 									<td>${check.rscNm }</td>
 									<td><fmt:formatDate value="${check.inspDt }"
 											pattern="yyyy-MM-dd" /></td>
 									<td>${check.inspTstr }</td>
-									<td>${check.ordrCnt }</td>
+									<td>${check.inspCnt }</td>
 									<td>${check.inspPassCnt }</td>
 									<td>${check.cont }</td>
 									<td>${check.decay }</td>
@@ -325,7 +323,11 @@ form {
 	<!-- ============================================================== -->
 
 	<script>
-	
+	//초기화
+	$(document).on("click","#resetBtn", function () {
+		console.log('클릭');
+	 $('#insertForm input').val('');
+	});
 	
 	<!-- 발주번호 검색 모달  발주번호 검색 모달  발주번호 검색 모달 -->
 	//url은 getMapping에 들어가는 주소
@@ -428,6 +430,7 @@ form {
  // 검수량, 오염, 부패, 푸장불량, 중량미달, 기타 입력값이 변경되었을 때 호출되는 함수
      function updateInspPassCntInput() {
       // 검수량, 오염, 합격량, 기타 입력값 가져오기
+      var inspCnt = Number($("#inspCntInput").val());
       var cont = Number($("#contInput").val());
       var decay = Number($("#decayInput").val());
       var pack = Number($("#packInput").val());
@@ -438,11 +441,7 @@ form {
       var inspPassCntValue = Number($("#inspPassCntInput").val()); 
      
       // 검수량, 오염, 부패, 푸장불량, 중량미달, 기타 값을 빼기
-      inspPassCntValue -= cont;
-      inspPassCntValue -= decay;
-      inspPassCntValue -= pack;
-      inspPassCntValue -= underWeight;
-      inspPassCntValue -= etc;
+      inspPassCntValue = inspCnt - cont - decay - pack - underWeight - etc;
 
       // 계산 결과가 0보다 작을 경우, 0으로 처리
       if (inspPassCntValue < 0) {
@@ -475,7 +474,7 @@ form {
 	    }
     <!-- ============================================================== -->	
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
-      
+	
 	$("#insertBtn").on("click", function () {
 		  let ordrCdData = $("input[name='ordrCdInput']").val();
 		  console.log(ordrCdData)
@@ -698,7 +697,7 @@ $(document).on('click', '#updateBtn', function() {
     $("#insertBtn").removeAttr("onclick");
     $("#insertBtn").attr("onclick", "submitBtn();");
 	  // 단건조회를 위한 rscInspCd 값을 추출합니다.
-	  var rscInspCd = $(this).closest('tr').find('td:eq(2)').text();
+	  var rscInspCd = $(this).closest('tr').find('td:eq(1)').text();
 	  
 	//서버로 보낼 데이터를 구성합니다.
 	  var data = {
@@ -804,7 +803,7 @@ $(document).on('click', '#updateBtn', function() {
           let tr = $("<tr>").attr("data-id", item.rscInspCd);
           tr.append(
             $("<td>").append(
-              $("<input>").attr("type", "checkbox").attr("name", "chk")
+              $("<input>").attr("type", "checkbox").attr("name", "chk").attr("value", item.rscInspCd)
             )
           );
           tr.append("<td>" + item.rscInspCd + "</td>");
@@ -859,13 +858,29 @@ $(document).on('click', '#updateBtn', function() {
   <!-- ============================================================== -->
   <!-- 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 삭제 -->
   function deleteBtn() {
-      let valueArr = new Array();
-      let list = $("input[name=chk]");
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].checked) {
-          valueArr.push(list[i].value);
-        }
-      }
+//       let valueArr = new Array();
+//       let list = $("input[name=chk]");
+//       let ordrCd = $(this).closest('tr').find('td:eq(2)').text();
+//       for (let i = 0; i < list.length; i++) {
+//         if (list[i].checked) {
+//           valueArr.push(list[i].value);
+//         }
+//       }
+//       console.log(valueArr);
+      let valueArr = [];
+
+      $('input[name="chk"]:checked').each(function (idx, items) {
+        let rscInspCd = $(items).closest("tr").children().eq(1).text();
+        let ordrCd =  $(items).closest("tr").children().eq(2).text();
+        let dataObj = {
+        	rscInspCd: rscInspCd,
+          ordrCd: ordrCd,
+        };
+
+        // 데이터 배열에 객체 추가
+        valueArr.push(dataObj);
+     });
+      console.log(valueArr);
       if (valueArr.length == 0) {
         Swal.fire({
           icon: "warning",
@@ -886,12 +901,12 @@ $(document).on('click', '#updateBtn', function() {
             $.ajax({
               url: "removeMatatCheck",
               method: "post",
-              traditional: true,
-              data: { valueArr: valueArr },
+              headers: { "Content-Type": "application/json" },
+              data: JSON.stringify(valueArr),
               success: function (result) {
                 if (result == "success") {
                   for (let i = 0; i < valueArr.length; i++) {
-                    $('tr[data-id="' + valueArr[i] + '"]').remove();
+                    $('tr[data-id="' + valueArr[i].rscInspCd + '"]').remove();
                   }
                 } else if (result == "error") {
                   Swal.fire({

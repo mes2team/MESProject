@@ -153,9 +153,9 @@ public class MatServiceImpl implements MatService {
 		return matMapper.updateMatCheckInfo(matVO);
 	}
 	@Override
-	public int removeMatatCheckInfo(String rscInspCd) {
+	public int removeMatatCheckInfo(MatVO matVO) {
 		//자재검사 삭제
-		return matMapper.deleteMatatCheckInfo(rscInspCd);
+		return matMapper.deleteMatatCheckInfo(matVO);
 	}
 	@Override
 	public List<MatVO> matOrderChkList() {
