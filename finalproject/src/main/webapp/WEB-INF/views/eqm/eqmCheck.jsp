@@ -131,7 +131,7 @@
 					<table class="table table-striped table-hover">
 						<thead>
 							<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
-								<th scope="col"><input type="checkbox"
+								<th scope="col"><input type="checkbox" id="allCheck"
 									onclick="allCheck(this)" /></th>
 								<th scope="col">점검일자</th>
 								<th scope="col">점검코드</th>
@@ -560,7 +560,21 @@
 				  }
 				})
 		}
-
+	function checkCancel(tr){
+		let checkes = listTable.querySelectorAll('[type="checkbox"]');
+		let allCheck = document.querySelector('#allCheck');
+		let checkTrue = true;
+		for(let i=0;i<checkes.length;i++){
+			if(checkes[i].checked == false){
+				allCheck.checked = false;
+				checkTrue = false;
+				return;
+			}
+			if(checkTrue){
+				allCheck.checked = true;
+			}
+		}
+	}
 		
 		//tr클릭시 단건조회, check
 		function selectCheck(chkCd, tr) {
@@ -569,7 +583,7 @@
 				checkbox.checked = false;
 			} else
 				checkbox.checked = true;
-
+			checkCancel(tr);
 			$.ajax({
 				url : '/spring/selectCheck?checkCd=' + chkCd, // 조회 API의 URL
 				type : 'GET', // HTTP 요청 방식
@@ -754,7 +768,9 @@
 			for (let i = 0; i < checkes.length; i++) {
 				checkes[i].checked = allCheck.checked;
 			}
+			
 		}
+		
 
 		//클린버튼
 		function inputClean() {

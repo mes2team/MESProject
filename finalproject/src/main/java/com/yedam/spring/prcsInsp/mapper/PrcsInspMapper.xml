@@ -57,7 +57,7 @@
 		END;
 	</update>
 
-	<!-- 포장검사완료 지시,계획 테이블 수정 -->
+	<!-- 포장일때만 일로 옴 검사완료 지시,계획 테이블 수정 -->
 	<update id="updateIndiPlan" parameterType="PrcsInspVO">
 		DECLARE
 			CURSOR c_plan_dtl IS
@@ -81,13 +81,13 @@
 
 			IF v_all_same THEN
 				UPDATE plan
-				SET now_st = '생산완료' 
+				SET now_st = '생산완료', plan_fdt = SYSDATE 
 				WHERE plan_cd = (select distinct plan_cd from prcs_prog where indica_cd = #{indicaCd}); 
 				COMMIT; 
 			END IF;
 			
 			UPDATE indica
-			SET now_st = '생산완료'
+			SET now_st = '생산완료', indica_fdt = SYSDATE
 			WHERE indica_cd = #{indicaCd};
 			COMMIT;
 		END;
