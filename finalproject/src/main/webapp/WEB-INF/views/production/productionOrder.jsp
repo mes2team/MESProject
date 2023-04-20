@@ -263,7 +263,10 @@ function getCurrentDate() {
 	        contentType: 'application/json; charset=utf-8',
 	        success: function(response) {
 	            console.log(response); // 서버에서 반환한 응답을 콘솔에 출력합니다.
-	            alert('생산지시 등록 성공');
+	            Swal.fire({
+	                icon: "success",
+	                title: "생산지시 등록을 성공했습니다.",
+	              });
 	            location.reload();
 	        },
 	        error: function(error) {
@@ -432,10 +435,16 @@ function getCurrentDate() {
 																						  var min = parseInt($(this).attr("min"));
 																						  var max = parseInt($(this).attr("max"));
 																						  if (currentValue < min) {
-																							alert("0이하로는 입력할 수 없습니다.");
+																				            Swal.fire({
+																				                icon: "warning",
+																				                title: "0이하로는 입력할 수 없습니다.",
+																				              });
 																						    $(this).val(min);
 																						  } else if (currentValue > max) {
-																							alert("남은 계획수량을 초과했습니다.");
+																				            Swal.fire({
+																				                icon: "warning",
+																				                title: "남은 계획수량을 초과했습니다.",
+																				              });
 																						    $(this).val(max);
 																						  }
 																						});;

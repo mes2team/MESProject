@@ -10,6 +10,7 @@ uri="http://www.springframework.org/security/tags"%>
     <title>Insert title here</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    
     <style>
       h5 {
         float: left;
@@ -412,7 +413,10 @@ uri="http://www.springframework.org/security/tags"%>
       $("#deleteList").click(function () {
         var checkedBoxes = $("#processList input[type=checkbox]:checked");
         if (checkedBoxes.length === 0) {
-          alert("삭제할 데이터를 선택하세요.");
+          Swal.fire({
+              icon: "warning",
+              title: "삭제할 데이터를 선택하세요.",
+            });
           return;
         }
         if (confirm("삭제하시겠습니까?")) {
