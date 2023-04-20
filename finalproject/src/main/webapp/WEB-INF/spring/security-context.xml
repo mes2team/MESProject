@@ -17,7 +17,7 @@
 			access="isAuthenticated()" />
 			
 		<!-- <security:form-login login-page="/customLogin" /> -->
-		<security:form-login default-target-url="/dashboard" authentication-failure-url="/" />
+		<security:form-login default-target-url="/vendList" authentication-failure-url="/" />
 		<security:logout logout-url="/logout"
 			logout-success-url="/" />
 		<security:csrf disabled="true" />
