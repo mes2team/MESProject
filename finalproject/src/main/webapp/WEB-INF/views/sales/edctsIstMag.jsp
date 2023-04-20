@@ -10,12 +10,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     float: left;
   }
 
-  table,
-  tr,
-  th,
-  td {
-    border: 1px solid black;
-  }
+  table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
   #btnGrp {
     float: right;
@@ -88,15 +96,19 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </div>
           <p></p>
           <hr />
-          <div class="col-md-12">
-            <label for="inputEmail5" class="form-label">제품 입고 날짜</label>
-            <div class="d-flex align-items-center">
-              <input type="date" class="form-control mr-2" id="startDate" />
-              <span class="mx-2">~</span>
-              <input type="date" class="form-control ml-2" id="endDate" />
-            </div>
-            <div id="btnGrp"></div>
-          </div>
+	          <div class="col-md-6">
+	            <label class="form-label">제품 명</label>
+	            <input type="text" class="form-control" id="inputName1" />
+	          </div>
+	          <div class="col-md-6">
+	            <label for="inputEmail5" class="form-label">제품 입고 날짜</label>
+	            <div class="d-flex align-items-center">
+	              <input type="date" class="form-control mr-2" id="startDate" />
+	              <span class="mx-2">~</span>
+	              <input type="date" class="form-control ml-2" id="endDate" />
+	            </div>
+	            <div id="btnGrp"></div>
+	          </div>
           <div class="text-center">
             <button type="button" class="btn btn-secondary" id="searchBtn">
               검색
@@ -123,7 +135,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               style="width: 100%; height: 300px; overflow: auto"
             >
               <table
-                class="table table-striped table-bordered first table-hover"
+                class="table table-bordered table-hover"
               >
                 <thead>
                   <tr>
@@ -201,7 +213,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           ></button>
         </div>
         <div class="modal-body">
-          <table class="table table-hover">
+          <table class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th scope="col">제품 코드</th>
@@ -377,18 +389,27 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     $(document).on("click", "#searchBtn", function () {
       let startDate = $("#startDate").val();
       let endDate = $("#endDate").val();
-
-      if (startDate == "" || endDate == "") {
-        Swal.fire({
-          icon: "warning",
-          title: "날짜를 입력해주세요",
-        });
-        return;
-      }
+      let prdtNm = $("#inputName1").val();
+		
+//       if (prdtNm == "") {
+//           Swal.fire({
+//             icon: "warning",
+//             title: "상품을 입력해주세요",
+//           });
+//           return;
+//         }
+      
+//       if (startDate == "" || endDate == "") {
+//         Swal.fire({
+//           icon: "warning",
+//           title: "날짜를 입력해주세요",
+//         });
+//         return;
+//       }
 
       $.ajax({
         url: "searchEdctsIst",
-        data: { edctsIstDt: startDate, edctsIstDtEnd: endDate },
+        data: { edctsIstDt: startDate, edctsIstDtEnd: endDate, prdtNm: prdtNm },
         success: function (result) {
           if (result.length == 0) {
             Swal.fire({
@@ -403,6 +424,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           $("#inputCnt").val("");
           $("#startDate").val("");
           $("#endDate").val("");
+          $("#inputName1").val("");
           $(result).each(function (idx, item) {
             let tr = $("<tr>").attr("data-id", item.edctsIstNo);
             tr.append(
@@ -553,7 +575,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     });
 
     // 엔터키를 눌렀을 때 검색 버튼 클릭 이벤트 실행
-    $("#startDate, #endDate").on("keypress", function (event) {
+    $("#startDate, #endDate, #inputName1").on("keypress", function (event) {
       if (event.which === 13) {
         event.preventDefault();
         $("#searchBtn").click();

@@ -37,8 +37,19 @@
 <meta charset="UTF-8">
 <title>Material List</title>
 <style>
-table, tr, th, td {
-	border: 1px solid black;
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 
@@ -83,7 +94,7 @@ table, tr, th, td {
 					<div class="table-responsive"
 						style="width: 100%; height: 300px; overflow: auto">
 						<table id="stock-table"
-							class="table table-bordered first table-hover">
+							class="table table-bordered table-hover">
 							<thead>
 								<tr>
 									<th>No.</th>
@@ -202,7 +213,7 @@ table, tr, th, td {
 					</button>
 				</div>
 				<div class="modal-body">
-					<table class="table table-hover">
+					<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<th scope="col">자재명</th>
@@ -241,7 +252,7 @@ table, tr, th, td {
 				</div>
 				<div class="table-responsive">
 					<table id="matOrderList"
-						class="table table-striped table-bordered first">
+						class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<th><input type="checkbox" id="cbx_chkAll" /></th>

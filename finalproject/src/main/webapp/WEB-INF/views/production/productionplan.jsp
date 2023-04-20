@@ -106,7 +106,7 @@ div#prcsInfo {
 				</div>
 			</sec:authorize>
 			<!-- Table with hoverable rows -->
-			<table id="selectPlanTable" class="table table-hover">
+			<table id="selectPlanTable" class="table table-bordered table-hover">
 				<thead>
 					<tr>
 						<th scope="col"><input type="checkbox"></th>
@@ -161,7 +161,7 @@ div#prcsInfo {
 					<h5 class="modal-title">미지시 주문서 조회</h5>
 				</div>
 				<div class="modal-body">
-					<table id="orderSheetTable" class="table table-hover">
+					<table id="orderSheetTable" class="table table-bordered table-hover">
 						<thead id=aBox>
 							<tr>
 								<th scope="col"><input type="checkbox"></th>
@@ -245,7 +245,7 @@ div#prcsInfo {
 						<div class="row col-md-12">
 							<div class="col-md-8">
 								<h5 class="modal-title">자재정보</h5>
-								<table class="table table-hover">
+								<table class="table table-bordered table-hover">
 									<thead>
 										<tr>
 											<th scope="col">자재명</th>
@@ -262,7 +262,7 @@ div#prcsInfo {
 							</div>
 							<div id="prcsInfo" class="col-md-4">
 								<h5 class="modal-title">공정정보</h5>
-								<table class="table table-hover">
+								<table class="table table-bordered table-hover">
 									<thead>
 										<tr>
 											<th scope="col">공정순서</th>

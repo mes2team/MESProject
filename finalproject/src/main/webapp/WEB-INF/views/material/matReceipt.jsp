@@ -36,8 +36,19 @@
 <meta charset="UTF-8">
 <title>Material List</title>
 <style>
-table, tr, th, td {
-	border: 1px solid black;
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .insert {
@@ -148,7 +159,7 @@ form {
 					</button>
 				</div>
 				<div class="modal-body">
-					<table class="table table-hover">
+					<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<th scope="col">검사코드</th>
@@ -190,7 +201,7 @@ form {
 				</div>
 				<div class="table-responsive">
 					<table id="receipt"
-						class="table table-striped table-bordered first">
+						class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<th><input type="checkbox" id="cbx_chkAll" /></th>

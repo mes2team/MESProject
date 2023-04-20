@@ -7,7 +7,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <style>
+	table {
+	text-align: center;
+}
 
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
   #btnGrp {
     float: left;
     margin-top: 28px;
@@ -91,7 +104,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               </button> -->
             </div>
             <div class="table-responsive" style="width: 100%; overflow: auto">
-              <table id="productOrderTable" class="table table-hover" >
+              <table id="productOrderTable" class="table table-bordered table-hover" >
                 <thead>
                   <tr>
                     <th>생산지시명</th>
@@ -119,7 +132,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
             <div class="table-responsive" style="width: 100%; height: 350px; overflow: auto">
             <h5 id="prdtTitle" class="card-title">공정흐름</h5>
-              <table class="table table-hover">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                   	<th>공정순서</th>
@@ -140,7 +153,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
             <div class="table-responsive" style="width: 100%; height: 350px; overflow: auto">
             <h5 id='rscTitle' class="card-title">자재품목</h5>
-              <table class="table table-hover">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                   	<th>자재분류</th>
@@ -160,7 +173,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 		      <div class="card-body">
 			      <div class="table-responsive" style="width: 100%; height: 350px; overflow: auto">
 		              <h5 id="rscLotStkAmount" class="card-title"></h5>
-		              <table class="table table-hover">
+		              <table class="table table-bordered table-hover">
 		                <thead>
 		                  <tr>
 		                  	<th>LOT번호</th>
@@ -186,7 +199,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 					<h5 class="modal-title">미완료생산계획 조회</h5>
 				</div>
 				<div class="modal-body">
-					<table id="proPlanSearchTable" class="table table-hover">
+					<table id="proPlanSearchTable" class="table table-bordered table-hover">
 						<thead id=aBox>
 							<tr>
 								<th scope="col"><input type="checkbox"></th>

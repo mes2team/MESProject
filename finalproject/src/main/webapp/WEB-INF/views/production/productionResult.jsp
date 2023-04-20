@@ -7,6 +7,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <style>
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
   #btnGrp {
     float: right;
     padding: 20px 0 15px 0;
@@ -66,7 +80,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 			            <div id="btnGrp" style="float:right;">
 			            </div>
 			            <div class="table-responsive" style="width: 100%; overflow: auto">
-			              <table id="selectPrcsList" class="table table-hover" >
+			              <table id="selectPrcsList" class="table table-bordered table-hover" >
 			                <thead>
 			                  <tr>
 			                    <th>생산지시명</th>
@@ -93,7 +107,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               class="table-responsive"
               style="width: 100%; height: 300px; overflow: auto"
             >
-              <table class="table table-hover">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>생산지시코드</th>
@@ -129,7 +143,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               style="width: 100%; height: 300px; overflow: auto"
             >
             <h3 class="card-title" id="indicaCdText"></h3>
-              <table class="table table-hover">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th>공정 코드</th>
@@ -209,7 +223,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             </div>
             <div class="col-md-8">
               <label for="" class="form-label">투입자재</label>
-              <table class="table table-hover">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                   	<th scope="col">자재분류</th>

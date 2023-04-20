@@ -10,13 +10,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     float: left;
   }
 
-  table,
-  tr,
-  th,
-  td {
-    border: 1px solid black;
-  }
+  table {
+	text-align: center;
+}
 
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
   #btnGrp {
     float: right;
     padding: 20px 0 15px 0;
@@ -42,7 +49,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             class="table-responsive"
             style="width: 100%; height: 300px; overflow: auto"
           >
-            <table class="table table-striped table-bordered first table-hover">
+            <table class="table table-bordered table-hover">
               <!-- Multi Columns Form -->
 
               <thead>
@@ -99,7 +106,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
             class="table-responsive"
             style="width: 100%; height: 300px; overflow: auto"
           >
-            <table class="table table-striped table-bordered first table-hover">
+            <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th scope="col">
@@ -176,7 +183,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
         <div class="modal-body">
           <input type="text" id="orderNo" style="display: none" />
           <h5>주문 상세 조회</h5>
-          <table class="table table-hover">
+          <table class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th scope="col">제품 코드</th>
@@ -188,7 +195,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </table>
           <hr />
           <h5>완제품 상세 조회</h5>
-          <table class="table table-hover">
+          <table class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th scope="col">
