@@ -88,10 +88,11 @@ form {
 			<div id="btnGrp">
 				<button type="submit" class="btn btn-primary" id="insertBtn">등록</button>
 				<button type="reset" class="btn btn-secondary" id="resetBtn">초기화</button>
-				<button type="submit" class="btn btn-primary" id="checkBtn">검사조건</button>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+					data-bs-target="#checkInfo">검사기준</button>
 			</div>
-			<form class="row g-3" name="insertForm" id="insertForm" action="matCheckInsert"
-				method="post" onsubmit="return false"
+			<form class="row g-3" name="insertForm" id="insertForm"
+				action="matCheckInsert" method="post" onsubmit="return false"
 				style="margin: 0px 5px 5px 5px;">
 
 				<div class="col-md-2">
@@ -181,6 +182,63 @@ form {
 	</div>
 	<!-- 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록 자재검사등록  -->
 	<!-- ============================================================== -->
+	<!--  검사기준 모달 검사기준 모달 검사기준 모달 검사기준 모달 검사기준 모달 검사기준 모달 -->
+	<div class="modal fade" id="checkInfo" tabindex="-1">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">검사기준</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th scope="col">불량명</th>
+								<th scope="col">설명</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>오염</td>
+								<td>외부 물질이나 세균, 바이러스, 곰팡이 등이 혼입되어 있는 경우</td>
+							</tr>
+							<tr>
+								<td>부패</td>
+								<td>식품이 부패되는 경우</td>
+							</tr>
+							<tr>
+								<td>포장불량</td>
+								<td>포장이 완전하지 않은 경우</td>
+							</tr>
+							<tr>
+								<td>중량미달</td>
+								<td>포장 중량과 실제 중량이 일치하지 않는 경우</td>
+							</tr>
+							<tr>
+								<td>기타</td>
+								<td>나머지 다른 불량이 발생한 경우</td>
+							</tr>
+							<tr>
+								<td>기타설명</td>
+								<td>기타를 등록한 경우 상세설명 기재</td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- End Multi Columns Form -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary close"
+						data-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--  검사기준 모달 검사기준 모달 검사기준 모달 검사기준 모달 검사기준 모달 검사기준 모달 -->
+	<!-- ============================================================== -->
 	<!-- 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호 모달 발주번호  -->
 	<div class="modal fade" id="ordrCdSearch" tabindex="-1">
 		<div class="modal-dialog modal-lg">
@@ -254,7 +312,8 @@ form {
 	<!-- 자재검사목록테이블 자재검사목록 자재검사목록 자재검사목록 자재검사목록 자재검사목록  -->
 
 	<div class="row" style="padding: 0px; margin: 0px">
-		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12" style="padding: 0px; margin: 0px">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"
+			style="padding: 0px; margin: 0px">
 			<div class="card">
 				<div class="card-body d-flex justify-content-between">
 					<h3>자재검사목록</h3>
@@ -266,7 +325,8 @@ form {
 					</div>
 				</div>
 				<div class="table-responsive">
-					<table id="check" class="table table-striped table-bordered first" style="width: 99%; margin: auto;" >
+					<table id="check" class="table table-striped table-bordered first"
+						style="width: 99%; margin: auto;">
 						<thead>
 							<tr>
 								<th data-orderable="false" class="no-sort"><input
@@ -284,7 +344,9 @@ form {
 								<th>포장불량</th>
 								<th>중량미달</th>
 								<th>기타</th>
-								<th>수정</th>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<th>수정</th>
+								</sec:authorize>
 								<th style="display: none">Lot번호</th>
 							</tr>
 						</thead>
@@ -307,8 +369,10 @@ form {
 									<td>${check.pack }</td>
 									<td>${check.underWeight }</td>
 									<td>${check.etc }</td>
-									<td><button type="button" class="btn btn-primary"
-											id="updateBtn">수정</button></td>
+									<sec:authorize access="hasRole('ROLE_ADMIN')">
+										<td><button type="button" class="btn btn-primary"
+												id="updateBtn">수정</button></td>
+									</sec:authorize>
 									<td style="display: none">${check.rscLotCd }</td>
 								</tr>
 							</c:forEach>
@@ -322,6 +386,15 @@ form {
 	<!-- ============================================================== -->
 
 	<script>
+	//모달 닫기
+	$(document).on('click', '[data-dismiss="modal"]', function() {
+	  $(this).closest('.modal').modal('hide');
+	});
+	
+	$(document).on('hidden.bs.modal', '.modal', function() {
+	  $(this).find('form')[0].reset();
+	});
+	
 	//초기화
 	$(document).on("click","#resetBtn", function () {
 		console.log('클릭');
@@ -331,7 +404,8 @@ form {
 	//LOT번호가 부여된 검사코드 선택 불가
 	$('tbody#checkBody tr').each(function() {
   if ($(this).find('td:nth-child(15)').text() !== '') {
-    $(this).css('pointer-events', 'none');    
+    $(this).css('pointer-events', 'none');
+    $(this).css('opacity', '0.7');
   }
 });
 	
@@ -643,6 +717,7 @@ form {
 
                       $("#checkBody").append(tr);
                     });
+                  location.reload()
                   },
                   error: function (reject) {
                     console.log(reject);
@@ -860,6 +935,7 @@ $(document).on('click', '#updateBtn', function() {
             icon: "success",
             title: "수정이 정상적으로 되었습니다.",
         });
+        location.reload()
     },
     error: function (reject) {
         console.log(reject);
@@ -946,6 +1022,7 @@ $(document).on('click', '#updateBtn', function() {
                   icon: "success",
                   title: "삭제가 정상적으로 되었습니다.",
                 });
+                location.reload()
               },
               error: function (reject) {
                 console.log(reject);

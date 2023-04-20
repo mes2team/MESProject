@@ -13,7 +13,7 @@ public class MatVO {
 	private String rscSpec; //자재규격
 	private String mngUnit; //관리단위
 	private String rscTyp; //자재유형
-	private double safStc; //안전재고
+	private int safStc; //안전재고
 	private String useYn; //사용여부
 	private String vendCd; //거래처코드
 	private String vendNm; //거래처이름

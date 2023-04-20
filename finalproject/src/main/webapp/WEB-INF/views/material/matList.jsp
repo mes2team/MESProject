@@ -97,26 +97,8 @@ form {
                         type="text" class="form-control" id="rscNmInput" name="rscNmInput"
                         placeholder="">
                   </div>
-
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">자재규격</label> <select
-                        class="form-control" id="rscSpecInput" name="rscSpecInput" >
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="KG">kg(킬로그램)</option>
-                        <option value="L">L(리터)</option>
-                     </select>
-                  </div>
-
-                  <div class="col-md-3">
-                     <label for="country" class="form-label">사용여부</label> <select
-                        class="form-control" id="useYnInput" name="useYnInput">
-                        <option value="none" disabled selected>=== 선택 ===</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                     </select>
-                  </div>
-
-                  <div class="col-md-3">
+                  
+                   <div class="col-md-3">
                      <label for="country" class="form-label">자재유형</label> <select
                         class="form-control" id="rscTypInput" name="rscTypInput">
                         <option value="none" disabled selected>=== 선택 ===</option>
@@ -126,6 +108,26 @@ form {
                      </select>
                   </div>
 
+				  <div class="col-md-3">
+                     <label for="country" class="form-label">사용여부</label> <select
+                        class="form-control" id="useYnInput" name="useYnInput">
+                        <option value="none" disabled selected>=== 선택 ===</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                     </select>
+                  </div>	
+					
+                  <div class="col-md-3">
+                     <label for="country" class="form-label">자재규격</label> <select
+                        class="form-control" id="rscSpecInput" name="rscSpecInput" >
+                        <option value="none" disabled selected>=== 선택 ===</option>
+                        <option value="KG">kg(킬로그램)</option>
+                        <option value="L">L(리터)</option>
+                        <option value="EA">EA</option>
+                     </select>
+                  </div>
+
+                 
                   <div class="col-md-3">
                      <label for="country" class="form-label">안전재고</label> <input
                         type="text" class="form-control" id="safStcInput" name="safStcInput"
@@ -204,9 +206,9 @@ form {
                            <tr>
                               <th>자재코드</th>
                               <th>자재명</th>
-                              <th>자재규격</th>
                               <th>자재유형</th>
                               <th>안전재고</th>
+                              <th>자재규격</th>
                               <th>사용여부</th>
                               <th>거래처코드</th>
                               <th>거래처명</th>
@@ -220,9 +222,9 @@ form {
                               <tr data-id="${mat.rscCd }">
                                  <td>${mat.rscCd }</td>
                                  <td>${mat.rscNm }</td>
-                                 <td>${mat.rscSpec }</td>
                                  <td>${mat.rscTyp }</td>
                                  <td>${mat.safStc }</td>
+                                 <td>${mat.rscSpec }</td>
                                  <td>${mat.useYn }</td>
                                  <td>${mat.vendCd }</td>
                                  <td>${mat.vendNm }</td>
@@ -248,6 +250,14 @@ form {
 
 
       <script>
+    //모달 닫기
+  	$(document).on('click', '[data-dismiss="modal"]', function() {
+  	  $(this).closest('.modal').modal('hide');
+  	});
+  	
+  	$(document).on('hidden.bs.modal', '.modal', function() {
+  	  $(this).find('form')[0].reset();
+  	});
     //초기화
   	$(document).on("click","#resetBtn", function () {
   		console.log('클릭');
@@ -383,7 +393,8 @@ form {
         		  //MatController 의 @PostMapping("/matCheckInsert")
                   url: "matInsert",
                   method: "post",
-                  data: {rscCd: rscCdData,
+                  data: 
+                  {rscCd: rscCdData,
                 	  rscNm: rscNmData,
                 	  rscSpec: rscSpecData,
                 	  rscTyp: rscTypData,
@@ -523,7 +534,7 @@ function submitBtn() {
         $("#checkBody").empty();
     	  //input 내 데이터 지우기  
     	$('input').val('');  
-        
+    	location.reload()
         $(result).each(function (idx, item) {
         	let tr = $("<tr>").attr("data-id", item.rscCd);
             tr.append("<td>" + item.rscCd + "</td>");

@@ -31,12 +31,7 @@ public class MatController {
 		model.addAttribute("matList",matService.matList());
 		return "material/matList";
 	}
-	//ajax용 자재정보전체조회
-	@GetMapping("/ajaxMatList")
-	@ResponseBody
-	public List<MatVO> ajaxMatList() {
-		return matService.matList();
-	}
+	
 	//자재정보단건조회
 	@GetMapping("/matInfo")
 	@ResponseBody
@@ -114,6 +109,13 @@ public class MatController {
 		model.addAttribute("matStock",matService.matStock());
 		return "material/matOrder";
 	}
+	//ajax용 자재발주전체조회
+		@GetMapping("/ajaxMatOrder")
+		@ResponseBody
+		public List<MatVO> ajaxMatOrder() {
+			return matService.matOrderList();
+		}
+	
 	//자재발주 단건조회
 		@GetMapping("/ordrInfo")
 		@ResponseBody
