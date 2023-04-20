@@ -51,11 +51,6 @@
               <i class="bi bi-circle"></i><span>제품 출고 관리</span>
             </a>
           </li>
-          <li>
-            <a href="${pageContext.request.contextPath }/finishedPrd">
-              <i class="bi bi-circle"></i><span>완제품 조회</span>
-            </a>
-          </li>
         </ul>
       </li><!-- End Forms Nav -->
 
@@ -146,16 +141,6 @@
           <li>
             <a href="${pageContext.request.contextPath }/prcsInsp">
               <i class="bi bi-circle"></i><span>공정검사관리</span>
-            </a>
-          </li>
-          <li>
-            <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Remix Icons</span>
-            </a>
-          </li>
-          <li>
-            <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Boxicons</span>
             </a>
           </li>
         </ul>

@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec"
+   uri="http://www.springframework.org/security/tags"%>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -22,7 +24,7 @@ label {
 			<div class="card-body">
 				<div
 					style="width: 100%; height: 300px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
-					<table class="table table-striped table-hover" >
+					<table class="table table-striped table-hover">
 						<thead>
 							<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 								<th scope="col">번호</th>
@@ -99,7 +101,8 @@ label {
 								<label for="inputPassword6" class="col-form-label">점검주기*</label>
 							</div>
 							<div class="col-auto">
-								<input type="number" min=0 placeholder="단위는(일)" name="chckPerd" class="form-control">
+								<input type="number" min=0 placeholder="단위는(일)" name="chckPerd"
+									class="form-control">
 							</div>
 							<div class="col-auto">
 								<label for="inputPassword6" class="col-form-label">온도</label>
@@ -129,10 +132,12 @@ label {
 							<div class="col-auto">
 								<input type="radio" name="useYn" checked value="Y" hidden>
 								<input type="radio" name="useYn" value="N" hidden>
-								<button type="button" onclick="formOptionChk()"
-									class="btn btn-outline-info">저장</button>
-								<button type="button" onclick="deleteEqm()"
-									class="btn btn-outline-danger">삭제</button>
+								<sec:authorize access="hasRole('ROLE_ADMIN')">
+									<button type="button" onclick="formOptionChk()"
+										class="btn btn-outline-info">저장</button>
+									<button type="button" onclick="deleteEqm()"
+										class="btn btn-outline-danger">삭제</button>
+								</sec:authorize>
 								<button type="button" onclick="cleanInput()"
 									class="btn btn-outline-secondary">초기화</button>
 							</div>
