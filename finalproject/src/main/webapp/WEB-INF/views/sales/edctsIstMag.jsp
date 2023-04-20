@@ -116,7 +116,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
 
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
-          <h5 class="card-header">Basic Table</h5>
+          <h5 class="card-header">완제품 조회</h5>
           <div class="card-body">
             <div
               class="table-responsive"

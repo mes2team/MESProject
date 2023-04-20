@@ -206,9 +206,11 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
           </table>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="insertBtn">
-            등록
-          </button>
+        	<sec:authorize access="hasRole('ROLE_ADMIN')">	
+	          <button type="button" class="btn btn-primary" id="insertBtn">
+	            등록
+	          </button>
+          	</sec:authorize>
           <button
             type="button"
             class="btn btn-secondary"
