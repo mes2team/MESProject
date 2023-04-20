@@ -76,7 +76,7 @@ form {
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="#" class="breadcrumb-link">자재관리</a></li>
-				<li class="breadcrumb-item active" aria-current="page">자재입고</li>
+				<li class="breadcrumb-item active" aria-current="page">자재검사</li>
 			</ol>
 		</nav>
 	</div>
