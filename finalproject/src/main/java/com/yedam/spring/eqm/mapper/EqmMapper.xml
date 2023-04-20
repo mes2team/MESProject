@@ -137,21 +137,23 @@
 	
 	<!-- 검색조회 -->
 	<select id="searchEqmCheck" parameterType="EqmVO" resultType="EqmVO">
-		SELECT CHECK_CD,
-			   EQM_CD, 
-			   CHCK_FG,
-			   CHCK_DT,
-			   JDGMNT,
-			   DISPO_CTNT,
-			   CHCK_PSCH,
-			   EQM_NM
-		FROM eqm_check
+		SELECT c.CHECK_CD,
+			   c.EQM_CD, 
+			   c.CHCK_FG,
+			   c.CHCK_DT,
+			   c.JDGMNT,
+			   c.DISPO_CTNT,
+			   c.CHCK_PSCH,
+			   c.EQM_NM,
+               e.chck_perd+c.chck_dt next_chck_dt
+		FROM eqm_check c join eqm e
+        ON c.eqm_nm = e.eqm_nm
 		<where>
 			<if test="startDt != null and endDt != null">
-				AND chck_dt BETWEEN #{startDt} AND #{endDt}
+				AND c.chck_dt BETWEEN #{startDt} AND #{endDt}
 			</if>
 			<if test="eqmNm != null">
-				AND eqm_nm LIKE '%'||#{eqmNm}||'%'
+				AND c.eqm_nm LIKE '%'||#{eqmNm}||'%'
 			</if>
 		</where>
 	</select>
