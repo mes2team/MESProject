@@ -148,16 +148,6 @@
               <i class="bi bi-circle"></i><span>공정검사관리</span>
             </a>
           </li>
-          <li>
-            <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Remix Icons</span>
-            </a>
-          </li>
-          <li>
-            <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Boxicons</span>
-            </a>
-          </li>
         </ul>
       </li><!-- End Icons Nav -->
     </ul>
