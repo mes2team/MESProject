@@ -37,6 +37,11 @@ public class ProController {
 	@Autowired
 	EdctsService edctsService;
 	
+	@GetMapping("/dashboard")
+	public String dashboard() {
+		return "production/dashboard";
+	}
+	
 	// 생산계획 수정
 	@PostMapping("/modifyProPlan")
 	@ResponseBody

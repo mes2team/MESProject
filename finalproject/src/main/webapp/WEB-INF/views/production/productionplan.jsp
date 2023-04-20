@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,7 @@
 <title>Insert title here</title>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <style>
 h5 {
 	float: left;
@@ -54,13 +56,15 @@ div#prcsInfo {
 	<!-- 검색폼 영역 -->
 	<div class="card">
 		<div class="card-body">
-			<h5 class="card-title">생산계획페이지</h5>
-			<div class="btnGrp">
-				<button id="orderSheetBtn" type="button" class="btn btn-primary"
-					data-bs-toggle="modal" data-bs-target="#orderSheet">주문서</button>
-				<button id="proPlanInsert" type="button" class="btn btn-primary" data-bs-toggle="modal"
-					data-bs-target="#createPlan">계획등록</button>
-			</div>
+			<h5 class="card-title">생산계획관리</h5>
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<div class="btnGrp">
+					<button id="orderSheetBtn" type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#orderSheet">주문서</button>
+					<button id="proPlanInsert" type="button" class="btn btn-primary" data-bs-toggle="modal"
+						data-bs-target="#createPlan">계획등록</button>
+				</div>
+			</sec:authorize>
 			<!-- Multi Columns Form -->
 			<form class="row g-3" id="searchOption" name="searchOption" action="searchProPlan" method="post" onsubmit="return false">
 				<div class="col-md-6">
@@ -96,9 +100,11 @@ div#prcsInfo {
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title">생산계획조회</h5>
-			<div class="btnGrp">
-				<button id="deleteList" type="button" class="btn btn-primary">계획삭제</button>
-			</div>
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<div class="btnGrp">
+					<button id="deleteList" type="button" class="btn btn-primary">계획삭제</button>
+				</div>
+			</sec:authorize>
 			<!-- Table with hoverable rows -->
 			<table id="selectPlanTable" class="table table-hover">
 				<thead>
@@ -275,8 +281,10 @@ div#prcsInfo {
 					<!-- End Multi Columns Form -->
 				</div>
 				<div class="modal-footer">
+				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<button id="newPlanSubmit" type="button" class="btn btn-primary">등록</button>
 					<button id="modifyPlanSubmit" type="button" class="btn btn-primary" style="display:none">수정</button>
+				</sec:authorize>
 					<button id="cancelPlan" type="button" class="btn btn-secondary">취소</button>
 				</div>
 			</div>
@@ -490,7 +498,10 @@ div#prcsInfo {
 		  $("#myDate").change(function() {
 		    var selectedDate = $(this).val();
 		    if (selectedDate < today) {
-		      alert("오늘 이전의 날짜는 선택할 수 없습니다.");
+		        Swal.fire({
+		            icon: "warning",
+		            title: "현재이후 날짜를 선택하세요.",
+		          });
 		      $(this).val("");
 		    }
 		  });
@@ -499,7 +510,10 @@ div#prcsInfo {
 		$('#orderCnt').on('input', function() {
 			var inputVal = this.value;
 			if (!/^[0-9]*$/.test(inputVal)) {
-				alert('숫자만 입력 가능합니다.');
+		        Swal.fire({
+		            icon: "warning",
+		            title: "숫자만 선택가능합니다.",
+		          });
 				this.value = inputVal.replace(/[^0-9]/g, '');
 			}
 		});
@@ -667,6 +681,14 @@ div#prcsInfo {
 			  var orderCntValue = $('#orderCnt').val();
 
 			  if (selectedOptionValue && orderCntValue ) {
+				  if(orderCntValue <= 0) {
+				        Swal.fire({
+				            icon: "warning",
+				            title: "상품수량을 확인하세요.",
+				          });
+				        return;
+				  }
+				  
 			    var isExist = false;
 			    $('#multiPro option').each(function() {
 			      if ($(this).data('nm') == selectedOptionText) {
@@ -690,9 +712,17 @@ div#prcsInfo {
 
 			    $('#prdtNm option:selected').prop('selected', false);
 			    $('#orderCnt').val('');
+			    
+			    
 			  } else {
-			    alert('제품정보를 입력해주세요.')
+			        Swal.fire({
+			            icon: "warning",
+			            title: "상품정보를 선택해주세요.",
+			        });
+			        return;
+			    
 			  }
+			  
 			});
 		
 		
@@ -731,18 +761,27 @@ div#prcsInfo {
 		let multiPro = document.getElementById('multiPro');
 
 		if(multiPro.selectedOptions.length === 0) {
-		  alert("제품이 선택되지 않았습니다.");
+	        Swal.fire({
+	            icon: "warning",
+	            title: "제품을 선택하세요.",
+	          });
 		  multiPro.focus();
 		  return false;
 		} 
 
  		if(planName.value === "") {
-		  alert("생산계획명이 입력되지 않았습니다.");
+ 	        Swal.fire({
+ 	           icon: "warning",
+ 	           title: "생산계획명을 작성하세요.",
+ 	         });
 		  planName.focus();
 		  return false;
 		} 
 		if(wkToDt.value === "") {
-		  alert("생산시작 예정일이 입력되지 않았습니다.");
+	        Swal.fire({
+	            icon: "warning",
+	            title: "생산예정일을 선택하세요.",
+	          });
 		  wkToDt.focus();
 		  return false;
 		}
@@ -1176,7 +1215,10 @@ div#prcsInfo {
 		    });
 		
 		    if (!isChecked) {
-		      alert('삭제할 항목을 선택해주세요.');
+		        Swal.fire({
+		            icon: "warning",
+		            title: "삭제할 생산계획을 선택하세요.",
+		          });
 		      return;
 		    }
 		
@@ -1191,7 +1233,10 @@ div#prcsInfo {
 		
 		    // nowSt가 '미지시'인 경우 함수를 종료합니다.
 		    if (!isDeletable) {
-		      alert('진행 상태가 \'미지시\'인 계획만 취소할 수 있습니다..');
+		        Swal.fire({
+		            icon: "warning",
+		            title: "현재상황이 미지시인 건만 삭제가능합니다.",
+		          });
 		      return;
 		    }
 		
@@ -1215,11 +1260,14 @@ div#prcsInfo {
 		        if(data == "success"){
 		          $("#proPlanChk input[type='checkbox']:checked").closest("tr").remove();
 		        } else {
-		          alert('통신결과를 받는데 실패');
+	                  Swal.fire({
+	                      icon: "error",
+	                      title: "오류가 발생했습니다.",
+	                    });
 		        }
 		      },
-		      error: function(jqXHR, textStatus, errorThrown) {
-		        console.log(textStatus + ": " + errorThrown);
+		      error: function(error) {
+		        console.log(error);
 		      }
 		    });
 		  });
