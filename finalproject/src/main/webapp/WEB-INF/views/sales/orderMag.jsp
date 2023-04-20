@@ -10,12 +10,20 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
     float: left;
   }
 
-  table,
-  tr,
-  th,
-  td {
-    border: 1px solid black;
-  }
+  table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
   #btnGrp {
     float: right;
@@ -93,7 +101,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
               style="width: 100%; height: 300px; overflow: auto"
             >
               <table
-                class="table table-striped table-bordered first table table-hover"
+                class="table table-bordered table-hover"
               >
                 <thead>
                   <tr>
@@ -359,7 +367,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
             </div>
             <hr />
             <h5 class="modal-title">상품 정보</h5>
-            <table class="table table-hover">
+            <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th scope="col">
@@ -425,7 +433,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
           ></button>
         </div>
         <div class="modal-body">
-          <table class="table table-hover">
+          <table class="table table-bordered table-hover">
             <thead>
               <tr>
                 <th scope="col">거래처 코드</th>
@@ -531,7 +539,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
             </div>
             <hr />
             <h5>상품</h5>
-            <table class="table table-hover">
+            <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th scope="col">상품코드</th>
@@ -545,7 +553,7 @@ uri="http://java.sun.com/jsp/jstl/fmt"%>
             <div style="display: none" id="orderDetailUpdate">
               <hr />
               <h5>상품 추가</h5>
-              <table class="table table-hover">
+              <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th scope="col">상품코드</th>

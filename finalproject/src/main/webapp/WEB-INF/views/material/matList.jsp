@@ -36,8 +36,19 @@
 <meta charset="UTF-8">
 <title>Material List</title>
 <style>
-table, tr, th, td {
-   border: 1px solid black;
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .insert {
 	display: inline-blcok;
@@ -169,7 +180,7 @@ form {
 					</button>
 				</div>
 				<div class="modal-body">
-					<table class="table table-hover">
+					<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
 								<th scope="col">거래처명</th>
@@ -201,7 +212,7 @@ form {
                   <div class="table-responsive">
                   
                      <h3>자재정보</h3>
-                     <table id="jaje" class="table table-striped table-bordered first">
+                     <table id="jaje" class="table table-bordered table-hover">
                         <thead>
                            <tr>
                               <th>자재코드</th>

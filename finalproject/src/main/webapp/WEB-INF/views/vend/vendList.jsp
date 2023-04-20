@@ -10,13 +10,20 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
     float: left;
   }
 
-  table,
-  tr,
-  th,
-  td {
-    border: 1px solid black;
-  }
+ table {
+	text-align: center;
+}
 
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
   #btnGrp {
     float: right;
     padding: 20px 20px 15px 0;
@@ -218,7 +225,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" %>
               style="width: 100%; height: 300px; overflow: auto"
             >
               <table
-                class="table table-striped table-bordered first table-hover"
+                class="table table-bordered table-hover"
               >
                 <thead>
                   <tr>

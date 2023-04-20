@@ -12,6 +12,7 @@ uri="http://www.springframework.org/security/tags"%>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     
     <style>
+     
       h5 {
         float: left;
       }
@@ -38,6 +39,20 @@ uri="http://www.springframework.org/security/tags"%>
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 
       .scrollable {
         max-height: 500px;
@@ -137,7 +152,7 @@ uri="http://www.springframework.org/security/tags"%>
 		                
 	                </div>
                 <!-- Table with hoverable rows -->
-                <table id="processTable" class="table table-hover">
+                <table id="processTable" class="table table-bordered table-hover">
                   <thead>
                     <tr>
                       <th scope="col"><input type="checkbox" /></th>
@@ -202,7 +217,7 @@ uri="http://www.springframework.org/security/tags"%>
                 <h5 class="card-title">공정 흐름 관리</h5>
 
                 <!-- Table with hoverable rows -->
-                <table class="table table-hover">
+                <table class="table table-bordered table-hover">
                   <thead>
                     <tr>
                       <th scope="col">완제품 코드</th>
@@ -255,7 +270,7 @@ uri="http://www.springframework.org/security/tags"%>
                     </div>
 </sec:authorize>
                     <!-- Table with hoverable rows -->
-                    <table class="table table-hover">
+                    <table class="table table-bordered table-hover">
                       <thead>
                         <tr>
                           <th scope="col">
@@ -302,7 +317,7 @@ uri="http://www.springframework.org/security/tags"%>
             ></button>
           </div>
           <div class="modal-body">
-            <table class="table table-hover">
+            <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th scope="col">공정 코드</th>

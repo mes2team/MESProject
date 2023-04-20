@@ -7,6 +7,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+</style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 </head>
@@ -142,7 +158,7 @@
 						<div class="card">
 							<div class="card-body">
 							<div style="width: 100%; height: 230px; overflow: auto;">
-								<table class="table table-striped table-hover"
+								<table class="table table-bordered table-hover"
 									style="margin-top: 20px; margin-bottom: 5px;">
 									<thead>
 										<tr
@@ -199,7 +215,7 @@
 							<hr>
 							<div class="row g-3 align-items-center"
 								style="margin-bottom: 5px;">
-								<table class="table table-striped table-hover"
+								<table class="table table-bordered table-hover"
 									style="margin-top: 20px; margin-bottom: 5px;">
 									<thead>
 										<tr
@@ -255,7 +271,7 @@
 							</div>
 							<p>
 							<div style="width: 100%; height: 200px; overflow: auto;">
-								<table class="table table-striped table-hover">
+								<table class="table table-bordered table-hover">
 									<thead>
 										<tr
 											style="position: sticky; top: 0px; background-color: #E2E2E2">
@@ -322,7 +338,7 @@
 
 							<p>
 							<div style="width: 100%; height: 200px; overflow: auto;">
-								<table class="table table-striped table-hover">
+								<table class="table table-bordered table-hover">
 									<thead>
 										<tr
 											style="position: sticky; top: 0px; background-color: #E2E2E2">

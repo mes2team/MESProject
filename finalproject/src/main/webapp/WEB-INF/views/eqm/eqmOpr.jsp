@@ -10,6 +10,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <style>
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 </style>
 </head>
 <body>
@@ -40,7 +54,7 @@
 
 			<div
 				style="width: 100%; height: 800px; overflow: auto; padding-top: 20px; margin-bottom: 50px;">
-				<table class="table table-striped table-hover">
+				<table class="table table-bordered table-hover">
 					<thead>
 						<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 							<th scope="col"><input type="checkbox"

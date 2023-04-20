@@ -93,11 +93,18 @@
 					ei.edcts_cd, 
 					ei.edcts_lot_no, 
 					e.prdt_nm,
-					ei.edcts_expire,
-					i.indica_cd
+					ei.edcts_expire
 		FROM 		edcts e, edcts_ist ei
-		WHERE 		e.edcts_cd = ei.edcts_cd
-		AND <![CDATA[ei.edcts_ist_dt >= #{edctsIstDt}]]> and <![CDATA[ei.edcts_ist_dt <= #{edctsIstDtEnd} + 1]]>
+		<where>
+			e.edcts_cd = ei.edcts_cd
+			<if test="edctsIstDt != null and !edctsIstDt.equals('') and edctsIstDtEnd != null and !edctsIstDtEnd.equals('')">
+				AND <![CDATA[ei.edcts_ist_dt >= #{edctsIstDt}]]> and <![CDATA[ei.edcts_ist_dt <= #{edctsIstDtEnd} + 1]]>
+			</if>
+			<if test="prdtNm != null and !prdtNm.equals('')">
+				AND e.prdt_nm LIKE '%' || #{prdtNm} || '%'
+			</if>
+		</where>
+		ORDER BY ei.edcts_ist_no
 	</select>
 
 	<!-- 입고 제품 삭제 -->

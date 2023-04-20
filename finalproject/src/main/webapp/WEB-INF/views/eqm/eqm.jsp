@@ -12,6 +12,20 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <style>
+table {
+	text-align: center;
+}
+
+td input[type='text'] {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 label {
 	font-weight: bold;
 }
@@ -24,7 +38,7 @@ label {
 			<div class="card-body">
 				<div
 					style="width: 100%; height: 300px; overflow: auto; margin-top: 20px; margin-bottom: 5px;">
-					<table class="table table-striped table-hover">
+					<table class="table table-bordered table-hover">
 						<thead>
 							<tr style="position: sticky; top: 0px; background-color: #E2E2E2">
 								<th scope="col">번호</th>
@@ -134,12 +148,12 @@ label {
 								<input type="radio" name="useYn" value="N" hidden>
 								<sec:authorize access="hasRole('ROLE_ADMIN')">
 									<button type="button" onclick="formOptionChk()"
-										class="btn btn-outline-info">저장</button>
+										class="btn btn-primary">저장</button>
 									<button type="button" onclick="deleteEqm()"
-										class="btn btn-outline-danger">삭제</button>
+										class="btn btn-danger">삭제</button>
 								</sec:authorize>
 								<button type="button" onclick="cleanInput()"
-									class="btn btn-outline-secondary">초기화</button>
+									class="btn btn-secondary">초기화</button>
 							</div>
 						</div>
 					</div>
